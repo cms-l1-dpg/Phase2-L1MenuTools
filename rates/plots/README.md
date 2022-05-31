@@ -8,4 +8,9 @@ To run the offline rate plots, do
 
 > python ratePlots_validation123x.py --indir testRates --outdir "your own directory" --tag "here a tag for the plots" 
 
-For online plots, add option --online
+For online plots, add option --online.
+
+#NB: For testing the rate plotting, just do
+
+> 
+> python ratePlots_validation123x.py --indir ratesEmu_123x_2 --outdir "your own directory" --tag "here a tag for the plots" 
