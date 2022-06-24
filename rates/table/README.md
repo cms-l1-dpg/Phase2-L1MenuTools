@@ -8,6 +8,9 @@ For the firmware-based emulators under 123x, utilise `FBE_noMu_L1TDRMET_mhtSeed_
   
 To display the rates in an easy-to-read format, run
 ```
-python3 printNice.py -c cfg/v10_TRIDAS_newThresholds_LHCCReview -r out/2020-05-26-MENU-LHCCReview-BugFix_v10_TRIDAS_newThresholds_LHCCReview/thresholds/menu.csv
+python3 printRateTable.py -c cfg/v10_TRIDAS_newThresholds_LHCCReview -r out/2020-05-26-MENU-LHCCReview-BugFix_v10_TRIDAS_newThresholds_LHCCReview/thresholds/menu.csv
 ```
+You can also edit the `CFG_RATE_COMBOS` dictionary at the top of
+the file and run the script without any arguments `python3 printRateTable.py`.
+This way multiple rate tables can be compared quickly. 
 
