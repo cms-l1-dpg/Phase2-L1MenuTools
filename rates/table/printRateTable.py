@@ -9,6 +9,7 @@ displayed.
 """
 import argparse
 from itertools import chain
+import re
 
 
 CFG_RATE_COMBOS = {
@@ -59,6 +60,7 @@ PATH_NAME_MAP = {
     "L1_DoublePFJet_MassMin": "Double ???",
     "L1_SingleEGEle": "Single StaEG",
     "L1_DoubleEGEle": "Double StaEG",
+    "total menu": "Total",
 }
 
 
@@ -101,11 +103,8 @@ class RateTablePrinter():
         """
         paths = []
         with open(cfg_path, 'r') as f:
-            for line in f:
-                if "Set:" in line:
-                    paths.append(line)
-                if line.startswith("trigger"):
-                    paths.append(line.split('::')[1].strip())
+            paths = [l.split('::')[1].strip() for l in f if l.startswith("trigger")]
+        paths.append("total menu")
         return paths
 
     def _getRates(self, rates_path: str, paths: list) -> dict:
@@ -114,15 +113,10 @@ class RateTablePrinter():
         """
         rate_dict = {}
         with open(rates_path, 'r') as f:
-            for path in paths:
-                if "Set:" in path:
-                    print(path)
-                    continue
-                for line in f:
-                    if path == line.split(':')[0].strip():
-                        pathrate = line.replace(':', ' :').split(':')[1].split()[2]
-                        rate_dict[path] = float(pathrate)
-                f.seek(0)
+            for line in f:
+                if (path := re.search("^\w+(\smenu)?", line).group(0)) in paths:
+                    pathrate = re.search("\d+.\d+$", line).group(0)
+                    rate_dict[path] = float(pathrate)
         return rate_dict
 
     def _printTable(self, paths_rates: dict):
@@ -130,7 +124,7 @@ class RateTablePrinter():
         Prints paths and rates as a table.
         """
         nested_list_of_paths = [list(x) for x in paths_rates.values()]
-        list_of_paths = list(set(chain.from_iterable(nested_list_of_paths)))
+        list_of_paths = list(dict.fromkeys(chain.from_iterable(nested_list_of_paths)))
         object_names = list(map(lambda x: PATH_NAME_MAP[x], list_of_paths))
 
         n_chars_first_col = max(list(map(lambda x: len(x), object_names))) + 2
@@ -147,25 +141,25 @@ class RateTablePrinter():
 
         # Print Body
         for path in list_of_paths:
+            if "total" in path:
+                print('-' * total_length)
+
             rate_numbers = []
             for rname in paths_rates:
                 try:
-                    rate_numbers.append(
-                        self._pad(
-                          round(paths_rates[rname][path], 2),
-                          n_chars_other_col
-                        )
-                    )
+                    n = round(paths_rates[rname][path], 2)
                 except KeyError:
-                    rate_numbers.append(
-                        self._pad(
-                          '-',
-                          n_chars_other_col
-                        )
+                    n = '-'
+                rate_numbers.append(
+                    self._pad(
+                      n,
+                      n_chars_other_col
                     )
+                )
             print('|', self._pad(PATH_NAME_MAP[path], n_chars_first_col), *rate_numbers)
+        totals_plus = [self._pad(float(x[:-1]) + 54, n_chars_other_col) for x in rate_numbers]
+        print('|', self._pad("Total + 54kHz", n_chars_first_col), *totals_plus)
 
-        # Print Footer
         print('-' * total_length)
 
     def printRateTable(self):
