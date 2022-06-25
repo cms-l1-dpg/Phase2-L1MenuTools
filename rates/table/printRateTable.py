@@ -13,17 +13,13 @@ import re
 
 
 CFG_RATE_COMBOS = {
-    "Rates 1": {
+    "2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x": {
         "cfg": "cfg/v10_TRIDAS_newThresholds_LHCCReview",
         "rates": "out/2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu.csv"
     },
-    "Rates 2": {
+    "2020-05-26-BugFix_v10_TRIDAS_newThresholds_LHCCReview": {
         "cfg": "cfg/v10_TRIDAS_newThresholds_LHCCReview",
-        "rates": "out/2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu.csv"
-    },
-    "Rates With Objects Missing": {
-        "cfg": "cfg/v10_TRIDAS_newThresholds_LHCCReview",
-        "rates": "out/2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu_alt.csv"
+        "rates": "out/2020-05-26-MENU-LHCCReview-BugFix_v10_TRIDAS_newThresholds_LHCCReview/thresholds/menu.csv"
     },
 }
 
@@ -57,9 +53,19 @@ PATH_NAME_MAP = {
     "L1_DoubleTkEle_PFHTT": "DoubleTkEleElectron-PuppiHT",
     "L1_TkEleIso_PFHTT": "TkIsoElectron-PuppiHT",
     "L1_TkEle_PFJet_dRMin": "TkElectron-PuppiJet-dRMin",
-    "L1_DoublePFJet_MassMin": "Double ???",
+    "L1_DoublePFJet_MassMin": "Double PuppiJets",
     "L1_SingleEGEle": "Single StaEG",
     "L1_DoubleEGEle": "Double StaEG",
+    "L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4": "Double TkMuon 0er1p5_SQ_OS_dR_Max1p4",
+    "L1_DoubleTkMu4_SQ_OS_dR_Max1p2": "Double TkMuon 4_SQ_OS_dR_Max1p",
+    "L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18": "Double TkMuon 4p5er2p0_SQ_OS_Mass7to18",
+    "L1_DoubleTkMu_PfHTT": "DoubleTkMuon-PuppiHT",
+    "L1_DoubleTkMu_PfJet_PfMet": "DoubleTkMuon-PuppiJet-PuppiETmiss",
+    "L1_DoubleTkMu_TkEle": "DoubleTkMuon-TkElectron",
+    "L1_TkMu_PfJet_PfMet": "TkMuon-PuppiJet-PuppiETmiss",
+    "L1_TripleTkMu": "Triple TkMuon",
+    "L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9": "Triple TkMuon 5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9",
+    "L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17": "Triple TkMuon 5_3p5_2p5_OS_Mass_5to17",
     "total menu": "Total",
 }
 
@@ -136,10 +142,11 @@ class RateTablePrinter():
         # Print Header
         print('-' * total_length)
         rate_headings = [self._pad(x, n_chars_other_col) for x in paths_rates]
-        print('|', self._pad("Object", n_chars_first_col), *rate_headings)
+        print('|', self._pad("L1 Trigger Seeds", n_chars_first_col), *rate_headings)
         print('|' + '-' * (total_length - 2) + '|')
 
         # Print Body
+        list_of_paths.append(list_of_paths.pop(list_of_paths.index("total menu")))
         for path in list_of_paths:
             if "total" in path:
                 print('-' * total_length)
