@@ -2,13 +2,47 @@ ArbitraryPlotName:
   inputs:
     version: "V22"
     sample: "TT"
-  object_keys: ["trackerMET", "puppiMETEt"]
-  truth_key: "genMetTrue"
-  plot_labels: ["Tracker MET", "Puppi MET"]
+    truth_key: "genMetTrue"
+    object_keys_labels:
+      trackerMET: "Tracker MET"
+      puppiMETEt: "Puppi MET"
   threshold: 70
-  xlabel: "MET (GeV)"
-  ylabel: "Efficiency with 70 GeV Threshold"
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (70 GeV)"
   binning:
     min: 0
     max: 500 
     step: 20
+
+PlotWithDifferentThreshold:
+  inputs:
+    version: "V22"
+    sample: "TT"
+    truth_key: "genMetTrue"
+    object_keys_labels:
+      trackerMET: "Tracker MET"
+      puppiMETEt: "Puppi MET"
+  threshold: 150
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (150 GeV)"
+  binning:
+    min: 0
+    max: 500 
+    step: 20
+
+
+HTPlot:
+  inputs:
+    version: "V22"
+    sample: "TT"
+    truth_key: "jetPt"
+    object_keys_labels:
+      trackerHT: "Tracker HT"
+      phase1PuppiHT: "Puppi HT"
+  threshold: 200
+  xlabel: "Gen. HT (GeV)"
+  ylabel: "Trigger Efficiency (200 GeV)"
+  binning:
+    min: 0
+    max: 500 
+    step: 10

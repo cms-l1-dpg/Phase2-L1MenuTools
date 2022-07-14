@@ -1,114 +1,164 @@
 #!/eos/user/d/dhundhau/miniconda3/envs/l1phase2/bin/python
 #/eos/user/d/dhundhau/miniconda3/bin/python
 import glob
-import hashlib
 import json
+import time
 
 import matplotlib.pyplot as plt
+import mplhep as hep
 import numpy as np
+import pandas as pd
 import uproot
 import yaml
 
 
-class NTupleSkimmer():
+plt.style.use(hep.style.CMS)
+
+
+class NTupleLoader():
     
-    def __init__(self, indir, config, skim_type="MET"):
-        self.indir = indir
+    def __init__(self, ntuple_path, config):
+        self.ntuple_path = ntuple_path
+        self.config = config
+        self.df = None
+    
+    def _load_ntuples_into_df(self):
+        fnames = glob.glob(self.ntuple_path + "L1NtuplePhaseII_Step1_*.root")[:]
+        print(f"Loading objects from {len(fnames)} files...")
+        gen_tree = "genTree/L1GenTree"
+        reco_tree = "l1PhaseIITree/L1PhaseIITree"
+        df = None
+
+        t0 = time.time()
+        for f_in in fnames:
+            with uproot.open(f_in) as f:
+                df_gen = f[gen_tree].arrays(
+                    self.config["inputs"]["truth_key"],
+                    library="pd"
+                )
+                if "jetPt" in (x := self.config["inputs"]["truth_key"]):
+                    df_gen.loc[df_gen[x] < 30, x] = 0
+                    df_gen = df_gen.groupby(level=0).sum()
+                df_reco = f[reco_tree].arrays(
+                    self.config["inputs"]["object_keys_labels"].keys(),
+                    library="pd"
+                )
+            df_merged = pd.concat([df_gen, df_reco], axis=1)
+            df = pd.concat([df, df_merged], axis=0)
+        t1 = time.time()
+        print(f"Loading of {len(fnames)} files took {round(t1 - t0, 1)}s")
+        return df
+
+    def _add_missing_columns(self):
+        print("Required columns not cached. Loading ...")
+        df = self._load_ntuples_into_df()
+        duplicate_cols = list(set(df.columns) - set(self.df.columns))
+        df.drop(duplicate_cols, axis=1)
+        self.df = pd.concat([self.df, df], axis=1)
+        print(self.df.columns)
+
+    def _get_h5_fname(self):
+        version = self.config["inputs"]["version"]
+        sample = self.config["inputs"]["sample"]
+        return version + '_' + sample
+
+    def _save_df(self):
+        self.df.to_hdf(f"tmp/{self._get_h5_fname()}.h5", key="l1")
+
+    def _cache_has_columns(self):
+        """
+        Checks if the required columns
+        are present in the cached h5 file.
+        """
+        required_keys = [self.config["inputs"]["truth_key"]]
+        required_keys += list(self.config["inputs"]["object_keys_labels"].keys())
+        return all([x in self.df.columns for x in required_keys])
+
+    def _cache_file_exists(self):
+        """
+        Checks if there is h5 file in tmp
+        with the name 'version_sample.h5'
+        """
+        try:
+            self.df = pd.read_hdf(f"tmp/{self._get_h5_fname()}.h5", key="l1")
+            return True
+        except FileNotFoundError:
+            return False
+
+    def load(self):
+        if not self._cache_file_exists():
+            print("Cache file does not exist.")
+            self.df = self._load_ntuples_into_df()
+            self._save_df()
+        if not self._cache_has_columns():
+            print("Cache file does not have required columns")
+            self._add_missing_columns()
+            self._save_df()
+
+
+class Skimmer():
+    
+    def __init__(self, config):
         self.config = config
         self.threshold = config["threshold"]
-        self.skim_type = skim_type
         self.bin_width = config["binning"]["step"]
         self.bins = np.array([i * self.bin_width for i in range(int(config["binning"]["max"] / self.bin_width) + 1)])
-        self.df_gen = None
-        self.df_reco = None
-        self.fhash = None
-        self.gen_hists = {}
-
-    def _set_hashname(self):
-        h = hashlib.blake2s()
-        h.update(str.encode(self.indir))
-        h.update(str.encode(json.dumps(self.config)))
-        self.fhash = h.hexdigest()
-
-    def _load_ntuples_into_df(self):
-        # gen
-        print("Loading GEN objects ...")
-        fnames = glob.glob(self.indir + "L1NtuplePhaseII_Step1_*.root")
-        gen_files = {fname:"genTree/L1GenTree" for fname in fnames}
-        self.df_gen = uproot.concatenate(
-            gen_files,
-            library="pd",
-            filter_name=self.config["truth_key"]
-        )
-
-        # reco
-        reco_filter_name = "/(" + '|'.join(self.config["object_keys"]) + ')/'
-        print(f"Loading RECO objects with filter {reco_filter_name}...")
-        reco_files = {fname: "l1PhaseIITree/L1PhaseIITree" for fname in fnames}
-        self.df_reco = uproot.concatenate(
-            reco_files,
-            library="pd",
-            filter_name=reco_filter_name
-        )
+        self.df = None
+        self.hists = {}
 
     def _load_dfs_from_h5(self):
-        """ TODO: Load dfs from h5 file with hased name of sample+config """
-        pass  
+        """ Load dfs from h5 file with hased name of sample+config """
+        version = self.config["inputs"]["version"]
+        sample = self.config["inputs"]["sample"]
+        fname = version + '_' + sample
+        self.df = pd.read_hdf(f"tmp/{fname}.h5", key="l1")
 
-    def _skim_data(self):
-        self.gen_hists["all"] = plt.hist(self.df_gen[self.config["truth_key"]], bins=self.bins, log=True)
+    def _skim_to_hists(self):
+        self.hists["all"] = plt.hist(self.df[self.config["inputs"]["truth_key"]], bins=self.bins, log=True)
 
         # select threshold
-        for obj_key in self.config["object_keys"]:
-            trig_sel = self.df_reco[obj_key] > self.threshold
-            self.gen_hists[obj_key] = plt.hist(
-                self.df_gen.loc[trig_sel,
-                self.config["truth_key"]],
+        for obj_key in self.config["inputs"]["object_keys_labels"]:
+            trig_sel = self.df[obj_key] > self.threshold
+            self.hists[obj_key] = plt.hist(
+                self.df.loc[trig_sel,
+                self.config["inputs"]["truth_key"]],
                 bins=self.bins,
                 log=True
             )
 
-    def _save_skimmed_dfs(self):
-        self.df_reco.to_hdf(f"tmp/{self.fhash}_reco.h5", key="reco")
-        self.df_gen.to_hdf(f"tmp/{self.fhash}_gen.h5", key="gen")
-
-    def _is_cached(self):
-        """ Should check if there are h5 files in tmp
-        with the hash of this NTuple. """
-        return False
-
-    def load_skim_save(self, overwrite=True):
-        self._set_hashname()
-        if overwrite or not self._is_cached():
-            self._load_ntuples_into_df()
-            self._save_skimmed_dfs()
-        else:
-            self._load_dfs_from_h5()
-        self._skim_data()
+    def create_hists(self):
+        self._load_dfs_from_h5()
+        self._skim_to_hists()
 
 
 class EfficiencyPlotter():
 
     def __init__(self, name, config, skimmer):
-        print("Initialising Plotter")
         self.plot_name = name
         self.config = config
         self.skimmer = skimmer
 
     def plot(self):
+        print("Plotting ...")
         fig, ax = plt.subplots(figsize = (10,10))
-        gen_hist_all = self.skimmer.gen_hists["all"]
+        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
+        gen_hist_all = self.skimmer.hists["all"]
         xbins = self.skimmer.bins[:-1] + self.skimmer.bin_width / 2
 
-        err_kwargs = {"capsize": 3, "marker": 'o', "markersize": 8}
-        for label, gen_hist_trig in self.skimmer.gen_hists.items():
-            if label == "all":
+        xerr = np.ones_like(gen_hist_all[0]) * self.skimmer.bin_width / 2
+        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o', "markersize": 8}
+        for obj_key, gen_hist_trig in self.skimmer.hists.items():
+            if obj_key== "all":
                 continue
-            ax.errorbar(xbins, gen_hist_trig[0] / gen_hist_all[0], label=label, **err_kwargs)
+            label = self.config["inputs"]["object_keys_labels"][obj_key]
+            efficiency = gen_hist_trig[0] / gen_hist_all[0]
+            yerr = np.sqrt(gen_hist_all[0])  * gen_hist_trig[0] / gen_hist_all[0] ** 2
+            yerr = np.stack([yerr, np.minimum(1 - efficiency, yerr)])
+            ax.errorbar(xbins, efficiency, yerr=yerr, label=label, **err_kwargs)
 
         ax.axvline(self.skimmer.threshold, ls = ":", c = "k")
         ax.axhline(1, ls = ":", c = "k")
-        ax.legend(frameon=False)
+        ax.legend(loc="lower right", frameon=False)
         ax.set_xlabel(self.config["xlabel"])
         ax.set_ylabel(self.config["ylabel"])
         ax.set_xlim(self.config["binning"]["min"], self.config["binning"]["max"])
@@ -134,21 +184,23 @@ class PlottingCentral():
 
     def run(self):
         for plot, pconfig in self.plot_conf.items():
-            print(f"Working on {plot} ...")
+            print(f">>> {plot} <<<")
             # Get Config
             version = pconfig["inputs"]["version"]
             sample = pconfig["inputs"]["sample"]
             fpath = self.conf[version][sample]
-            # Process L1 NTuple
-            skimmer = NTupleSkimmer(fpath, pconfig)
-            skimmer.load_skim_save()
+            # Load L1 NTuple (if not cached)
+            loader = NTupleLoader(fpath, pconfig)
+            loader.load()
+            # Skim loaded dataframe
+            skimmer = Skimmer(pconfig)
+            skimmer.create_hists()
             # Plot
             plotter = EfficiencyPlotter(plot, pconfig, skimmer)
             plotter.plot()
 
 
 if __name__ == "__main__":
-    print("Starting up!")
     plotter = PlottingCentral()
     plotter.run()
 
