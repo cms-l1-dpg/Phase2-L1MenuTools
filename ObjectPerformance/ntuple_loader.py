@@ -15,45 +15,23 @@ class NTupleLoader():
         self._version = version
         self._sample = sample
         self._ntuple_path = ""
-        self._gen_trees = {}
-        self._reco_trees = []
+        self._trees_branches = {}
         self._df = None
-        self._load_config()
-    
-    def _apply_column_trafo(self, df, x, operation):
-        if "sum" in operation:
-            df = df.groupby(level=0).sum()
-        if "sumThreshold30" in operation:
-            df.loc[df[x] < 30, x] = 0
-            df = df.groupby(level=0).sum()
-        return df
+        self._load_cfg()
 
-    def _load_reco_trees(self, f):
+    def _load_trees_branches(self, f):
         df = None
-        for tree_key in self._reco_trees:
-            df_reco = f["l1PhaseIITree/L1PhaseIITree"].arrays(
-                tree_key,
-                library="pd"
-            )
-            df = pd.concat([df, df_reco], axis=1)
-        return df
-
-    def _load_gen_trees(self, f):
-        df = None
-        for obs, tree_conf in self._gen_trees.items():
-            tree_key = tree_conf["treeKey"]
-            operation = tree_conf["operation"]
-            df_gen = f["genTree/L1GenTree"].arrays(
-                tree_key,
-                library="pd"
-            )
-            df_gen = df_gen.rename(columns={tree_key: obs})
-            df_gen = self._apply_column_trafo(df_gen, obs, operation)
-            df = pd.concat([df, df_gen], axis=1)
+        for tree_key, branches in self._gen_trees.items():
+            for branch_key in branches:
+                df_gen = f[tree_key].arrays(
+                    branch_key,
+                    library="pd"
+                )
+                df = pd.concat([df, df_gen], axis=1)
         return df
     
     def _load_ntuples_into_df(self):
-        fnames = glob.glob(self._ntuple_path + "L1NtuplePhaseII_Step1_*.root")[:]
+        fnames = glob.glob(self._ntuple_path)[:3]
         df = None
 
         print(f"Loading objects from {len(fnames)} files...")
@@ -63,10 +41,8 @@ class NTupleLoader():
         for f_in in fnames:
             bar.next()
             with uproot.open(f_in) as f:
-                df_gen = self._load_gen_trees(f)
-                df_reco = self._load_reco_trees(f)
-            df_merged = pd.concat([df_gen, df_reco], axis=1)
-            df = pd.concat([df, df_merged], axis=0)
+                df_file = self._load_trees_branches(f)
+            df = pd.concat([df, df_file], axis=0)
 
         t1 = time.time()
         bar.finish()
@@ -76,12 +52,11 @@ class NTupleLoader():
     def _get_h5_fname(self):
         return self._version + '_' + self._sample
 
-    def _load_config(self):
-        with open("config.yaml", 'r') as f:
+    def _load_cfg(self):
+        with open("cfg.yaml", 'r') as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
         self._ntuple_path = cfg["ntuple_path"]
-        self._gen_trees = cfg["gen_trees"]
-        self._reco_trees = cfg["reco_trees"]
+        self._trees_branches = cfg["trees_branches"]
 
     def _cache_has_columns(self):
         """
