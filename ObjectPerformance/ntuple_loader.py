@@ -1,6 +1,7 @@
-#!/eos/user/d/dhundhau/miniconda3/envs/l1phase2/bin/python
+#!/afs/cern.ch/user/d/dhundhau/miniconda3/envs/py310/bin/python
 from datetime import timedelta
 import glob
+import itertools
 import time
 
 import pandas as pd
@@ -21,7 +22,7 @@ class NTupleLoader():
 
     def _load_trees_branches(self, f):
         df = None
-        for tree_key, branches in self._gen_trees.items():
+        for tree_key, branches in self._trees_branches.items():
             for branch_key in branches:
                 df_gen = f[tree_key].arrays(
                     branch_key,
@@ -29,9 +30,9 @@ class NTupleLoader():
                 )
                 df = pd.concat([df, df_gen], axis=1)
         return df
-    
+
     def _load_ntuples_into_df(self):
-        fnames = glob.glob(self._ntuple_path)[:3]
+        fnames = glob.glob(self._ntuple_path)[:40]
         df = None
 
         print(f"Loading objects from {len(fnames)} files...")
@@ -63,7 +64,8 @@ class NTupleLoader():
         Checks if the required columns
         are present in the cached h5 file.
         """
-        required_keys = self._reco_trees + list(self._gen_trees.keys())
+        required_keys = list(itertools.chain(*[x for x in self._trees_branches.values()]))
+        print(required_keys)
         return all([x in self.df.columns for x in required_keys])
 
     def _cache_file_exists(self):

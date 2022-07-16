@@ -18,40 +18,9 @@ plots:
       max: 500 
       step: 20
 
-  HT:
-    inputs:
-      reference_key: "genHT"
-      object_keys_labels:
-        trackerHT: "Tracker HT"
-        phase1PuppiHT: "Puppi HT"
-    thresholds: [200, 350]
-    regions: [""]
-    xlabel: "Gen. HT (GeV)"
-    ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-    binning:
-      min: 0
-      max: 500 
-      step: 10
-
-  HTWithCalo:
-    inputs:
-      reference_key: "genHT"
-      object_keys_labels:
-        trackerHT: "Tracker HT"
-        phase1PuppiHT: "Puppi HT"
-        caloJetHT: "Calo HT"
-    thresholds: [200, 350]
-    regions: [""]
-    xlabel: "Gen. HT (GeV)"
-    ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-    binning:
-      min: 0
-      max: 500 
-      step: 10
-
   JetPt:
     inputs:
-      reference_key: "genJetPt"
+      reference_key: "jetPt"
       object_keys_labels:
         seededConePuppiJetPt: "Seeded Cone PuppiJet"
         trackerJetPt: "Calo Jet"
@@ -65,3 +34,35 @@ plots:
       max: 500 
       step: 10
 
+HT:
+  inputs:
+    reference_key: "genHT"
+    object_keys_labels:
+      trackerHT: "Tracker HT"
+      phase1PuppiHT: "Puppi HT"
+  thresholds: [200, 350]
+  regions: [""]
+  xlabel: "Gen. HT (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  binning:
+    min: 0
+    max: 500 
+    step: 10
+
+HTWithCalo:
+  inputs:
+    reference_key: "genHT"
+    reference_cuts:
+      jetPt: {">": 30}
+    object_keys_labels:
+      trackerHT: "Tracker HT"
+      phase1PuppiHT: "Puppi HT"
+      caloJetHT: "Calo HT"
+  thresholds: [200, 350]
+  regions: [""]
+  xlabel: "Gen. HT (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  binning:
+    min: 0
+    max: 500 
+    step: 10
