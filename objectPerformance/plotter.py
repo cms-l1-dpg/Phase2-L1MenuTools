@@ -1,9 +1,11 @@
 #!/afs/cern.ch/user/d/dhundhau/miniconda3/envs/py310/bin/python
 import argparse
+from datetime import datetime
 import glob
 from itertools import product
 import json
 import time
+import warnings
 
 import matplotlib.pyplot as plt
 import mplhep as hep
@@ -20,7 +22,7 @@ plt.style.use(hep.style.CMS)
 
 
 class Skimmer():
-    
+
     def __init__(self, cfg_plot, version, sample, threshold, region):
         self.cfg_plot = cfg_plot
         self.version = version
@@ -36,27 +38,53 @@ class Skimmer():
         """ Load dfs from h5 file with hased name of sample+config """
         fname = self.version + '_' + self.sample
         self.df = pd.read_hdf(f"tmp/{fname}.h5", key="l1")
+        # print(self.df["genMetTrue"])
+        # print(self.df["jetPt"])
+
+    def _get_reference_cuts_mask(self, df, sel):
+        if not self.cfg_plot["reference_cuts"]:
+            return sel
+        for branch, cut_cfg in self.cfg_plot["reference_cuts"].items():
+            op = utils.str_to_op(cut_cfg["operator"])
+            threshold = cut_cfg["threshold"]
+            tmp_sel = op(self.df[branch], threshold)
+            # df.loc[tmp_sel, branch] = 0
+            sel = np.logical_and(sel, tmp_sel)
+        return sel
+ 
+    def _apply_ref_column_trafo(self, df):
+        try:
+            trafo = self.cfg_plot["inputs"]["reference_trafo"]
+        except KeyError:
+            # print("No Trafo made!")
+            return df
+        if trafo == "per_event_sum":
+            return df.groupby(level=0).sum()
 
     def _get_ref_column(self):
         col_ref = self.cfg_plot["inputs"]["reference_key"]
-        df_ref = self.df[col_ref]
+        df_ref = self.df[[col_ref]]
+        sel = self._get_reference_cuts_mask(df_ref, df_ref > -999)
+        df_ref = df_ref[sel]
+        df_ref = self._apply_ref_column_trafo(df_ref)
         return df_ref
 
-    def _get_reco_column(self, obj_key):
-        col = self.cfg_plot["inputs"]["reference_key"]
-        sel = (self.df[obj_key] > self.threshold)
-        return self.df.loc[sel, col]
+    def _get_reco_column(self, obj_key, df_ref):
+        df_reco = self.df[obj_key]
+        sel = (df_reco > self.threshold)
+        return df_ref[sel]
 
     def _skim_to_hists(self):
         df_ref = self._get_ref_column()
-        self.hists["ref"] = plt.hist(df_ref, bins=self.bins, log=True)
+        # print(df_ref)
+        self.hists["ref"] = np.histogram(df_ref, bins=self.bins)
         for obj_key in self.cfg_plot["inputs"]["object_keys_labels"]:
-            df_reco = self._get_reco_column(obj_key)
-            self.hists[obj_key] = plt.hist(df_reco, bins=self.bins, log=True)
+            df_reco = self._get_reco_column(obj_key, df_ref)
+            # print(df_reco)
+            self.hists[obj_key] = np.histogram(df_reco, bins=self.bins)
 
     def create_hists(self):
         self._load_df_from_h5()
-        # self._create_sel_mask()
         self._skim_to_hists()
 
 
@@ -66,17 +94,6 @@ class EfficiencyPlotter():
         self.plot_name = name
         self.cfg = cfg
         self.skimmer = skimmer
-
-    def _get_clopper_pearson_interval(self, x_hist, n_hist, alpha=1-0.95):
-        yerr_lo = []
-        yerr_hi = []
-        for x, n in zip(x_hist, n_hist):
-            lo_bound = beta.ppf(alpha / 2, x, n - x + 1)
-            yerr_lo.append(x / n - np.nan_to_num(lo_bound, nan=0.0))
-            hi_bound = beta.ppf(1 - alpha / 2, x + 1, n - x)
-            yerr_hi.append(np.nan_to_num(hi_bound, nan=1.0) - x / n)
-        yerr = np.stack([yerr_lo, yerr_hi])
-        return yerr
 
     def plot(self):
         print("Plotting ...")
@@ -90,8 +107,10 @@ class EfficiencyPlotter():
         for obj_key, gen_hist_trig in self.skimmer.hists.items():
             if obj_key== "ref":
                 continue
-            efficiency = gen_hist_trig[0] / gen_hist_ref[0]
-            yerr = self._get_clopper_pearson_interval(gen_hist_trig[0], gen_hist_ref[0])
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                efficiency = gen_hist_trig[0] / gen_hist_ref[0]
+            yerr = utils.clopper_pearson_err(gen_hist_trig[0], gen_hist_ref[0])
             label = self.cfg["inputs"]["object_keys_labels"][obj_key]
             ax.errorbar(xbins, efficiency, yerr=yerr, label=label, **err_kwargs)
 
@@ -99,6 +118,7 @@ class EfficiencyPlotter():
         ax.axhline(1, ls = ":", c = "k")
         ax.legend(loc="lower right", frameon=False)
         ax.set_xlabel(self.cfg["xlabel"])
+        # ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
         ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.skimmer.threshold))
         ylabel = ylabel.replace("<region>", f"{', ' + self.skimmer.region if self.skimmer.region else ''}")
         ax.set_ylabel(ylabel)
@@ -111,7 +131,7 @@ class EfficiencyPlotter():
 
 
 class PlottingCentral():
-    
+
     def __init__(self, cfg_plots_path):
         with open("cfg.yaml", 'r') as f:
             self.cfg = yaml.safe_load(f)
@@ -139,9 +159,14 @@ class PlottingCentral():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("cfg_plots_path", help="Path of YAML file specifying the desired plots.")
+    parser.add_argument(
+        "--cfg_plots",
+        "-c",
+        default="cfg_plots.yaml",
+        help="Path of YAML file specifying the desired plots."
+    )
     args = parser.parse_args()
 
-    plotter = PlottingCentral(args.cfg_plots_path)
+    plotter = PlottingCentral(args.cfg_plots)
     plotter.run()
 

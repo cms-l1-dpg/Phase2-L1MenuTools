@@ -1,3 +1,7 @@
+**/__pycache__/*
+**/*.png
+**/rates.py
 rates/table/out/*
 rates/table/cache/**/*
 rates/table/lib/*
+**/tmp/*

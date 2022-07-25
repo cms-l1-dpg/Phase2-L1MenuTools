@@ -32,7 +32,7 @@ class NTupleLoader():
         return df
 
     def _load_ntuples_into_df(self):
-        fnames = glob.glob(self._ntuple_path)[:40]
+        fnames = glob.glob(self._ntuple_path)[:]
         df = None
 
         print(f"Loading objects from {len(fnames)} files...")
@@ -65,7 +65,6 @@ class NTupleLoader():
         are present in the cached h5 file.
         """
         required_keys = list(itertools.chain(*[x for x in self._trees_branches.values()]))
-        print(required_keys)
         return all([x in self.df.columns for x in required_keys])
 
     def _cache_file_exists(self):

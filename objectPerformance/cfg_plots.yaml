@@ -1,0 +1,41 @@
+global:
+  version: "V22"
+  sample: "TT"
+
+plots:
+  MET:
+    inputs:
+      reference_key: "genMetTrue"
+      object_keys_labels:
+        trackerMET: "Tracker MET"
+        puppiMETEt: "Puppi MET"
+    thresholds: [70, 150]
+    regions: [""]
+    xlabel: "Gen. MET (GeV)"
+    ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+    reference_cuts: False
+    binning:
+      min: 0
+      max: 500 
+      step: 20
+
+  HT:
+    inputs:
+      reference_key: "jetPt"
+      reference_trafo: "per_event_sum"
+      object_keys_labels:
+        trackerHT: "Tracker HT"
+        phase1PuppiHT: "Puppi HT"
+    thresholds: [200, 350]
+    regions: [""]
+    xlabel: "Gen. HT (GeV)"
+    ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+    binning:
+      min: 0
+      max: 800 
+      step: 10
+    reference_cuts:
+      jetPt: {"operator": ">", "threshold": 30}
+      jetEta: {"operator": "<", "threshold": 2.4}
+
+

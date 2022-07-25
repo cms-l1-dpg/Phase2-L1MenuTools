@@ -11,6 +11,7 @@ V22:
         - genMetTrue
         - jetPt
         - jetEta
+        # - jetPhi
       l1PhaseIITree/L1PhaseIITree:
         # MET
         - trackerMET
@@ -20,12 +21,15 @@ V22:
         - phase1PuppiHT
         - caloJetHT
         # Jet
-        - seededConePuppiJetPt
-        - seededConePuppiJetEta
-        - trackerJetPt
-        - trackerJetEta
-        - phase1PuppiJetPt
-        - phase1PuppiJetEta
+        # - seededConePuppiJetPt
+        # - seededConePuppiJetEta
+        # - seededConePuppiJetPhi
+        # - trackerJetPt
+        # - trackerJetEta
+        # - trackerJetPhi
+        # - phase1PuppiJetPt
+        # - phase1PuppiJetEta
+        # - phase1PuppiJetPhi
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/VBFToTauTau_PU200_v22/220407_095503/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches: ""
