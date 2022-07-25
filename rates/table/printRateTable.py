@@ -43,6 +43,7 @@ PATH_NAME_MAP = {
     "L1_DoublePFJet_dEtaMax": "DoublePuppiJet",
     "L1_PFHTT": "PuppiMHT",
     "L1_PFMet": "PuppiMET",
+    "L1_tkMet": "TrackerMET",
     "L1_PFHTT_QuadJet": "QuadPuppiJets-PuppiHT",
     "L1_TkMu_TkEleIso": "TkMuon-TkIsoElectron",
     "L1_TkMu_TkEle": "TkMuon-TkElectron",
@@ -133,7 +134,7 @@ class RateTablePrinter():
         list_of_paths = list(dict.fromkeys(chain.from_iterable(nested_list_of_paths)))
         object_names = list(map(lambda x: PATH_NAME_MAP[x], list_of_paths))
 
-        n_chars_first_col = max(list(map(lambda x: len(x), object_names))) + 2
+        n_chars_first_col = max([len("L1 Trigger Seeds")] + list(map(lambda x: len(x), object_names))) + 2
         n_chars_other_col = max(list(map(lambda x: len(x), paths_rates.keys()))) + 2
         total_length = (n_chars_first_col
             + n_chars_other_col * len(list(paths_rates.keys()))
