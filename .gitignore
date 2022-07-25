@@ -1,0 +1,3 @@
+rates/table/out/*
+rates/table/cache/**/*
+rates/table/lib/*
