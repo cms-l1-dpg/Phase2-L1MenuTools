@@ -53,12 +53,10 @@ class Skimmer():
         for test_obj in self.cfg_plot.test_objects:
             version = self.cfg_plot.get_test_object_version(test_obj)
             ak_arr = ak.from_parquet(f"tmp/{version}_{sample}_{test_obj}.parquet")
-            print("load: ", ak_arr.fields)
             ak_arr = ak.zip({
                 key.replace(test_obj, "").lower(): ak_arr[key]
                 for key in ak_arr.fields
             })
-            print("load: ", ak_arr.fields)
             self.ak_arrays[test_obj] = ak.with_name(ak_arr, "Momentum4D")
 
     def _match_test_to_ref(self):
@@ -198,8 +196,6 @@ class EfficiencyPlotter():
         plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}.png")
         plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.skimmer.threshold}.png")
         plt.close()
-        # print("We want to get to here!!!")
-        # sys.exit(0)
 
 
 class PlottingCentral():

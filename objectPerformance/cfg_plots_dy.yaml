@@ -1,0 +1,26 @@
+
+Muons:
+  sample: DY
+  default_version: V22
+  reference_object: 
+    object: ""
+    suffix: ""
+    cuts:
+      pt: {"operator": ">", "threshold": 30}
+      eta: {"operator": "<", "threshold": 2.4}
+  test_objects:
+    tkMuon:
+      suffix: "Pt"
+      label: "Tracker Muon"
+      cuts:
+        pt: {"operator": ">", "threshold": 30}
+        eta: {"operator": "<", "threshold": 2.4}
+  thresholds: [70, 150]
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  match_dR: 0.4
+  binning:
+    min: 0
+    max: 500 
+    step: 20
+
