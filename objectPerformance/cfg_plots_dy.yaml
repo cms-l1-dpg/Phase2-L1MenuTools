@@ -3,17 +3,16 @@ Muons:
   sample: DY
   default_version: V22
   reference_object: 
-    object: ""
-    suffix: ""
+    object: "part"
+    suffix: "Pt"
     cuts:
-      pt: {"operator": ">", "threshold": 30}
       eta: {"operator": "<", "threshold": 2.4}
   test_objects:
     tkMuon:
       suffix: "Pt"
       label: "Tracker Muon"
       cuts:
-        pt: {"operator": ">", "threshold": 30}
+        pt: {"operator": ">", "threshold": 50}
         eta: {"operator": "<", "threshold": 2.4}
   thresholds: [70, 150]
   xlabel: "Gen. MET (GeV)"

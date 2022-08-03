@@ -34,6 +34,23 @@ class NTupleLoader():
             cfg = yaml.safe_load(f)[self._version][self._sample]
         self._ntuple_path = cfg["ntuple_path"]
 
+    def _filter_branches(self, all_arrays):
+        """
+        Fiter gen particle branches to get rid
+        of final state particles.
+        """
+        if self._object != "part":
+            return all_arrays
+
+        # print(list(all_arrays.keys()))
+        partId = abs(all_arrays["partId"])
+        sel_id = (partId == 11) + (partId == 13) + (partId == 15) + (partId == 22)
+        sel_stat = all_arrays["partStat"] > 5
+        sel = sel_id & sel_stat
+        for branch in all_arrays:
+            all_arrays[branch] = all_arrays[branch][sel]
+        return all_arrays
+
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
 
@@ -49,12 +66,12 @@ class NTupleLoader():
                 for branch in branches:
                     br = f[self._tree][branch].arrays(library="ak")[branch]
                     all_arrays[branch] = ak.concatenate([all_arrays[branch], br])
+            all_arrays = self._filter_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
 
         t1 = time.time()
         bar.finish()
-        print(self._final_ak_array.fields)
         print(f"Loading completed in {timedelta(seconds=round(t1 - t0, 0))}s")
 
     def _cache_file_exists(self):

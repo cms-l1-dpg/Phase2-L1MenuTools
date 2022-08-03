@@ -3,11 +3,11 @@ V22:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_PU200_v22/220407_094155/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
       genTree/L1GenTree:
-        part: [Id, Stat, Parent, Pt, Eta, Phi, E, Ch, P, Dxy, Lxy, Vx, Vy, Vz]
+        part: [Id, Stat, Pt, Eta, Phi]
       l1PhaseIITree/L1PhaseIITree:
         tkMuon: [Pt, Eta, Phi, Chg, TrkIso, Bx, Qual, zVtx, MuRefPt, MuRefPhi, MuRefEta, DRMuTrack, NMatchedTracks, MuRefChg, Region]
         tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesLooseTrackID, PassesPhotonID]
-        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, TrkIsoPV, PfIso, PfIsoPV, PuppiIso, PuppiIsoPV, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesLooseTrackID, PassesPhotonID]
+        # tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesLooseTrackID, PassesPhotonID]
   TT:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/TT_TuneCP5_14TeV-powheg-pythia8/TT_PU200_v22/220407_094308/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
@@ -19,7 +19,7 @@ V22:
         puppiMET: [Et, Phi]
         trackerHT: [""]
         phase1PuppiHT: [""]
-        caloJet: [Pt, Et, Eta, Phi, Bx, HT, HTMenu, MHTMenuEt, MHTMenuPhi]
+        # caloJet: [Pt, Et, Eta, Phi, Bx, HT, HTMenu, MHTMenuEt, MHTMenuPhi]
         seededConePuppiJet: [Pt, Eta, Phi, Et, Bx, zVtx, EtUnCorr]
         trackerJet: [Pt, Et, Eta, Phi, Bx, Z0]
         phase1PuppiJet: [Pt, Et, Eta, Phi]
