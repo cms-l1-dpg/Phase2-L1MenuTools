@@ -3,23 +3,35 @@ Muons:
   sample: DY
   default_version: V22
   reference_object: 
-    object: "part"
+    object: "part_mu"
     suffix: "Pt"
     cuts:
-      eta: {"operator": "<", "threshold": 2.4}
+      eta: {"operator": "<", "threshold": 1.5}
   test_objects:
     tkMuon:
       suffix: "Pt"
       label: "Tracker Muon"
+      cuts: {}
+        # pt: {"operator": ">", "threshold": 2}
+        # eta: {"operator": "<", "threshold": 2.4}
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon"
       cuts:
-        pt: {"operator": ">", "threshold": 50}
+        # pt: {"operator": ">", "threshold": 2}
         eta: {"operator": "<", "threshold": 2.4}
-  thresholds: [70, 150]
-  xlabel: "Gen. MET (GeV)"
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon"
+      cuts:
+        # pt: {"operator": ">", "threshold": 2}
+        eta: {"operator": "<", "threshold": 2.4}
+  thresholds: [0, 5, 10, 15]
+  xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
   match_dR: 0.4
   binning:
     min: 0
-    max: 500 
-    step: 20
+    max: 150 
+    step: 5
 

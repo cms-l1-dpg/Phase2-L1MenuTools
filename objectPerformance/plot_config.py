@@ -23,6 +23,7 @@ class PlotConfig():
     @property
     def reference_cuts(self):
         try: 
+            print(self._cfg["reference_object"]["cuts"])
             return self._cfg["reference_object"]["cuts"]
         except KeyError:
             return None

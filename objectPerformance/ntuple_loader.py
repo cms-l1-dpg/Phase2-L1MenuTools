@@ -9,22 +9,35 @@ from progress.bar import IncrementalBar
 import uproot
 import yaml
 
+from utils import get_pdg_id
+
 
 class NTupleLoader():
 
     def __init__(self, version, sample, obj, tree, branches):
         self._version = version
         self._sample = sample
-        self._object = obj
+        self._object = obj.split('_')[0]
         self._tree = tree
         self._branches = branches
         self._ntuple_path = ""
         self._set_ntuple_path()
         self._final_ak_array = None
+        try:
+            self._part_type = obj.split('_')[1]
+        except:
+            self._part_type = None
 
     @property
     def parquet_fname(self):
-        return self._version + '_' + self._sample + "_" + self._object
+        fname = (
+            self._version
+            + '_' + self._sample
+            + "_" + self._object
+        )
+        if self._part_type:
+            fname += "_" + self._part_type
+        return fname
 
     def _set_ntuple_path(self):
         """
@@ -39,14 +52,13 @@ class NTupleLoader():
         Fiter gen particle branches to get rid
         of final state particles.
         """
-        if self._object != "part":
+        if not self._object.startswith("part"):
             return all_arrays
 
-        # print(list(all_arrays.keys()))
-        partId = abs(all_arrays["partId"])
-        sel_id = (partId == 11) + (partId == 13) + (partId == 15) + (partId == 22)
-        sel_stat = all_arrays["partStat"] > 5
-        sel = sel_id & sel_stat
+        partId = abs(all_arrays["Id"])
+        sel_id = (partId == get_pdg_id(self._part_type))
+        # sel_stat = all_arrays["Stat"] == 1
+        sel = sel_id # & sel_stat
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel]
         return all_arrays
@@ -59,13 +71,15 @@ class NTupleLoader():
         t0 = time.time()
 
         branches = [self._object + x for x in self._branches]
-        all_arrays = {x: [] for x in branches}
+        all_arrays = {x.removeprefix("part"): [] for x in branches}
+        print(all_arrays)
         for fname in fnames:
             bar.next()
             with uproot.open(fname) as f:
                 for branch in branches:
+                    branch_key = branch.removeprefix("part")
                     br = f[self._tree][branch].arrays(library="ak")[branch]
-                    all_arrays[branch] = ak.concatenate([all_arrays[branch], br])
+                    all_arrays[branch_key] = ak.concatenate([all_arrays[branch_key], br])
             all_arrays = self._filter_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
@@ -103,7 +117,6 @@ if __name__ == "__main__":
                 if tree == "ntuple_path":
                     continue
                 for obj, branches in object_branches.items(): 
-                    print(tree, obj)
                     loader = NTupleLoader(
                         version=version,
                         sample=sample,

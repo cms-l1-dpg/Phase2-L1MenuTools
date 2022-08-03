@@ -36,7 +36,9 @@ class Skimmer():
         self.hists = {}
 
     def _load_branches_from_parquet(self):
-        """ Load ak arrays from parquet files. """
+        """
+        Load ak arrays from parquet files.
+        """
         sample = self.cfg_plot.sample
 
         # Load reference object
@@ -60,7 +62,12 @@ class Skimmer():
             self.ak_arrays[test_obj] = ak.with_name(ak_arr, "Momentum4D")
 
     def _match_test_to_ref(self):
+        """
+        Method for deltaR matching of test objects
+        to reference objects.
+        """
         for test_obj, obj_cfg in self.cfg_plot.test_objects.items():
+            suffix = obj_cfg["suffix"].lower()
             ref_test = ak.cartesian(
                 {"ref": self.ak_arrays["ref"],
                  "test": self.ak_arrays[test_obj],
@@ -70,11 +77,16 @@ class Skimmer():
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
-            # add dR as property of ref arrays
-            self.ak_arrays["ref"]["min_dR_" + test_obj] = ak.min(dR, axis=-1)
-            # store field (pt, ...) of closest object
+            self.ak_arrays["ref"]["dR_value_" + test_obj] = ak.min(dR, axis = -1)
             best_dR = ak.argmin(dR, axis=-1, keepdims=True)
-            self.ak_arrays["ref"]["closest_" + test_obj] = ref_test[best_dR]["test"][obj_cfg["suffix"].lower()][:,:,0]
+            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[best_dR]["test"][suffix][:,:,0]
+
+            # add dR as property of ref arrays
+            # pass_dR = dR < self.cfg_plot.match_dR
+            # pass_dR_lowest_pT = ak.argmin(ref_test["test"][suffix][pass_dR], axis=-1, keepdims=True)
+            # self.ak_arrays["ref"]["dR_value_" + test_obj] = dR[pass_dR_lowest_pT]
+            # store field (pt, ...) of dr matched object
+            # self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[pass_dR_lowest_pT]["test"][suffix][:,:,0]
 
     def _flatten_array(self, ak_array):
         """
@@ -94,11 +106,13 @@ class Skimmer():
         """
         if not self.cfg_plot.reference_cuts:
             return
+        
+        print("doing ref cuts")
 
         for branch, cut_cfg in self.cfg_plot.reference_cuts.items():
             op = utils.str_to_op(cut_cfg["operator"])
             threshold = cut_cfg["threshold"]
-            sel = op(self.ak_arrays["ref"][branch], threshold)
+            sel = op(abs(self.ak_arrays["ref"][branch]), threshold)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
     def _apply_test_obj_cuts(self):
@@ -114,7 +128,7 @@ class Skimmer():
             for branch, cut_cfg in cuts.items():
                 op = utils.str_to_op(cut_cfg["operator"])
                 threshold = cut_cfg["threshold"]
-                sel = op(self.ak_arrays[test_obj][branch], threshold)
+                sel = op(abs(self.ak_arrays[test_obj][branch]), threshold)
                 self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
     def _skim_to_hists(self):
@@ -133,13 +147,16 @@ class Skimmer():
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
         for test_obj, cfg in self.cfg_plot.test_objects.items():
-            sel_threshold = self.ak_arrays["ref"]["closest_" + test_obj] > self.threshold
-            sel_dR = self.ak_arrays["ref"]["min_dR_" + test_obj] < self.cfg_plot.match_dR
+            sel_threshold = self.ak_arrays["ref"]["dR_matched_" + test_obj] > self.threshold
+            sel_dR = self.ak_arrays["ref"]["dR_value_" + test_obj] < self.cfg_plot.match_dR
             sel = sel_threshold & sel_dR
+
             ak_array = self.ak_arrays["ref"][sel]
             ak_array = self._flatten_array(ak_array[ref_field])
-            self.hists[test_obj] = np.histogram(ak.to_numpy(ak_array,
-              allow_missing=True), bins=self.bins)
+            self.hists[test_obj] = np.histogram(
+                ak.to_numpy(ak_array, allow_missing=True),
+                bins=self.bins
+            )
 
         self.hists["ref"] = np.histogram(
             self._flatten_array(self.ak_arrays["ref"][ref_field]),
@@ -164,8 +181,15 @@ class EfficiencyPlotter():
         self.cfg = cfg
         self.skimmer = skimmer
 
-    def plot(self):
-        print("Plotting ...")
+    def _compute_efficiency(self, test_vals, ref_vals):
+        eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
+        # assert all(0 <= i <= 1 for i in eff)
+        return eff
+
+    def _plot_efficiency_curve(self):
+        """
+        Efficiency / turn-on plots.
+        """
         fig, ax = plt.subplots(figsize = (10,10))
         hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
         gen_hist_ref = self.skimmer.hists["ref"]
@@ -173,12 +197,13 @@ class EfficiencyPlotter():
 
         xerr = np.ones_like(gen_hist_ref[0]) * self.skimmer.bin_width / 2
         err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o', "markersize": 8}
+
         for obj_key, gen_hist_trig in self.skimmer.hists.items():
             if obj_key== "ref":
                 continue
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                efficiency = gen_hist_trig[0] / gen_hist_ref[0]
+                efficiency = self._compute_efficiency(gen_hist_trig[0], gen_hist_ref[0])
             yerr = utils.clopper_pearson_err(gen_hist_trig[0], gen_hist_ref[0])
             label = self.cfg["test_objects"][obj_key]["label"]
             ax.errorbar(xbins, efficiency, yerr=yerr, label=label, **err_kwargs)
@@ -193,9 +218,48 @@ class EfficiencyPlotter():
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.set_ylim(0, 1.1)
         ax.tick_params(direction="in")
+        fig.tight_layout()
         plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}.png")
         plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.skimmer.threshold}.png")
         plt.close()
+
+    def _plot_raw_counts(self):
+        """
+        Raw counts of objects in bins
+        of the efficiency plots.
+        """
+        fig, ax = plt.subplots(figsize = (10,10))
+        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
+        gen_hist_ref = self.skimmer.hists["ref"]
+        xbins = self.skimmer.bins[:-1] + self.skimmer.bin_width / 2
+
+        xerr = np.ones_like(gen_hist_ref[0]) * self.skimmer.bin_width / 2
+        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o', "markersize": 8}
+
+        for obj_key, gen_hist_trig in self.skimmer.hists.items():
+            if obj_key== "ref":
+                continue
+            yerr = np.sqrt(gen_hist_trig[0])
+            label = self.cfg["test_objects"][obj_key]["label"]
+            ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label, **err_kwargs)
+
+        ax.axvline(self.skimmer.threshold, ls = ":", c = "k")
+        ax.legend(loc="upper right", frameon=False)
+        ax.set_xlabel(self.cfg["xlabel"])
+        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
+        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.skimmer.threshold))
+        ax.set_ylabel(ylabel)
+        ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
+        ax.tick_params(direction="in")
+        fig.tight_layout()
+        plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}.png")
+        plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{self.skimmer.threshold}.png")
+        plt.close()
+
+    def plot(self):
+        print("Plotting ...")
+        self._plot_efficiency_curve()
+        self._plot_raw_counts()
 
 
 class PlottingCentral():

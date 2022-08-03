@@ -30,3 +30,17 @@ def clopper_pearson_err(x_hist, n_hist, alpha=1-0.68, warn="ignore"):
     yerr = np.stack([yerr_lo, yerr_hi])
     return yerr
 
+
+def get_pdg_id(particle: str):
+    id_map = {
+        'e': 11,
+        'ele': 11,
+        'electron': 11,
+        'mu': 13,
+        'muon': 13,
+        'tau': 15,
+        'photon': 22,
+        'gamma': 22,
+    }
+    return id_map[particle.lower()]
+
