@@ -47,7 +47,7 @@ class NTupleLoader():
             cfg = yaml.safe_load(f)[self._version][self._sample]
         self._ntuple_path = cfg["ntuple_path"]
 
-    def _filter_branches(self, all_arrays):
+    def _filter_genpart_branches(self, all_arrays):
         """
         Fiter gen particle branches to get rid
         of final state particles.
@@ -57,11 +57,27 @@ class NTupleLoader():
 
         partId = abs(all_arrays["Id"])
         sel_id = (partId == get_pdg_id(self._part_type))
-        # sel_stat = all_arrays["Stat"] == 1
-        sel = sel_id # & sel_stat
+        sel_eta = all_arrays["Eta"] < 2.4
+        sel = sel_id & sel_eta
+        sel_pt = ak.argmax(all_arrays["Pt"][sel], axis=-1)
         for branch in all_arrays:
-            all_arrays[branch] = all_arrays[branch][sel]
+            all_arrays[branch] = all_arrays[branch][sel_pt]
         return all_arrays
+
+    def _add_ht(self, all_arrays):
+        sel_pt = all_arrays["jetPt"] > 30
+        sel_eta = abs(all_arrays["jetEta"]) < 2.4
+        sel = sel_pt & sel_eta
+        all_arrays["Ht"] = ak.sum(all_arrays["jetPt"][sel], axis=-1)
+        return all_arrays
+
+    def _postprocess_branches(self, all_arrays):
+        if self._object.startswith("part"):
+            return self._filter_genpart_branches(all_arrays)
+        if self._object == "jet":
+            all_arrays = self._add_ht(all_arrays)
+            # TODO: add MHT
+            return all_arrays
 
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
@@ -72,7 +88,6 @@ class NTupleLoader():
 
         branches = [self._object + x for x in self._branches]
         all_arrays = {x.removeprefix("part"): [] for x in branches}
-        print(all_arrays)
         for fname in fnames:
             bar.next()
             with uproot.open(fname) as f:
@@ -80,7 +95,7 @@ class NTupleLoader():
                     branch_key = branch.removeprefix("part")
                     br = f[self._tree][branch].arrays(library="ak")[branch]
                     all_arrays[branch_key] = ak.concatenate([all_arrays[branch_key], br])
-            all_arrays = self._filter_branches(all_arrays)
+            all_arrays = self._postprocess_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
 

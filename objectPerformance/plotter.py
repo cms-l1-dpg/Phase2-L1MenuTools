@@ -24,6 +24,15 @@ vector.register_awkward()
 plt.style.use(hep.style.CMS)
 
 
+class EfficiencyHist():
+
+    def __init__(self):
+        self.threshold = None
+        self.version = None
+        self.hist_ref = None
+        self.hist_test = None
+
+
 class Skimmer():
 
     def __init__(self, cfg_plot, threshold):
@@ -46,7 +55,7 @@ class Skimmer():
         version_ref = self.cfg_plot.version_ref_object
         ref_array = ak.from_parquet(f"tmp/{version_ref}_{sample}_{ref_obj}.parquet")
         ref_array = ak.zip({
-            key.replace(ref_obj, "").lower(): ref_array[key]
+            key.removeprefix(ref_obj).lower(): ref_array[key]
             for key in ref_array.fields
         })
         self.ak_arrays["ref"] = ak.with_name(ref_array, "Momentum4D")
@@ -56,7 +65,7 @@ class Skimmer():
             version = self.cfg_plot.get_test_object_version(test_obj)
             ak_arr = ak.from_parquet(f"tmp/{version}_{sample}_{test_obj}.parquet")
             ak_arr = ak.zip({
-                key.replace(test_obj, "").lower(): ak_arr[key]
+                key.removeprefix(test_obj).lower(): ak_arr[key]
                 for key in ak_arr.fields
             })
             self.ak_arrays[test_obj] = ak.with_name(ak_arr, "Momentum4D")
@@ -99,6 +108,20 @@ class Skimmer():
         except ValueError:
             return ak_array
 
+    def _apply_reference_trafo(self):
+        if not (trafo := self.cfg_plot.reference_trafo):
+            return
+
+        if trafo == "HT":
+            self.ak_arrays["ref"]["pt"] = ak.sum(
+                self.ak_arrays["ref"]["pt"],
+                axis=-1
+            )
+
+        if trafo == "MHT":
+            # TODO: To be implemented
+            pass
+
     def _apply_reference_cuts(self):
         """
         Applies configured cuts on reference objects.
@@ -107,8 +130,6 @@ class Skimmer():
         if not self.cfg_plot.reference_cuts:
             return
         
-        print("doing ref cuts")
-
         for branch, cut_cfg in self.cfg_plot.reference_cuts.items():
             op = utils.str_to_op(cut_cfg["operator"])
             threshold = cut_cfg["threshold"]
@@ -166,6 +187,7 @@ class Skimmer():
     def create_hists(self):
         self._load_branches_from_parquet()
         self._apply_reference_cuts()
+        self._apply_reference_trafo()
         self._apply_test_obj_cuts()
         if not self.cfg_plot.match_dR:
             self._skim_to_hists()
@@ -276,6 +298,26 @@ class PlottingCentral():
                 skimmer.create_hists()
 
                 plotter = EfficiencyPlotter(plot_name, cfg_plot, skimmer)
+                plotter.plot()
+
+
+class ScalingCentral(PlottingCentral):
+
+    def __init__(self, cfg_scalings_path):
+        with open(cfg_scalings_path, 'r') as f:
+            self.cfg_scalings = yaml.safe_load(f)
+
+    def run(self):
+        for plot_name, cfg_plot in self.cfg_plots.items():
+            for threshold in cfg_plot["thresholds"]:
+                print(f">>> {plot_name} ({threshold} GeV) <<<")
+                skimmer = Skimmer(cfg_plot, threshold)
+                skimmer.create_hists()
+
+                scalingClass = ScalingFitter(skimmer)
+                sclaingClass.fit()
+
+                plotter = ScalingsPlotter(scalingClass)
                 plotter.plot()
 
 
