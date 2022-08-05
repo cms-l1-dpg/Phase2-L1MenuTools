@@ -1,4 +1,5 @@
-#!/afs/cern.ch/user/d/dhundhau/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+import argparse
 from datetime import timedelta
 import glob
 import itertools
@@ -10,26 +11,35 @@ import uproot
 import yaml
 
 from utils import get_pdg_id
+from utils import get_branches
 
 
-class NTupleLoader():
+class ObjectCacher():
 
-    def __init__(self, version, sample, obj, tree, branches):
+    def __init__(self, version, sample, obj, tree, branches, dryrun=False):
         self._version = version
         self._sample = sample
         self._object = obj.split('_')[0]
         self._tree = tree
-        self._branches = branches
+        if not isinstance(branches, list):
+            self._branches = get_branches(sample_cfg["ntuple_path"], tree, obj)
+        else:
+            self._branches = branches
         self._ntuple_path = ""
         self._set_ntuple_path()
         self._final_ak_array = None
         try:
             self._part_type = obj.split('_')[1]
         except:
-            self._part_type = None
+            self._part_type = ""
+        self._dryrun = dryrun
 
     @property
     def parquet_fname(self):
+        """
+        Returns the name of the output file
+        that the object will produce.
+        """
         fname = (
             self._version
             + '_' + self._sample
@@ -49,8 +59,9 @@ class NTupleLoader():
 
     def _filter_genpart_branches(self, all_arrays):
         """
-        Fiter gen particle branches to get rid
-        of final state particles.
+        Filter genparticle branches. For leptons
+        apply eta cut and choose largest pT object
+        in each event.
         """
         if not self._object.startswith("part"):
             return all_arrays
@@ -59,25 +70,15 @@ class NTupleLoader():
         sel_id = (partId == get_pdg_id(self._part_type))
         sel_eta = all_arrays["Eta"] < 2.4
         sel = sel_id & sel_eta
-        sel_pt = ak.argmax(all_arrays["Pt"][sel], axis=-1)
+        sel_pt = ak.argmax(all_arrays["Pt"][sel], axis=-1, keepdims=True)
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_pt]
-        return all_arrays
-
-    def _add_ht(self, all_arrays):
-        sel_pt = all_arrays["jetPt"] > 30
-        sel_eta = abs(all_arrays["jetEta"]) < 2.4
-        sel = sel_pt & sel_eta
-        all_arrays["Ht"] = ak.sum(all_arrays["jetPt"][sel], axis=-1)
         return all_arrays
 
     def _postprocess_branches(self, all_arrays):
         if self._object.startswith("part"):
             return self._filter_genpart_branches(all_arrays)
-        if self._object == "jet":
-            all_arrays = self._add_ht(all_arrays)
-            # TODO: add MHT
-            return all_arrays
+        return all_arrays
 
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
@@ -118,12 +119,29 @@ class NTupleLoader():
         )
 
     def load(self):
+        print(f"Process {self._object + self._part_type} object...")
         if not self._cache_file_exists():
+            print(
+                f"Loading {self._object + self._part_type} object "
+                f"with the following branches: {self._branches}"
+            )
+            if self._dryrun:
+                return
             self._concat_array_from_ntuples()
             self._save_array_to_parquet()
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--dry-run",
+        "-d",
+        action="store_true",
+        help="Only do print-out of objects and branches to be loaded."
+    )
+    args = parser.parse_args()
+
     with open("cfg.yaml", 'r') as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
@@ -132,12 +150,13 @@ if __name__ == "__main__":
                 if tree == "ntuple_path":
                     continue
                 for obj, branches in object_branches.items(): 
-                    loader = NTupleLoader(
+                    loader = ObjectCacher(
                         version=version,
                         sample=sample,
                         tree=tree,
                         obj=obj,
                         branches=branches,
+                        dryrun=args.dry_run
                     )
                     loader.load()
 

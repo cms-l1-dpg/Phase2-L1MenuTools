@@ -1,8 +1,10 @@
+import glob
 import operator
 import warnings
 
 import numpy as np
 from scipy.stats import beta
+import uproot
 
 
 def str_to_op(x: str):
@@ -43,4 +45,24 @@ def get_pdg_id(particle: str):
         'gamma': 22,
     }
     return id_map[particle.lower()]
+
+
+def get_branches(ntuple_path: str, tree: str, obj: str):
+    """
+    Returns all branches that match the specified object
+    in the given NTuple.
+    """
+    ntuple = glob.glob(ntuple_path)[0]
+    with uproot.open(ntuple) as f:
+        all_branches = f[tree].keys()
+        if "Generator" in tree:
+            prefix = "Generator/"
+        else:
+            prefix = "L1PhaseII/"
+
+    obj_branches  = [
+        x.removeprefix(prefix + obj) for x in all_branches if obj in x
+    ]
+
+    return obj_branches
 

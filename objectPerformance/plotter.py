@@ -1,4 +1,4 @@
-#!/afs/cern.ch/user/d/dhundhau/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import datetime
 import glob
@@ -25,6 +25,11 @@ plt.style.use(hep.style.CMS)
 
 
 class EfficiencyHist():
+    """
+    Efficiency hist corresponds to one curve in
+    a turn-on plot, i.e. on combination of test
+    and reference object, at a certain threshold.
+    """
 
     def __init__(self):
         self.threshold = None
@@ -59,6 +64,7 @@ class Skimmer():
             for key in ref_array.fields
         })
         self.ak_arrays["ref"] = ak.with_name(ref_array, "Momentum4D")
+        print(self.ak_arrays["ref"])
 
         # Load test objects
         for test_obj in self.cfg_plot.test_objects:
@@ -90,6 +96,7 @@ class Skimmer():
             best_dR = ak.argmin(dR, axis=-1, keepdims=True)
             self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[best_dR]["test"][suffix][:,:,0]
 
+            # TODO: Implement dR matching with pT sorting
             # add dR as property of ref arrays
             # pass_dR = dR < self.cfg_plot.match_dR
             # pass_dR_lowest_pT = ak.argmin(ref_test["test"][suffix][pass_dR], axis=-1, keepdims=True)
@@ -109,6 +116,11 @@ class Skimmer():
             return ak_array
 
     def _apply_reference_trafo(self):
+        """
+        Transforms the reference branch, e.g.
+        by summing over jetPt to get the HT
+        reference object.
+        """
         if not (trafo := self.cfg_plot.reference_trafo):
             return
 
@@ -179,8 +191,13 @@ class Skimmer():
                 bins=self.bins
             )
 
+        ref_flat_np = ak.to_numpy(
+            self._flatten_array(
+              self.ak_arrays["ref"][ref_field]
+            )
+        )
         self.hists["ref"] = np.histogram(
-            self._flatten_array(self.ak_arrays["ref"][ref_field]),
+            ref_flat_np,
             bins=self.bins
         )
 
@@ -303,13 +320,18 @@ class PlottingCentral():
 
 class ScalingCentral(PlottingCentral):
 
-    def __init__(self, cfg_scalings_path):
-        with open(cfg_scalings_path, 'r') as f:
+    def __init__(self, cfg_plots_path):
+        super().__init__(cfg_plots_path)
+        with open("./cfg_scalings.yaml", 'r') as f:
             self.cfg_scalings = yaml.safe_load(f)
+
+    def _get_scaling_thresholds(self, cfg):
+        # TODO: Implement (sample, object) -> scaling threshold list mapping
+        pass
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
-            for threshold in cfg_plot["thresholds"]:
+            for threshold in self._get_scaling_thresholds(cfg_plot):
                 print(f">>> {plot_name} ({threshold} GeV) <<<")
                 skimmer = Skimmer(cfg_plot, threshold)
                 skimmer.create_hists()
@@ -333,4 +355,7 @@ if __name__ == "__main__":
 
     plotter = PlottingCentral(args.cfg_plots)
     plotter.run()
+
+    # scalings = ScalingCentral()
+    # scalings.run()
 

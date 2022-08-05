@@ -184,4 +184,4 @@ dependencies:
   - zlib=1.2.12=h7f8727e_2
   - zstandard=0.18.0=py310h5764c6d_0
   - zstd=1.5.2=h8a70e8d_2
-prefix: /afs/cern.ch/user/d/dhundhau/miniconda3/envs/py310
+prefix: /afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310
