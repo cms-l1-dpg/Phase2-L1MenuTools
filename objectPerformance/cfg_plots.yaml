@@ -1,32 +1,29 @@
-JetPt:
+
+HT:
   sample: TT
   default_version: V22
   reference_object: 
     object: "jet"
     suffix: "Pt"
     cuts:
-      eta: {"operator": "<", "threshold": 1.5}
+      eta: {"operator": "<", "threshold": 2.4}
+      pt: {"operator": ">", "threshold": 30}
+    trafo: "HT"
   test_objects:
-    seededConePuppiJet:
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-    trackerJet:
-      suffix: "Pt"
-      label: "Tracker Jet"
-    # phase1PuppiJet: 
-    #   suffix: "Pt"
-    #   label: "Histogrammed PuppiJet"
-    #   cuts:
-    #     pt: {"operator": ">", "threshold": 30}
-    #     eta: {"operator": "<", "threshold": 2.4}
-  thresholds: [50, 120]
-  xlabel: "Gen. p_T (GeV)"
+    trackerHT:
+      suffix: ""
+      label: "Tracker HT"
+    phase1PuppiHT:
+      suffix: ""
+      label: "Phase1 Puppi HT"
+  thresholds: [200, 350]
+  xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: 0.4
+  match_dR: False
   binning:
     min: 0
-    max: 500 
-    step: 10
+    max: 750 
+    step: 20
 
 MET:
   sample: TT
@@ -49,4 +46,28 @@ MET:
     min: 0
     max: 500 
     step: 20
+
+JetPt:
+  sample: TT
+  default_version: V22
+  reference_object: 
+    object: "jet"
+    suffix: "Pt"
+    cuts:
+      eta: {"operator": "<", "threshold": 1.5}
+  test_objects:
+    seededConePuppiJet:
+      suffix: "Pt"
+      label: "Seeded Cone PuppiJet"
+    trackerJet:
+      suffix: "Pt"
+      label: "Tracker Jet"
+  thresholds: [50, 120]
+  xlabel: "Gen. p_T (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  match_dR: 0.4
+  binning:
+    min: 0
+    max: 500 
+    step: 10
 
