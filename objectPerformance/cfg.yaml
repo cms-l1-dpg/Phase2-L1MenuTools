@@ -5,7 +5,6 @@ V22:
       genTree/L1GenTree:
         part_e: [Id, Stat, Pt, Eta, Phi]
         part_mu: [Id, Stat, Pt, Eta, Phi]
-        part_tau: [Id, Stat, Pt, Eta, Phi]
         # part_gamma: [Id, Stat, Pt, Eta, Phi]
       l1PhaseIITree/L1PhaseIITree:
         tkMuon: [Pt, Eta, Phi, Chg, TrkIso, Bx, Qual, zVtx, MuRefPt, MuRefPhi, MuRefEta, DRMuTrack, NMatchedTracks, MuRefChg, Region]
@@ -19,17 +18,17 @@ V22:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/TT_TuneCP5_14TeV-powheg-pythia8/TT_PU200_v22/220407_094308/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
       genTree/L1GenTree:
-        genMetTrue: [""]
-        jet: [Pt, Eta, Phi]
+        genMetTrue: "all"
+        jet: "all"
       l1PhaseIITree/L1PhaseIITree:
-        trackerMET: [""]
-        puppiMET: [Et, Phi]
-        trackerHT: [""]
-        phase1PuppiHT: [""]
-        # caloJet: [Pt, Et, Eta, Phi, Bx, HT, HTMenu, MHTMenuEt, MHTMenuPhi]
-        seededConePuppiJet: [Pt, Eta, Phi, Et, Bx, zVtx, EtUnCorr]
-        trackerJet: [Pt, Et, Eta, Phi, Bx, Z0]
-        phase1PuppiJet: [Pt, Et, Eta, Phi]
+        trackerMET: "all"
+        puppiMET: "all"
+        trackerHT: "all"
+        phase1PuppiHT: "all"
+        seededConePuppiJet: ['Pt', 'Et', 'Eta', 'Phi']
+        trackerJet: ['Pt', 'Et', 'Eta', 'Phi']
+        phase1PuppiJet: "all"
+        # caloJet: "all"
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/VBFToTauTau_PU200_v22/220407_095503/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches: {}
