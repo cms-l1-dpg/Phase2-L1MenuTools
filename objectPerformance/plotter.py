@@ -165,7 +165,10 @@ class Skimmer():
         if trafo:
             for test_obj, cfg in self.cfg_plot.test_objects.items():
                 field = cfg["suffix"].lower()
-                self.ak_arrays[test_obj][field] = ak.min(self.ak_arrays[test_obj][field], axis=-1)
+                try:
+                    self.ak_arrays[test_obj][field] = ak.max(self.ak_arrays[test_obj][field], axis=1)
+                except ValueError:
+                    pass
 
     def _apply_reference_cuts(self):
         """
@@ -258,8 +261,7 @@ class EfficiencyPlotter():
 
     def _compute_efficiency(self, test_vals, ref_vals):
         eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
-        # TODO: This assert should be active
-        # assert all(0 <= i <= 1 for i in eff)
+        assert all(0 <= i <= 1 for i in eff)
         return eff
 
     def _plot_efficiency_curve(self):
