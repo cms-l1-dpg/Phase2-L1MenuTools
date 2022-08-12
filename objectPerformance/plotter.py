@@ -49,32 +49,60 @@ class Skimmer():
         self.ak_arrays = {}
         self.hists = {}
 
-    def _load_branches_from_parquet(self):
-        """
-        Load ak arrays from parquet files.
-        """
-        sample = self.cfg_plot.sample
+    def _transform_key(self, raw_key: str, obj: str):
+        key = raw_key.removeprefix(obj).lower()
+        return key if "qual" not in key else "quality"
 
-        # Load reference object
-        ref_obj = self.cfg_plot.reference_object
-        version_ref = self.cfg_plot.version_ref_object
-        ref_array = ak.from_parquet(f"tmp/{version_ref}_{sample}_{ref_obj}.parquet")
-        ref_array = ak.zip({
-            key.removeprefix(ref_obj).lower(): ref_array[key]
-            for key in ref_array.fields
-        })
+    def _load_array_from_parquet(self, obj: str):
+        """
+        Loads the specified parquet file
+        into an ak array. The keys are
+        transformed according to the logic
+        in self._transform_key().
+        """
+        fname = (
+            "tmp/"
+            f"{self.cfg_plot.version_ref_object}_"
+            f"{self.cfg_plot.sample}_"
+            f"{obj}.parquet"
+        )
+        array = ak.from_parquet(fname)
+        array_dict = {
+            self._transform_key(key, obj): array[key]
+            for key in array.fields
+        }
+        if self.cfg_plot.reference_trafo:
+            array = ak.Array(array_dict)
+        else:
+            array = ak.zip(array_dict)
+        return array
+
+    def _load_ref_branches(self):
+        """
+        Load reference object.
+        """
+        ref_array = self._load_array_from_parquet(
+            self.cfg_plot.reference_object
+        )
         self.ak_arrays["ref"] = ak.with_name(ref_array, "Momentum4D")
-        print(self.ak_arrays["ref"])
 
+    def _load_test_branches(self):
+        """
+        Load test objects.
+        """
         # Load test objects
         for test_obj in self.cfg_plot.test_objects:
-            version = self.cfg_plot.get_test_object_version(test_obj)
-            ak_arr = ak.from_parquet(f"tmp/{version}_{sample}_{test_obj}.parquet")
-            ak_arr = ak.zip({
-                key.removeprefix(test_obj).lower(): ak_arr[key]
-                for key in ak_arr.fields
-            })
-            self.ak_arrays[test_obj] = ak.with_name(ak_arr, "Momentum4D")
+            test_array = self._load_array_from_parquet(
+                test_obj
+            )
+            self.ak_arrays[test_obj] = ak.with_name(test_array, "Momentum4D")
+
+    def _load_arrays(self):
+        """
+        Load ak arrays from cache (parquet) files.
+        """
+        self._load_ref_branches()
+        self._load_test_branches()
 
     def _match_test_to_ref(self):
         """
@@ -100,9 +128,9 @@ class Skimmer():
             # add dR as property of ref arrays
             # pass_dR = dR < self.cfg_plot.match_dR
             # pass_dR_lowest_pT = ak.argmin(ref_test["test"][suffix][pass_dR], axis=-1, keepdims=True)
-            # self.ak_arrays["ref"]["dR_value_" + test_obj] = dR[pass_dR_lowest_pT]
+            # self.ak_arrays["ref"]["dR_value_" + test_obj] = dR[pass_dR][pass_dR_lowest_pT]
             # store field (pt, ...) of dr matched object
-            # self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[pass_dR_lowest_pT]["test"][suffix][:,:,0]
+            # self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[pass_dR][pass_dR_lowest_pT]["test"][suffix][:,:,0]
 
     def _flatten_array(self, ak_array):
         """
@@ -125,7 +153,7 @@ class Skimmer():
             return
 
         if trafo == "HT":
-            self.ak_arrays["ref"]["pt"] = ak.sum(
+            self.ak_arrays["ref"]["HT"] = ak.sum(
                 self.ak_arrays["ref"]["pt"],
                 axis=-1
             )
@@ -133,6 +161,11 @@ class Skimmer():
         if trafo == "MHT":
             # TODO: To be implemented
             pass
+
+        if trafo:
+            for test_obj, cfg in self.cfg_plot.test_objects.items():
+                field = cfg["suffix"].lower()
+                self.ak_arrays[test_obj][field] = ak.min(self.ak_arrays[test_obj][field], axis=-1)
 
     def _apply_reference_cuts(self):
         """
@@ -166,6 +199,9 @@ class Skimmer():
 
     def _skim_to_hists(self):
         ref_field = self.cfg_plot.reference_field
+        if (trafo := self.cfg_plot.reference_trafo):
+            ref_field = trafo
+
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
@@ -202,7 +238,7 @@ class Skimmer():
         )
 
     def create_hists(self):
-        self._load_branches_from_parquet()
+        self._load_arrays()
         self._apply_reference_cuts()
         self._apply_reference_trafo()
         self._apply_test_obj_cuts()
@@ -222,6 +258,7 @@ class EfficiencyPlotter():
 
     def _compute_efficiency(self, test_vals, ref_vals):
         eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
+        # TODO: This assert should be active
         # assert all(0 <= i <= 1 for i in eff)
         return eff
 
