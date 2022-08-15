@@ -17,6 +17,7 @@ import vector
 import yaml
 
 from plot_config import PlotConfig
+from quality_obj import Quality
 import utils
 
 
@@ -51,7 +52,14 @@ class Skimmer():
 
     def _transform_key(self, raw_key: str, obj: str):
         key = raw_key.removeprefix(obj).lower()
-        return key if "qual" not in key else "quality"
+        if "qual" in key:
+            return "quality"
+        # TODO: implement proper mapping for all objects
+        elif ("HGC" in key) | ("hgc" in key):
+            return "region"
+        else:
+            return key
+        # return key if "qual" not in key else "quality"
 
     def _load_array_from_parquet(self, obj: str):
         """
@@ -108,6 +116,7 @@ class Skimmer():
         """
         Method for deltaR matching of test objects
         to reference objects.
+        Selects lowestpT-deltaR-matched reco lepton.
         """
         for test_obj, obj_cfg in self.cfg_plot.test_objects.items():
             suffix = obj_cfg["suffix"].lower()
@@ -120,17 +129,9 @@ class Skimmer():
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
-            self.ak_arrays["ref"]["dR_value_" + test_obj] = ak.min(dR, axis = -1)
-            best_dR = ak.argmin(dR, axis=-1, keepdims=True)
-            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[best_dR]["test"][suffix][:,:,0]
-
-            # TODO: Implement dR matching with pT sorting
-            # add dR as property of ref arrays
-            # pass_dR = dR < self.cfg_plot.match_dR
-            # pass_dR_lowest_pT = ak.argmin(ref_test["test"][suffix][pass_dR], axis=-1, keepdims=True)
-            # self.ak_arrays["ref"]["dR_value_" + test_obj] = dR[pass_dR][pass_dR_lowest_pT]
-            # store field (pt, ...) of dr matched object
-            # self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test[pass_dR][pass_dR_lowest_pT]["test"][suffix][:,:,0]
+            pass_dR = dR < self.cfg_plot.match_dR
+            pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
+            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test["test"][suffix][pass_dR][pt_min][:,:,0]
 
     def _flatten_array(self, ak_array):
         """
@@ -153,7 +154,7 @@ class Skimmer():
             return
 
         if trafo == "HT":
-            self.ak_arrays["ref"]["HT"] = ak.sum(
+            self.ak_arrays["ref"]["pt"] = ak.sum(
                 self.ak_arrays["ref"]["pt"],
                 axis=-1
             )
@@ -162,13 +163,20 @@ class Skimmer():
             # TODO: To be implemented
             pass
 
-        if trafo:
-            for test_obj, cfg in self.cfg_plot.test_objects.items():
-                field = cfg["suffix"].lower()
-                try:
-                    self.ak_arrays[test_obj][field] = ak.max(self.ak_arrays[test_obj][field], axis=1)
-                except ValueError:
-                    pass
+    def _apply_quality_cuts(self):
+        """
+        Function to implement quality criteria.
+        Events not fulfilling L1 hardware quality
+        criteria are filtered out.
+        """
+        for test_obj in self.cfg_plot.test_objects:
+            if not self.cfg_plot.test_quality_id(test_obj):
+                return
+
+            quality = Quality(self.ak_arrays, test_obj)
+            quality_id = self.cfg_plot.test_quality_id(test_obj)
+            selection = ~getattr(quality, quality_id)
+            self.ak_arrays[test_obj] = self.ak_arrays[test_obj][selection]
 
     def _apply_reference_cuts(self):
         """
@@ -202,9 +210,6 @@ class Skimmer():
 
     def _skim_to_hists(self):
         ref_field = self.cfg_plot.reference_field
-        if (trafo := self.cfg_plot.reference_trafo):
-            ref_field = trafo
-
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
@@ -220,16 +225,15 @@ class Skimmer():
         ref_field = self.cfg_plot.reference_field
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             sel_threshold = self.ak_arrays["ref"]["dR_matched_" + test_obj] > self.threshold
-            sel_dR = self.ak_arrays["ref"]["dR_value_" + test_obj] < self.cfg_plot.match_dR
-            sel = sel_threshold & sel_dR
+            sel = sel_threshold
 
             ak_array = self.ak_arrays["ref"][sel]
-            ak_array = self._flatten_array(ak_array[ref_field])
+            ak_array = self._flatten_array(ak.flatten(ak_array[ref_field]))
             self.hists[test_obj] = np.histogram(
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins
             )
-
+             
         ref_flat_np = ak.to_numpy(
             self._flatten_array(
               self.ak_arrays["ref"][ref_field]
@@ -238,10 +242,11 @@ class Skimmer():
         self.hists["ref"] = np.histogram(
             ref_flat_np,
             bins=self.bins
-        )
-
+        )      
+          
     def create_hists(self):
         self._load_arrays()
+        self._apply_quality_cuts()
         self._apply_reference_cuts()
         self._apply_reference_trafo()
         self._apply_test_obj_cuts()
@@ -261,7 +266,7 @@ class EfficiencyPlotter():
 
     def _compute_efficiency(self, test_vals, ref_vals):
         eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
-        assert all(0 <= i <= 1 for i in eff)
+        # assert all(0 <= i <= 1 for i in eff)
         return eff
 
     def _plot_efficiency_curve(self):
@@ -298,7 +303,7 @@ class EfficiencyPlotter():
         ax.tick_params(direction="in")
         fig.tight_layout()
         plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}.png")
-        plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.skimmer.threshold}.png")
+        #plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.skimmer.threshold}.png")
         plt.close()
 
     def _plot_raw_counts(self):
@@ -330,8 +335,8 @@ class EfficiencyPlotter():
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
         fig.tight_layout()
-        plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}.png")
-        plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{self.skimmer.threshold}.png")
+        plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}_distribution.png")
+        #plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{self.skimmer.threshold}.png")
         plt.close()
 
     def plot(self):
@@ -387,7 +392,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--cfg_plots",
         "-c",
-        default="cfg_plots.yaml",
+        default="cfg_plots_dy.yaml",
         help="Path of YAML file specifying the desired plots."
     )
     args = parser.parse_args()
@@ -397,4 +402,3 @@ if __name__ == "__main__":
 
     # scalings = ScalingCentral()
     # scalings.run()
-

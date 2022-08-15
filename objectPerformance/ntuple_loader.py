@@ -8,11 +8,13 @@ import time
 import awkward as ak
 from progress.bar import IncrementalBar
 import uproot
+import vector
 import yaml
 
 from utils import get_pdg_id
 from utils import get_branches
 
+vector.register_awkward()
 
 class ObjectCacher():
 
@@ -68,16 +70,74 @@ class ObjectCacher():
 
         partId = abs(all_arrays["Id"])
         sel_id = (partId == get_pdg_id(self._part_type))
-        sel_eta = all_arrays["Eta"] < 2.4
-        sel = sel_id & sel_eta
-        sel_pt = ak.argmax(all_arrays["Pt"][sel], axis=-1, keepdims=True)
+        sel = sel_id
+        for branch in all_arrays:
+            all_arrays[branch] = all_arrays[branch][sel]
+        
+        sel_pt = ak.argmax(all_arrays["Pt"], axis=-1, keepdims=True)
+
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_pt]
+            all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
+        
         return all_arrays
+
+    def _filter_fspart_branches(self, all_parts):
+        """
+        Select all the final state particles.
+        This collection is used only for dR matching
+        and Isolation computations, but it's not saved.
+        """
+        sel_fs = all_parts["Stat"] == 1
+        for branch in all_parts:
+            all_parts[branch] = all_parts[branch][sel_fs]
+            all_parts[branch] = ak.fill_none(all_parts[branch], -999) 
+
+        return all_parts
+
+    def _filter_Iso_branches(self, all_parts, all_arrays):
+        """
+        Compute Isolation on selected gen-leptons
+        that are matched to final state particles.
+        Filter out selected gen-leptons that do not
+        satisfy the isolation requirement.
+        """
+        leptons = ak.zip({k.lower(): all_arrays[k] for k in all_arrays.keys()})
+        fs_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
+
+        full_set = {}
+        full_set["leptons"] = ak.with_name(leptons, "Momentum4D")
+        full_set["fs_parts"] = ak.with_name(fs_parts, "Momentum4D")
+
+        combs = ak.cartesian({"leptons": full_set["leptons"], "fs_parts": full_set["fs_parts"]}, axis=-1)
+        lep, fs = ak.unzip(combs)
+
+        dR = fs.deltaR(lep)
+
+        # TODO: Make this cut configurable
+        sel_dR = dR < 0.3
+        pt = full_set["fs_parts"]["pt"][sel_dR]
+        
+        # Compute Iso, reflecting definition in:
+        # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
+        Iso = ak.sum(pt, axis=-1)/full_set["leptons"]["pt"] - 1
+
+        # TODO: Make this cut configurable
+        sel_Iso = Iso > -1
+        sel = sel_Iso
+        final_leptons = {}
+
+        for key in full_set["leptons"].fields:
+            final_leptons[key.capitalize()] = full_set["leptons"][key][sel]
+
+        return final_leptons
 
     def _postprocess_branches(self, all_arrays):
         if self._object.startswith("part"):
-            return self._filter_genpart_branches(all_arrays)
+            all_parts = all_arrays.copy()
+            all_parts = self._filter_fspart_branches(all_parts)
+            all_arrays = self._filter_genpart_branches(all_arrays)
+            return self._filter_Iso_branches(all_parts, all_arrays)
         return all_arrays
 
     def _concat_array_from_ntuples(self):
@@ -89,6 +149,7 @@ class ObjectCacher():
 
         branches = [self._object + x for x in self._branches]
         all_arrays = {x.removeprefix("part"): [] for x in branches}
+
         for fname in fnames:
             bar.next()
             with uproot.open(fname) as f:
@@ -159,4 +220,3 @@ if __name__ == "__main__":
                         dryrun=args.dry_run
                     )
                     loader.load()
-

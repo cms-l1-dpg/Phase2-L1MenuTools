@@ -26,6 +26,15 @@
 
     conda activate py310  
 
+  More details on how to set up a `conda` environment using a shared
+  `.yaml` file can be found
+  [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment).
+
+  **NOTE:** The current version of the framework runs even without the above.
+  In fact, the `py310` environment is taken from Daniel's `public` area.
+  In the future we hope to migrate this to a common `PhaseII-L1` area and the
+  steps detailed above should no longer be necessary.
+
 ## Caching the NTuple trees
   In order to run the below steps, the object
   trees from the L1NTuples need to be cached

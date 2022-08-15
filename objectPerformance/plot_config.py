@@ -68,3 +68,9 @@ class PlotConfig():
         except KeyError:
             return self._cfg["default_version"]
 
+    def test_quality_id(self, obj):
+        try:
+            return self._cfg["test_objects"][obj]["quality_id"]
+        except KeyError:
+            return None
+
