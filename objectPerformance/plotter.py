@@ -154,7 +154,7 @@ class Skimmer():
             return
 
         if trafo == "HT":
-            self.ak_arrays["ref"]["pt"] = ak.sum(
+            self.ak_arrays["ref"]["HT"] = ak.sum(
                 self.ak_arrays["ref"]["pt"],
                 axis=-1
             )
@@ -162,6 +162,14 @@ class Skimmer():
         if trafo == "MHT":
             # TODO: To be implemented
             pass
+
+        if trafo:
+            for test_obj, cfg in self.cfg_plot.test_objects.items():
+                field = cfg["suffix"].lower()
+                try:
+                    self.ak_arrays[test_obj][field] = ak.max(self.ak_arrays[test_obj][field], axis=1)
+                except ValueError:
+                    pass
 
     def _apply_quality_cuts(self):
         """
@@ -210,6 +218,9 @@ class Skimmer():
 
     def _skim_to_hists(self):
         ref_field = self.cfg_plot.reference_field
+        if (trafo := self.cfg_plot.reference_trafo):
+            ref_field = trafo
+
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
