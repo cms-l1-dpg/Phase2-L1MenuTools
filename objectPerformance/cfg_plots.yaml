@@ -1,9 +1,35 @@
+MHT:
+  sample: TT
+  default_version: V22
+  reference_object:
+    object: "jet"
+    suffix: "Pt"
+    label: "Gen MHT"
+    cuts:
+      eta: {"operator": "<", "threshold": 2.4}
+      pt: {"operator": ">", "threshold": 10}
+    trafo: "MHT"
+  test_objects:
+    trackerMHT:
+      suffix: ""
+      label: "Tracker MHT"
+      cuts: {}
+  thresholds: [70]
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  match_dR: False
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
 HT:
   sample: TT
   default_version: V22
   reference_object: 
     object: "jet"
     suffix: "Pt"
+    label: "Gen HT"
     cuts:
       eta: {"operator": "<", "threshold": 2.4}
       pt: {"operator": ">", "threshold": 30}
@@ -30,6 +56,7 @@ MET:
   reference_object: 
     object: "genMetTrue"
     suffix: ""
+    label: "Gen MET"
   test_objects:
     trackerMET:
       suffix: ""
@@ -52,6 +79,7 @@ JetPt:
   reference_object: 
     object: "jet"
     suffix: "Pt"
+    label: "Gen Jets"
     cuts:
       eta: {"operator": "<", "threshold": 1.5}
   test_objects:

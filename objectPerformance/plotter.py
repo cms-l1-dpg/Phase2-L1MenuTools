@@ -144,6 +144,18 @@ class Skimmer():
         except ValueError:
             return ak_array
 
+    def _compute_MHT(self, ak_array):
+        """
+        Returns MHT for the gen-level objects considered (typically jets).
+        Cuts are not applied at this stage, as the `ak_array` passed to
+        this function already has cuts applied in `_apply_reference_cuts`.
+        `_mht` is an `ak.Array()` with one entry (MHT) per event.
+        """
+        _px = ak_array.px
+        _py = ak_array.py
+        _mht = np.sqrt(ak.sum(_px[:,:],axis=-1,keepdims=True)**2 + ak.sum(_py[:,:],axis=-1,keepdims=True)**2)
+        return _mht
+
     def _apply_reference_trafo(self):
         """
         Transforms the reference branch, e.g.
@@ -160,8 +172,8 @@ class Skimmer():
             )
 
         if trafo == "MHT":
-            # TODO: To be implemented
-            pass
+            gen_mht = self._compute_MHT(self.ak_arrays["ref"])
+            self.ak_arrays["ref"]["MHT"] = gen_mht
 
         if trafo:
             for test_obj, cfg in self.cfg_plot.test_objects.items():
@@ -331,14 +343,21 @@ class EfficiencyPlotter():
         xbins = self.skimmer.bins[:-1] + self.skimmer.bin_width / 2
 
         xerr = np.ones_like(gen_hist_ref[0]) * self.skimmer.bin_width / 2
-        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o', "markersize": 8}
+        err_kwargs = {"xerr": xerr, "capsize": 1, "marker": 'o', "markersize": 2, "linestyle": "None"}
+
+        ref_hist = ax.step(xbins, gen_hist_ref[0], where = "mid")
+        label = self.cfg["reference_object"]["label"]
+        ax.errorbar(xbins, gen_hist_ref[0], yerr = np.sqrt(gen_hist_ref[0]), label = label, color = ref_hist[0].get_color(), **err_kwargs)
+
 
         for obj_key, gen_hist_trig in self.skimmer.hists.items():
             if obj_key== "ref":
                 continue
             yerr = np.sqrt(gen_hist_trig[0])
             label = self.cfg["test_objects"][obj_key]["label"]
-            ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label, **err_kwargs)
+            test_hist = ax.step(xbins, gen_hist_trig[0], where = "mid")
+            ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label, color = test_hist[0].get_color(), **err_kwargs)
+
 
         ax.axvline(self.skimmer.threshold, ls = ":", c = "k")
         ax.legend(loc="upper right", frameon=False)
@@ -349,7 +368,7 @@ class EfficiencyPlotter():
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
         fig.tight_layout()
-        plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}_distribution.png")
+        plt.savefig(f"plot_output/{self.plot_name}_{self.skimmer.threshold}_distributions.png")
         #plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{self.skimmer.threshold}.png")
         plt.close()
 

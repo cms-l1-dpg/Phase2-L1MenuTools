@@ -4,6 +4,7 @@ Electrons:
   reference_object:
     object: "part_e"
     suffix: "Pt"
+    label: "Gen Electrons"
     cuts:
       eta: {"operator": ">", "threshold": 1.479}
       eta: {"operator": "<", "threshold": 3}
@@ -32,6 +33,7 @@ Electrons:
 #   reference_object:
 #     object: "part_e"
 #     suffix: "Eta"
+#     label: "Gen Electrons"
 #     cuts:
 #       eta: {"operator": "<", "threshold": 3}
 #       pt: {"operator": ">", "threshold": 25}
@@ -60,6 +62,7 @@ Muons:
   reference_object: 
     object: "part_mu"
     suffix: "Pt"
+    label: "Gen Muons"
     cuts:
       eta: {"operator": "<", "threshold": 1.5}
   test_objects:
