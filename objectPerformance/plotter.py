@@ -239,7 +239,10 @@ class Skimmer():
             sel = sel_threshold
 
             ak_array = self.ak_arrays["ref"][sel]
-            ak_array = self._flatten_array(ak.flatten(ak_array[ref_field]))
+            # Drop None and empty arrays
+            ak_to_plot = ak_array[ref_field][~ak.is_none(ak_array[ref_field],axis=-1)]
+            ak_to_plot = ak_to_plot[ak.num(ak_to_plot)>0]
+            ak_array = self._flatten_array(ak.flatten(ak_to_plot))
             self.hists[test_obj] = np.histogram(
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins

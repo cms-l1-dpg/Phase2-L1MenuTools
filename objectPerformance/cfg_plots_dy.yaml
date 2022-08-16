@@ -33,12 +33,15 @@ Electrons:
 #     object: "part_e"
 #     suffix: "Eta"
 #     cuts:
-#       pt: {"operator": "<", "threshold": 25}
-#       pt: {"operator": ">", "threshold": 10}
+#       eta: {"operator": "<", "threshold": 3}
+#       pt: {"operator": ">", "threshold": 25}
+#       #pt: {"operator": ">", "threshold": 10}
 #   test_objects:
 #     tkElectron:
 #       suffix: "Eta"
 #       label: "Tracker Electron"
+#       quality: "quality"
+#       region: "region"
 #       quality_id: "QUAL_BarrelNoneEndcap3"
 #       cuts:
 #          pt: {"operator": ">", "threshold": 0}
