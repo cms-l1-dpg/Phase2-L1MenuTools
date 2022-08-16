@@ -144,15 +144,15 @@ class Skimmer():
         except ValueError:
             return ak_array
 
-    def _compute_MHT(self, ak_array):
+    def _compute_MHT(self):
         """
         Returns MHT for the gen-level objects considered (typically jets).
         Cuts are not applied at this stage, as the `ak_array` passed to
         this function already has cuts applied in `_apply_reference_cuts`.
         `_mht` is an `ak.Array()` with one entry (MHT) per event.
         """
-        _px = ak_array.px
-        _py = ak_array.py
+        _px = self.ak_arrays["ref"].px
+        _py = self.ak_arrays["ref"].py
         _mht = np.sqrt(ak.sum(_px[:,:],axis=-1,keepdims=True)**2 + ak.sum(_py[:,:],axis=-1,keepdims=True)**2)
         return _mht
 
@@ -172,7 +172,7 @@ class Skimmer():
             )
 
         if trafo == "MHT":
-            gen_mht = self._compute_MHT(self.ak_arrays["ref"])
+            gen_mht = self._compute_MHT()
             self.ak_arrays["ref"]["MHT"] = gen_mht
 
         if trafo:
@@ -189,10 +189,10 @@ class Skimmer():
         Events not fulfilling L1 hardware quality
         criteria are filtered out.
         """
-        for test_obj in self.cfg_plot.test_objects:
-            if not self.cfg_plot.test_quality_id(test_obj):
-                return
+        if not self.cfg_plot.test_quality_id(test_obj):
+            return
 
+        for test_obj in self.cfg_plot.test_objects:
             quality = Quality(self.ak_arrays, test_obj)
             quality_id = self.cfg_plot.test_quality_id(test_obj)
             selection = ~getattr(quality, quality_id)
@@ -248,9 +248,8 @@ class Skimmer():
         ref_field = self.cfg_plot.reference_field
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             sel_threshold = self.ak_arrays["ref"]["dR_matched_" + test_obj] > self.threshold
-            sel = sel_threshold
 
-            ak_array = self.ak_arrays["ref"][sel]
+            ak_array = self.ak_arrays["ref"][sel_threshold]
             # Drop None and empty arrays
             ak_to_plot = ak_array[ref_field][~ak.is_none(ak_array[ref_field],axis=-1)]
             ak_to_plot = ak_to_plot[ak.num(ak_to_plot)>0]
@@ -259,7 +258,6 @@ class Skimmer():
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins
             )
-             
         ref_flat_np = ak.to_numpy(
             self._flatten_array(
               self.ak_arrays["ref"][ref_field]
@@ -268,7 +266,7 @@ class Skimmer():
         self.hists["ref"] = np.histogram(
             ref_flat_np,
             bins=self.bins
-        )      
+        )
           
     def create_hists(self):
         self._load_arrays()
@@ -292,7 +290,7 @@ class EfficiencyPlotter():
 
     def _compute_efficiency(self, test_vals, ref_vals):
         eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
-        # assert all(0 <= i <= 1 for i in eff)
+        assert all(0 <= i <= 1 for i in eff)
         return eff
 
     def _plot_efficiency_curve(self):

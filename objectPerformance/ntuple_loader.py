@@ -70,9 +70,8 @@ class ObjectCacher():
 
         partId = abs(all_arrays["Id"])
         sel_id = (partId == get_pdg_id(self._part_type))
-        sel = sel_id
         for branch in all_arrays:
-            all_arrays[branch] = all_arrays[branch][sel]
+            all_arrays[branch] = all_arrays[branch][sel_id]
         
         sel_pt = ak.argmax(all_arrays["Pt"], axis=-1, keepdims=True)
 
@@ -95,7 +94,7 @@ class ObjectCacher():
 
         return all_parts
 
-    def _filter_Iso_branches(self, all_parts, all_arrays):
+    def _filter_iso_branches(self, all_parts, all_arrays):
         """
         Compute Isolation on selected gen-leptons
         that are matched to final state particles.
@@ -137,7 +136,7 @@ class ObjectCacher():
             all_parts = all_arrays.copy()
             all_parts = self._filter_fspart_branches(all_parts)
             all_arrays = self._filter_genpart_branches(all_arrays)
-            return self._filter_Iso_branches(all_parts, all_arrays)
+            return self._filter_iso_branches(all_parts, all_arrays)
         return all_arrays
 
     def _concat_array_from_ntuples(self):
