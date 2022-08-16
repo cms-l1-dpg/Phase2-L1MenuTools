@@ -65,4 +65,4 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
     ]
 
     return obj_branches
-
+    
