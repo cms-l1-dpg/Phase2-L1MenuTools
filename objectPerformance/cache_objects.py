@@ -1,8 +1,9 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+#!/Users/danielhundhausen/opt/miniconda3/envs/py310/bin/python
+# /afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import timedelta
 import glob
-import itertools
+import os
 import time
 
 import awkward as ak
@@ -14,7 +15,9 @@ import yaml
 from utils import get_pdg_id
 from utils import get_branches
 
+
 vector.register_awkward()
+
 
 class ObjectCacher():
 
@@ -32,9 +35,10 @@ class ObjectCacher():
         self._final_ak_array = None
         try:
             self._part_type = obj.split('_')[1]
-        except:
+        except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
+        os.makedirs("cache", exist_ok=True)
 
     @property
     def parquet_fname(self):
@@ -72,13 +76,13 @@ class ObjectCacher():
         sel_id = (partId == get_pdg_id(self._part_type))
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_id]
-        
+
         sel_pt = ak.argmax(all_arrays["Pt"], axis=-1, keepdims=True)
 
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_pt]
             all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
-        
+
         return all_arrays
 
     def _filter_fspart_branches(self, all_parts):
@@ -90,7 +94,7 @@ class ObjectCacher():
         sel_fs = all_parts["Stat"] == 1
         for branch in all_parts:
             all_parts[branch] = all_parts[branch][sel_fs]
-            all_parts[branch] = ak.fill_none(all_parts[branch], -999) 
+            all_parts[branch] = ak.fill_none(all_parts[branch], -999)
 
         return all_parts
 
@@ -116,7 +120,7 @@ class ObjectCacher():
         # TODO: Make this cut configurable
         sel_dR = dR < 0.3
         pt = full_set["fs_parts"]["pt"][sel_dR]
-        
+
         # Compute Iso, reflecting definition in:
         # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
         Iso = ak.sum(pt, axis=-1)/full_set["leptons"]["pt"] - 1
@@ -166,16 +170,16 @@ class ObjectCacher():
 
     def _cache_file_exists(self):
         """
-        Checks if there is parquet file in tmp
+        Checks if there is parquet file in cache
         with the name 'version_sample_object.parquet'
         """
-        cached_files = glob.glob("tmp/*")
-        return "tmp/" + self.parquet_fname + ".parquet" in cached_files
+        cached_files = glob.glob("cache/*")
+        return "cache/" + self.parquet_fname + ".parquet" in cached_files
 
     def _save_array_to_parquet(self):
         ak.to_parquet(
             self._final_ak_array,
-            where=f"tmp/{self.parquet_fname}.parquet"
+            where=f"cache/{self.parquet_fname}.parquet"
         )
 
     def load(self):
@@ -209,7 +213,7 @@ if __name__ == "__main__":
             for tree, object_branches in sample_cfg["trees_branches"].items():
                 if tree == "ntuple_path":
                     continue
-                for obj, branches in object_branches.items(): 
+                for obj, branches in object_branches.items():
                     loader = ObjectCacher(
                         version=version,
                         sample=sample,

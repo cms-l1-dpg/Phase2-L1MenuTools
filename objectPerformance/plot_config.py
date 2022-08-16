@@ -1,7 +1,7 @@
 
 
 class PlotConfig():
- 
+
     def __init__(self, cfg: dict):
         self._cfg = cfg
 
@@ -52,6 +52,18 @@ class PlotConfig():
     def reference_field(self):
         field = self._cfg["reference_object"]["suffix"]
         return field.lower()
+
+    @property
+    def bin_width(self):
+        return self._cfg["binning"]["step"]
+
+    @property
+    def bin_min(self):
+        return self._cfg["binning"]["min"]
+
+    @property
+    def bin_max(self):
+        return self._cfg["binning"]["max"]
 
     def get_object_cuts(self, obj):
         obj_cfg = self._cfg["test_objects"][obj]

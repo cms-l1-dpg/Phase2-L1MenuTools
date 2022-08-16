@@ -2,18 +2,13 @@
 # /afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import datetime
-import glob
-from itertools import product
-import json
-import sys
-import time
+import os
 import warnings
 
 import awkward as ak
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
-from scipy.stats import beta
 import vector
 import yaml
 
@@ -26,35 +21,25 @@ vector.register_awkward()
 plt.style.use(hep.style.CMS)
 
 
-class EfficiencyHist():
-    """
-    Efficiency hist corresponds to one curve in
-    a turn-on plot, i.e. on combination of test
-    and reference object, at a certain threshold.
-    """
-
-    def __init__(self):
-        self.threshold = None
-        self.version = None
-        self.hist_ref = None
-        self.hist_test = None
-
-
 class ArrayLoader():
 
     def __init__(self, turnon_collection):
         self.turnon_collection = turnon_collection
 
     def _transform_key(self, raw_key: str, obj: str):
+        """
+        This method serves to map the different
+        NTuple branch names for quality and region
+        to "quality"/"region".
+        """
         key = raw_key.removeprefix(obj).lower()
         if "qual" in key:
             return "quality"
         # TODO: implement proper mapping for all objects
-        elif ("HGC" in key) | ("hgc" in key):
+        elif "hgc" in key.lower():
             return "region"
         else:
             return key
-        # return key if "qual" not in key else "quality"
 
     def _load_array_from_parquet(self, obj: str):
         """
@@ -64,7 +49,7 @@ class ArrayLoader():
         in self._transform_key().
         """
         fname = (
-            "tmp/"
+            "cache/"
             f"{self.turnon_collection.cfg_plot.version_ref_object}_"
             f"{self.turnon_collection.cfg_plot.sample}_"
             f"{obj}.parquet"
@@ -87,7 +72,8 @@ class ArrayLoader():
         ref_array = self._load_array_from_parquet(
             self.turnon_collection.cfg_plot.reference_object
         )
-        self.turnon_collection.ak_arrays["ref"] = ak.with_name(ref_array, "Momentum4D")
+        ref_array = ak.with_name(ref_array, "Momentum4D")
+        self.turnon_collection.ak_arrays["ref"] = ref_array
 
     def _load_test_branches(self):
         """
@@ -98,7 +84,8 @@ class ArrayLoader():
             test_array = self._load_array_from_parquet(
                 test_obj
             )
-            self.turnon_collection.ak_arrays[test_obj] = ak.with_name(test_array, "Momentum4D")
+            test_array = ak.with_name(test_array, "Momentum4D")
+            self.turnon_collection.ak_arrays[test_obj] = test_array
 
     def load_arrays(self):
         """
@@ -113,11 +100,19 @@ class TurnOnCollection():
     def __init__(self, cfg_plot, threshold):
         self.cfg_plot = PlotConfig(cfg_plot)
         self.threshold = threshold
-        self.bin_width = cfg_plot["binning"]["step"]
-        self.default_version = cfg_plot["default_version"]
-        self.bins = np.array([i * self.bin_width for i in range(int(cfg_plot["binning"]["max"] / self.bin_width) + 1)])
+        self.bins = []
         self.ak_arrays = {}
         self.hists = {}
+        self._set_bins()
+
+    def _set_bins(self):
+        """
+        Set bins according to configuration.
+        """
+        bin_width = self.cfg_plot.bin_width
+        x_max = self.cfg_plot.bin_max
+        n_bin_edges = int(x_max / bin_width) + 1
+        self.bins = np.array([i * bin_width for i in range(n_bin_edges)])
 
     def _load_arrays(self):
         """
@@ -136,16 +131,17 @@ class TurnOnCollection():
             suffix = obj_cfg["suffix"].lower()
             ref_test = ak.cartesian(
                 {"ref": self.ak_arrays["ref"],
-                 "test": self.ak_arrays[test_obj],
-                },
+                 "test": self.ak_arrays[test_obj]},
                 nested=True
             )
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
             pass_dR = dR < self.cfg_plot.match_dR
-            pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
-            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test["test"][suffix][pass_dR][pt_min][:,:,0]
+            pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1,
+                               keepdims=True)
+            ref_test_matched = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
+            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test_matched
 
     def _flatten_array(self, ak_array):
         """
@@ -167,8 +163,28 @@ class TurnOnCollection():
         """
         _px = self.ak_arrays["ref"].px
         _py = self.ak_arrays["ref"].py
-        _mht = np.sqrt(ak.sum(_px[:,:],axis=-1,keepdims=True)**2 + ak.sum(_py[:,:],axis=-1,keepdims=True)**2)
+        _mht = np.sqrt(
+            ak.sum(_px[:, :], axis=-1, keepdims=True)**2
+            + ak.sum(_py[:, :], axis=-1, keepdims=True)**2
+        )
         return _mht
+
+    def _reduce_to_per_event(self):
+        """
+        Reduces the test branches to a single number per event.
+        This is needed to unify the structur of different MET objects
+        for some of which one number per event is stored in the branches
+        and for some of which one number per jet is stored.
+        """
+        for test_obj, cfg in self.cfg_plot.test_objects.items():
+            field = cfg["suffix"].lower()
+            try:
+                self.ak_arrays[test_obj][field] = ak.max(
+                    self.ak_arrays[test_obj][field],
+                    axis=1
+                )
+            except ValueError:
+                pass
 
     def _apply_reference_trafo(self):
         """
@@ -190,12 +206,7 @@ class TurnOnCollection():
             self.ak_arrays["ref"]["MHT"] = gen_mht
 
         if trafo:
-            for test_obj, cfg in self.cfg_plot.test_objects.items():
-                field = cfg["suffix"].lower()
-                try:
-                    self.ak_arrays[test_obj][field] = ak.max(self.ak_arrays[test_obj][field], axis=1)
-                except ValueError:
-                    pass
+            self._reduce_to_per_event()
 
     def _apply_quality_cuts(self):
         """
@@ -260,22 +271,27 @@ class TurnOnCollection():
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
         for test_obj, cfg in self.cfg_plot.test_objects.items():
-            sel_threshold = self.ak_arrays["ref"]["dR_matched_" + test_obj] > self.threshold
 
+            test_vals = self.ak_arrays["ref"]["dR_matched_" + test_obj]
+            sel_threshold = test_vals > self.threshold
             ak_array = self.ak_arrays["ref"][sel_threshold]
+
             # Drop None and empty arrays
-            ak_to_plot = ak_array[ref_field][~ak.is_none(ak_array[ref_field],axis=-1)]
-            ak_to_plot = ak_to_plot[ak.num(ak_to_plot)>0]
+            sel_none = ~ak.is_none(ak_array[ref_field], axis=-1)
+            sel_empty = ak.num(ak_array[ref_field]) > 0
+            ak_to_plot = ak_array[ref_field][sel_none & sel_empty]
             ak_array = self._flatten_array(ak.flatten(ak_to_plot))
             self.hists[test_obj] = np.histogram(
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins
             )
+
         ref_flat_np = ak.to_numpy(
             self._flatten_array(
               self.ak_arrays["ref"][ref_field]
             )
         )
+
         self.hists["ref"] = np.histogram(
             ref_flat_np,
             bins=self.bins
@@ -297,9 +313,11 @@ class TurnOnCollection():
 class EfficiencyPlotter():
 
     def __init__(self, name, cfg, turnon_collection):
+        os.makedirs("plots", exist_ok=True)
         self.plot_name = name
         self.cfg = cfg
         self.turnon_collection = turnon_collection
+        self.bin_width = turnon_collection.cfg_plot.bin_width
 
     def _compute_efficiency(self, test_vals, ref_vals):
         eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
@@ -310,26 +328,29 @@ class EfficiencyPlotter():
         """
         Efficiency / turn-on plots.
         """
-        fig, ax = plt.subplots(figsize = (10,10))
+        fig, ax = plt.subplots(figsize=(10, 10))
         hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
         gen_hist_ref = self.turnon_collection.hists["ref"]
-        xbins = self.turnon_collection.bins[:-1] + self.turnon_collection.bin_width / 2
+        xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-        xerr = np.ones_like(gen_hist_ref[0]) * self.turnon_collection.bin_width / 2
-        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o', "markersize": 8}
+        xerr = np.ones_like(gen_hist_ref[0]) * self.bin_width / 2
+        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o',
+                      "markersize": 8}
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if obj_key== "ref":
+            if obj_key == "ref":
                 continue
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                efficiency = self._compute_efficiency(gen_hist_trig[0], gen_hist_ref[0])
+                efficiency = self._compute_efficiency(gen_hist_trig[0],
+                                                      gen_hist_ref[0])
             yerr = utils.clopper_pearson_err(gen_hist_trig[0], gen_hist_ref[0])
             label = self.cfg["test_objects"][obj_key]["label"]
-            ax.errorbar(xbins, efficiency, yerr=yerr, label=label, **err_kwargs)
+            ax.errorbar(xbins, efficiency, yerr=yerr, label=label,
+                        **err_kwargs)
 
-        ax.axvline(self.turnon_collection.threshold, ls = ":", c = "k")
-        ax.axhline(1, ls = ":", c = "k")
+        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
+        ax.axhline(1, ls=":", c="k")
         ax.legend(loc="lower right", frameon=False)
         ax.set_xlabel(self.cfg["xlabel"])
         ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
@@ -339,7 +360,7 @@ class EfficiencyPlotter():
         ax.set_ylim(0, 1.1)
         ax.tick_params(direction="in")
         fig.tight_layout()
-        plt.savefig(f"plot_output/{self.plot_name}_{self.turnon_collection.threshold}.png")
+        plt.savefig(f"plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
         plt.close()
 
@@ -348,39 +369,41 @@ class EfficiencyPlotter():
         Raw counts of objects in bins
         of the efficiency plots.
         """
-        fig, ax = plt.subplots(figsize = (10,10))
+        fig, ax = plt.subplots(figsize=(10, 10))
         hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
         gen_hist_ref = self.turnon_collection.hists["ref"]
-        xbins = self.turnon_collection.bins[:-1] + self.turnon_collection.bin_width / 2
+        xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-        xerr = np.ones_like(gen_hist_ref[0]) * self.turnon_collection.bin_width / 2
-        err_kwargs = {"xerr": xerr, "capsize": 1, "marker": 'o', "markersize": 2, "linestyle": "None"}
+        xerr = np.ones_like(gen_hist_ref[0]) * self.bin_width / 2
+        err_kwargs = {"xerr": xerr, "capsize": 1, "marker": 'o',
+                      "markersize": 2, "linestyle": "None"}
 
-        ref_hist = ax.step(xbins, gen_hist_ref[0], where = "mid")
+        ref_hist = ax.step(xbins, gen_hist_ref[0], where="mid")
         label = self.cfg["reference_object"]["label"]
-        ax.errorbar(xbins, gen_hist_ref[0], yerr = np.sqrt(gen_hist_ref[0]), label = label, color = ref_hist[0].get_color(), **err_kwargs)
-
+        ax.errorbar(xbins, gen_hist_ref[0], yerr=np.sqrt(gen_hist_ref[0]),
+                    label=label, color=ref_hist[0].get_color(), **err_kwargs)
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if obj_key== "ref":
+            if obj_key == "ref":
                 continue
             yerr = np.sqrt(gen_hist_trig[0])
             label = self.cfg["test_objects"][obj_key]["label"]
-            test_hist = ax.step(xbins, gen_hist_trig[0], where = "mid")
-            ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label, color = test_hist[0].get_color(), **err_kwargs)
+            test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
+            ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label,
+                        color=test_hist[0].get_color(), **err_kwargs)
 
-
-        ax.axvline(self.turnon_collection.threshold, ls = ":", c = "k")
+        threshold = self.turnon_collection.threshold
+        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
         ax.legend(loc="upper right", frameon=False)
         ax.set_xlabel(self.cfg["xlabel"])
-        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
-        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.turnon_collection.threshold))
+        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))  # TODO: remove line
+        ylabel = self.cfg["ylabel"].replace("<threshold>", str(threshold))
         ax.set_ylabel(ylabel)
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
         fig.tight_layout()
-        plt.savefig(f"plot_output/{self.plot_name}_{self.turnon_collection.threshold}_distributions.png")
-        # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{self.turnon_collection.threshold}.png")
+        plt.savefig(f"plots/{self.plot_name}_{threshold}_distributions.png")
+        # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{threshold}.png")
         plt.close()
 
     def plot(self):
@@ -425,7 +448,7 @@ class ScalingCentral(PlottingCentral):
                 turnon_collection.create_hists()
 
                 scalingClass = ScalingFitter(turnon_collection)
-                sclaingClass.fit()
+                scalingClass.fit()
 
                 plotter = ScalingsPlotter(scalingClass)
                 plotter.plot()
@@ -438,6 +461,12 @@ if __name__ == "__main__":
         "-c",
         default="cfg_plots_dy.yaml",
         help="Path of YAML file specifying the desired plots."
+    )
+    parser.add_argument(
+        "--scalings",
+        "-s",
+        action="store_true",
+        help="Produce scaling plots."
     )
     args = parser.parse_args()
 

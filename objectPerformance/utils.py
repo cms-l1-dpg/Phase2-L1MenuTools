@@ -19,7 +19,7 @@ def str_to_op(x: str):
     return op_map[x]
 
 
-def clopper_pearson_err(x_hist, n_hist, alpha=1-0.68, warn="ignore"):
+def clopper_pearson_err(x_hist, n_hist, alpha=1 - 0.68, warn="ignore"):
     yerr_lo = []
     yerr_hi = []
     with warnings.catch_warnings():
@@ -60,9 +60,9 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
         else:
             prefix = "L1PhaseII/"
 
-    obj_branches  = [
+    obj_branches = [
         x.removeprefix(prefix + obj) for x in all_branches if obj in x
     ]
 
     return obj_branches
-    
+
