@@ -1,3 +1,4 @@
+#!/Users/danielhundhausen/opt/miniconda3/envs/py310/bin/python
 #!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import datetime
@@ -8,6 +9,7 @@ import awkward as ak
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
+from scipy.optimize import curve_fit
 import vector
 import yaml
 
@@ -327,19 +329,23 @@ class TurnOnCollection():
             self._skim_to_hists_dR_matched()
 
 
-class EfficiencyPlotter():
-
-    def __init__(self, name, cfg, turnon_collection):
-        os.makedirs("plots/distributions", exist_ok=True)
-        self.plot_name = name
-        self.cfg = cfg
-        self.turnon_collection = turnon_collection
-        self.bin_width = turnon_collection.cfg_plot.bin_width
+class Plotter():
 
     def _new_plot(self):
         fig, ax = plt.subplots(figsize=(10, 10))
         hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
         return fig, ax
+
+
+class EfficiencyPlotter(Plotter):
+
+    def __init__(self, name, cfg, turnon_collection):
+        os.makedirs("outputs/turnons", exist_ok=True)
+        os.makedirs("outputs/distributions", exist_ok=True)
+        self.plot_name = name
+        self.cfg = cfg
+        self.turnon_collection = turnon_collection
+        self.bin_width = turnon_collection.cfg_plot.bin_width
 
     def _style_plot(self, fig, ax, legend_loc="lower right"):
         ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
@@ -376,9 +382,8 @@ class EfficiencyPlotter():
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        plt.savefig(f"plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
+        plt.savefig(f"outputs/turnons/{self.plot_name}_{self.turnon_collection.threshold}.png")
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
-        plt.close()
 
     def _plot_raw_counts(self):
         """
@@ -389,8 +394,7 @@ class EfficiencyPlotter():
         gen_hist_ref = self.turnon_collection.hists["ref"]
         xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-        xerr = np.ones_like(gen_hist_ref[0]) * self.bin_width / 2
-        err_kwargs = {"xerr": xerr, "capsize": 1, "marker": 'o',
+        err_kwargs = {"xerr": self.turnon_collection.xerr, "capsize": 1, "marker": 'o',
                       "markersize": 2, "linestyle": "None"}
 
         ref_hist = ax.step(xbins, gen_hist_ref[0], where="mid")
@@ -408,9 +412,9 @@ class EfficiencyPlotter():
                         color=test_hist[0].get_color(), **err_kwargs)
 
         self._style_plot(fig, ax)
-        plt.savefig(f"plots/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist.png")
+        plt.savefig(f"outputs/distributions/{self.plot_name}"
+                    f"_{self.turnon_collection.threshold}_dist.png")
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{threshold}.png")
-        plt.close()
 
     def plot(self):
         print("Plotting ...")
@@ -435,29 +439,114 @@ class PlottingCentral():
                 plotter.plot()
 
 
+class ScalingPlotter(Plotter):
+
+    def __init__(self, plot_name: str, cfg_plot: dict, scalings: dict, params: dict):
+        os.makedirs("outputs/scalings", exist_ok=True)
+        self.plot_name = plot_name
+        self.cfg_plot = cfg_plot
+        self.scalings = scalings
+        self.params = params
+
+    def plot(self):
+        fig, ax = self._new_plot()
+        for obj, points in self.scalings.items():
+            x_points = np.array(list(points.keys()))
+            y_points = np.array(list(points.values()))
+            pts = ax.plot(x_points, y_points, 'o')
+
+            a, b = self.params[obj]
+            label = self.cfg_plot["test_objects"][obj]["label"]
+            y_points = utils.scaling_func(x_points, a, b)
+            ax.plot(x_points, y_points, color=pts[0].get_color(), label=label)
+
+        ax.legend(loc="lower right")
+        ax.set_xlabel("Threshold")
+        ax.set_ylabel("Scaling Factor")
+        fig.tight_layout()
+
+        plt.savefig(f"outputs/scalings/{self.plot_name}.png")
+
+
 class ScalingCentral(PlottingCentral):
 
     def __init__(self, cfg_plots_path):
         super().__init__(cfg_plots_path)
-        with open("./cfg_scalings.yaml", 'r') as f:
-            self.cfg_scalings = yaml.safe_load(f)
+        with open("./cfg_scaling_thresholds.yaml", 'r') as f:
+            self.scaling_thresholds = yaml.safe_load(f)
 
-    def _get_scaling_thresholds(self, cfg):
-        # TODO: Implement (sample, object) -> scaling threshold list mapping
-        pass
+    def _get_scaling_thresholds(self, cfg_plot):
+        if any("Muon" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["Muon"]
+        if any("Elec" in x or "Photon" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["EG"]
+        if any("HT" in x or "MET" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["HT"]
+        if any("Tau" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["Tau"]
+        if any("Jet" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["Jet"]
+        raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
+
+    def _find_percentage_point(self, hist, bins, p=0.95):
+        for i, eff in enumerate(hist[:-2]):
+            if eff < p and hist[i + 1] > p and hist[i + 2] > p:
+                return bins[i + 1]
+
+    def _compute_scalings(self, turnon_collection, scalings, p=0.95):
+        bins = turnon_collection.bins
+        threshold = turnon_collection.threshold
+
+        for obj in turnon_collection.hists:
+            if obj == "ref":
+                continue
+            efficiency, _ = turnon_collection.get_efficiency(obj)
+            percentage_point = self._find_percentage_point(efficiency, bins, p)
+            if percentage_point:
+                scalings[obj][threshold] = percentage_point
+
+        return scalings
+
+    def _fit_linear_functions(self, scalings):
+        params = {}
+        for obj, thresh_points in scalings.items():
+            xdata = [th for th, val in thresh_points.items() if val]
+            ydata = [thresh_points[x] for x in xdata]
+            if not ydata:
+                return None
+            popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
+            params[obj] = popt
+        return params
+
+    def _rate_config_function(self, name: str, a: float, b: float):
+        pm = '+' if b > 0 else ''
+        return f"function :: {name}Scaling :: args:=(offline); lambda:={a}*offline{pm}{b}"
+
+    def _write_scalings_to_file(self, plot_name: str, params: dict):
+        with open(f"outputs/scalings/{plot_name}.txt", 'w+') as f:
+            f.write('')
+
+        with open(f"outputs/scalings/{plot_name}.txt", 'a') as f:
+            for obj, obj_params in params.items():
+                a, b = obj_params
+                f.write(self._rate_config_function(obj, a, b) + "\n")
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
-            for threshold in self._get_scaling_thresholds(cfg_plot):
-                print(f">>> {plot_name} ({threshold} GeV) <<<")
+            print(f">>> Scalings {plot_name} <<<")
+            thds = self._get_scaling_thresholds(cfg_plot)
+            scalings = {x: {} for x in cfg_plot["test_objects"]}
+            for threshold in thds:
+                print(f"{threshold} GeV")
                 turnon_collection = TurnOnCollection(cfg_plot, threshold)
                 turnon_collection.create_hists()
+                scalings = self._compute_scalings(turnon_collection, scalings)
 
-                scalingClass = ScalingFitter(turnon_collection)
-                scalingClass.fit()
-
-                plotter = ScalingsPlotter(scalingClass)
+            params = self._fit_linear_functions(scalings)
+            if params:
+                plotter = ScalingPlotter(plot_name, cfg_plot, scalings, params)
                 plotter.plot()
+                self._write_scalings_to_file(plot_name, params)
 
 
 if __name__ == "__main__":
@@ -479,5 +568,6 @@ if __name__ == "__main__":
     plotter = PlottingCentral(args.cfg_plots)
     plotter.run()
 
-    # scalings = ScalingCentral()
-    # scalings.run()
+    if args.scalings:
+        scalings = ScalingCentral(args.cfg_plots)
+        scalings.run()
