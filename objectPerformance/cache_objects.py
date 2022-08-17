@@ -1,5 +1,4 @@
-#!/Users/danielhundhausen/opt/miniconda3/envs/py310/bin/python
-# /afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import timedelta
 import glob

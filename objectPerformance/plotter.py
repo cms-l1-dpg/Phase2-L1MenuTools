@@ -1,5 +1,4 @@
-#!/Users/danielhundhausen/opt/miniconda3/envs/py310/bin/python
-# /afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 from datetime import datetime
 import os
@@ -111,7 +110,8 @@ class TurnOnCollection():
         """
         bin_width = self.cfg_plot.bin_width
         x_max = self.cfg_plot.bin_max
-        n_bin_edges = int(x_max / bin_width) + 1
+        x_min = self.cfg_plot.bin_min
+        n_bin_edges = int(x_max / bin_width) + int(x_min / bin_width) + 1
         self.bins = np.array([i * bin_width for i in range(n_bin_edges)])
 
     def _load_arrays(self):
@@ -288,7 +288,7 @@ class TurnOnCollection():
 
         ref_flat_np = ak.to_numpy(
             self._flatten_array(
-              self.ak_arrays["ref"][ref_field]
+                self.ak_arrays["ref"][ref_field]
             )
         )
 
@@ -296,6 +296,23 @@ class TurnOnCollection():
             ref_flat_np,
             bins=self.bins
         )
+
+    @property
+    def xerr(self):
+        ref_vals = self.hists["ref"][0]
+        bin_width = self.cfg_plot.bin_width
+        return np.ones_like(ref_vals) * bin_width / 2
+
+    def get_efficiency(self, obj_key: str):
+        ref_vals = self.hists["ref"][0]
+        test_vals = self.hists[obj_key][0]
+
+        eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
+        assert all(0 <= i <= 1 for i in eff)
+
+        err = utils.clopper_pearson_err(test_vals, ref_vals)
+
+        return eff, err
 
     def create_hists(self):
         self._load_arrays()
@@ -313,53 +330,52 @@ class TurnOnCollection():
 class EfficiencyPlotter():
 
     def __init__(self, name, cfg, turnon_collection):
-        os.makedirs("plots", exist_ok=True)
+        os.makedirs("plots/distributions", exist_ok=True)
         self.plot_name = name
         self.cfg = cfg
         self.turnon_collection = turnon_collection
         self.bin_width = turnon_collection.cfg_plot.bin_width
 
-    def _compute_efficiency(self, test_vals, ref_vals):
-        eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
-        assert all(0 <= i <= 1 for i in eff)
-        return eff
+    def _new_plot(self):
+        fig, ax = plt.subplots(figsize=(10, 10))
+        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
+        return fig, ax
+
+    def _style_plot(self, fig, ax, legend_loc="lower right"):
+        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
+        ax.axhline(1, ls=":", c="k")
+        ax.legend(loc=legend_loc, frameon=False)
+        ax.set_xlabel(self.cfg["xlabel"])
+        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
+        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.turnon_collection.threshold))
+        ax.set_ylabel(ylabel)
+        ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
+        ax.tick_params(direction="in")
+        fig.tight_layout()
 
     def _plot_efficiency_curve(self):
         """
         Efficiency / turn-on plots.
         """
-        fig, ax = plt.subplots(figsize=(10, 10))
-        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
-        gen_hist_ref = self.turnon_collection.hists["ref"]
+        fig, ax = self._new_plot()
         xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-        xerr = np.ones_like(gen_hist_ref[0]) * self.bin_width / 2
-        err_kwargs = {"xerr": xerr, "capsize": 3, "marker": 'o',
-                      "markersize": 8}
+        err_kwargs = {"xerr": self.turnon_collection.xerr,
+                      "capsize": 3, "marker": 'o', "markersize": 8}
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                efficiency = self._compute_efficiency(gen_hist_trig[0],
-                                                      gen_hist_ref[0])
-            yerr = utils.clopper_pearson_err(gen_hist_trig[0], gen_hist_ref[0])
+                efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
+
             label = self.cfg["test_objects"][obj_key]["label"]
             ax.errorbar(xbins, efficiency, yerr=yerr, label=label,
                         **err_kwargs)
 
-        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
-        ax.axhline(1, ls=":", c="k")
-        ax.legend(loc="lower right", frameon=False)
-        ax.set_xlabel(self.cfg["xlabel"])
-        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
-        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.turnon_collection.threshold))
-        ax.set_ylabel(ylabel)
-        ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
+        self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        ax.tick_params(direction="in")
-        fig.tight_layout()
         plt.savefig(f"plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/{self.plot_name}_{self.turnon_collection.threshold}.png")
         plt.close()
@@ -369,8 +385,7 @@ class EfficiencyPlotter():
         Raw counts of objects in bins
         of the efficiency plots.
         """
-        fig, ax = plt.subplots(figsize=(10, 10))
-        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
+        fig, ax = self._new_plot()
         gen_hist_ref = self.turnon_collection.hists["ref"]
         xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
@@ -392,17 +407,8 @@ class EfficiencyPlotter():
             ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label,
                         color=test_hist[0].get_color(), **err_kwargs)
 
-        threshold = self.turnon_collection.threshold
-        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
-        ax.legend(loc="upper right", frameon=False)
-        ax.set_xlabel(self.cfg["xlabel"])
-        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))  # TODO: remove line
-        ylabel = self.cfg["ylabel"].replace("<threshold>", str(threshold))
-        ax.set_ylabel(ylabel)
-        ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
-        ax.tick_params(direction="in")
-        fig.tight_layout()
-        plt.savefig(f"plots/{self.plot_name}_{threshold}_distributions.png")
+        self._style_plot(fig, ax)
+        plt.savefig(f"plots/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist.png")
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{threshold}.png")
         plt.close()
 

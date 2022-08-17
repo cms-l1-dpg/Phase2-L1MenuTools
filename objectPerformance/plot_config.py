@@ -65,6 +65,10 @@ class PlotConfig():
     def bin_max(self):
         return self._cfg["binning"]["max"]
 
+    @property
+    def bin_min(self):
+        return self._cfg["binning"]["min"]
+
     def get_object_cuts(self, obj):
         obj_cfg = self._cfg["test_objects"][obj]
         try:
