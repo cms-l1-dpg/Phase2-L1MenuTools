@@ -9,6 +9,7 @@ import awkward as ak
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
+from progress.bar import IncrementalBar
 from scipy.optimize import curve_fit
 import vector
 import yaml
@@ -417,7 +418,6 @@ class EfficiencyPlotter(Plotter):
         # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{threshold}.png")
 
     def plot(self):
-        print("Plotting ...")
         self._plot_efficiency_curve()
         self._plot_raw_counts()
 
@@ -431,7 +431,7 @@ class PlottingCentral():
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
             for threshold in cfg_plot["thresholds"]:
-                print(f">>> {plot_name} ({threshold} GeV) <<<")
+                print(f">>> Turn On {plot_name} ({threshold} GeV) <<<")
                 turnon_collection = TurnOnCollection(cfg_plot, threshold)
                 turnon_collection.create_hists()
 
@@ -448,7 +448,13 @@ class ScalingPlotter(Plotter):
         self.scalings = scalings
         self.params = params
 
-    def plot(self):
+    def _params_to_func_str(self, obj):
+        a = round(self.params[obj][0], 3)
+        b = round(self.params[obj][1], 3)
+        pm = '+' if b > 0 else '-'
+        return f"y = {a} x {pm} {abs(b)}"
+
+    def plot(self, pct_point: float):
         fig, ax = self._new_plot()
         for obj, points in self.scalings.items():
             x_points = np.array(list(points.keys()))
@@ -456,13 +462,17 @@ class ScalingPlotter(Plotter):
             pts = ax.plot(x_points, y_points, 'o')
 
             a, b = self.params[obj]
-            label = self.cfg_plot["test_objects"][obj]["label"]
+            label = (self.cfg_plot["test_objects"][obj]["label"]
+                     + ", "
+                     + self._params_to_func_str(obj))
             y_points = utils.scaling_func(x_points, a, b)
             ax.plot(x_points, y_points, color=pts[0].get_color(), label=label)
 
         ax.legend(loc="lower right")
         ax.set_xlabel("Threshold")
-        ax.set_ylabel("Scaling Factor")
+        ax.set_ylabel(f"{int(pct_point*100)}% Location")
+        ax.set_xlim(0)
+        ax.set_ylim(0)
         fig.tight_layout()
 
         plt.savefig(f"outputs/scalings/{self.plot_name}.png")
@@ -474,6 +484,7 @@ class ScalingCentral(PlottingCentral):
         super().__init__(cfg_plots_path)
         with open("./cfg_scaling_thresholds.yaml", 'r') as f:
             self.scaling_thresholds = yaml.safe_load(f)
+            self.pct_point = 0.9
 
     def _get_scaling_thresholds(self, cfg_plot):
         if any("Muon" in x for x in cfg_plot["test_objects"]):
@@ -488,12 +499,14 @@ class ScalingCentral(PlottingCentral):
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _find_percentage_point(self, hist, bins, p=0.95):
+    def _find_percentage_point(self, hist, bins):
         for i, eff in enumerate(hist[:-2]):
-            if eff < p and hist[i + 1] > p and hist[i + 2] > p:
+            if (eff < self.pct_point
+                and hist[i + 1] > self.pct_point
+                and hist[i + 2] > self.pct_point):
                 return bins[i + 1]
 
-    def _compute_scalings(self, turnon_collection, scalings, p=0.95):
+    def _compute_scalings(self, turnon_collection, scalings):
         bins = turnon_collection.bins
         threshold = turnon_collection.threshold
 
@@ -501,7 +514,7 @@ class ScalingCentral(PlottingCentral):
             if obj == "ref":
                 continue
             efficiency, _ = turnon_collection.get_efficiency(obj)
-            percentage_point = self._find_percentage_point(efficiency, bins, p)
+            percentage_point = self._find_percentage_point(efficiency, bins)
             if percentage_point:
                 scalings[obj][threshold] = percentage_point
 
@@ -536,16 +549,18 @@ class ScalingCentral(PlottingCentral):
             print(f">>> Scalings {plot_name} <<<")
             thds = self._get_scaling_thresholds(cfg_plot)
             scalings = {x: {} for x in cfg_plot["test_objects"]}
+            bar = IncrementalBar("Progress", max=len(thds))
             for threshold in thds:
-                print(f"{threshold} GeV")
+                bar.next()
                 turnon_collection = TurnOnCollection(cfg_plot, threshold)
                 turnon_collection.create_hists()
                 scalings = self._compute_scalings(turnon_collection, scalings)
 
+            bar.finish()
             params = self._fit_linear_functions(scalings)
             if params:
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings, params)
-                plotter.plot()
+                plotter.plot(self.pct_point)
                 self._write_scalings_to_file(plot_name, params)
 
 
