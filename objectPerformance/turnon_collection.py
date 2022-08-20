@@ -130,8 +130,8 @@ class TurnOnCollection():
             pass_dR = dR < self.cfg_plot.match_dR
             pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            ref_test_matched = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
-            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test_matched
+            matched_obj = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
+            self.ak_arrays["ref"]["dR_matched_" + test_obj] = matched_obj
 
     def _flatten_array(self, ak_array):
         """
@@ -250,7 +250,9 @@ class TurnOnCollection():
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
-            ak_array = self._flatten_array(self.ak_arrays["ref"][sel][ref_field])
+            ak_array = self._flatten_array(
+                self.ak_arrays["ref"][sel][ref_field]
+            )
             self.hists[test_obj] = np.histogram(ak_array, bins=self.bins)
 
         self.hists["ref"] = np.histogram(
