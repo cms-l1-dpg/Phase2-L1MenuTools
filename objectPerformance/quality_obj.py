@@ -1,4 +1,3 @@
-import awkward as ak
 
 
 class Quality():

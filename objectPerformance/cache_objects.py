@@ -111,7 +111,9 @@ class ObjectCacher():
         full_set["leptons"] = ak.with_name(leptons, "Momentum4D")
         full_set["fs_parts"] = ak.with_name(fs_parts, "Momentum4D")
 
-        combs = ak.cartesian({"leptons": full_set["leptons"], "fs_parts": full_set["fs_parts"]}, axis=-1)
+        combs = ak.cartesian({"leptons": full_set["leptons"],
+                              "fs_parts": full_set["fs_parts"]},
+                             axis=-1)
         lep, fs = ak.unzip(combs)
 
         dR = fs.deltaR(lep)
@@ -122,7 +124,7 @@ class ObjectCacher():
 
         # Compute Iso, reflecting definition in:
         # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
-        Iso = ak.sum(pt, axis=-1)/full_set["leptons"]["pt"] - 1
+        Iso = ak.sum(pt, axis=-1) / full_set["leptons"]["pt"] - 1
 
         # TODO: Make this cut configurable
         sel_Iso = Iso > -1
@@ -158,7 +160,9 @@ class ObjectCacher():
                 for branch in branches:
                     branch_key = branch.removeprefix("part")
                     br = f[self._tree][branch].arrays(library="ak")[branch]
-                    all_arrays[branch_key] = ak.concatenate([all_arrays[branch_key], br])
+                    all_arrays[branch_key] = ak.concatenate(
+                        [all_arrays[branch_key], br]
+                    )
             all_arrays = self._postprocess_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
