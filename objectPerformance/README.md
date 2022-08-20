@@ -18,16 +18,16 @@
 ## Efficiency and Scalings
   To produce matching efficiency and scaling plots,
   configure the plots you wish to make in a `.yaml` file
-  with the structure of e.g. `cfg_plots_dy.yaml` and then run
+  with the structure of e.g. `cfg_plots/muons.yaml` and then run
 
   ```
-    ./plotter.py --cfg_plots=cfg_plots_dy.yaml
+    ./plotter.py --cfg_plots=cfg_plots/muons.yaml
   ```
 
   or
 
   ```
-    ./plotter.py -c=cfg_plots_dy.yaml
+    ./plotter.py -c=cfg_plots/muons.yaml
   ```
   
   The outputs will be written to the `outputs` directory. The

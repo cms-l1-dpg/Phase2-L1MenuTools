@@ -220,7 +220,7 @@ class ScalingCentral():
     def __init__(self, cfg_plots_path):
         with open(cfg_plots_path, 'r') as f:
             self.cfg_plots = yaml.safe_load(f)
-        with open("./cfg_scaling_thresholds.yaml", 'r') as f:
+        with open("./cfg_plots/scaling_thresholds.yaml", 'r') as f:
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot):
@@ -326,7 +326,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--cfg_plots",
         "-c",
-        default="cfg_plots_dy.yaml",
+        default="cfg_plots/muons.yaml",
         help="Path of YAML file specifying the desired plots."
     )
     args = parser.parse_args()

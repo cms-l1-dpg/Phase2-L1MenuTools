@@ -58,7 +58,7 @@ class ObjectCacher():
         """
         Load cfg file to extract path to ntuples.
         """
-        with open("cfg.yaml", 'r') as f:
+        with open("cfg_caching/V22.yaml", 'r') as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
         self._ntuple_path = cfg["ntuple_path"]
 
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    with open("cfg.yaml", 'r') as f:
+    with open("cfg_caching/V22.yaml", 'r') as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
         for sample, sample_cfg in samples.items():
