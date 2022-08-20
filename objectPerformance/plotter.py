@@ -329,17 +329,10 @@ if __name__ == "__main__":
         default="cfg_plots_dy.yaml",
         help="Path of YAML file specifying the desired plots."
     )
-    parser.add_argument(
-        "--scalings",
-        "-s",
-        action="store_true",
-        help="Produce scaling plots."
-    )
     args = parser.parse_args()
 
     plotter = EfficiencyCentral(args.cfg_plots)
     plotter.run()
 
-    if args.scalings:
-        scalings = ScalingCentral(args.cfg_plots)
-        scalings.run()
+    scalings = ScalingCentral(args.cfg_plots)
+    scalings.run()

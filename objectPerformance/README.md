@@ -21,16 +21,18 @@
   with the structure of e.g. `cfg_plots_dy.yaml` and then run
 
   ```
-    ./plotter.py --cfg_plots=cfg_plots_dy.yaml --scalings
+    ./plotter.py --cfg_plots=cfg_plots_dy.yaml
   ```
 
   or
 
   ```
-    ./plotter.py -c=cfg_plots_dy.yaml -s
+    ./plotter.py -c=cfg_plots_dy.yaml
   ```
   
-  The outputs will be written to the `outputs` directory.
+  The outputs will be written to the `outputs` directory. The
+  scalings are plottet automatically when a `scaling_pct` is
+  configured in the plot config.
 
 ## Setup of Python environment
   **Note:** The code should run without any setup on `lxplus`.
