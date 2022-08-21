@@ -91,7 +91,7 @@ def ignore_warnings(func):
 
 def timer(task: str):
     def decorator(func):
-        def wrapper(*args, **kwars):
+        def wrapper(*args, **kwargs):
             print(f"{task} ...")
             t0 = time.time()
             result = func(*args, **kwargs)
