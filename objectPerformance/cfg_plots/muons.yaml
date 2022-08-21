@@ -8,14 +8,14 @@ MuonsBarrel:
     cuts:
       eta: {"operator": "<", "threshold": 0.83}
   test_objects:
-    tkMuon:
+    gmtMuon:
       suffix: "Pt"
-      label: "Tracker Muon"
+      label: "GMT Muon"
       cuts:
         eta: {"operator": "<", "threshold": 0.83}
-    tkGlbMuon:
+    gmtTkMuon:
       suffix: "Pt"
-      label: "Tracker Global Muon"
+      label: "GMT TkMuon"
       cuts:
         eta: {"operator": "<", "threshold": 0.83}
   xlabel: "Gen. pT (GeV)"

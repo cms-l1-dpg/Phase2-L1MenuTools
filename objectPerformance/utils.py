@@ -1,5 +1,7 @@
+from datetime import timedelta
 import glob
 import operator
+import time
 from typing import Union
 import warnings
 
@@ -74,9 +76,29 @@ def scaling_func(x: Union[float, np.ndarray], a: float, b: float):
     return a * x + b
 
 
+##############
+# Decorators #
+##############
+
+
 def ignore_warnings(func):
     def wrapper(*args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             func(*args, **kwargs)
     return wrapper
+
+
+def timer(task: str):
+    def decorator(func):
+        def wrapper(*args, **kwars):
+            print(f"{task} ...")
+            t0 = time.time()
+            result = func(*args, **kwargs)
+            t1 = time.time()
+            print(f"{task} completed in"
+                  f"{timedelta(seconds=round(t1 - t0, 0))}s")
+            return result
+        return wrapper
+    return decorator
+

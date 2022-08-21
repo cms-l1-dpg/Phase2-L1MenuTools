@@ -1,9 +1,7 @@
 #!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
-from datetime import timedelta
 import glob
 import os
-import time
 
 import awkward as ak
 from progress.bar import IncrementalBar
@@ -13,6 +11,7 @@ import yaml
 
 from utils import get_pdg_id
 from utils import get_branches
+from utils import timer
 
 
 vector.register_awkward()
@@ -144,32 +143,31 @@ class ObjectCacher():
             return self._filter_iso_branches(all_parts, all_arrays)
         return all_arrays
 
+    def _load_branches_from_ntuple(self, fname, all_arrays):
+        with uproot.open(fname) as f:
+            for branch in branches:
+                branch_key = branch.removeprefix("part")
+                branch_arr = f[self._tree][branch].arrays(library="ak")[branch]
+                all_arrays[branch_key] = ak.concatenate(
+                    [all_arrays[branch_key], branch_arr]
+                )
+        return all_arrays
+
+    @timer("Loading objects files...")
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
-
-        print(f"Loading objects from {len(fnames)} files...")
         bar = IncrementalBar("Progress", max=len(fnames))
-        t0 = time.time()
 
         branches = [self._object + x for x in self._branches]
         all_arrays = {x.removeprefix("part"): [] for x in branches}
 
         for fname in fnames:
             bar.next()
-            with uproot.open(fname) as f:
-                for branch in branches:
-                    branch_key = branch.removeprefix("part")
-                    br = f[self._tree][branch].arrays(library="ak")[branch]
-                    all_arrays[branch_key] = ak.concatenate(
-                        [all_arrays[branch_key], br]
-                    )
+            all_arrays = self._load_branches_from_ntuple(fname, all_arrays)
             all_arrays = self._postprocess_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
-
-        t1 = time.time()
         bar.finish()
-        print(f"Loading completed in {timedelta(seconds=round(t1 - t0, 0))}s")
 
     def _cache_file_exists(self):
         """
