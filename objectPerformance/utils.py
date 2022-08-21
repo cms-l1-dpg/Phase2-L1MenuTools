@@ -96,7 +96,7 @@ def timer(task: str):
             t0 = time.time()
             result = func(*args, **kwargs)
             t1 = time.time()
-            print(f"{task} completed in"
+            print(f"{task} completed in "
                   f"{timedelta(seconds=round(t1 - t0, 0))}s")
             return result
         return wrapper

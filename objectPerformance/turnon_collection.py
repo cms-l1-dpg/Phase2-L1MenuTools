@@ -211,15 +211,31 @@ class TurnOnCollection():
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
+    def _apply_reference_iso_cuts(self, ref_cuts):
+        """
+        Applies configured cuts on reference isolation.
+        """
+        try:
+            dR = ref_cuts["isolation"]["dR"]
+            threshold = ref_cuts["isolation"]["threshold"]
+            sel = self.ak_arrays["ref"][f"iso{threshold}_dR{dR}"]
+            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        except KeyError:
+            pass
+
     def _apply_reference_cuts(self):
         """
         Applies configured cuts on reference objects.
         Should be applied before any matching.
         """
-        if not self.cfg_plot.reference_cuts:
+        if not (ref_cuts := self.cfg_plot.reference_cuts):
             return
 
-        for branch, cut_cfg in self.cfg_plot.reference_cuts.items():
+        self._apply_reference_iso_cuts(ref_cuts)
+
+        for branch, cut_cfg in ref_cuts.items():
+            if branch == "isolation":
+                continue
             op = utils.str_to_op(cut_cfg["operator"])
             threshold = cut_cfg["threshold"]
             sel = op(abs(self.ak_arrays["ref"][branch]), threshold)
