@@ -68,20 +68,21 @@ MuonsEndcap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      eta: {"operator": ">", "threshold": 1.24}
+      eta: {"operator": ">", "threshold": 0.83}
       eta: {"operator": "<", "threshold": 2.4}
   test_objects:
     tkMuon:
       suffix: "Pt"
       label: "Tracker Muon"
+      match_dR: 0.1
       cuts:
-        eta: {"operator": ">", "threshold": 1.24}
+        eta: {"operator": ">", "threshold": 0.83}
         eta: {"operator": "<", "threshold": 2.4}
     tkGlbMuon:
       suffix: "Pt"
       label: "Tracker Global Muon"
       cuts:
-        eta: {"operator": ">", "threshold": 1.24}
+        eta: {"operator": ">", "threshold": 0.83}
         eta: {"operator": "<", "threshold": 2.4}
   xlabel: "Gen. pT (GeV)"
   ylabel: "Matching Efficiency (endcap)"

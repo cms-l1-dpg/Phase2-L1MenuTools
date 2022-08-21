@@ -1,5 +1,3 @@
-
-
 class PlotConfig():
 
     def __init__(self, cfg: dict):
@@ -41,6 +39,12 @@ class PlotConfig():
     @property
     def match_dR(self):
         return self._cfg["match_dR"]
+
+    def get_match_dR(self, test_obj):
+        try:
+            return self._cfg["test_objects"][test_obj]["match_dR"]
+        except KeyError:
+            return self.match_dR
 
     @property
     def reference_object_field(self):

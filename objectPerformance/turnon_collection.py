@@ -126,7 +126,7 @@ class TurnOnCollection():
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
-            pass_dR = dR < self.cfg_plot.match_dR
+            pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
             pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
             matched_obj = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
