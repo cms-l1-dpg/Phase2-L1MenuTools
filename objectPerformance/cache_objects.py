@@ -106,32 +106,31 @@ class ObjectCacher():
         leptons = ak.zip({k.lower(): all_arrays[k] for k in all_arrays.keys()})
         fs_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
 
-        full_set = {}
-        full_set["leptons"] = ak.with_name(leptons, "Momentum4D")
-        full_set["fs_parts"] = ak.with_name(fs_parts, "Momentum4D")
-
+        # Compute dR between leptons and final state particles
+        full_set = {
+            "leptons": ak.with_name(leptons, "Momentum4D"),
+            "fs_parts": ak.with_name(fs_parts, "Momentum4D")
+        }
         combs = ak.cartesian({"leptons": full_set["leptons"],
                               "fs_parts": full_set["fs_parts"]},
                              axis=-1)
         lep, fs = ak.unzip(combs)
-
         dR = fs.deltaR(lep)
 
-        # TODO: Make this cut configurable
-        sel_dR = dR < 0.3
-        pt = full_set["fs_parts"]["pt"][sel_dR]
-
+        final_leptons = {}
+        for key in full_set["leptons"].fields:
+            final_leptons[key.capitalize()] = full_set["leptons"][key]
+            print(key)
         # Compute Iso, reflecting definition in:
         # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
-        Iso = ak.sum(pt, axis=-1) / full_set["leptons"]["pt"] - 1
+        for dR_threshold in [0.1, 0.3, 1, 999]:
+            sel_dR = dR < dR_threshold
+            pt = full_set["fs_parts"]["pt"][sel_dR]
+            iso = ak.sum(pt, axis=-1) / full_set["leptons"]["pt"] - 1
 
-        # TODO: Make this cut configurable
-        sel_Iso = Iso > -1
-        sel = sel_Iso
-        final_leptons = {}
-
-        for key in full_set["leptons"].fields:
-            final_leptons[key.capitalize()] = full_set["leptons"][key][sel]
+            for iso_threshold in [0.15, -1]:
+                sel_iso = iso > iso_threshold
+                final_leptons[f"iso{iso_threshold}_dR{dR_threshold}"] = sel_iso
 
         return final_leptons
 
