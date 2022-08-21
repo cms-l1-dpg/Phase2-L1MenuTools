@@ -99,10 +99,9 @@ class TurnOnCollection():
         Set bins according to configuration.
         """
         bin_width = self.cfg_plot.bin_width
-        x_max = self.cfg_plot.bin_max
-        x_min = self.cfg_plot.bin_min
-        n_bin_edges = int(x_max / bin_width) + int(x_min / bin_width) + 1
-        self.bins = np.array([i * bin_width for i in range(n_bin_edges)])
+        xmax = self.cfg_plot.bin_max
+        xmin = self.cfg_plot.bin_min
+        self.bins = np.linspace(xmin, xmax, int((xmax - xmin) / bin_width))
 
     def _load_arrays(self):
         """
@@ -272,7 +271,7 @@ class TurnOnCollection():
             sel_none = ~ak.is_none(ak_array[ref_field], axis=-1)
             sel_empty = ak.num(ak_array[ref_field]) > 0
             ak_to_plot = ak_array[ref_field][sel_none & sel_empty]
-            ak_array = self._flatten_array(ak.flatten(ak_to_plot))
+            ak_array = self._flatten_array(ak_to_plot)
             self.hists[test_obj] = np.histogram(
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins
