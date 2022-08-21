@@ -1,5 +1,8 @@
+from datetime import timedelta
 import glob
 import operator
+import time
+from typing import Union
 import warnings
 
 import numpy as np
@@ -67,6 +70,35 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
     return obj_branches
 
 
-def scaling_func(x, a, b):
+def scaling_func(x: Union[float, np.ndarray], a: float, b: float):
+    if isinstance(x, np.ndarray):
+        return a * x + b * np.ones_like(x)
     return a * x + b
+
+
+##############
+# Decorators #
+##############
+
+
+def ignore_warnings(func):
+    def wrapper(*args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            func(*args, **kwargs)
+    return wrapper
+
+
+def timer(task: str):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            print(f"{task} ...")
+            t0 = time.time()
+            result = func(*args, **kwargs)
+            t1 = time.time()
+            print(f"{task} completed in"
+                  f"{timedelta(seconds=round(t1 - t0, 0))}s")
+            return result
+        return wrapper
+    return decorator
 

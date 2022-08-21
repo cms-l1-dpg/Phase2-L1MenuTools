@@ -1,60 +1,71 @@
 # Object Performance Tools
 
-## Setup of Python environment
   The code has been tested on lxplus,
-  but it should work on any machine that can access `/eos/`.
-
-### Install miniconda
-  To install `miniconda` run the following commands:
-
-    wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh
-    sh Miniconda3-py39_4.12.0-Linux-x86_64.sh "${PATH}/miniconda3"
-
-  Make sure you are installing the latest version by
-  checking out the available installers [here](https://docs.conda.io/en/latest/miniconda.html#linux-installers).
-
-### Install the environment for the framework
-  The easiest way to set up the `conda` environment is to
-  use the `environment.yml` file provided.
-  Specify the path to your `miniconda3` installation in `prefix`
-  and run:
-
-    conda env create -f environment.yml
-
-  This will create a new environment named `py310`.
-  Before running the next steps, just activate the environment:
-
-    conda activate py310  
-
-  More details on how to set up a `conda` environment using a shared
-  `.yaml` file can be found
-  [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment).
-
-  **NOTE:** The current version of the framework runs even without the above.
-  In fact, the `py310` environment is taken from Daniel's `public` area.
-  In the future we hope to migrate this to a common `PhaseII-L1` area and the
-  steps detailed above should no longer be necessary.
+  but should work on any machine that can access `/eos`.
 
 ## Caching the NTuple trees
   In order to run the below steps, the object
   trees from the L1NTuples need to be cached
-  as akward arrays written to .parquet files.
+  as awkward arrays written to .parquet files.
   In order to do this, edit `cfg.yaml` specifying
   which trees and branches are to be loaded
   from which NTuple and run
 
   ```
-  ./ntuple_loader.py
+  ./cache_objects.py
   ```
 
-## Efficiency Plots
-  To run the efficiency plots configure the plots
-  you wish to make in a yaml file with the structure
-  of e.g. `cfg_plots_dy.yaml` and then run
+## Efficiency and Scalings
+  To produce matching efficiency and scaling plots,
+  configure the plots you wish to make in a `.yaml` file
+  with the structure of e.g. `cfg_plots/muons.yaml` and then run
 
   ```
-  ./plotter.py cfg_plots_dy.yaml
+    ./plotter.py --cfg_plots=cfg_plots/muons.yaml
   ```
 
-## Scalings
-  Not implemented yet.
+  or
+
+  ```
+    ./plotter.py -c=cfg_plots/muons.yaml
+  ```
+  
+  The outputs will be written to the `outputs` directory. The
+  scalings are plottet automatically when a `scaling_pct` is
+  configured in the plot config.
+
+## Setup of Python environment
+  **Note:** The code should run without any setup on `lxplus`.
+
+  In the event of failure of the
+  central setup, the following steps are required to
+  install a new Python environment.
+
+### Install miniconda
+  To install `miniconda` run the following commands:
+
+    cd ~
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh
+
+### Install the environment for the framework
+  Specify the path to your `miniconda3` installation under `prefix`
+  in `environment.yml` and run
+
+    conda env create -f environment.yml
+
+  This will create a new environment named `py310`.
+
+  To execute the scripts in the repo you need to modify the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29)
+  (the very first line of the executable `.py` files which starts
+  with `#!`) to point
+  to your newly set up Python installation. To find the path run
+
+    conda activate py310  
+    which python
+
+  and replace the current path in the shebang with the output.
+
+  More details on how to set up a `conda` environment using a shared
+  `.yml` file can be found
+  [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment).

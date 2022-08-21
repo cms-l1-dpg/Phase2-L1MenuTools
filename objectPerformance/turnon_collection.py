@@ -99,10 +99,9 @@ class TurnOnCollection():
         Set bins according to configuration.
         """
         bin_width = self.cfg_plot.bin_width
-        x_max = self.cfg_plot.bin_max
-        x_min = self.cfg_plot.bin_min
-        n_bin_edges = int(x_max / bin_width) + int(x_min / bin_width) + 1
-        self.bins = np.array([i * bin_width for i in range(n_bin_edges)])
+        xmax = self.cfg_plot.bin_max
+        xmin = self.cfg_plot.bin_min
+        self.bins = np.linspace(xmin, xmax, int((xmax - xmin) / bin_width))
 
     def _load_arrays(self):
         """
@@ -127,11 +126,11 @@ class TurnOnCollection():
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
-            pass_dR = dR < self.cfg_plot.match_dR
+            pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
             pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            ref_test_matched = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
-            self.ak_arrays["ref"]["dR_matched_" + test_obj] = ref_test_matched
+            matched_obj = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
+            self.ak_arrays["ref"]["dR_matched_" + test_obj] = matched_obj
 
     def _flatten_array(self, ak_array):
         """
@@ -250,7 +249,9 @@ class TurnOnCollection():
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
-            ak_array = self._flatten_array(self.ak_arrays["ref"][sel][ref_field])
+            ak_array = self._flatten_array(
+                self.ak_arrays["ref"][sel][ref_field]
+            )
             self.hists[test_obj] = np.histogram(ak_array, bins=self.bins)
 
         self.hists["ref"] = np.histogram(
@@ -270,7 +271,7 @@ class TurnOnCollection():
             sel_none = ~ak.is_none(ak_array[ref_field], axis=-1)
             sel_empty = ak.num(ak_array[ref_field]) > 0
             ak_to_plot = ak_array[ref_field][sel_none & sel_empty]
-            ak_array = self._flatten_array(ak.flatten(ak_to_plot))
+            ak_array = self._flatten_array(ak_to_plot)
             self.hists[test_obj] = np.histogram(
                 ak.to_numpy(ak_array, allow_missing=True),
                 bins=self.bins

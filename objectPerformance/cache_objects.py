@@ -1,9 +1,7 @@
 #!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
-from datetime import timedelta
 import glob
 import os
-import time
 
 import awkward as ak
 from progress.bar import IncrementalBar
@@ -13,6 +11,7 @@ import yaml
 
 from utils import get_pdg_id
 from utils import get_branches
+from utils import timer
 
 
 vector.register_awkward()
@@ -58,7 +57,7 @@ class ObjectCacher():
         """
         Load cfg file to extract path to ntuples.
         """
-        with open("cfg.yaml", 'r') as f:
+        with open("cfg_caching/V22.yaml", 'r') as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
         self._ntuple_path = cfg["ntuple_path"]
 
@@ -111,7 +110,9 @@ class ObjectCacher():
         full_set["leptons"] = ak.with_name(leptons, "Momentum4D")
         full_set["fs_parts"] = ak.with_name(fs_parts, "Momentum4D")
 
-        combs = ak.cartesian({"leptons": full_set["leptons"], "fs_parts": full_set["fs_parts"]}, axis=-1)
+        combs = ak.cartesian({"leptons": full_set["leptons"],
+                              "fs_parts": full_set["fs_parts"]},
+                             axis=-1)
         lep, fs = ak.unzip(combs)
 
         dR = fs.deltaR(lep)
@@ -122,7 +123,7 @@ class ObjectCacher():
 
         # Compute Iso, reflecting definition in:
         # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
-        Iso = ak.sum(pt, axis=-1)/full_set["leptons"]["pt"] - 1
+        Iso = ak.sum(pt, axis=-1) / full_set["leptons"]["pt"] - 1
 
         # TODO: Make this cut configurable
         sel_Iso = Iso > -1
@@ -142,30 +143,32 @@ class ObjectCacher():
             return self._filter_iso_branches(all_parts, all_arrays)
         return all_arrays
 
+    def _load_branches_from_ntuple(self, fname, all_arrays, branches):
+        with uproot.open(fname) as f:
+            for branch in branches:
+                branch_arr = f[self._tree][branch].arrays(library="ak")[branch]
+                branch_key = branch.removeprefix("part")
+                all_arrays[branch_key] = ak.concatenate(
+                    [all_arrays[branch_key], branch_arr]
+                )
+        return all_arrays
+
+    @timer("Loading objects files")
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
-
-        print(f"Loading objects from {len(fnames)} files...")
         bar = IncrementalBar("Progress", max=len(fnames))
-        t0 = time.time()
 
         branches = [self._object + x for x in self._branches]
         all_arrays = {x.removeprefix("part"): [] for x in branches}
 
         for fname in fnames:
             bar.next()
-            with uproot.open(fname) as f:
-                for branch in branches:
-                    branch_key = branch.removeprefix("part")
-                    br = f[self._tree][branch].arrays(library="ak")[branch]
-                    all_arrays[branch_key] = ak.concatenate([all_arrays[branch_key], br])
+            all_arrays = self._load_branches_from_ntuple(
+                fname, all_arrays, branches)
             all_arrays = self._postprocess_branches(all_arrays)
 
         self._final_ak_array = ak.zip(all_arrays)
-
-        t1 = time.time()
         bar.finish()
-        print(f"Loading completed in {timedelta(seconds=round(t1 - t0, 0))}s")
 
     def _cache_file_exists(self):
         """
@@ -205,7 +208,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    with open("cfg.yaml", 'r') as f:
+    with open("cfg_caching/V22.yaml", 'r') as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
         for sample, sample_cfg in samples.items():

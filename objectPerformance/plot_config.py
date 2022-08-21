@@ -1,5 +1,3 @@
-
-
 class PlotConfig():
 
     def __init__(self, cfg: dict):
@@ -42,6 +40,12 @@ class PlotConfig():
     def match_dR(self):
         return self._cfg["match_dR"]
 
+    def get_match_dR(self, test_obj):
+        try:
+            return self._cfg["test_objects"][test_obj]["match_dR"]
+        except KeyError:
+            return self.match_dR
+
     @property
     def reference_object_field(self):
         ref_obj = self._cfg["reference_object"]["object"]
@@ -66,8 +70,8 @@ class PlotConfig():
         return self._cfg["binning"]["max"]
 
     @property
-    def bin_min(self):
-        return self._cfg["binning"]["min"]
+    def scaling_pct(self):
+        return self._cfg["scaling_pct"]
 
     def get_object_cuts(self, obj):
         obj_cfg = self._cfg["test_objects"][obj]

@@ -15,6 +15,7 @@ MHT:
       label: "Tracker MHT"
       cuts: {}
   thresholds: [70]
+  scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
   match_dR: False
@@ -42,6 +43,7 @@ HT:
       suffix: ""
       label: "Phase1 Puppi HT"
   thresholds: [200, 350]
+  scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
   match_dR: False
@@ -65,6 +67,7 @@ MET:
       suffix: "Et"
       label: "Puppi MET"
   thresholds: [70, 150]
+  scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
   match_dR: False
@@ -90,6 +93,7 @@ JetPt:
       suffix: "Pt"
       label: "Tracker Jet"
   thresholds: [50, 120]
+  scaling_pct: 0.9
   xlabel: "Gen. p_T (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
   match_dR: 0.4
