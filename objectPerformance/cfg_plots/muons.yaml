@@ -6,6 +6,9 @@ MuonsBarrel:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
+      isolation:
+        threshold: 0.15
+        dR: 0.3
       eta: {"operator": "<", "threshold": 0.83}
   test_objects:
     gmtMuon:
