@@ -324,8 +324,7 @@ class ScalingCentral():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--cfg_plots",
-        "-c",
+        "cfg_plots",
         default="cfg_plots/muons.yaml",
         help="Path of YAML file specifying the desired plots."
     )
