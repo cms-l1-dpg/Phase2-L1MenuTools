@@ -114,7 +114,7 @@ class TurnOnCollection():
         """
         Method for deltaR matching of test objects
         to reference objects.
-        Selects lowestpT-deltaR-matched reco lepton.
+        Selects highest pT deltaR-matched reco lepton.
         """
         for test_obj, obj_cfg in self.cfg_plot.test_objects.items():
             suffix = obj_cfg["suffix"].lower()
@@ -127,9 +127,9 @@ class TurnOnCollection():
             dR = gs.deltaR(js)
 
             pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
-            pt_min = ak.argmin(ref_test["test"]["pt"][pass_dR], axis=-1,
+            pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            matched_obj = ref_test["test"][suffix][pass_dR][pt_min][:, :, 0]
+            matched_obj = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]
             self.ak_arrays["ref"]["dR_matched_" + test_obj] = matched_obj
 
     def _flatten_array(self, ak_array):
