@@ -224,7 +224,7 @@ class TurnOnCollection():
             pass
 
     def _select_highest_pt_ref_object(self):
-        sel_pt = ak.argmax(self.ak_arrays["ref"]["Pt"], axis=-1, keepdims=True)
+        sel_pt = ak.argmax(self.ak_arrays["ref"]["pt"], axis=-1, keepdims=True)
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
         self.ak_arrays["ref"] = ak.fill_none(self.ak_arrays["ref"], -999)
 
@@ -246,7 +246,7 @@ class TurnOnCollection():
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
         self._select_highest_pt_ref_object()
-        self._apply_reference_iso_cuts(ref_cuts)
+        # self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """
@@ -328,12 +328,17 @@ class TurnOnCollection():
 
         return eff, err
 
-    def create_hists(self):
-        self._load_arrays()
-        self._apply_quality_cuts()
+    def _apply_cuts(self):
+        # Apply cuts on reference objects
         self._apply_reference_cuts()
         self._apply_reference_trafo()
+        # Apply cuts on test objects
+        self._apply_quality_cuts()
         self._apply_test_obj_cuts()
+
+    def create_hists(self):
+        self._load_arrays()
+        self._apply_cuts()
         if not self.cfg_plot.match_dR:
             self._skim_to_hists()
         else:
