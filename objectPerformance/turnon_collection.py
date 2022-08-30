@@ -223,15 +223,19 @@ class TurnOnCollection():
         except KeyError:
             pass
 
+    def _select_highest_pt_ref_object(self):
+        sel_pt = ak.argmax(self.ak_arrays["ref"]["Pt"], axis=-1, keepdims=True)
+        self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
+        self.ak_arrays["ref"] = ak.fill_none(self.ak_arrays["ref"], -999)
+
     def _apply_reference_cuts(self):
         """
         Applies configured cuts on reference objects.
         Should be applied before any matching.
         """
         if not (ref_cuts := self.cfg_plot.reference_cuts):
+            self._select_highest_pt_ref_object()
             return
-
-        self._apply_reference_iso_cuts(ref_cuts)
 
         for branch, cut_cfg in ref_cuts.items():
             if branch == "isolation":
@@ -240,6 +244,9 @@ class TurnOnCollection():
             threshold = cut_cfg["threshold"]
             sel = op(abs(self.ak_arrays["ref"][branch]), threshold)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+
+        self._select_highest_pt_ref_object()
+        self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """

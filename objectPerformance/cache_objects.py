@@ -31,6 +31,7 @@ class ObjectCacher():
         self._ntuple_path = ""
         self._set_ntuple_path()
         self._final_ak_array = None
+        self._isolation_branches = {}
         try:
             self._part_type = obj.split('_')[1]
         except IndexError:
@@ -63,9 +64,7 @@ class ObjectCacher():
 
     def _filter_genpart_branches(self, all_arrays):
         """
-        Filter genparticle branches. For leptons
-        apply eta cut and choose largest pT object
-        in each event.
+        Filter genparticle branches by Id.
         """
         if not self._object.startswith("part"):
             return all_arrays
@@ -74,11 +73,6 @@ class ObjectCacher():
         sel_id = (partId == get_pdg_id(self._part_type))
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_id]
-
-        sel_pt = ak.argmax(all_arrays["Pt"], axis=-1, keepdims=True)
-
-        for branch in all_arrays:
-            all_arrays[branch] = all_arrays[branch][sel_pt]
             all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
 
         return all_arrays
@@ -93,15 +87,12 @@ class ObjectCacher():
         for branch in all_parts:
             all_parts[branch] = all_parts[branch][sel_fs]
             all_parts[branch] = ak.fill_none(all_parts[branch], -999)
-
         return all_parts
 
     def _filter_iso_branches(self, all_parts, all_arrays):
         """
         Compute Isolation on selected gen-leptons
         that are matched to final state particles.
-        Filter out selected gen-leptons that do not
-        satisfy the isolation requirement.
         """
         leptons = ak.zip({k.lower(): all_arrays[k] for k in all_arrays.keys()})
         fs_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
@@ -113,33 +104,31 @@ class ObjectCacher():
         }
         combs = ak.cartesian({"leptons": full_set["leptons"],
                               "fs_parts": full_set["fs_parts"]},
-                             axis=-1)
+                              axis=-1)
         lep, fs = ak.unzip(combs)
         dR = fs.deltaR(lep)
 
-        final_leptons = {}
-        for key in full_set["leptons"].fields:
-            final_leptons[key.capitalize()] = full_set["leptons"][key]
-            print(key)
         # Compute Iso, reflecting definition in:
         # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
         for dR_threshold in [0.1, 0.3, 1, 999]:
             sel_dR = dR < dR_threshold
-            pt = full_set["fs_parts"]["pt"][sel_dR]
-            iso = ak.sum(pt, axis=-1) / full_set["leptons"]["pt"] - 1
-
+            pt = fs["pt"][sel_dR]
+            iso = ak.sum(pt, axis=-1) / lep["pt"] - 1
             for iso_threshold in [0.15, -1]:
                 sel_iso = iso > iso_threshold
-                final_leptons[f"iso{iso_threshold}_dR{dR_threshold}"] = sel_iso
-
-        return final_leptons
+                try:
+                    self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"] = ak.concatenate(
+                        [self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"],
+                         sel_iso]
+                    )
+                except KeyError:
+                    self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"] = sel_iso
 
     def _postprocess_branches(self, all_arrays):
         if self._object.startswith("part"):
-            all_parts = all_arrays.copy()
-            all_parts = self._filter_fspart_branches(all_parts)
+            all_parts = self._filter_fspart_branches(all_arrays.copy())
             all_arrays = self._filter_genpart_branches(all_arrays)
-            return self._filter_iso_branches(all_parts, all_arrays)
+            self._filter_iso_branches(all_parts, all_arrays)
         return all_arrays
 
     def _load_branches_from_ntuple(self, fname, all_arrays, branches):
@@ -154,7 +143,7 @@ class ObjectCacher():
 
     @timer("Loading objects files")
     def _concat_array_from_ntuples(self):
-        fnames = glob.glob(self._ntuple_path)[:]
+        fnames = glob.glob(self._ntuple_path)[:5]
         bar = IncrementalBar("Progress", max=len(fnames))
 
         branches = [self._object + x for x in self._branches]
@@ -163,10 +152,12 @@ class ObjectCacher():
         for fname in fnames:
             bar.next()
             all_arrays = self._load_branches_from_ntuple(
-                fname, all_arrays, branches)
+                fname, all_arrays, branches
+            )
             all_arrays = self._postprocess_branches(all_arrays)
+            print(self._isolation_branches)
 
-        self._final_ak_array = ak.zip(all_arrays)
+        self._final_ak_array = ak.zip({**all_arrays})  # , **self._isolation_branches})
         bar.finish()
 
     def _cache_file_exists(self):
@@ -178,6 +169,9 @@ class ObjectCacher():
         return "cache/" + self.parquet_fname + ".parquet" in cached_files
 
     def _save_array_to_parquet(self):
+        """
+        Save
+        """
         ak.to_parquet(
             self._final_ak_array,
             where=f"cache/{self.parquet_fname}.parquet"
