@@ -1,6 +1,7 @@
 **/__pycache__/*
 **/*.png
 **/rates.py
+objectPerformance/**/*.root
 rates/table/out/*
 rates/table/cache/**/*
 rates/table/lib/*

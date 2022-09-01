@@ -147,7 +147,7 @@ class TurnOnCollection():
         """
         Returns MHT for the gen-level objects considered (typically jets).
         Cuts are not applied at this stage, as the `ak_array` passed to
-        this function already has cuts applied in `_apply_reference_cuts`.
+        this function already has cuts applied in `apply_reference_cuts`.
         `_mht` is an `ak.Array()` with one entry (MHT) per event.
         """
         _px = self.ak_arrays["ref"].px
@@ -218,20 +218,26 @@ class TurnOnCollection():
         try:
             dR = ref_cuts["isolation"]["dR"]
             threshold = ref_cuts["isolation"]["threshold"]
-            sel = self.ak_arrays["ref"][f"iso{threshold}_dR{dR}"]
+            sel = self.ak_arrays["ref"][f"isolation_dr_{dR}"] < threshold
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
         except KeyError:
             pass
 
     def _select_highest_pt_ref_object(self):
+        """
+        The raw cached arrays of the reference still contain
+        multiple objects per event. This function selects the
+        highest object in pt and should be called after all the
+        reference cuts are applied.
+        """
         sel_pt = ak.argmax(self.ak_arrays["ref"]["pt"], axis=-1, keepdims=True)
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
-        self.ak_arrays["ref"] = ak.fill_none(self.ak_arrays["ref"], -999)
 
     def _apply_reference_cuts(self):
         """
-        Applies configured cuts on reference objects.
-        Should be applied before any matching.
+        Applies configured cuts on reference objects. Should be
+        applied before any matching and before the selection of
+        the highest pT object.
         """
         if not (ref_cuts := self.cfg_plot.reference_cuts):
             self._select_highest_pt_ref_object()
@@ -246,7 +252,7 @@ class TurnOnCollection():
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
         self._select_highest_pt_ref_object()
-        # self._apply_reference_iso_cuts(ref_cuts)
+        self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """
@@ -259,6 +265,8 @@ class TurnOnCollection():
             if not cuts:
                 continue
             for branch, cut_cfg in cuts.items():
+                if branch == "nstubs":
+                    print(self.ak_arrays[test_obj][branch])
                 op = utils.str_to_op(cut_cfg["operator"])
                 threshold = cut_cfg["threshold"]
                 sel = op(abs(self.ak_arrays[test_obj][branch]), threshold)

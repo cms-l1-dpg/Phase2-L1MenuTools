@@ -24,19 +24,22 @@ class ObjectCacher():
         self._sample = sample
         self._object = obj.split('_')[0]
         self._tree = tree
-        if not isinstance(branches, list):
-            self._branches = get_branches(sample_cfg["ntuple_path"], tree, obj)
-        else:
-            self._branches = branches
-        self._ntuple_path = ""
-        self._set_ntuple_path()
         self._final_ak_array = None
-        self._isolation_branches = {}
+        self._ref_part_iso_dR_vals = [0.1, 0.15, 0.2, 0.3, 1.5]
+        self._ref_part_iso = {
+            f"isolation_dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
+        }
         try:
             self._part_type = obj.split('_')[1]
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
+        # Get Branches
+        if not isinstance(branches, list):
+            self._branches = get_branches(self._ntuple_path, tree, obj)
+            # sample_cfg["ntuple_path"]
+        else:
+            self._branches = branches
         os.makedirs("cache", exist_ok=True)
 
     @property
@@ -54,21 +57,23 @@ class ObjectCacher():
             fname += "_" + self._part_type
         return fname
 
-    def _set_ntuple_path(self):
+    @property
+    def _ntuple_path(self):
         """
         Load cfg file to extract path to ntuples.
         """
+        local_ntuple_path = f"l1ntuples/{self._version}/{self._sample}/*.root"
+        if glob.glob(local_ntuple_path):
+            return local_ntuple_path
+
         with open("cfg_caching/V22.yaml", 'r') as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
-        self._ntuple_path = cfg["ntuple_path"]
+        return cfg["ntuple_path"]
 
     def _filter_genpart_branches(self, all_arrays):
         """
         Filter genparticle branches by Id.
         """
-        if not self._object.startswith("part"):
-            return all_arrays
-
         partId = abs(all_arrays["Id"])
         sel_id = (partId == get_pdg_id(self._part_type))
         for branch in all_arrays:
@@ -86,64 +91,58 @@ class ObjectCacher():
         sel_fs = all_parts["Stat"] == 1
         for branch in all_parts:
             all_parts[branch] = all_parts[branch][sel_fs]
-            all_parts[branch] = ak.fill_none(all_parts[branch], -999)
         return all_parts
 
-    def _filter_iso_branches(self, all_parts, all_arrays):
+    def _compute_ref_part_isolation(self, fs_parts, ref_parts):
         """
         Compute Isolation on selected gen-leptons
         that are matched to final state particles.
         """
-        leptons = ak.zip({k.lower(): all_arrays[k] for k in all_arrays.keys()})
-        fs_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
+        leptons = ak.zip({k.lower(): ref_parts[k] for k in ref_parts.keys()})
+        fs_parts = ak.zip({k.lower(): fs_parts[k] for k in fs_parts.keys()})
 
         # Compute dR between leptons and final state particles
         full_set = {
             "leptons": ak.with_name(leptons, "Momentum4D"),
-            "fs_parts": ak.with_name(fs_parts, "Momentum4D")
+            "fs_parts": ak.with_name(fs_parts, "Momentum4D"),
         }
-        combs = ak.cartesian({"leptons": full_set["leptons"],
-                              "fs_parts": full_set["fs_parts"]},
-                              axis=-1)
+        combs = ak.cartesian(full_set, axis=-1, nested=True)
         lep, fs = ak.unzip(combs)
         dR = fs.deltaR(lep)
 
         # Compute Iso, reflecting definition in:
-        # https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
-        for dR_threshold in [0.1, 0.3, 1, 999]:
+        # https://github.com/FHead/Phase2-L1MenuTools/blob/main/
+        #   ObjectPerformances/V22Processing/source/HelperFunctions.cpp#L240
+        # TODO: Make for loop over standard values of dR thresholds
+        for dR_threshold in self._ref_part_iso_dR_vals:
             sel_dR = dR < dR_threshold
             pt = fs["pt"][sel_dR]
-            iso = ak.sum(pt, axis=-1) / lep["pt"] - 1
-            for iso_threshold in [0.15, -1]:
-                sel_iso = iso > iso_threshold
-                try:
-                    self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"] = ak.concatenate(
-                        [self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"],
-                         sel_iso]
-                    )
-                except KeyError:
-                    self._isolation_branches[f"iso{iso_threshold}_dR{dR_threshold}"] = sel_iso
+            iso = ak.sum(pt, axis=-1) / leptons["pt"] - 1
+            self._ref_part_iso[f"isolation_dr_{dR_threshold}"] = ak.concatenate(
+                [self._ref_part_iso[f"isolation_dr_{dR_threshold}"], iso],
+            )
 
-    def _postprocess_branches(self, all_arrays):
+    def _postprocess_branches(self, arr):
         if self._object.startswith("part"):
-            all_parts = self._filter_fspart_branches(all_arrays.copy())
-            all_arrays = self._filter_genpart_branches(all_arrays)
-            self._filter_iso_branches(all_parts, all_arrays)
-        return all_arrays
+            ref_parts = self._filter_genpart_branches(arr)
+            fs_parts = self._filter_fspart_branches(arr)
+            self._compute_ref_part_isolation(fs_parts, ref_parts)
+            arr = ref_parts
+        return arr
 
-    def _load_branches_from_ntuple(self, fname, all_arrays, branches):
+    def _load_branches_from_ntuple(self, fname, arr, branches):
         with uproot.open(fname) as f:
             for branch in branches:
                 branch_arr = f[self._tree][branch].arrays(library="ak")[branch]
                 branch_key = branch.removeprefix("part")
-                all_arrays[branch_key] = ak.concatenate(
-                    [all_arrays[branch_key], branch_arr]
+                arr[branch_key] = ak.concatenate(
+                    [arr[branch_key], branch_arr]
                 )
-        return all_arrays
+        return arr
 
     @timer("Loading objects files")
     def _concat_array_from_ntuples(self):
-        fnames = glob.glob(self._ntuple_path)[:5]
+        fnames = glob.glob(self._ntuple_path)[:]
         bar = IncrementalBar("Progress", max=len(fnames))
 
         branches = [self._object + x for x in self._branches]
@@ -151,13 +150,22 @@ class ObjectCacher():
 
         for fname in fnames:
             bar.next()
-            all_arrays = self._load_branches_from_ntuple(
-                fname, all_arrays, branches
+            new_array = {x.removeprefix("part"): [] for x in branches}
+            new_array = self._load_branches_from_ntuple(
+                fname, new_array, branches
             )
-            all_arrays = self._postprocess_branches(all_arrays)
-            print(self._isolation_branches)
+            new_array = self._postprocess_branches(new_array)
 
-        self._final_ak_array = ak.zip({**all_arrays})  # , **self._isolation_branches})
+            # Concatenate array from "fname file" to all_arrays
+            for branch in branches:
+                branch_key = branch.removeprefix("part")
+                all_arrays[branch_key] = ak.concatenate(
+                    [all_arrays[branch_key], new_array[branch_key]]
+                )
+
+        self._final_ak_array = ak.zip(
+            {**all_arrays, **self._ref_part_iso}
+        )
         bar.finish()
 
     def _cache_file_exists(self):
@@ -179,15 +187,20 @@ class ObjectCacher():
 
     def load(self):
         print(f"Process {self._object + self._part_type} object...")
-        if not self._cache_file_exists():
-            print(
-                f"Loading {self._object + self._part_type} object "
-                f"with the following branches: {self._branches}"
-            )
-            if self._dryrun:
-                return
-            self._concat_array_from_ntuples()
-            self._save_array_to_parquet()
+
+        if self._cache_file_exists():
+            return
+
+        print(
+            f"Loading {self._object + self._part_type} object "
+            f"with the following branches: {self._branches}"
+        )
+
+        if self._dryrun:
+            return
+
+        self._concat_array_from_ntuples()
+        self._save_array_to_parquet()
 
 
 if __name__ == "__main__":
@@ -218,3 +231,4 @@ if __name__ == "__main__":
                         dryrun=args.dry_run
                     )
                     loader.load()
+

@@ -8,7 +8,7 @@ MuonsBarrel:
     cuts:
       isolation:
         threshold: 0.15
-        dR: 0.3
+        dR: 0.1
       eta: {"operator": "<", "threshold": 0.83}
   test_objects:
     gmtMuon:
@@ -19,8 +19,10 @@ MuonsBarrel:
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
+      quality_id: "NStubsFlag2"
       cuts:
         eta: {"operator": "<", "threshold": 0.83}
+        nstubs: {"operator": "<=", "threshold": 1}
   xlabel: "Gen. pT (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   thresholds: [0, 20]
@@ -39,6 +41,9 @@ MuonsOverlap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
+      isolation:
+        threshold: 0.15
+        dR: 0.1
       eta: {"operator": ">", "threshold": 0.83}
       eta: {"operator": "<", "threshold": 1.24}
   test_objects:
@@ -104,6 +109,9 @@ MuonsEta2to5:
     suffix: "Eta"
     label: "Gen Muons"
     cuts:
+      isolation:
+        threshold: 0.15
+        dR: 0.1
       eta: {"operator": "<", "threshold": 2.4}
       pt: {"operator": ">", "threshold": 2}
       pt: {"operator": "<", "threshold": 5}
@@ -138,6 +146,9 @@ MuonsEtaGreater15:
     suffix: "Eta"
     label: "Gen Muons"
     cuts:
+      isolation:
+        threshold: 0.15
+        dR: 0.1
       eta: {"operator": "<", "threshold": 2.4}
       pt: {"operator": ">", "threshold": 15}
   test_objects:
@@ -160,35 +171,4 @@ MuonsEtaGreater15:
     min: -3
     max: 3
     step: 0.2
-
-Muons:
-  sample: DY
-  default_version: V22
-  reference_object: 
-    object: "part_mu"
-    suffix: "Pt"
-    label: "Gen Muons"
-    cuts:
-      eta: {"operator": "<", "threshold": 1.4841}
-  test_objects:
-    tkMuon:
-      suffix: "Pt"
-      label: "Tracker Muon"
-      cuts:
-        eta: {"operator": "<", "threshold": 1.4841}
-    tkGlbMuon:
-      suffix: "Pt"
-      label: "Tracker Global Muon"
-      cuts:
-        eta: {"operator": "<", "threshold": 1.4841}
-  thresholds: [20]
-  scaling_pct: 0.95
-  xlabel: "Gen. pT (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, Barrel)"
-  match_dR: 0.1
-  binning:
-    min: 0
-    max: 150 
-    step: 5
-
 
