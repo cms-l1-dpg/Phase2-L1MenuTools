@@ -1,29 +1,3 @@
-MHT:
-  sample: TT
-  default_version: V22
-  reference_object:
-    object: "jet"
-    suffix: "Pt"
-    label: "Gen MHT"
-    cuts:
-      eta: {"operator": "<", "threshold": 2.4}
-      pt: {"operator": ">", "threshold": 10}
-    trafo: "MHT"
-  test_objects:
-    trackerMHT:
-      suffix: ""
-      label: "Tracker MHT"
-      cuts: {}
-  thresholds: [70]
-  scaling_pct: 0.9
-  xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: False
-  binning:
-    min: 0
-    max: 500
-    step: 10
-
 HT:
   sample: TT
   default_version: V22
@@ -102,3 +76,28 @@ JetPt:
     max: 500 
     step: 10
 
+MHT:
+  sample: TT
+  default_version: V22
+  reference_object:
+    object: "jet"
+    suffix: "Pt"
+    label: "Gen MHT"
+    cuts:
+      eta: {"operator": "<", "threshold": 2.4}
+      pt: {"operator": ">", "threshold": 10}
+    trafo: "MHT"
+  test_objects:
+    trackerMHT:
+      suffix: ""
+      label: "Tracker MHT"
+      cuts: {}
+  thresholds: [70]
+  scaling_pct: 0.9
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  match_dR: False
+  binning:
+    min: 0
+    max: 500
+    step: 10

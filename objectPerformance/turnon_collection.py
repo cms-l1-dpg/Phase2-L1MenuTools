@@ -239,6 +239,9 @@ class TurnOnCollection():
         applied before any matching and before the selection of
         the highest pT object.
         """
+        if self.cfg_plot.reference_trafo or not self.cfg_plot.match_dR:
+            return
+
         if not (ref_cuts := self.cfg_plot.reference_cuts):
             self._select_highest_pt_ref_object()
             return
