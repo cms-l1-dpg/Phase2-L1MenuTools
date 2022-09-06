@@ -19,9 +19,10 @@ vector.register_awkward()
 
 class ObjectCacher():
 
-    def __init__(self, version, sample, obj, tree, branches, dryrun=False):
+    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
         self._version = version
         self._sample = sample
+        self._cfg_file = cfg_file
         self._object = obj.split('_')[0]
         self._tree = tree
         self._final_ak_array = None
@@ -66,7 +67,7 @@ class ObjectCacher():
         if glob.glob(local_ntuple_path):
             return local_ntuple_path
 
-        with open("cfg_caching/V22.yaml", 'r') as f:
+        with open(self._cfg_file, 'r') as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
         return cfg["ntuple_path"]
 
@@ -207,6 +208,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "cfg_file",
+        default="cfg_caching/V22.yaml"
+        help=""
+    )
+    parser.add_argument(
         "--dry-run",
         "-d",
         action="store_true",
@@ -214,7 +220,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    with open("cfg_caching/V22.yaml", 'r') as f:
+    with open(args.cfg, 'r') as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
         for sample, sample_cfg in samples.items():
@@ -228,6 +234,7 @@ if __name__ == "__main__":
                         tree=tree,
                         obj=obj,
                         branches=branches,
+                        cfg_file=args.cfg_file
                         dryrun=args.dry_run
                     )
                     loader.load()
