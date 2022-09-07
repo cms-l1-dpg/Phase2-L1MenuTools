@@ -16,7 +16,9 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           pip install flake8 pytest
           if [ -f objectPerformance/requirements.txt ]; then pip install -r objectPerformance/requirements.txt; fi
-      - name: Display Python version
+      - name: Run Flake8
+        run: flake8 objectPerformance
+      - name: Run Tests
         run: |
           cd objectPerformance
           python -m pytest
