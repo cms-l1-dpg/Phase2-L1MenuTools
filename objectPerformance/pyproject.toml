@@ -1,7 +1,22 @@
 # pyproject.toml
+[tool.poetry]
+name = "object-performance"
+version = "0.0.1"
+description = ""
+authors = [
+    "Matteo Bonanomi <matteo.bonanomi@cern.ch>",
+    "Daniel Hundhausen <daniel.hundhausen@cern.ch>",
+]
+
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
     "ignore::UserWarning",
     'ignore:A NumPy version',
+]
+pythonpath = [
+    "src"
+]
+testpaths = [
+    "tests",
 ]
