@@ -19,7 +19,8 @@ vector.register_awkward()
 
 class ObjectCacher():
 
-    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
+    def __init__(self, version, sample, obj, tree, branches, cfg_file,
+                 dryrun=False):
         self._version = version
         self._sample = sample
         self._cfg_file = cfg_file
@@ -119,7 +120,7 @@ class ObjectCacher():
             sel_dR = dR < dR_threshold
             pt = fs["pt"][sel_dR]
             iso = ak.sum(pt, axis=-1) / leptons["pt"] - 1
-            self._ref_part_iso[f"isolation_dr_{dR_threshold}"] = ak.concatenate(
+            self._ref_part_iso[f"isolation_dr_{dR_threshold}"] = ak.concatenate(  # noqa
                 [self._ref_part_iso[f"isolation_dr_{dR_threshold}"], iso],
             )
 
@@ -209,7 +210,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_file",
-        default="cfg_caching/V22.yaml"
+        default="cfg_caching/V22.yaml",
         help=""
     )
     parser.add_argument(
@@ -234,7 +235,7 @@ if __name__ == "__main__":
                         tree=tree,
                         obj=obj,
                         branches=branches,
-                        cfg_file=args.cfg_file
+                        cfg_file=args.cfg_file,
                         dryrun=args.dry_run
                     )
                     loader.load()
