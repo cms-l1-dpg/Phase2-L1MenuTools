@@ -38,7 +38,7 @@ class ArrayLoader():
         in self._transform_key().
         """
         fname = (
-            "cache/"
+            f"cache/{self.turnon_collection.cfg_plot.version_ref_object}/"
             f"{self.turnon_collection.cfg_plot.version_ref_object}_"
             f"{self.turnon_collection.cfg_plot.sample}_"
             f"{obj}.parquet"

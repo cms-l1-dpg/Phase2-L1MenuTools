@@ -41,7 +41,7 @@ class ObjectCacher():
             # sample_cfg["ntuple_path"]
         else:
             self._branches = branches
-        os.makedirs("cache", exist_ok=True)
+        os.makedirs(f"cache/{version}", exist_ok=True)
 
     @property
     def parquet_fname(self):
@@ -183,7 +183,7 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            where=f"cache/{self.parquet_fname}.parquet"
+            where=f"cache/{self._version}/{self.parquet_fname}.parquet"
         )
 
     def load(self):

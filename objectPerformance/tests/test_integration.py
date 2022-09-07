@@ -3,7 +3,7 @@ from turnon_collection import TurnOnCollection
 
 def test_turnon_collection_met():
     """
-    This integration test, whether the MET histograms for the
+    This integration test tests whether the MET histograms for the
     MET plots for V22 are produced as expected. The cache files
     included in the test directory should lead to the bin values
     specified below.
