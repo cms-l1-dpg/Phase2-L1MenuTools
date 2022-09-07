@@ -1,42 +1,42 @@
-attrs @ file:///opt/conda/conda-bld/attrs_1642510447205/work
-awkward @ file:///Users/runner/miniforge3/conda-bld/awkward_1649793817852/work
-certifi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_884c889c-96af-444f-bd6d-daddb5e9a462ykj3l5n_/croots/recipe/certifi_1655968814730/work/certifi
-cffi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_f9af_qffaa/croots/recipe/cffi_1659598650277/work
-cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
-flake8 @ file:///opt/conda/conda-bld/flake8_1648129545443/work
+attrs
+awkward
+certifi
+cffi
+cycler
+flake8
 fonttools==4.25.0
-importlib-metadata @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-5pqd2z6f/importlib-metadata_1648710902288/work
-iniconfig @ file:///home/linux1/recipes/ci/iniconfig_1610983019677/work
-kiwisolver @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_69de275f-e01d-4033-8ea6-9caf70c31072d5uirqak/croots/recipe/kiwisolver_1653292042660/work
-lz4 @ file:///Users/ktietz/ci_310/lz4_1643977262863/work
-matplotlib @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-_3usbnl1/matplotlib-suite_1647506475477/work
-mccabe @ file:///opt/conda/conda-bld/mccabe_1644221741721/work
-mplhep @ file:///home/conda/feedstock_root/build_artifacts/mplhep_1657205811192/work
-mplhep-data @ file:///home/conda/feedstock_root/build_artifacts/mplhep_data_1629888653954/work
+importlib-metadata
+iniconfig
+kiwisolver
+lz4
+matplotlib
+mccabe
+mplhep
+mplhep-data
 munkres==1.1.4
-numpy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_5f5504oaep/croots/recipe/numpy_and_numpy_base_1659432718638/work
-packaging @ file:///tmp/build/80754af9/packaging_1637314298585/work
+numpy
+packaging
 Pillow==9.2.0
-pluggy @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_croot-w6jyveby/pluggy_1648109277227/work
-progress @ file:///home/conda/feedstock_root/build_artifacts/progress_1628490366097/work
-py @ file:///opt/conda/conda-bld/py_1644396412707/work
+pluggy
+progress
+py
 pyarrow==8.0.0
-pycodestyle @ file:///tmp/build/80754af9/pycodestyle_1636635402688/work
-pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
-pyflakes @ file:///tmp/build/80754af9/pyflakes_1636644436481/work
-pyparsing @ file:///tmp/build/80754af9/pyparsing_1635766073266/work
+pycodestyle
+pycparser
+pyflakes
+pyparsing
 pytest==7.1.2
-python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+python-dateutil
 PyYAML==6.0
-scipy @ file:///Users/ktietz/ci_310/scipy_1644255974431/work
-six @ file:///tmp/build/80754af9/six_1644875935023/work
-tomli @ file:///tmp/build/80754af9/tomli_1637314251069/work
-tornado @ file:///Users/ktietz/ci_310/tornado_1643969120498/work
-typing_extensions @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_27esv8zrkq/croots/recipe/typing_extensions_1659638827591/work
-uhi @ file:///home/conda/feedstock_root/build_artifacts/uhi_1641530239308/work
-uproot @ file:///Users/runner/miniforge3/conda-bld/uproot_1659637751638/work
-vector @ file:///home/conda/feedstock_root/build_artifacts/vector_1643753369110/work
+scipy
+six
+tomli
+tornado
+typing_extensions
+uhi
+uproot
+vector
 xrootd==5.4.3
-xxhash @ file:///Users/runner/miniforge3/conda-bld/python-xxhash_1649442455687/work
-zipp @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_66c2c5f2-5dd5-4946-a16a-72af650ebd6cnmz4ou0f/croots/recipe/zipp_1652343960956/work
-zstandard @ file:///Users/ktietz/ci_310/zstandard_1643973967142/work
+xxhash
+zipp
+zstandard
