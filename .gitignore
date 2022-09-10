@@ -1,5 +1,7 @@
 **/__pycache__/*
 **/*.png
+**/.DS_Store
+**/*.parquet
 **/rates.py
 objectPerformance/**/*.root
 rates/table/out/*

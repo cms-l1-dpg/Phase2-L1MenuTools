@@ -248,10 +248,8 @@ class ScalingCentral():
             if is_point:
                 return bins[i + 1]
 
-    def _compute_scalings(self,
-                          turnon_collection,
-                          scalings,
-                          scaling_pct) -> dict:
+    def _compute_scalings_naive(self, turnon_collection, scalings,
+                          scaling_pct):
         bins = turnon_collection.bins
         threshold = turnon_collection.threshold
 
@@ -268,6 +266,10 @@ class ScalingCentral():
                 scalings[obj][threshold] = percentage_point
 
         return scalings
+
+    def _compute_scalings(self, turnon_collection, scalings,
+                          scaling_pct) -> dict:
+            return self._compute_scalings_naive(
 
     def _fit_linear_functions(self, scalings):
         params = {}
