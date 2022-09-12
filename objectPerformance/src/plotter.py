@@ -269,7 +269,8 @@ class ScalingCentral():
 
     def _compute_scalings(self, turnon_collection, scalings,
                           scaling_pct) -> dict:
-            return self._compute_scalings_naive(
+            return self._compute_scalings_naive(turnon_collection, scalings,
+                          scaling_pct)
 
     def _fit_linear_functions(self, scalings):
         params = {}

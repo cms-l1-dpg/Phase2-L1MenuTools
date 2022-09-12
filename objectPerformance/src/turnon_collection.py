@@ -268,8 +268,6 @@ class TurnOnCollection():
             if not cuts:
                 continue
             for branch, cut_cfg in cuts.items():
-                if branch == "nstubs":
-                    print(self.ak_arrays[test_obj][branch])
                 op = utils.str_to_op(cut_cfg["operator"])
                 threshold = cut_cfg["threshold"]
                 sel = op(abs(self.ak_arrays[test_obj][branch]), threshold)
@@ -328,6 +326,7 @@ class TurnOnCollection():
         bin_width = self.cfg_plot.bin_width
         return np.ones_like(ref_vals) * bin_width / 2
 
+    @utils.ignore_warnings
     def get_efficiency(self, obj_key: str):
         ref_vals = self.hists["ref"][0]
         test_vals = self.hists[obj_key][0]
