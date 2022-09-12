@@ -25,7 +25,7 @@ MuonsBarrel:
         nstubs: {"operator": "<=", "threshold": 1}
   xlabel: "Gen. pT (GeV)"
   ylabel: "Matching Efficiency (barrel)"
-  thresholds: [0, 20]
+  thresholds: [0, 10, 20, 30, 40, 50]
   scaling_pct: 0.95
   match_dR: 0.1
   binning:

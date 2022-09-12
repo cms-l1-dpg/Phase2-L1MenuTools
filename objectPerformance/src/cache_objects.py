@@ -39,10 +39,10 @@ class ObjectCacher():
         # Get Branches
         if not isinstance(branches, list):
             self._branches = get_branches(self._ntuple_path, tree, obj)
-            # sample_cfg["ntuple_path"]
         else:
             self._branches = branches
-        os.makedirs(f"cache/{version}", exist_ok=True)
+        self.cache_out_path = f"cache/{version}/"
+        os.makedirs(self.cache_out_path, exist_ok=True)
 
     @property
     def parquet_fname(self):
@@ -126,8 +126,8 @@ class ObjectCacher():
 
     def _postprocess_branches(self, arr):
         if self._object.startswith("part"):
-            ref_parts = self._filter_genpart_branches(arr)
-            fs_parts = self._filter_fspart_branches(arr)
+            ref_parts = self._filter_genpart_branches(arr.copy())
+            fs_parts = self._filter_fspart_branches(arr.copy())
             self._compute_ref_part_isolation(fs_parts, ref_parts)
             arr = ref_parts
         return arr
@@ -164,19 +164,19 @@ class ObjectCacher():
                 all_arrays[branch_key] = ak.concatenate(
                     [all_arrays[branch_key], new_array[branch_key]]
                 )
-
-        self._final_ak_array = ak.zip(
-            {**all_arrays, **self._ref_part_iso}
-        )
         bar.finish()
+
+        if self._object.startswith("part"):
+            all_arrays = {**all_arrays, **self._ref_part_iso}
+        self._final_ak_array = ak.zip({**all_arrays})
 
     def _cache_file_exists(self):
         """
         Checks if there is parquet file in cache
         with the name 'version_sample_object.parquet'
         """
-        cached_files = glob.glob("cache/*")
-        return "cache/" + self.parquet_fname + ".parquet" in cached_files
+        cached_files = glob.glob(self.cache_out_path + "*")
+        return self.cache_out_path + f"{self.parquet_fname}.parquet" in cached_files
 
     def _save_array_to_parquet(self):
         """
@@ -184,7 +184,7 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            where=f"cache/{self._version}/{self.parquet_fname}.parquet"
+            where=self.cache_out_path+f"{self.parquet_fname}.parquet"
         )
 
     def load(self):
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "cfg_file",
+        "cfg",
         default="cfg_caching/V22.yaml",
         help=""
     )
@@ -235,7 +235,7 @@ if __name__ == "__main__":
                         tree=tree,
                         obj=obj,
                         branches=branches,
-                        cfg_file=args.cfg_file,
+                        cfg_file=args.cfg,
                         dryrun=args.dry_run
                     )
                     loader.load()
