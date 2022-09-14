@@ -249,7 +249,7 @@ class ScalingCentral():
                 return bins[i + 1]
 
     def _compute_scalings_naive(self, turnon_collection, scalings,
-                          scaling_pct):
+                                scaling_pct):
         bins = turnon_collection.bins
         threshold = turnon_collection.threshold
 

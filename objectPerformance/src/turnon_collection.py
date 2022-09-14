@@ -68,11 +68,8 @@ class ArrayLoader():
         """
         Load test objects.
         """
-        # Load test objects
         for test_obj in self.turnon_collection.cfg_plot.test_objects:
-            test_array = self._load_array_from_parquet(
-                test_obj
-            )
+            test_array = self._load_array_from_parquet(test_obj)
             test_array = ak.with_name(test_array, "Momentum4D")
             self.turnon_collection.ak_arrays[test_obj] = test_array
 
@@ -132,16 +129,20 @@ class TurnOnCollection():
             matched_obj = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]
             self.ak_arrays["ref"]["dR_matched_" + test_obj] = matched_obj
 
-    def _flatten_array(self, ak_array):
+    def _flatten_array(self, ak_array, ak_to_np=False):
         """
         Returns a flattend array if the ak array is nested.
         If the ak array is already flat, the function returns
         the original array.
         """
         try:
-            return ak.flatten(ak_array)
+            arr = ak.flatten(ak_array)
         except ValueError:
-            return ak_array
+            arr = ak_array
+
+        if ak_to_np:
+            return ak.to_numpy(arr)
+        return arr
 
     def _compute_MHT(self):
         """
@@ -221,7 +222,7 @@ class TurnOnCollection():
             sel = self.ak_arrays["ref"][f"isolation_dr_{dR}"] < threshold
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
         except KeyError:
-            pass
+            print("No reference iso applied!")
 
     def _select_highest_pt_ref_object(self):
         """
@@ -242,7 +243,9 @@ class TurnOnCollection():
         if self.cfg_plot.reference_trafo or not self.cfg_plot.match_dR:
             return
 
-        if not (ref_cuts := self.cfg_plot.reference_cuts):
+        ref_cuts = self.cfg_plot.reference_cuts
+
+        if not ref_cuts:
             self._select_highest_pt_ref_object()
             return
 
@@ -291,34 +294,34 @@ class TurnOnCollection():
             bins=self.bins
         )
 
+    def _remove_inner_nones_zeros(self, arr):
+        sel_arr_not_none = ~ak.is_none(arr, axis=-1)
+        sel_arr_not_zero = ak.num(arr) > 0
+        sel = sel_arr_not_none & sel_arr_not_zero
+        return arr[sel]
+
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
         for test_obj, cfg in self.cfg_plot.test_objects.items():
-
             test_vals = self.ak_arrays["ref"]["dR_matched_" + test_obj]
-            sel_threshold = test_vals > self.threshold
-            ak_array = self.ak_arrays["ref"][sel_threshold]
 
-            # Drop None and empty arrays
-            sel_none = ~ak.is_none(ak_array[ref_field], axis=-1)
-            sel_empty = ak.num(ak_array[ref_field]) > 0
-            ak_to_plot = ak_array[ref_field][sel_none & sel_empty]
-            ak_array = self._flatten_array(ak_to_plot)
-            self.hists[test_obj] = np.histogram(
-                ak.to_numpy(ak_array, allow_missing=True),
-                bins=self.bins
-            )
-
-        ref_flat_np = ak.to_numpy(
-            self._flatten_array(
+            ref_obj = self._remove_inner_nones_zeros(
                 self.ak_arrays["ref"][ref_field]
             )
-        )
 
-        self.hists["ref"] = np.histogram(
-            ref_flat_np,
-            bins=self.bins
+            sel_threshold = test_vals > self.threshold
+            test_obj_arr = self.ak_arrays["ref"][ref_field][sel_threshold]
+            test_obj_arr = self._remove_inner_nones_zeros(test_obj_arr)
+
+            # Create Test Object(s) Numpy Histogram
+            test_obj_arr = self._flatten_array(test_obj_arr, ak_to_np=True)
+            self.hists[test_obj] = np.histogram(test_obj_arr, bins=self.bins)
+
+        # Create Reference Numpy Histogram
+        ref_flat_np = self._flatten_array(
+            ref_obj, ak_to_np=True
         )
+        self.hists["ref"] = np.histogram(ref_flat_np, bins=self.bins)
 
     @property
     def xerr(self):

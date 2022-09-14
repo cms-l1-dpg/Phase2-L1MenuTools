@@ -176,7 +176,8 @@ class ObjectCacher():
         with the name 'version_sample_object.parquet'
         """
         cached_files = glob.glob(self.cache_out_path + "*")
-        return self.cache_out_path + f"{self.parquet_fname}.parquet" in cached_files
+        fpath = self.cache_out_path + f"{self.parquet_fname}.parquet"
+        return fpath in cached_files
 
     def _save_array_to_parquet(self):
         """
@@ -184,7 +185,7 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            where=self.cache_out_path+f"{self.parquet_fname}.parquet"
+            where=self.cache_out_path + f"{self.parquet_fname}.parquet"
         )
 
     def load(self):

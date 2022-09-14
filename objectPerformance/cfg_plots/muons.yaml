@@ -1,4 +1,4 @@
-MuonsBarrel:
+MuonsBarrelTrigger:
   sample: DY
   default_version: V22
   reference_object: 
@@ -25,15 +25,50 @@ MuonsBarrel:
         nstubs: {"operator": "<=", "threshold": 1}
   xlabel: "Gen. pT (GeV)"
   ylabel: "Matching Efficiency (barrel)"
-  thresholds: [0, 10, 20, 30, 40, 50]
+  thresholds: [20]
   scaling_pct: 0.95
   match_dR: 0.1
+  binning:
+    min: 0
+    max: 50 
+    step: 1.5
+
+MuonsBarrelMatching:
+  sample: DY
+  default_version: V22
+  reference_object: 
+    object: "part_mu"
+    suffix: "Pt"
+    label: "Gen Muons"
+    cuts:
+      isolation:
+        threshold: 0.15
+        dR: 0.1
+      eta: {"operator": "<", "threshold": 0.83}
+  test_objects:
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon"
+      cuts:
+        eta: {"operator": "<", "threshold": 0.83}
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon"
+      quality_id: "NStubsFlag2"
+      cuts:
+        eta: {"operator": "<", "threshold": 0.83}
+        # nstubs: {"operator": "<=", "threshold": 1}
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  thresholds: [0]
+  scaling_pct: 0.95
+  match_dR: 0.2
   binning:
     min: 3
     max: 150 
     step: 3
 
-MuonsOverlap:
+MuonsOverlapMatching:
   sample: DY
   default_version: V22
   reference_object: 
@@ -68,7 +103,7 @@ MuonsOverlap:
     max: 150 
     step: 3
 
-MuonsEndcap:
+MuonsEndcapMatching:
   sample: DY
   default_version: V22
   reference_object: 
@@ -95,7 +130,7 @@ MuonsEndcap:
   xlabel: "Gen. pT (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   match_dR: 0.1
-  thresholds: [0, 20]
+  thresholds: [0]
   binning:
     min: 3
     max: 150 
