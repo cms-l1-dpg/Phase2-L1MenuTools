@@ -19,7 +19,8 @@ vector.register_awkward()
 
 class ObjectCacher():
 
-    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
+    def __init__(self, version, sample, obj, tree, branches, cfg_file,
+                 dryrun=False):
         self._version = version
         self._sample = sample
         self._cfg_file = cfg_file
@@ -28,7 +29,7 @@ class ObjectCacher():
         self._final_ak_array = None
         self._ref_part_iso_dR_vals = [0.1, 0.15, 0.2, 0.3, 1.5]
         self._ref_part_iso = {
-            f"isolation_dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
+            f"dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
         }
         try:
             self._part_type = obj.split('_')[1]
@@ -38,10 +39,10 @@ class ObjectCacher():
         # Get Branches
         if not isinstance(branches, list):
             self._branches = get_branches(self._ntuple_path, tree, obj)
-            # sample_cfg["ntuple_path"]
         else:
             self._branches = branches
-        os.makedirs("cache", exist_ok=True)
+        self.cache_out_path = f"cache/{version}/"
+        os.makedirs(self.cache_out_path, exist_ok=True)
 
     @property
     def parquet_fname(self):
@@ -88,10 +89,17 @@ class ObjectCacher():
         Select all the final state particles.
         This collection is used only for dR matching
         and Isolation computations, but it's not saved.
+        Neutrino final state particles are not considered.
         """
+        sel_no_nu_e = all_parts["Id"] != 12
+        sel_no_nu_mu = all_parts["Id"] != 14
+        sel_no_nu_tau = all_parts["Id"] != 16
         sel_fs = all_parts["Stat"] == 1
+        sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
+
         for branch in all_parts:
-            all_parts[branch] = all_parts[branch][sel_fs]
+            all_parts[branch] = all_parts[branch][sel]
+
         return all_parts
 
     def _compute_ref_part_isolation(self, fs_parts, ref_parts):
@@ -119,14 +127,14 @@ class ObjectCacher():
             sel_dR = dR < dR_threshold
             pt = fs["pt"][sel_dR]
             iso = ak.sum(pt, axis=-1) / leptons["pt"] - 1
-            self._ref_part_iso[f"isolation_dr_{dR_threshold}"] = ak.concatenate(
-                [self._ref_part_iso[f"isolation_dr_{dR_threshold}"], iso],
+            self._ref_part_iso[f"dr_{dR_threshold}"] = ak.concatenate(
+                [self._ref_part_iso[f"dr_{dR_threshold}"], iso],
             )
 
     def _postprocess_branches(self, arr):
         if self._object.startswith("part"):
-            ref_parts = self._filter_genpart_branches(arr)
-            fs_parts = self._filter_fspart_branches(arr)
+            ref_parts = self._filter_genpart_branches(arr.copy())
+            fs_parts = self._filter_fspart_branches(arr.copy())
             self._compute_ref_part_isolation(fs_parts, ref_parts)
             arr = ref_parts
         return arr
@@ -163,19 +171,20 @@ class ObjectCacher():
                 all_arrays[branch_key] = ak.concatenate(
                     [all_arrays[branch_key], new_array[branch_key]]
                 )
-
-        self._final_ak_array = ak.zip(
-            {**all_arrays, **self._ref_part_iso}
-        )
         bar.finish()
+
+        if self._object.startswith("part"):
+            all_arrays = {**all_arrays, **self._ref_part_iso}
+        self._final_ak_array = ak.zip({**all_arrays})
 
     def _cache_file_exists(self):
         """
         Checks if there is parquet file in cache
         with the name 'version_sample_object.parquet'
         """
-        cached_files = glob.glob("cache/*")
-        return "cache/" + self.parquet_fname + ".parquet" in cached_files
+        cached_files = glob.glob(self.cache_out_path + "*")
+        fpath = self.cache_out_path + f"{self.parquet_fname}.parquet"
+        return fpath in cached_files
 
     def _save_array_to_parquet(self):
         """
@@ -183,7 +192,7 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            where=f"cache/{self.parquet_fname}.parquet"
+            where=self.cache_out_path + f"{self.parquet_fname}.parquet"
         )
 
     def load(self):
@@ -208,8 +217,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "cfg_file",
-        default="cfg_caching/V22.yaml"
+        "cfg",
+        default="cfg_caching/V22.yaml",
         help=""
     )
     parser.add_argument(
@@ -234,7 +243,7 @@ if __name__ == "__main__":
                         tree=tree,
                         obj=obj,
                         branches=branches,
-                        cfg_file=args.cfg_file
+                        cfg_file=args.cfg,
                         dryrun=args.dry_run
                     )
                     loader.load()

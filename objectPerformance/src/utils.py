@@ -85,7 +85,7 @@ def ignore_warnings(func):
     def wrapper(*args, **kwargs):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
     return wrapper
 
 

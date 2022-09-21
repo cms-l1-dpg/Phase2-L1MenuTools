@@ -31,6 +31,10 @@ def test_str_to_op():
     assert op_less_than(2, 5)
     assert not op_less_than(5, 2)
 
+    assert op_less_equal(2, 5)
+    assert op_less_equal(3, 3)
+    assert not op_less_equal(5, 2)
+
     assert op_equal(5, 5)
     assert not op_equal(4, 5)
 
