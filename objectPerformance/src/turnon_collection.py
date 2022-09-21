@@ -88,6 +88,7 @@ class TurnOnCollection():
         self.threshold = threshold
         self.bins = []
         self.ak_arrays = {}
+        self.numerators = {"ref": {}, "test": {}}
         self.hists = {}
         self._set_bins()
 
@@ -126,8 +127,8 @@ class TurnOnCollection():
             pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            matched_obj = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]
-            self.ak_arrays["ref"]["dR_matched_" + test_obj] = matched_obj
+            self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]
+            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """
@@ -302,25 +303,22 @@ class TurnOnCollection():
 
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
+
+        ref_obj = self._remove_inner_nones_zeros(
+            self.ak_arrays["ref"][ref_field]
+        )
+
         for test_obj, cfg in self.cfg_plot.test_objects.items():
-            test_vals = self.ak_arrays["ref"]["dR_matched_" + test_obj]
-
-            ref_obj = self._remove_inner_nones_zeros(
-                self.ak_arrays["ref"][ref_field]
-            )
-
-            sel_threshold = test_vals > self.threshold
-            test_obj_arr = self.ak_arrays["ref"][ref_field][sel_threshold]
-            test_obj_arr = self._remove_inner_nones_zeros(test_obj_arr)
+            sel_threshold = self.numerators["test"][test_obj] > self.threshold
+            numerator = self.numerators["ref"][test_obj][sel_threshold]
+            numerator = self._remove_inner_nones_zeros(numerator)
+            numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            test_obj_arr = self._flatten_array(test_obj_arr, ak_to_np=True)
-            self.hists[test_obj] = np.histogram(test_obj_arr, bins=self.bins)
+            self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
 
         # Create Reference Numpy Histogram
-        ref_flat_np = self._flatten_array(
-            ref_obj, ak_to_np=True
-        )
+        ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
         self.hists["ref"] = np.histogram(ref_flat_np, bins=self.bins)
 
     @property
