@@ -127,8 +127,8 @@ class TurnOnCollection():
             pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]
-            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]
+            self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
+            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """
@@ -220,7 +220,7 @@ class TurnOnCollection():
         try:
             dR = ref_cuts["isolation"]["dR"]
             threshold = ref_cuts["isolation"]["threshold"]
-            sel = self.ak_arrays["ref"][f"isolation_dr_{dR}"] < threshold
+            sel = self.ak_arrays["ref"][f"dr_{dR}"] < threshold
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
         except KeyError:
             print("No reference iso applied!")

@@ -29,7 +29,7 @@ class ObjectCacher():
         self._final_ak_array = None
         self._ref_part_iso_dR_vals = [0.1, 0.15, 0.2, 0.3, 1.5]
         self._ref_part_iso = {
-            f"isolation_dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
+            f"dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
         }
         try:
             self._part_type = obj.split('_')[1]
@@ -89,10 +89,17 @@ class ObjectCacher():
         Select all the final state particles.
         This collection is used only for dR matching
         and Isolation computations, but it's not saved.
+        Neutrino final state particles are not considered.
         """
+        sel_no_nu_e = all_parts["Id"] != 12
+        sel_no_nu_mu = all_parts["Id"] != 14
+        sel_no_nu_tau = all_parts["Id"] != 16
         sel_fs = all_parts["Stat"] == 1
+        sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
+
         for branch in all_parts:
-            all_parts[branch] = all_parts[branch][sel_fs]
+            all_parts[branch] = all_parts[branch][sel]
+
         return all_parts
 
     def _compute_ref_part_isolation(self, fs_parts, ref_parts):
@@ -120,8 +127,8 @@ class ObjectCacher():
             sel_dR = dR < dR_threshold
             pt = fs["pt"][sel_dR]
             iso = ak.sum(pt, axis=-1) / leptons["pt"] - 1
-            self._ref_part_iso[f"isolation_dr_{dR_threshold}"] = ak.concatenate(  # noqa
-                [self._ref_part_iso[f"isolation_dr_{dR_threshold}"], iso],
+            self._ref_part_iso[f"dr_{dR_threshold}"] = ak.concatenate(
+                [self._ref_part_iso[f"dr_{dR_threshold}"], iso],
             )
 
     def _postprocess_branches(self, arr):
