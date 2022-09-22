@@ -279,10 +279,10 @@ class TurnOnCollection():
         """
         if self.cfg_plot.reference_trafo:
             return
+        if "met" in self.cfg_plot.reference_object.lower():
+            return
 
-        ref_cuts = self.cfg_plot.reference_cuts
-
-        if not ref_cuts:
+        if not (ref_cuts := self.cfg_plot.reference_cuts):
             self._select_highest_pt_ref_object()
             return
 
