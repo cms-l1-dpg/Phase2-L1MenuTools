@@ -213,17 +213,53 @@ class TurnOnCollection():
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
+    def _compute_iso_threshold(self, target_efficiency: float):
+        """
+        Iteratively finds the iso threshold as a function of the
+        configured target efficiency of the cut on the isolation
+        to a precision of 0.05%.
+        """
+        iso_threshold = 1
+        efficiency = 1
+
+        cleaned_gen_objects = self._remove_inner_nones_zeros(
+            self.ak_arrays["ref"]["dr_0.3"]
+        )
+        cleaned_gen_objects = ak.flatten(cleaned_gen_objects)
+
+        n_total = len(cleaned_gen_objects)
+
+        counter = 0
+        while abs(efficiency - target_efficiency) > 0.0005:
+            # Compute efficiency for given isolation threshold
+            sel = cleaned_gen_objects < iso_threshold
+            cleaned_gen_object_cut = cleaned_gen_objects[sel]
+            n_post_cut = len(cleaned_gen_object_cut)
+            efficiency = n_post_cut / n_total
+
+            # Update isolation threshold
+            iso_threshold /= (efficiency / target_efficiency) ** 7
+
+            # Incement counter to prevent loop from getting stuck
+            counter += 1
+            if counter > 100:
+                raise RuntimeError("Loop to find iso threshold based on"
+                                   "cut efficiency got stuck.")
+        return iso_threshold
+
     def _apply_reference_iso_cuts(self, ref_cuts):
         """
         Applies configured cuts on reference isolation.
         """
         try:
-            dR = ref_cuts["isolation"]["dR"]
-            threshold = ref_cuts["isolation"]["threshold"]
-            sel = self.ak_arrays["ref"][f"dr_{dR}"] < threshold
-            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+            efficiency = ref_cuts["iso_cut_efficiency"]
         except KeyError:
             print("No reference iso applied!")
+            return
+
+        threshold = self._compute_iso_threshold(efficiency)
+        sel = self.ak_arrays["ref"]["dr_0.3"] < threshold
+        self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
     def _select_highest_pt_ref_object(self):
         """
@@ -241,7 +277,7 @@ class TurnOnCollection():
         applied before any matching and before the selection of
         the highest pT object.
         """
-        if self.cfg_plot.reference_trafo or not self.cfg_plot.match_dR:
+        if self.cfg_plot.reference_trafo:
             return
 
         ref_cuts = self.cfg_plot.reference_cuts
@@ -251,7 +287,7 @@ class TurnOnCollection():
             return
 
         for branch, cut_cfg in ref_cuts.items():
-            if branch == "isolation":
+            if branch == "iso_cut_efficiency":
                 continue
             op = utils.str_to_op(cut_cfg["operator"])
             threshold = cut_cfg["threshold"]
@@ -350,7 +386,7 @@ class TurnOnCollection():
     def create_hists(self):
         self._load_arrays()
         self._apply_cuts()
-        if not self.cfg_plot.match_dR:
+        if not self.cfg_plot.matching_configured:
             self._skim_to_hists()
         else:
             self._match_test_to_ref()

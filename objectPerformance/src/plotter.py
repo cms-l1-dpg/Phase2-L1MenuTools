@@ -1,6 +1,5 @@
 #!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
-from datetime import datetime
 import os
 
 import matplotlib.pyplot as plt
@@ -42,13 +41,12 @@ class EfficiencyPlotter(Plotter):
         ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
         ax.axhline(1, ls=":", c="k")
         ax.legend(loc=legend_loc, frameon=False)
-        ax.set_xlabel(self.cfg["xlabel"])
-        ax.set_xlabel(self.cfg["xlabel"] + datetime.now().strftime("%H:%M:%S"))
+        ax.set_xlabel(rf"{self.cfg['xlabel']}")
         ylabel = self.cfg["ylabel"].replace(
             "<threshold>",
             str(self.turnon_collection.threshold)
         )
-        ax.set_ylabel(ylabel)
+        ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
         fig.tight_layout()
@@ -77,9 +75,6 @@ class EfficiencyPlotter(Plotter):
         ax.set_ylim(0, 1.1)
         plt.savefig(f"outputs/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
-        # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/"
-        #             f"python_plots/{self.plot_name}_"
-        #             f"{self.turnon_collection.threshold}.png")
         plt.close()
 
     def _plot_raw_counts(self):
@@ -90,6 +85,10 @@ class EfficiencyPlotter(Plotter):
         fig, ax = self._create_new_plot()
         gen_hist_ref = self.turnon_collection.hists["ref"]
         xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
+
+        import uproot
+        with uproot.recreate(f'foo_{self.plot_name}.root') as f:
+            f['num'] = (gen_hist_ref[0], gen_hist_ref[1])
 
         err_kwargs = {"xerr": self.turnon_collection.xerr, "capsize": 1,
                       "marker": 'o', "markersize": 2, "linestyle": "None"}
@@ -111,7 +110,6 @@ class EfficiencyPlotter(Plotter):
         self._style_plot(fig, ax)
         plt.savefig(f"outputs/distributions/{self.plot_name}"
                     f"_{self.turnon_collection.threshold}_dist.png")
-        # plt.savefig(f"/eos/user/d/dhundhau/www/L1_PhaseII/python_plots/raw_{self.plot_name}_{threshold}.png")
         plt.close()
 
     def plot(self):

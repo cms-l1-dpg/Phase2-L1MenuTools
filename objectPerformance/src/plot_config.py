@@ -36,15 +36,21 @@ class PlotConfig():
     def test_objects(self):
         return self._cfg["test_objects"]
 
-    @property
-    def match_dR(self):
-        return self._cfg["match_dR"]
-
     def get_match_dR(self, test_obj):
         try:
             return self._cfg["test_objects"][test_obj]["match_dR"]
         except KeyError:
-            return self.match_dR
+            return self._cfg["match_dR"]
+
+    @property
+    def matching_configured(self):
+        if "match_dR" in self._cfg.keys():
+            return True
+        for test_obj in self._cfg["test_objects"].values():
+            test_keys = test_obj.keys()
+            if "match_dR" not in test_keys:
+                return False
+        return True
 
     @property
     def reference_object_field(self):
