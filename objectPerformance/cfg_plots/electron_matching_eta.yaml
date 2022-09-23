@@ -1,0 +1,54 @@
+ElectronsMatching_Eta_Pt10to25:
+  sample: DY
+  default_version: V22
+  reference_object:
+    object: "part_e"
+    suffix: "Eta"
+    label: "Gen Electrons"
+    cuts:
+      eta: {"operator": "<", "threshold": 3}
+      pt: {"operator": "<", "threshold": 25}
+      pt: {"operator": ">", "threshold": 10}
+  test_objects:
+    tkElectron:
+      suffix: "Eta"
+      label: "Tracker Electron"
+      # quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        eta: {"operator": "<", "threshold": 3}
+        pt: {"operator": ">", "threshold": 25}
+        pt: {"operator": ">", "threshold": 10}
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
+  match_dR: 0.15
+  binning:
+    min: -3
+    max: 3
+    step: 0.2
+
+ElectronsMatching_Eta_Pt25toInf:
+  sample: DY
+  default_version: V22
+  reference_object:
+    object: "part_e"
+    suffix: "Eta"
+    label: "Gen Electrons"
+    cuts:
+      eta: {"operator": "<", "threshold": 3}
+      pt: {"operator": ">", "threshold": 25}
+  test_objects:
+    tkElectron:
+      suffix: "Eta"
+      label: "Tracker Electron"
+      # quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        eta: {"operator": "<", "threshold": 3}
+        pt: {"operator": ">", "threshold": 25}
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
+  match_dR: 0.15
+  binning:
+    min: -3
+    max: 3
+    step: 0.2
+
