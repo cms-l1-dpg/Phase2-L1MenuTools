@@ -20,7 +20,6 @@ HT:
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: False
   binning:
     min: 0
     max: 750 
@@ -44,37 +43,10 @@ MET:
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: False
   binning:
     min: 0
     max: 500 
     step: 20
-
-JetPt:
-  sample: TT
-  default_version: V22
-  reference_object: 
-    object: "jet"
-    suffix: "Pt"
-    label: "Gen Jets"
-    cuts:
-      eta: {"operator": "<", "threshold": 1.5}
-  test_objects:
-    seededConePuppiJet:
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-    trackerJet:
-      suffix: "Pt"
-      label: "Tracker Jet"
-  thresholds: [50, 120]
-  scaling_pct: 0.9
-  xlabel: "Gen. p_T (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: 0.4
-  binning:
-    min: 0
-    max: 500 
-    step: 10
 
 MHT:
   sample: TT
@@ -96,7 +68,6 @@ MHT:
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
-  match_dR: False
   binning:
     min: 0
     max: 500

@@ -1,0 +1,66 @@
+JetMatching_Eta_Pt40To100:
+  sample: TT
+  default_version: V22
+  reference_object: 
+    object: "jet"
+    suffix: "Eta"
+    label: "Gen Jets"
+    cuts:
+      pt: {"operator": "<", "threshold": 100}
+      pt: {"operator": ">", "threshold": 40}
+      eta: {"operator": "<", "threshold": 5}
+  test_objects:
+    seededConePuppiJet:
+      match_dR: 0.35
+      suffix: "Eta"
+      label: "Seeded Cone PuppiJet"
+      cuts:
+        pt: {"operator": "<", "threshold": 100}
+        pt: {"operator": ">", "threshold": 40}
+    trackerJet:
+      match_dR: 0.4
+      suffix: "Eta"
+      label: "Tracker Jet"
+      cuts:
+        pt: {"operator": "<", "threshold": 100}
+        pt: {"operator": ">", "threshold": 40}
+        eta: {"operator": "<", "threshold": 2.4}
+  scaling_pct: 0.9
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (40-100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
+JetMatching_Eta_Pt100ToInf:
+  sample: TT
+  default_version: V22
+  reference_object: 
+    object: "jet"
+    suffix: "Eta"
+    label: "Gen Jets"
+    cuts:
+      pt: {"operator": ">", "threshold": 100}
+      eta: {"operator": "<", "threshold": 5}
+  test_objects:
+    seededConePuppiJet:
+      match_dR: 0.35
+      suffix: "Eta"
+      label: "Seeded Cone PuppiJet"
+      cuts:
+        pt: {"operator": ">", "threshold": 100}
+    trackerJet:
+      match_dR: 0.4
+      suffix: "Eta"
+      label: "Tracker Jet"
+      cuts:
+        pt: {"operator": ">", "threshold": 100}
+        eta: {"operator": "<", "threshold": 2.4}
+  scaling_pct: 0.9
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (>100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
