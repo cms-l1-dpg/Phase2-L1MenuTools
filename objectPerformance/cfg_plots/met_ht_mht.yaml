@@ -19,7 +19,7 @@ HT:
   thresholds: [200, 350]
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
     min: 0
     max: 750 
@@ -42,7 +42,7 @@ MET:
   thresholds: [70, 150]
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
     min: 0
     max: 500 
@@ -67,8 +67,9 @@ MHT:
   thresholds: [70]
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV<region>)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
     min: 0
     max: 500
     step: 10
+

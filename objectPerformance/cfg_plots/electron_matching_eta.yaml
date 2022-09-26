@@ -16,7 +16,7 @@ ElectronsMatching_Eta_Pt10to25:
       # quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
         eta: {"operator": "<", "threshold": 3}
-        pt: {"operator": ">", "threshold": 25}
+        pt: {"operator": "<", "threshold": 25}
         pt: {"operator": ">", "threshold": 10}
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
