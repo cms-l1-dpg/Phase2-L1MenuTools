@@ -294,7 +294,8 @@ class TurnOnCollection():
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
         self._select_highest_pt_ref_object()
-        # TODO: Fix iso cut implemented in self._apply_reference_iso_cuts(ref_cuts)
+        # TODO: Fix iso cut implemented in
+        # self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """
@@ -303,10 +304,12 @@ class TurnOnCollection():
         Should be applied before any matching.
         """
         for test_obj in self.cfg_plot.test_objects:
-            if not (cuts:= self.cfg_plot.get_object_cuts(test_obj)):
+            if not (cuts := self.cfg_plot.get_object_cuts(test_obj)):
                 continue
             for cut in cuts:
-                cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays[test_obj]['\1']", cut)
+                cut = re.sub(r"{([^&|]*)}",
+                             r"self.ak_arrays[test_obj]['\1']",
+                             cut)
                 sel = eval(cut)
                 self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
