@@ -1,4 +1,4 @@
-JetMatchingBarrel:
+JetTurnonBarrel:
   sample: TT
   default_version: V22
   reference_object: 
@@ -29,7 +29,7 @@ JetMatchingBarrel:
     max: 500 
     step: 10
 
-JetMatchingEndcap:
+JetTurnonEndcap:
   sample: TT
   default_version: V22
   reference_object: 
@@ -63,7 +63,7 @@ JetMatchingEndcap:
     max: 500 
     step: 10
 
-JetMatchingForward:
+JetTurnonForward:
   sample: TT
   default_version: V22
   reference_object: 
@@ -78,13 +78,6 @@ JetMatchingForward:
       match_dR: 0.35
       suffix: "Pt"
       label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) > 2.4"
-        - "abs({eta}) < 5"
-    trackerJet:
-      match_dR: 0.4
-      suffix: "Pt"
-      label: "Tracker Jet"
       cuts:
         - "abs({eta}) > 2.4"
         - "abs({eta}) < 5"
