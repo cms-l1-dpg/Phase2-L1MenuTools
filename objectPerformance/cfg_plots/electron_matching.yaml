@@ -1,0 +1,53 @@
+ElectronsMatchingBarrel:
+  sample: DY
+  default_version: V22
+  reference_object:
+    object: "part_e"
+    suffix: "Pt"
+    label: "Gen Electrons"
+    cuts:
+      - "abs({eta}) < 2.4"
+  test_objects:
+    tkElectron:
+      suffix: "Pt"
+      label: "TkElectron"
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
+  thresholds: [0]
+  scaling_pct: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  match_dR: 0.15
+  binning:
+    min: 0
+    max: 150
+    step: 3
+
+ElectronsMatchingEndcap:
+  sample: DY
+  default_version: V22
+  reference_object:
+    object: "part_e"
+    suffix: "Pt"
+    label: "Gen Electrons"
+    cuts:
+      - "abs({pt}) > 2.4"
+      - "abs({eta}) < 2.8"
+  test_objects:
+    tkElectron:
+      suffix: "Pt"
+      label: "Tracker Electron"
+      cuts:
+        - "abs({pt}) > 2.4"
+        - "abs({eta}) < 2.8"
+  thresholds: [0]
+  scaling_pct: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Endcap)"
+  match_dR: 0.15
+  binning:
+    min: 0
+    max: 150
+    step: 3
+

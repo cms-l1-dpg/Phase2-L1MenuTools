@@ -21,7 +21,6 @@ def met_config():
                 "label": "Puppi MET"
             },
         },
-        "match_dR": False,
         "binning": {"min": 0, "max": 500, "step": 20},
         "trackerMETTruth": [17671, 8214, 6463, 5321, 4212, 3308, 2453, 1811,
                             1146, 759, 482, 307, 261, 154, 93, 73, 61, 32, 22,
