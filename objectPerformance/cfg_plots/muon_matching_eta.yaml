@@ -6,19 +6,18 @@ MuonsMatching_Eta_Pt2to5:
     suffix: "Eta"
     label: "Gen Muons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 2.4}
-      pt: {"operator": ">", "threshold": 2}
-      pt: {"operator": "<", "threshold": 5}
+      - "abs({eta}) < 2.4"
+      - "{pt} > 2"
+      - "{pt} < 5"
   test_objects:
     gmtTkMuon:
       suffix: "Eta"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
-        pt: {"operator": ">", "threshold": 2}
-        pt: {"operator": "<", "threshold": 5}
+        - "abs({eta}) < 2.4"
+        - "{pt} > 2"
+        - "{pt} < 5"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -34,24 +33,23 @@ MuonsMatching_Eta_Pt15toInf:
     suffix: "Eta"
     label: "Gen Muons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 2.4}
-      pt: {"operator": ">", "threshold": 15}
+      - "abs({eta}) < 2.4"
+      - "{pt} > 15"
   test_objects:
     gmtMuon:
       suffix: "Eta"
       label: "GMT Muon"
       match_dR: 0.3
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
-        pt: {"operator": ">", "threshold": 15}
+        - "abs({eta}) < 2.4"
+        - "{pt} > 15"
     gmtTkMuon:
       suffix: "Eta"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
-        pt: {"operator": ">", "threshold": 15}
+        - "abs({eta}) < 2.4"
+        - "{pt} > 15"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

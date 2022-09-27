@@ -1,3 +1,5 @@
+import re
+
 import awkward as ak
 import numpy as np
 import vector
@@ -286,16 +288,13 @@ class TurnOnCollection():
             self._select_highest_pt_ref_object()
             return
 
-        for branch, cut_cfg in ref_cuts.items():
-            if branch == "iso_cut_efficiency":
-                continue
-            op = utils.str_to_op(cut_cfg["operator"])
-            threshold = cut_cfg["threshold"]
-            sel = op(abs(self.ak_arrays["ref"][branch]), threshold)
+        for cut in ref_cuts:
+            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
+            sel = eval(cut)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
         self._select_highest_pt_ref_object()
-        self._apply_reference_iso_cuts(ref_cuts)
+        # TODO: Fix iso cut implemented in self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """
@@ -304,13 +303,11 @@ class TurnOnCollection():
         Should be applied before any matching.
         """
         for test_obj in self.cfg_plot.test_objects:
-            cuts = self.cfg_plot.get_object_cuts(test_obj)
-            if not cuts:
+            if not (cuts:= self.cfg_plot.get_object_cuts(test_obj)):
                 continue
-            for branch, cut_cfg in cuts.items():
-                op = utils.str_to_op(cut_cfg["operator"])
-                threshold = cut_cfg["threshold"]
-                sel = op(abs(self.ak_arrays[test_obj][branch]), threshold)
+            for cut in cuts:
+                cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays[test_obj]['\1']", cut)
+                sel = eval(cut)
                 self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
     def _skim_to_hists(self):

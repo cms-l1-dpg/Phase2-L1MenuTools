@@ -6,15 +6,14 @@ ElectronsMatchingBarrel:
     suffix: "Pt"
     label: "Gen Electrons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 2.4}
+      - "abs({eta}) < 2.4"
   test_objects:
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
       quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
+        - "abs({eta}) < 2.4"
   thresholds: [0]
   scaling_pct: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
@@ -33,17 +32,15 @@ ElectronsMatchingEndcap:
     suffix: "Pt"
     label: "Gen Electrons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 2.8}
-      pt: {"operator": ">", "threshold": 2.4}
+      - "abs({pt}) > 2.4"
+      - "abs({eta}) < 2.8"
   test_objects:
     tkElectron:
       suffix: "Pt"
       label: "Tracker Electron"
-      # quality_id: ""
       cuts:
-        eta: {"operator": "<", "threshold": 2.8}
-        pt: {"operator": ">", "threshold": 2.4}
+        - "abs({pt}) > 2.4"
+        - "abs({eta}) < 2.8"
   thresholds: [0]
   scaling_pct: 0.95
   xlabel: "Gen. $p_T$ (GeV)"

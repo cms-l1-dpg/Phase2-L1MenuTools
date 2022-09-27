@@ -6,18 +6,18 @@ ElectronsMatching_Eta_Pt10to25:
     suffix: "Eta"
     label: "Gen Electrons"
     cuts:
-      eta: {"operator": "<", "threshold": 3}
-      pt: {"operator": "<", "threshold": 25}
-      pt: {"operator": ">", "threshold": 10}
+      - "abs({eta}) < 3"
+      - "{pt} < 25"
+      - "{pt} > 10"
   test_objects:
     tkElectron:
       suffix: "Eta"
-      label: "Tracker Electron"
-      # quality_id: "QUAL_BarrelNoneEndcap3"
+      label: "TkElectron"
+      quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
-        eta: {"operator": "<", "threshold": 3}
-        pt: {"operator": "<", "threshold": 25}
-        pt: {"operator": ">", "threshold": 10}
+        - "abs({eta}) < 3"
+        - "{pt} < 25"
+        - "{pt} > 10"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   match_dR: 0.15
@@ -34,16 +34,15 @@ ElectronsMatching_Eta_Pt25toInf:
     suffix: "Eta"
     label: "Gen Electrons"
     cuts:
-      eta: {"operator": "<", "threshold": 3}
-      pt: {"operator": ">", "threshold": 25}
+      - "abs({eta}) < 3"
+      - "{pt} > 25"
   test_objects:
     tkElectron:
       suffix: "Eta"
-      label: "Tracker Electron"
-      # quality_id: "QUAL_BarrelNoneEndcap3"
+      label: "TkElectron"
       cuts:
-        eta: {"operator": "<", "threshold": 3}
-        pt: {"operator": ">", "threshold": 25}
+        - "abs({eta}) < 3"
+        - "{pt} > 25"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
   match_dR: 0.15

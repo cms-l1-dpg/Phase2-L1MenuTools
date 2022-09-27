@@ -5,9 +5,6 @@ HT:
     object: "jet"
     suffix: "Pt"
     label: "Gen HT"
-    cuts:
-      eta: {"operator": "<", "threshold": 2.4}
-      pt: {"operator": ">", "threshold": 30}
     trafo: "HT"
   test_objects:
     trackerHT:
@@ -19,7 +16,7 @@ HT:
   thresholds: [200, 350]
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
     min: 0
     max: 750 
@@ -56,14 +53,13 @@ MHT:
     suffix: "Pt"
     label: "Gen MHT"
     cuts:
-      eta: {"operator": "<", "threshold": 2.4}
-      pt: {"operator": ">", "threshold": 10}
+      - "abs({eta}) < 2.4"
+      - "{pt} > 10"
     trafo: "MHT"
   test_objects:
     trackerMHT:
       suffix: ""
       label: "Tracker MHT"
-      cuts: {}
   thresholds: [70]
   scaling_pct: 0.9
   xlabel: "Gen. MET (GeV)"

@@ -6,21 +6,20 @@ MuonsTrigger:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 0.83}
+      - "abs({eta}) < 0.83"
   test_objects:
     gmtMuon:
       suffix: "Pt"
       label: "GMT Muon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": "<", "threshold": 0.83}
+        - "abs({eta}) < 0.83"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
       match_dR: 0.3
       cuts:
-        eta: {"operator": "<", "threshold": 0.83}
+        - "abs({eta}) < 0.83"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
   thresholds: [20]
@@ -29,7 +28,3 @@ MuonsTrigger:
     min: 0
     max: 50 
     step: 1.5
-
-
-# "(abs(eta) < 1.2 & (qual >3)) | (abs(eta)>=1.2 & qual >=2)":
-# nstubs: {"operator": "<=", "threshold": 1}

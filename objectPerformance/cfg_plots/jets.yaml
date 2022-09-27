@@ -6,20 +6,20 @@ JetMatchingBarrel:
     suffix: "Pt"
     label: "Gen Jets"
     cuts:
-      eta: {"operator": "<", "threshold": 1.5}
+      - "abs({eta}) < 1.5"
   test_objects:
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Pt"
       label: "Seeded Cone PuppiJet"
       cuts:
-        eta: {"operator": "<", "threshold": 1.5}
+        - "abs({eta}) < 1.5"
     trackerJet:
       match_dR: 0.4
       suffix: "Pt"
       label: "Tracker Jet"
       cuts:
-        eta: {"operator": "<", "threshold": 1.5}
+        - "abs({eta}) < 1.5"
   thresholds: [50]
   scaling_pct: 0.9
   xlabel: "Gen. $p_T$ (GeV)"
@@ -37,23 +37,23 @@ JetMatchingEndcap:
     suffix: "Pt"
     label: "Gen Jets"
     cuts:
-      eta: {"operator": "<", "threshold": 2.4}
-      eta: {"operator": ">", "threshold": 1.5}
+      - "abs({eta}) > 1.5"
+      - "abs({eta}) < 2.4"
   test_objects:
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Pt"
       label: "Seeded Cone PuppiJet"
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
-        eta: {"operator": ">", "threshold": 1.5}
+        - "abs({eta}) > 1.5"
+        - "abs({eta}) < 2.4"
     trackerJet:
       match_dR: 0.4
       suffix: "Pt"
       label: "Tracker Jet"
       cuts:
-        eta: {"operator": "<", "threshold": 2.4}
-        eta: {"operator": ">", "threshold": 1.5}
+        - "abs({eta}) > 1.5"
+        - "abs({eta}) < 2.4"
   thresholds: [50]
   scaling_pct: 0.9
   xlabel: "Gen. $p_T$ (GeV)"
@@ -71,23 +71,23 @@ JetMatchingForward:
     suffix: "Pt"
     label: "Gen Jets"
     cuts:
-      eta: {"operator": "<", "threshold": 5}
-      eta: {"operator": ">", "threshold": 2.4}
+      - "abs({eta}) > 2.4"
+      - "abs({eta}) < 5"
   test_objects:
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Pt"
       label: "Seeded Cone PuppiJet"
       cuts:
-        eta: {"operator": "<", "threshold": 5}
-        eta: {"operator": ">", "threshold": 2.4}
+        - "abs({eta}) > 2.4"
+        - "abs({eta}) < 5"
     trackerJet:
       match_dR: 0.4
       suffix: "Pt"
       label: "Tracker Jet"
       cuts:
-        eta: {"operator": "<", "threshold": 5}
-        eta: {"operator": ">", "threshold": 2.4}
+        - "abs({eta}) > 2.4"
+        - "abs({eta}) < 5"
   thresholds: [50]
   scaling_pct: 0.9
   xlabel: "Gen. $p_T$ (GeV)"
@@ -96,5 +96,3 @@ JetMatchingForward:
     min: 0
     max: 500 
     step: 10
-
-# /eos/user/d/dhundhau/www/L1_PhaseII/plts

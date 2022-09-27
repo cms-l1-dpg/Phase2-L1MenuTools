@@ -6,21 +6,20 @@ MuonsMatchingBarrel:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": "<", "threshold": 0.83}
+      - "abs({eta}) < 0.83"
   test_objects:
     gmtMuon:
       suffix: "Pt"
       label: "GMT Muon"
       match_dR: 0.3
       cuts:
-        eta: {"operator": "<", "threshold": 0.83}
+        - "abs({eta}) < 0.83"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": "<", "threshold": 0.83}
+        - "abs({eta}) < 0.83"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   thresholds: [0]
@@ -38,24 +37,23 @@ MuonsMatchingOverlap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      iso_cut_efficiency: 0.948
-      eta: {"operator": ">", "threshold": 0.83}
-      eta: {"operator": "<", "threshold": 1.24}
+      - "abs({eta}) > 0.83"
+      - "abs({eta}) < 1.24"
   test_objects:
     gmtMuon:
       suffix: "Pt"
       label: "GMT Muon"
       match_dR: 0.3
       cuts:
-        eta: {"operator": ">", "threshold": 0.83}
-        eta: {"operator": "<", "threshold": 1.24}
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": ">", "threshold": 0.83}
-        eta: {"operator": "<", "threshold": 1.24}
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
   thresholds: [0]
@@ -72,23 +70,23 @@ MuonsMatchingEndcap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      eta: {"operator": ">", "threshold": 0.83}
-      eta: {"operator": "<", "threshold": 2.4}
+      - "abs({eta}) > 0.83"
+      - "abs({eta}) < 2.4"
   test_objects:
     gmtMuon:
       suffix: "Pt"
       label: "GMT Muon"
       match_dR: 0.3
       cuts:
-        eta: {"operator": ">", "threshold": 0.83}
-        eta: {"operator": "<", "threshold": 2.4}
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 2.4"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        eta: {"operator": ">", "threshold": 0.83}
-        eta: {"operator": "<", "threshold": 2.4}
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 2.4"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   thresholds: [0]
