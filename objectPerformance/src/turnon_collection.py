@@ -215,53 +215,18 @@ class TurnOnCollection():
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
-    def _compute_iso_threshold(self, target_efficiency: float):
-        """
-        Iteratively finds the iso threshold as a function of the
-        configured target efficiency of the cut on the isolation
-        to a precision of 0.05%.
-        """
-        iso_threshold = 1
-        efficiency = 1
-
-        cleaned_gen_objects = self._remove_inner_nones_zeros(
-            self.ak_arrays["ref"]["dr_0.3"]
-        )
-        cleaned_gen_objects = ak.flatten(cleaned_gen_objects)
-
-        n_total = len(cleaned_gen_objects)
-
-        counter = 0
-        while abs(efficiency - target_efficiency) > 0.0005:
-            # Compute efficiency for given isolation threshold
-            sel = cleaned_gen_objects < iso_threshold
-            cleaned_gen_object_cut = cleaned_gen_objects[sel]
-            n_post_cut = len(cleaned_gen_object_cut)
-            efficiency = n_post_cut / n_total
-
-            # Update isolation threshold
-            iso_threshold /= (efficiency / target_efficiency) ** 7
-
-            # Incement counter to prevent loop from getting stuck
-            counter += 1
-            if counter > 100:
-                raise RuntimeError("Loop to find iso threshold based on"
-                                   "cut efficiency got stuck.")
-        return iso_threshold
-
     def _apply_reference_iso_cuts(self, ref_cuts):
         """
         Applies configured cuts on reference isolation.
         """
-        try:
-            efficiency = ref_cuts["iso_cut_efficiency"]
-        except KeyError:
+        threshold = self.cfg_plot.reference_iso_threshold
+        if threshold is None:
             print("No reference iso applied!")
             return
 
-        threshold = self._compute_iso_threshold(efficiency)
         sel = self.ak_arrays["ref"]["dr_0.3"] < threshold
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        print("Iso applied")
 
     def _select_highest_pt_ref_object(self):
         """
@@ -295,7 +260,7 @@ class TurnOnCollection():
 
         self._select_highest_pt_ref_object()
         # TODO: Fix iso cut implemented in
-        # self._apply_reference_iso_cuts(ref_cuts)
+        self._apply_reference_iso_cuts(ref_cuts)
 
     def _apply_test_obj_cuts(self):
         """

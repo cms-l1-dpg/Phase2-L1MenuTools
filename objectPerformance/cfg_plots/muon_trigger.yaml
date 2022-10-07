@@ -5,6 +5,7 @@ MuonsTrigger:
     object: "part_mu"
     suffix: "Pt"
     label: "Gen Muons"
+    iso_threshold: 0.15
     cuts:
       - "abs({eta}) < 0.83"
   test_objects:

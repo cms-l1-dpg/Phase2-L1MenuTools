@@ -5,6 +5,7 @@ ElectronsMatching_Eta_Pt10to25:
     object: "part_e"
     suffix: "Eta"
     label: "Gen Electrons"
+    iso_threshold: 0.15
     cuts:
       - "abs({eta}) < 3"
       - "{pt} < 25"
@@ -33,6 +34,7 @@ ElectronsMatching_Eta_Pt25toInf:
     object: "part_e"
     suffix: "Eta"
     label: "Gen Electrons"
+    iso_threshold: 0.15
     cuts:
       - "abs({eta}) < 3"
       - "{pt} > 25"

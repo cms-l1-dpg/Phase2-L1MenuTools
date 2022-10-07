@@ -64,6 +64,13 @@ class PlotConfig():
         return field.lower()
 
     @property
+    def reference_iso_threshold(self):
+        try:
+            return self._cfg["reference_object"]["iso_threshold"]
+        except KeyError:
+            return None
+
+    @property
     def bin_width(self):
         return self._cfg["binning"]["step"]
 
