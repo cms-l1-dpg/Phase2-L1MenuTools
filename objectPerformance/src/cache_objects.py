@@ -91,9 +91,9 @@ class ObjectCacher():
         and Isolation computations, but it's not saved.
         Neutrino final state particles are not considered.
         """
-        sel_no_nu_e = all_parts["Id"] != 12
-        sel_no_nu_mu = all_parts["Id"] != 14
-        sel_no_nu_tau = all_parts["Id"] != 16
+        sel_no_nu_e = abs(all_parts["Id"]) != 12
+        sel_no_nu_mu = abs(all_parts["Id"]) != 14
+        sel_no_nu_tau = abs(all_parts["Id"]) != 16
         sel_fs = all_parts["Stat"] == 1
         sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
 
