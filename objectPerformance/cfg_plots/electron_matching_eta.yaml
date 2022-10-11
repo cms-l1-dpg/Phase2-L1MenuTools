@@ -5,20 +5,20 @@ ElectronsMatching_Eta_Pt10to25:
     object: "part_e"
     suffix: "Eta"
     label: "Gen Electrons"
-    iso_threshold: 0.15
     cuts:
-      - "abs({eta}) < 3"
-      - "{pt} < 25"
-      - "{pt} > 10"
+      event:
+        - "{dr_0.3} < 0.15"
+        - "{pt} < 25"
+        - "{pt} > 10"
+      object:
+        - "abs({eta}) < 2.4"
   test_objects:
     tkElectron:
       suffix: "Eta"
       label: "TkElectron"
       quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
-        - "abs({eta}) < 3"
-        - "{pt} < 25"
-        - "{pt} > 10"
+        - "abs({eta}) < 2.4"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   match_dR: 0.15
@@ -34,17 +34,18 @@ ElectronsMatching_Eta_Pt25toInf:
     object: "part_e"
     suffix: "Eta"
     label: "Gen Electrons"
-    iso_threshold: 0.15
     cuts:
-      - "abs({eta}) < 3"
-      - "{pt} > 25"
+      object:
+        - "abs({eta}) < 2.4"
+      event:
+        - "{dr_0.3} < 0.15"
+        - "{pt} > 25"
   test_objects:
     tkElectron:
       suffix: "Eta"
       label: "TkElectron"
       cuts:
-        - "abs({eta}) < 3"
-        - "{pt} > 25"
+        - "abs({eta}) < 2.4"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
   match_dR: 0.15

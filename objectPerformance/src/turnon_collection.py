@@ -307,7 +307,7 @@ class TurnOnCollection():
             self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
 
         # Create Reference Numpy Histogram
-        if self.threshold:
+        if self.threshold >= 0:
             ref_obj = self.numerators["ref"][test_obj]
             ref_obj = self._remove_inner_nones_zeros(ref_obj)
         ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)

@@ -5,9 +5,11 @@ ElectronsMatchingBarrel:
     object: "part_e"
     suffix: "Pt"
     label: "Gen Electrons"
-    iso_threshold: 0.15
     cuts:
-      - "abs({eta}) < 2.4"
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 2.4"
   test_objects:
     tkElectron:
       suffix: "Pt"
@@ -32,9 +34,11 @@ ElectronsMatchingEndcap:
     object: "part_e"
     suffix: "Pt"
     label: "Gen Electrons"
-    iso_threshold: 0.15
     cuts:
-      - "abs({eta}) < 2.8"
+      event:
+        - "{dr_0.3} < 0.15" 
+      object:
+        - "abs({eta}) < 2.8"
   test_objects:
     tkElectron:
       suffix: "Pt"
