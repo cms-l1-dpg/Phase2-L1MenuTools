@@ -76,6 +76,14 @@ def scaling_func(x: Union[float, np.ndarray], a: float, b: float):
     return a * x + b
 
 
+def tanh(x: float, a: float, b: float):
+    return 0.5 * np.tanh(a * x + b) + 0.5
+
+
+def arctanh(x: float, a: float, b: float):
+    return (np.arctanh(2 * x - 1) - b) / a
+
+
 ##############
 # Decorators #
 ##############

@@ -11,13 +11,12 @@ MuonsTrigger:
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    gmtMuon:
-      quality_id: "QUAL_Overlap_12"
-      suffix: "Pt"
-      label: "GMT Muon"
-      match_dR: 0.3
-      cuts:
-        - "abs({eta}) < 0.83"
+    # gmtMuon:
+      # suffix: "Pt"
+      # label: "GMT Muon"
+      # match_dR: 0.3
+      # cuts:
+        # - "abs({eta}) < 0.83"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
@@ -26,8 +25,10 @@ MuonsTrigger:
         - "abs({eta}) < 0.83"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
-  thresholds: [20]
-  scaling_pct: 0.90
+  thresholds: [20, 25]
+  scalings:
+    method: "tanh"
+    threshold: 0.90
   binning:
     min: 0
     max: 50 

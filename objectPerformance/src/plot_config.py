@@ -91,7 +91,11 @@ class PlotConfig():
 
     @property
     def scaling_pct(self):
-        return self._cfg["scaling_pct"]
+        return self._cfg["scalings"]["threshold"]
+
+    @property
+    def scaling_method(self):
+        return self._cfg["scalings"]["method"]
 
     def get_object_cuts(self, obj):
         obj_cfg = self._cfg["test_objects"][obj]

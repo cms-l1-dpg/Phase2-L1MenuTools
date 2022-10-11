@@ -242,6 +242,20 @@ class ScalingCentral():
             if is_point:
                 return bins[i + 1]
 
+    @utils.ignore_warnings
+    def _compute_value_of_tanh_at_threshold(self,
+                                            efficiency,
+                                            bins,
+                                            threshold):
+        xvals = [x - (bins[1] - bins[0]) / 2 for x in bins[1:]]
+        popt, pcov = curve_fit(utils.tanh, xvals, efficiency, p0=[1,0])
+        if np.inf in pcov:
+            return None
+
+        s_val = utils.arctanh(threshold, *list(popt))
+
+        return s_val
+
     def _compute_scalings_naive(self, turnon_collection, scalings,
                                 scaling_pct):
         bins = turnon_collection.bins
@@ -261,10 +275,42 @@ class ScalingCentral():
 
         return scalings
 
+    def _compute_scalings_tanh(self,
+                               turnon_collection,
+                               scalings,
+                               scaling_pct):
+        bins = turnon_collection.bins
+        threshold = turnon_collection.threshold
+
+        for obj in turnon_collection.hists:
+            if obj == "ref":
+                continue
+            efficiency, _ = turnon_collection.get_efficiency(obj)
+            percentage_point = self._compute_value_of_tanh_at_threshold(
+                efficiency,
+                bins,
+                scaling_pct
+            )
+            if percentage_point:
+                scalings[obj][threshold] = percentage_point
+
+        return scalings
+
+
     def _compute_scalings(self, turnon_collection, scalings,
-                          scaling_pct) -> dict:
-        return self._compute_scalings_naive(turnon_collection, scalings,
-                                            scaling_pct)
+                          scaling_pct, method="tanh") -> dict:
+        if method == "tanh":
+            return self._compute_scalings_tanh(
+                turnon_collection,
+                scalings,
+                scaling_pct
+            )
+        if method == "naive":
+            return self._compute_scalings_naive(
+                turnon_collection,
+                scalings,
+                scaling_pct
+            )
 
     def _fit_linear_functions(self, scalings):
         params = {}
@@ -294,22 +340,27 @@ class ScalingCentral():
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
-            if "scaling_pct" not in cfg_plot:
+            if "scalings" not in cfg_plot:
                 continue
             print(f">>> Scalings {plot_name} <<<")
+
             thds = self._get_scaling_thresholds(cfg_plot)
             scalings = {x: {} for x in cfg_plot["test_objects"]}
+
             bar = IncrementalBar("Progress", max=len(thds))
             for threshold in thds:
                 bar.next()
                 turnon_collection = TurnOnCollection(cfg_plot, threshold)
                 turnon_collection.create_hists()
                 scaling_pct = turnon_collection.cfg_plot.scaling_pct
+                method = turnon_collection.cfg_plot.scaling_method
                 scalings = self._compute_scalings(turnon_collection,
                                                   scalings,
-                                                  scaling_pct)
+                                                  scaling_pct,
+                                                  method)
 
             bar.finish()
+
             params = self._fit_linear_functions(scalings)
             if params:
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
