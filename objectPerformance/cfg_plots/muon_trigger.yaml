@@ -5,14 +5,17 @@ MuonsTrigger:
     object: "part_mu"
     suffix: "Pt"
     label: "Gen Muons"
-    iso_threshold: 0.15
     cuts:
-      - "abs({eta}) < 0.83"
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 0.83"
   test_objects:
     gmtMuon:
+      quality_id: "QUAL_Overlap_12"
       suffix: "Pt"
       label: "GMT Muon"
-      match_dR: 0.1
+      match_dR: 0.3
       cuts:
         - "abs({eta}) < 0.83"
     gmtTkMuon:

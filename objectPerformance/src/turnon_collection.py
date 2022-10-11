@@ -88,20 +88,19 @@ class TurnOnCollection():
     def __init__(self, cfg_plot, threshold):
         self.cfg_plot = PlotConfig(cfg_plot)
         self.threshold = threshold
-        self.bins = []
         self.ak_arrays = {}
         self.numerators = {"ref": {}, "test": {}}
         self.hists = {}
-        self._set_bins()
 
-    def _set_bins(self):
+    @property
+    def bins(self):
         """
         Set bins according to configuration.
         """
         bin_width = self.cfg_plot.bin_width
         xmax = self.cfg_plot.bin_max
         xmin = self.cfg_plot.bin_min
-        self.bins = np.linspace(xmin, xmax, int((xmax - xmin) / bin_width))
+        return np.arange(xmin, xmax, bin_width)
 
     def _load_arrays(self):
         """
@@ -215,19 +214,6 @@ class TurnOnCollection():
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
-    def _apply_reference_iso_cuts(self, ref_cuts):
-        """
-        Applies configured cuts on reference isolation.
-        """
-        threshold = self.cfg_plot.reference_iso_threshold
-        if threshold is None:
-            print("No reference iso applied!")
-            return
-
-        sel = self.ak_arrays["ref"]["dr_0.3"] < threshold
-        self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
-        print("Iso applied")
-
     def _select_highest_pt_ref_object(self):
         """
         The raw cached arrays of the reference still contain
@@ -237,6 +223,14 @@ class TurnOnCollection():
         """
         sel_pt = ak.argmax(self.ak_arrays["ref"]["pt"], axis=-1, keepdims=True)
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
+
+    def _apply_list_of_reference_cuts(self, cut_list):
+        for cut in cut_list:
+            cut = re.sub(r"{([^&|]*)}",
+                         r"self.ak_arrays['ref']['\1']",
+                         cut)
+            sel = eval(cut)
+            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
     def _apply_reference_cuts(self):
         """
@@ -249,18 +243,12 @@ class TurnOnCollection():
         if "met" in self.cfg_plot.reference_object.lower():
             return
 
-        if not (ref_cuts := self.cfg_plot.reference_cuts):
-            self._select_highest_pt_ref_object()
-            return
+        ref_object_cuts = self.cfg_plot.reference_object_cuts
+        ref_event_cuts = self.cfg_plot.reference_event_cuts
 
-        for cut in ref_cuts:
-            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
-            sel = eval(cut)
-            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
-
+        self._apply_list_of_reference_cuts(ref_object_cuts)
         self._select_highest_pt_ref_object()
-        # TODO: Fix iso cut implemented in
-        self._apply_reference_iso_cuts(ref_cuts)
+        self._apply_list_of_reference_cuts(ref_event_cuts)
 
     def _apply_test_obj_cuts(self):
         """
@@ -319,6 +307,9 @@ class TurnOnCollection():
             self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
 
         # Create Reference Numpy Histogram
+        if self.threshold:
+            ref_obj = self.numerators["ref"][test_obj]
+            ref_obj = self._remove_inner_nones_zeros(ref_obj)
         ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
         self.hists["ref"] = np.histogram(ref_flat_np, bins=self.bins)
 
@@ -333,8 +324,8 @@ class TurnOnCollection():
         ref_vals = self.hists["ref"][0]
         test_vals = self.hists[obj_key][0]
 
-        eff = np.nan_to_num(test_vals / ref_vals, posinf=0)
-        assert all(0 <= i <= 1 for i in eff)
+        eff = test_vals / ref_vals
+        assert all(0 <= i <= 1 or str(i) == "nan" for i in eff)
 
         err = utils.clopper_pearson_err(test_vals, ref_vals)
 

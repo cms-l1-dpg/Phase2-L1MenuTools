@@ -6,7 +6,10 @@ MuonsMatchingBarrel:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      - "abs({eta}) < 0.83"
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 0.83"
   test_objects:
     gmtMuon:
       suffix: "Pt"
@@ -37,8 +40,11 @@ MuonsMatchingOverlap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      - "abs({eta}) > 0.83"
-      - "abs({eta}) < 1.24"
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
   test_objects:
     gmtMuon:
       suffix: "Pt"
@@ -70,8 +76,11 @@ MuonsMatchingEndcap:
     suffix: "Pt"
     label: "Gen Muons"
     cuts:
-      - "abs({eta}) > 0.83"
-      - "abs({eta}) < 2.4"
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 2.4"
   test_objects:
     gmtMuon:
       suffix: "Pt"

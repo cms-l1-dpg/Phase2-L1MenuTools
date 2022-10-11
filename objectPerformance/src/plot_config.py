@@ -19,9 +19,16 @@ class PlotConfig():
         return self._cfg["reference_object"]["object"]
 
     @property
-    def reference_cuts(self):
+    def reference_event_cuts(self):
         try:
-            return self._cfg["reference_object"]["cuts"]
+            return self._cfg["reference_object"]["cuts"]["event"]
+        except KeyError:
+            return None
+
+    @property
+    def reference_object_cuts(self):
+        try:
+            return self._cfg["reference_object"]["cuts"]["object"]
         except KeyError:
             return None
 
