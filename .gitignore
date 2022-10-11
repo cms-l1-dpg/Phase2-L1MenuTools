@@ -4,6 +4,7 @@
 **/*.parquet
 **/rates.py
 objectPerformance/**/*.root
+objectPerformance/outputs/**/*
 rates/table/out/*
 rates/table/cache/**/*
 rates/table/lib/*
