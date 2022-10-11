@@ -2,12 +2,10 @@
 import argparse
 import os
 
-import awkward as ak
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
 from progress.bar import IncrementalBar
-import uproot
 from scipy.optimize import curve_fit
 import yaml
 
@@ -84,17 +82,9 @@ class EfficiencyPlotter(Plotter):
         Raw counts of objects in bins
         of the efficiency plots.
         """
-        with uproot.open("DYLL_V22_20220412Muon.root") as f:
-            x_yi, bins_yi = f["GMTTkMuonIso/GMTTkMuonIso_EtaPT2to5_000000"].to_numpy()
-            x_ref, bins_ref_yi = f["GMTTkMuonIso/GMTTkMuonIsoNoMatch_EtaPT2to5_000000"].to_numpy()
-
         fig, ax = self._create_new_plot()
         gen_hist_ref = self.turnon_collection.hists["ref"]
         xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
-
-        # import uproot
-        # with uproot.recreate(f'foo_{self.plot_name}.root') as f:
-        #     f['num'] = (gen_hist_ref[0], gen_hist_ref[1])
 
         err_kwargs = {"xerr": self.turnon_collection.xerr, "capsize": 1,
                       "marker": 'o', "markersize": 2, "linestyle": "None"}
@@ -104,8 +94,6 @@ class EfficiencyPlotter(Plotter):
         ax.errorbar(xbins, gen_hist_ref[0], yerr=np.sqrt(gen_hist_ref[0]),
                     label=label, color=ref_hist[0].get_color(), **err_kwargs)
 
-        ax.hist(bins_yi[:-1], bins=bins_yi, weights=x_yi, histtype="step", linestyle='--', label="C++ GMTTkMuon")
-        ax.hist(bins_ref_yi[:-1], bins=bins_ref_yi, weights=x_ref, histtype="step", linestyle='--', label="C++ Denominator GMTTkMuon")
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
@@ -119,11 +107,6 @@ class EfficiencyPlotter(Plotter):
         plt.savefig(f"outputs/distributions/{self.plot_name}"
                     f"_{self.turnon_collection.threshold}_dist.png")
         plt.close()
-
-        fig, ax = plt.subplots(figsize=(8,8))
-        ax.hist(ak.flatten(self.turnon_collection.ak_arrays["ref"]["dr_0.3"]), bins=np.linspace(-1, 5, 100))
-        plt.savefig(f"outputs/distributions/iso_{self.plot_name}"
-                    f"_{self.turnon_collection.threshold}_dist.png")
 
     def plot(self):
         self._make_output_dirs()
