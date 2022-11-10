@@ -72,6 +72,78 @@ class ObjectCacher():
             cfg = yaml.safe_load(f)[self._version][self._sample]
         return cfg["ntuple_path"]
 
+    def _p4_sum(self, array, axis=-1):
+        """
+        Inspired from: https://github.com/CoffeaTeam/coffea/blob/875d1d02f04cac381c5b5b754513408beeba5739/coffea/nanoevents/methods/vector.py#L568
+        Get the total four-momentum from a collection of four-momenta.
+        with_name="Momentum4D" allows to use array.pt, array.eta, etc
+        """
+       return ak.zip(
+        {   
+            "px": ak.sum(array.px, axis=axis, keepdims=True),
+            "py": ak.sum(array.py, axis=axis, keepdims=True),
+            "pz": ak.sum(array.pz, axis=axis, keepdims=True),
+            "E": ak.sum(array.E, axis=axis, keepdims=True),
+        },
+        with_name="Momentum4D",
+        behavior=array.behavior,
+       )
+
+    def _get_visible_taus(self, all_parts):
+        """
+        Create a collection of gen-level taus.
+        Leptonic taus are discarded.
+        Only the visible component (i.e. no neutrinos)
+        of hadronically-decaying taus is considered.
+        """
+        sel_no_nu_e = abs(all_parts["Id"]) != 12
+        sel_no_nu_mu = abs(all_parts["Id"]) != 14
+        sel_no_nu_tau = abs(all_parts["Id"]) != 16
+        sel = sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
+
+        for branch in all_parts:
+            all_parts[branch] = all_parts[branch][sel]
+
+        all_tau_p = all_parts.copy()
+        all_tau_m = all_parts.copy()
+
+        sel = all_tau_p['Parent'] == 15
+        for branch in all_tau_p:
+            all_tau_p[branch] = all_tau_p[branch][sel]
+
+        sel = all_tau_m['Parent'] == -15
+        for branch in all_tau_m:
+            all_tau_m[branch] = all_tau_m[branch][sel]
+
+        all_tau_m = ak.zip({k.lower(): all_tau_m[k] for k in all_tau_m.keys()})
+        all_tau_m = ak.with_name(all_tau_m, "Momentum4D")
+
+        all_tau_p = ak.zip({k.lower(): all_tau_p[k] for k in all_tau_p.keys()})
+        all_tau_p = ak.with_name(all_tau_p, "Momentum4D")
+
+        sel_ele = ak.any(abs(all_tau_p['id']) == 11, axis=-1)
+        sel_mu = ak.any(abs(all_tau_p['id']) == 13, axis=-1)
+        sel_lep = sel_ele | sel_mu
+        all_tau_p = ak.mask(all_tau_p, sel_lep, valid_when=False)
+
+        sel_ele = ak.any(abs(all_tau_m['id']) == 11, axis=-1)
+        sel_mu = ak.any(abs(all_tau_m['id']) == 13, axis=-1)
+        sel_lep = sel_ele | sel_mu
+        all_tau_m = ak.mask(all_tau_m, sel_lep, valid_when=False)
+
+        fs_tau_p = self._p4_sum(all_tau_p)
+        fs_tau_m = self._p4_sum(all_tau_m)
+
+        final_taus = {'Pt': ak.concatenate([fs_tau_p.pt, fs_tau_m.pt], axis=-1),
+                     'Eta': ak.concatenate([fs_tau_p.eta, fs_tau_m.eta], axis=-1),
+                     'Phi': ak.concatenate([fs_tau_p.phi, fs_tau_m.phi], axis=-1),
+                     'E': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+                     'Parent': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1), #dummy
+                     'Id': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1), #dummy
+                     'Stat': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1)} #dummy
+
+        return final_taus
+
     def _filter_genpart_branches(self, all_arrays):
         """
         Filter genparticle branches by Id.
@@ -133,7 +205,10 @@ class ObjectCacher():
 
     def _postprocess_branches(self, arr):
         if self._object.startswith("part"):
-            ref_parts = self._filter_genpart_branches(arr.copy())
+            if "tau" in self._object:
+                ref_parts = self._get_visible_taus(arr.copy())
+            else:
+                ref_parts = self._filter_genpart_branches(arr.copy())
             fs_parts = self._filter_fspart_branches(arr.copy())
             self._compute_ref_part_isolation(fs_parts, ref_parts)
             arr = ref_parts

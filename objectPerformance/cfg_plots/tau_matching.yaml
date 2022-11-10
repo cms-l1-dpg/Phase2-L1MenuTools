@@ -1,10 +1,10 @@
-ElectronsMatchingBarrel:
-  sample: DY
+TausMatchingBarrel:
+  sample: GluGluToGG
   default_version: V22
   reference_object:
-    object: "part_e"
+    object: "part_tau"
     suffix: "Pt"
-    label: "Gen Electrons"
+    label: "Gen Taus"
     cuts:
       event:
         - "{dr_0.3} < 0.15"
@@ -12,46 +12,56 @@ ElectronsMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    tkElectron:
+    nnTau:
       suffix: "Pt"
-      label: "TkElectron"
-      quality_id: "QUAL_BarrelNoneEndcap3"
+      label: "NN Tau"
       cuts:
         - "abs({eta}) < 2.4"
-        - "{passesloosetrackid} == 1"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+      match_dR: 0.3
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
-  match_dR: 0.15
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 6
 
-ElectronsMatchingEndcap:
-  sample: DY
+TausMatchingEndcap:
+  sample: GluGluToGG
   default_version: V22
   reference_object:
-    object: "part_e"
+    object: "part_tau"
     suffix: "Pt"
-    label: "Gen Electrons"
+    label: "Gen Taus"
     cuts:
       event:
-        - "{dr_0.3} < 0.15" 
+        - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    tkElectron:
+    nnTau:
       suffix: "Pt"
-      label: "TkElectron"
+      label: "NN Tau"
       cuts:
         - "abs({eta}) < 2.4"
-        - "{passesloosetrackid} == 1"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+      match_dR: 0.3
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
-  match_dR: 0.15
   binning:
     min: 0
     max: 150
-    step: 3
-
+    step: 6

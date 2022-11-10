@@ -37,4 +37,9 @@ V22:
     trees_branches: {}
   GluGluToHHTo2B2Tau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/GGToHHTo2B2Tau_PU200_v22/220408_073133/0000//L1NtuplePhaseII_Step1_*.root
-    trees_branches: {}
+    trees_branches:
+      genTree/L1GenTree:
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]
+      l1PhaseIITree/L1PhaseIITree:
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
