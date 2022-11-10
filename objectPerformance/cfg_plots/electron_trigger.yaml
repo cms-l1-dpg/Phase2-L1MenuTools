@@ -1,4 +1,4 @@
-ElectronsMatchingBarrel:
+ElectronsTriggerBarrel:
   sample: DY
   default_version: V22
   reference_object:
@@ -10,24 +10,27 @@ ElectronsMatchingBarrel:
         - "{dr_0.3} < 0.15"
         - "abs({eta}) < 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.8"
   test_objects:
     tkElectron:
       suffix: "Pt"
-      label: "TkElectron"
-      quality_id: "QUAL_BarrelNoneEndcap3"
+      label: "tkElectron"
+      match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
-  xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Barrel)"
-  match_dR: 0.15
+        - "abs({eta}) < 2.8"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 1.5
 
-ElectronsMatchingEndcap:
+ElectronsTriggerEndcap:
   sample: DY
   default_version: V22
   reference_object:
@@ -36,22 +39,25 @@ ElectronsMatchingEndcap:
     label: "Gen Electrons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15" 
+        - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.8"
   test_objects:
     tkElectron:
       suffix: "Pt"
-      label: "TkElectron"
+      label: "tkElectron"
+      match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
-  xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Endcap)"
-  match_dR: 0.15
+        - "abs({eta}) < 2.8"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 150
-    step: 3
-
+    step: 1.5

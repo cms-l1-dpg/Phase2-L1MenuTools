@@ -1,7 +1,7 @@
 MuonsMatchingBarrel:
   sample: DY
   default_version: V22
-  reference_object: 
+  reference_object:
     object: "part_mu"
     suffix: "Pt"
     label: "Gen Muons"
@@ -25,17 +25,15 @@ MuonsMatchingBarrel:
         - "abs({eta}) < 0.83"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
-  thresholds: [0]
-  scaling_pct: 0.95
   binning:
     min: 0
-    max: 150 
+    max: 150
     step: 3
 
 MuonsMatchingOverlap:
   sample: DY
   default_version: V22
-  reference_object: 
+  reference_object:
     object: "part_mu"
     suffix: "Pt"
     label: "Gen Muons"
@@ -62,16 +60,15 @@ MuonsMatchingOverlap:
         - "abs({eta}) < 1.24"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
-  thresholds: [0]
   binning:
     min: 0
-    max: 150 
+    max: 150
     step: 3
 
 MuonsMatchingEndcap:
   sample: DY
   default_version: V22
-  reference_object: 
+  reference_object:
     object: "part_mu"
     suffix: "Pt"
     label: "Gen Muons"
@@ -79,7 +76,7 @@ MuonsMatchingEndcap:
       event:
         - "{dr_0.3} < 0.15"
       object:
-        - "abs({eta}) > 0.83"
+        - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
   test_objects:
     gmtMuon:
@@ -87,20 +84,18 @@ MuonsMatchingEndcap:
       label: "GMT Muon"
       match_dR: 0.3
       cuts:
-        - "abs({eta}) > 0.83"
+        - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
-        - "abs({eta}) > 0.83"
+        - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
-  thresholds: [0]
   binning:
     min: 0
-    max: 150 
+    max: 150
     step: 3
-

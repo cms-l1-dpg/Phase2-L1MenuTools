@@ -298,7 +298,7 @@ class TurnOnCollection():
         )
 
         for test_obj, cfg in self.cfg_plot.test_objects.items():
-            sel_threshold = self.numerators["test"][test_obj] > self.threshold
+            sel_threshold = self.numerators["test"][test_obj] >= self.threshold
             numerator = self.numerators["ref"][test_obj][sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
