@@ -1,5 +1,5 @@
 TausMatchingBarrel:
-  sample: GluGluToGG
+  sample: GluGluToHHTo2B2Tau
   default_version: V22
   reference_object:
     object: "part_tau"
@@ -33,7 +33,7 @@ TausMatchingBarrel:
     step: 6
 
 TausMatchingEndcap:
-  sample: GluGluToGG
+  sample: GluGluToHHTo2B2Tau
   default_version: V22
   reference_object:
     object: "part_tau"
