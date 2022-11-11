@@ -72,7 +72,6 @@ class EfficiencyPlotter(Plotter):
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        ax.set_xlim(0, 150)
         plt.savefig(f"outputs/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
         plt.close()
