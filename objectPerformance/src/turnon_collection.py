@@ -98,7 +98,7 @@ class TurnOnCollection():
         Set bins according to configuration.
         """
         bin_width = self.cfg_plot.bin_width
-        xmax = self.cfg_plot.bin_max
+        xmax = self.cfg_plot.bin_max + 1e-5
         xmin = self.cfg_plot.bin_min
         return np.arange(xmin, xmax, bin_width)
 

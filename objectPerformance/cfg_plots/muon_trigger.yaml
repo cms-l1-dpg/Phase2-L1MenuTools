@@ -27,8 +27,8 @@ MuonsTrigger:
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
   thresholds: [20, 25]
   scalings:
-    method: "tanh"
-    threshold: 0.90
+    method: "naive"
+    threshold: 0.95
   binning:
     min: 0
     max: 50 

@@ -74,20 +74,23 @@ class ObjectCacher():
 
     def _p4_sum(self, array, axis=-1):
         """
-        Inspired from: https://github.com/CoffeaTeam/coffea/blob/875d1d02f04cac381c5b5b754513408beeba5739/coffea/nanoevents/methods/vector.py#L568
+        Inspired from:
+        https://github.com/CoffeaTeam/coffea/blob/
+        875d1d02f04cac381c5b5b754513408beeba5739/coffea/nanoevents/
+        methods/vector.py#L568
         Get the total four-momentum from a collection of four-momenta.
         with_name="Momentum4D" allows to use array.pt, array.eta, etc
         """
-       return ak.zip(
-        {   
-            "px": ak.sum(array.px, axis=axis, keepdims=True),
-            "py": ak.sum(array.py, axis=axis, keepdims=True),
-            "pz": ak.sum(array.pz, axis=axis, keepdims=True),
-            "E": ak.sum(array.E, axis=axis, keepdims=True),
-        },
-        with_name="Momentum4D",
-        behavior=array.behavior,
-       )
+        return ak.zip(
+            {
+                "px": ak.sum(array.px, axis=axis, keepdims=True),
+                "py": ak.sum(array.py, axis=axis, keepdims=True),
+                "pz": ak.sum(array.pz, axis=axis, keepdims=True),
+                "E": ak.sum(array.E, axis=axis, keepdims=True),
+            },
+            with_name="Momentum4D",
+            behavior=array.behavior
+        )
 
     def _get_visible_taus(self, all_parts):
         """
@@ -134,13 +137,17 @@ class ObjectCacher():
         fs_tau_p = self._p4_sum(all_tau_p)
         fs_tau_m = self._p4_sum(all_tau_m)
 
-        final_taus = {'Pt': ak.concatenate([fs_tau_p.pt, fs_tau_m.pt], axis=-1),
-                     'Eta': ak.concatenate([fs_tau_p.eta, fs_tau_m.eta], axis=-1),
-                     'Phi': ak.concatenate([fs_tau_p.phi, fs_tau_m.phi], axis=-1),
-                     'E': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
-                     'Parent': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1), #dummy
-                     'Id': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1), #dummy
-                     'Stat': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1)} #dummy
+        # Parent, Id and Stat are dummy branches, only needed
+        # for technical consistency.
+        final_taus = {
+            'Pt': ak.concatenate([fs_tau_p.pt, fs_tau_m.pt], axis=-1),
+            'Eta': ak.concatenate([fs_tau_p.eta, fs_tau_m.eta], axis=-1),
+            'Phi': ak.concatenate([fs_tau_p.phi, fs_tau_m.phi], axis=-1),
+            'E': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            'Parent': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            'Id': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            'Stat': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1)
+        }
 
         return final_taus
 
