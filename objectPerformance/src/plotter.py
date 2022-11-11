@@ -57,22 +57,22 @@ class EfficiencyPlotter(Plotter):
         Efficiency / turn-on plots.
         """
         fig, ax = self._create_new_plot()
-        xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
-
-        err_kwargs = {"xerr": self.turnon_collection.xerr,
-                      "capsize": 3, "marker": 'o', "markersize": 8}
+        xbins = self.turnon_collection.bins
+        xbins = 0.5*(xbins[1:] + xbins[:-1])
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if obj_key == "ref":
+            if "ref" in obj_key:
                 continue
+            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
+                      "capsize": 3, "marker": 'o', "markersize": 8}
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
-
             label = self.cfg["test_objects"][obj_key]["label"]
             ax.errorbar(xbins, efficiency, yerr=yerr, label=label,
                         **err_kwargs)
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
+        ax.set_xlim(0, 150)
         plt.savefig(f"outputs/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
         plt.close()
@@ -83,26 +83,25 @@ class EfficiencyPlotter(Plotter):
         of the efficiency plots.
         """
         fig, ax = self._create_new_plot()
-        gen_hist_ref = self.turnon_collection.hists["ref"]
-        xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
+        xbins = self.turnon_collection.bins
+        xbins = 0.5*(xbins[1:] + xbins[:-1])
 
-        err_kwargs = {"xerr": self.turnon_collection.xerr, "capsize": 1,
-                      "marker": 'o', "markersize": 2, "linestyle": "None"}
-
-        ref_hist = ax.step(xbins, gen_hist_ref[0], where="mid")
         label = self.cfg["reference_object"]["label"]
-        ax.errorbar(xbins, gen_hist_ref[0], yerr=np.sqrt(gen_hist_ref[0]),
-                    label=label, color=ref_hist[0].get_color(), **err_kwargs)
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if obj_key == "ref":
+            if "ref" in obj_key:
                 continue
+            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key), "capsize": 1,
+                      "marker": 'o', "markersize": 2, "linestyle": "None"}
+            gen_hist_ref = self.turnon_collection.hists[f"ref_{obj_key}"]
+            ref_hist = ax.step(xbins, gen_hist_ref[0], where="mid")
+            ax.errorbar(xbins, gen_hist_ref[0], yerr=np.sqrt(gen_hist_ref[0]),
+            label=label, color=ref_hist[0].get_color(), **err_kwargs)
             yerr = np.sqrt(gen_hist_trig[0])
             label = self.cfg["test_objects"][obj_key]["label"]
             test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
             ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label,
                         color=test_hist[0].get_color(), **err_kwargs)
-
         self._style_plot(fig, ax)
         plt.savefig(f"outputs/distributions/{self.plot_name}"
                     f"_{self.turnon_collection.threshold}_dist.png")
@@ -262,7 +261,7 @@ class ScalingCentral():
         threshold = turnon_collection.threshold
 
         for obj in turnon_collection.hists:
-            if obj == "ref":
+            if "ref" in obj:
                 continue
             efficiency, _ = turnon_collection.get_efficiency(obj)
             percentage_point = self._find_percentage_point(
@@ -283,7 +282,7 @@ class ScalingCentral():
         threshold = turnon_collection.threshold
 
         for obj in turnon_collection.hists:
-            if obj == "ref":
+            if "ref" in obj:
                 continue
             efficiency, _ = turnon_collection.get_efficiency(obj)
             percentage_point = self._compute_value_of_tanh_at_threshold(
