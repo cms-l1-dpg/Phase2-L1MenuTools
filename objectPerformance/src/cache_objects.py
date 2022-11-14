@@ -257,7 +257,10 @@ class ObjectCacher():
 
         if self._object.startswith("part"):
             all_arrays = {**all_arrays, **self._ref_part_iso}
-        self._final_ak_array = ak.zip({**all_arrays})
+        if len(all_arrays) > 1:
+            self._final_ak_array = ak.zip({**all_arrays})
+        else:
+            self._final_ak_array = ak.Array(all_arrays)
 
     def _cache_file_exists(self):
         """

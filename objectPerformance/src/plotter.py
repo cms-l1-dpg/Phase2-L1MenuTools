@@ -57,16 +57,17 @@ class EfficiencyPlotter(Plotter):
         Efficiency / turn-on plots.
         """
         fig, ax = self._create_new_plot()
-        xbins = self.turnon_collection.bins
-        xbins = 0.5*(xbins[1:] + xbins[:-1])
+        xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if "ref" in obj_key:
+            if obj_key == "ref":
                 continue
-            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
-                      "capsize": 3, "marker": 'o', "markersize": 8}
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
+
             label = self.cfg["test_objects"][obj_key]["label"]
+
+            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
+                          "capsize": 3, "marker": 'o', "markersize": 8}
             ax.errorbar(xbins, efficiency, yerr=yerr, label=label,
                         **err_kwargs)
 
@@ -82,25 +83,24 @@ class EfficiencyPlotter(Plotter):
         of the efficiency plots.
         """
         fig, ax = self._create_new_plot()
-        xbins = self.turnon_collection.bins
-        xbins = 0.5*(xbins[1:] + xbins[:-1])
+        for obj_key, ref_hist in self.turnon_collection.hists["ref"].items():
+            xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-        label = self.cfg["reference_object"]["label"]
+            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key), "capsize": 1,
+                          "marker": 'o', "markersize": 2, "linestyle": "None"}
+
+            ref_hist = ax.step(xbins, ref_hist[0], where="mid")
+            label = self.cfg["reference_object"]["label"]
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
-            if "ref" in obj_key:
+            if obj_key == "ref":
                 continue
-            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key), "capsize": 1,
-                      "marker": 'o', "markersize": 2, "linestyle": "None"}
-            gen_hist_ref = self.turnon_collection.hists[f"ref_{obj_key}"]
-            ref_hist = ax.step(xbins, gen_hist_ref[0], where="mid")
-            ax.errorbar(xbins, gen_hist_ref[0], yerr=np.sqrt(gen_hist_ref[0]),
-            label=label, color=ref_hist[0].get_color(), **err_kwargs)
             yerr = np.sqrt(gen_hist_trig[0])
             label = self.cfg["test_objects"][obj_key]["label"]
             test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
             ax.errorbar(xbins, gen_hist_trig[0], yerr=yerr, label=label,
                         color=test_hist[0].get_color(), **err_kwargs)
+
         self._style_plot(fig, ax)
         plt.savefig(f"outputs/distributions/{self.plot_name}"
                     f"_{self.turnon_collection.threshold}_dist.png")
@@ -259,17 +259,17 @@ class ScalingCentral():
         bins = turnon_collection.bins
         threshold = turnon_collection.threshold
 
-        for obj in turnon_collection.hists:
-            if "ref" in obj:
+        for obj_key, gen_hist_trig in turnon_collection.hists.items():
+            if obj_key == "ref":
                 continue
-            efficiency, _ = turnon_collection.get_efficiency(obj)
+            efficiency, _ = turnon_collection.get_efficiency(obj_key)
             percentage_point = self._find_percentage_point(
                 efficiency,
                 bins,
                 scaling_pct
             )
             if percentage_point:
-                scalings[obj][threshold] = percentage_point
+                scalings[obj_key][threshold] = percentage_point
 
         return scalings
 
@@ -280,17 +280,17 @@ class ScalingCentral():
         bins = turnon_collection.bins
         threshold = turnon_collection.threshold
 
-        for obj in turnon_collection.hists:
-            if "ref" in obj:
+        for obj_key, gen_hist_trig in turnon_collection.hists.items():
+            if obj_key == "ref":
                 continue
-            efficiency, _ = turnon_collection.get_efficiency(obj)
+            efficiency, _ = turnon_collection.get_efficiency(obj_key)
             percentage_point = self._compute_value_of_tanh_at_threshold(
                 efficiency,
                 bins,
                 scaling_pct
             )
             if percentage_point:
-                scalings[obj][threshold] = percentage_point
+                scalings[obj_key][threshold] = percentage_point
 
         return scalings
 

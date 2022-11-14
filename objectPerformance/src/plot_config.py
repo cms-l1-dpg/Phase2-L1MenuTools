@@ -23,14 +23,14 @@ class PlotConfig():
         try:
             return self._cfg["reference_object"]["cuts"]["event"]
         except KeyError:
-            return None
+            return []
 
     @property
     def reference_object_cuts(self):
         try:
             return self._cfg["reference_object"]["cuts"]["object"]
         except KeyError:
-            return None
+            return []
 
     @property
     def reference_trafo(self):

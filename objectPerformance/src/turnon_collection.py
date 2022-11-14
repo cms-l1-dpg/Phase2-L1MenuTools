@@ -90,7 +90,7 @@ class TurnOnCollection():
         self.threshold = threshold
         self.ak_arrays = {}
         self.numerators = {"ref": {}, "test": {}}
-        self.hists = {}
+        self.hists = {"ref": {}}
 
     @property
     def bins(self):
@@ -267,8 +267,6 @@ class TurnOnCollection():
                 self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
     def _skim_to_hists(self):
-        # TODO: It's a while we don't check this
-        # TODO: Check JETS, HT, and MET
         ref_field = self.cfg_plot.reference_field
         if (trafo := self.cfg_plot.reference_trafo):
             ref_field = trafo
@@ -281,10 +279,10 @@ class TurnOnCollection():
             )
             self.hists[test_obj] = np.histogram(ak_array, bins=self.bins)
 
-        self.hists["ref"] = np.histogram(
-            self._flatten_array(self.ak_arrays["ref"][ref_field]),
-            bins=self.bins
-        )
+            self.hists["ref"][test_obj] = np.histogram(
+                self._flatten_array(self.ak_arrays["ref"][ref_field]),
+                bins=self.bins
+            )
 
     def _remove_inner_nones_zeros(self, arr):
         sel_arr_not_none = ~ak.is_none(arr, axis=-1)
@@ -313,16 +311,16 @@ class TurnOnCollection():
                 ref_obj = self.numerators["ref"][test_obj]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists[f"ref_{test_obj}"] = np.histogram(ref_flat_np, bins=self.bins)
+            self.hists["ref"][test_obj] = np.histogram(ref_flat_np, bins=self.bins)
 
     def xerr(self, obj_key: str):
-        ref_vals = self.hists[f"ref_{obj_key}"][0]
+        ref_vals = self.hists["ref"][obj_key][0]
         bin_width = self.cfg_plot.bin_width
         return np.ones_like(ref_vals) * bin_width / 2
 
     @utils.ignore_warnings
     def get_efficiency(self, obj_key: str):
-        ref_vals = self.hists[f"ref_{obj_key}"][0]
+        ref_vals = self.hists["ref"][obj_key][0]
         test_vals = self.hists[obj_key][0]
 
         eff = test_vals / ref_vals
