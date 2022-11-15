@@ -11,11 +11,6 @@ def off_test_turnon_collection_met(met_config):
     turnon_collection = TurnOnCollection(met_config, 70)
     turnon_collection.create_hists()
 
-    for x, y in zip(
-            list(turnon_collection.hists["trackerMET"][0]),
-            met_config["trackerMETTruth"]
-            ):
-        print(x, y)
     assert all([x == y for x, y in zip(
         list(turnon_collection.hists["trackerMET"][0]),
         met_config["trackerMETTruth"]

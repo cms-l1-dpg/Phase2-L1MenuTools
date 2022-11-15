@@ -86,8 +86,9 @@ class EfficiencyPlotter(Plotter):
         for obj_key, ref_hist in self.turnon_collection.hists["ref"].items():
             xbins = self.turnon_collection.bins[:-1] + self.bin_width / 2
 
-            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key), "capsize": 1,
-                          "marker": 'o', "markersize": 2, "linestyle": "None"}
+            err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
+                          "capsize": 1, "marker": 'o', "markersize": 2,
+                          "linestyle": "None"}
 
             ref_hist = ax.step(xbins, ref_hist[0], where="mid")
             label = self.cfg["reference_object"]["label"]
@@ -246,7 +247,7 @@ class ScalingCentral():
                                             bins,
                                             threshold):
         xvals = [x - (bins[1] - bins[0]) / 2 for x in bins[1:]]
-        popt, pcov = curve_fit(utils.tanh, xvals, efficiency, p0=[1,0])
+        popt, pcov = curve_fit(utils.tanh, xvals, efficiency, p0=[1, 0])
         if np.inf in pcov:
             return None
 
@@ -293,7 +294,6 @@ class ScalingCentral():
                 scalings[obj_key][threshold] = percentage_point
 
         return scalings
-
 
     def _compute_scalings(self, turnon_collection, scalings,
                           scaling_pct, method="tanh") -> dict:
