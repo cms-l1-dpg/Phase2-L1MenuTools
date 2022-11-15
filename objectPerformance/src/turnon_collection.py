@@ -239,8 +239,13 @@ class TurnOnCollection():
         the highest pT object.
         """
         if self.cfg_plot.reference_trafo:
+            ref_object_cuts = self.cfg_plot.reference_object_cuts
+            ref_event_cuts = self.cfg_plot.reference_event_cuts
+
+            self._apply_list_of_reference_cuts(ref_object_cuts)
             return
         if "met" in self.cfg_plot.reference_object.lower():
+            # TODO: Maybe we want to modify it and allow possible cuts on MET
             return
 
         ref_object_cuts = self.cfg_plot.reference_object_cuts
@@ -311,7 +316,8 @@ class TurnOnCollection():
                 ref_obj = self.numerators["ref"][test_obj]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists["ref"][test_obj] = np.histogram(ref_flat_np, bins=self.bins)
+            self.hists["ref"][test_obj] = np.histogram(ref_flat_np,
+                                                       bins=self.bins)
 
     def xerr(self, obj_key: str):
         ref_vals = self.hists["ref"][obj_key][0]

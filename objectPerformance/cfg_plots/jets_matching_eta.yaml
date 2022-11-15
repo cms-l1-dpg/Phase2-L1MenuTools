@@ -6,26 +6,24 @@ JetMatching_Eta_Pt40To100:
     suffix: "Eta"
     label: "Gen Jets"
     cuts:
-      - "{pt} > 40"
-      - "{pt} < 100"
-      - "abs({eta}) < 5"
+      event:
+        - "{pt} > 40"
+        - "{pt} < 100"
+      object:
+        - "abs({eta}) < 5"
   test_objects:
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Eta"
       label: "Seeded Cone PuppiJet"
       cuts:
-        - "{pt} > 40"
-        - "{pt} < 100"
+        - "abs({eta}) < 5"
     trackerJet:
       match_dR: 0.4
       suffix: "Eta"
       label: "Tracker Jet"
       cuts:
-        - "{pt} > 40"
-        - "{pt} < 100"
         - "abs({eta}) < 2.4"
-  scaling_pct: 0.9
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (40-100 GeV)"
   binning:
@@ -41,23 +39,23 @@ JetMatching_Eta_Pt100ToInf:
     suffix: "Eta"
     label: "Gen Jets"
     cuts:
-      - "{pt} > 100"
-      - "abs({eta}) < 5"
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 2.5"
   test_objects:
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Eta"
       label: "Seeded Cone PuppiJet"
       cuts:
-        - "{pt} > 100"
+       - "abs({eta}) < 5"
     trackerJet:
       match_dR: 0.4
       suffix: "Eta"
       label: "Tracker Jet"
       cuts:
-        - "{pt} > 100"
         - "abs({eta}) < 2.4"
-  scaling_pct: 0.9
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:
