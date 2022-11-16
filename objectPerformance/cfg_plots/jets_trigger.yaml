@@ -25,13 +25,13 @@ JetTurnonBarrel:
         - "abs({eta}) < 2.4"
   thresholds: [50]
   scalings:
-    method: "naive"
-    threshold: 0.90
+    method: "errf"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
     min: 0
-    max: 500 
+    max: 700 
     step: 10
 
 JetTurnonEndcap:
@@ -59,16 +59,16 @@ JetTurnonEndcap:
       label: "Tracker Jet"
       cuts:
         - "abs({eta}) < 2.4"
-  thresholds: [50]
+  thresholds: [125]
   scalings:
-    method: "naive"
-    threshold: 0.90
+    method: "errf"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
     min: 0
-    max: 500 
-    step: 10
+    max: 900
+    step: 20
 
 JetTurnonForward:
   sample: TT
@@ -91,39 +91,11 @@ JetTurnonForward:
         - "abs({eta}) < 5"
   thresholds: [50]
   scalings:
-    method: "naive"
-    threshold: 0.90
+    method: "errf"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
     min: 0
-    max: 500 
-    step: 10
-
-JetTurnonForwardCPP:
-  sample: TT
-  default_version: V22
-  reference_object: 
-    object: "jet"
-    suffix: "Pt"
-    label: "Gen Jets"
-    cuts:
-      object:
-        - "abs({eta}) < 2.4"
-  test_objects:
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) < 2.4"
-  thresholds: [50]
-  scalings:
-    method: "naive"
-    threshold: 0.90
-  xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
-  binning:
-    min: 0
-    max: 500 
+    max: 700 
     step: 10

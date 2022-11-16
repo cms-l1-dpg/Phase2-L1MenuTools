@@ -11,12 +11,12 @@ MuonsTrigger:
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    # gmtMuon:
-      # suffix: "Pt"
-      # label: "GMT Muon"
-      # match_dR: 0.3
-      # cuts:
-        # - "abs({eta}) < 0.83"
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon"
+      match_dR: 0.3
+      cuts:
+        - "abs({eta}) < 0.83"
     gmtTkMuon:
       suffix: "Pt"
       label: "GMT TkMuon"
