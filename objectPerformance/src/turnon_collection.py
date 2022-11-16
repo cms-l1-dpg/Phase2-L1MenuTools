@@ -87,6 +87,7 @@ class TurnOnCollection():
 
     def __init__(self, cfg_plot, threshold):
         self.cfg_plot = PlotConfig(cfg_plot)
+        self.version = self.cfg_plot.version_ref_object
         self.threshold = threshold
         self.ak_arrays = {}
         self.numerators = {"ref": {}, "test": {}}
