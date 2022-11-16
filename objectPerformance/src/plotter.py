@@ -247,11 +247,11 @@ class ScalingCentral():
         L = 0
         R = np.max(graph_x)
 
-        while(R - L > 0.0001):
+        while (R - L > 0.0001):
             C = (L + R) / 2
             V = self._get_point_on_curve(C, graph_x, graph_y)
 
-            if(V < Target):
+            if (V < Target):
                 L = C
             else:
                 R = C
@@ -266,11 +266,11 @@ class ScalingCentral():
         L = _min
         R = _max
 
-        while(R - L > 0.0001):
+        while (R - L > 0.0001):
             C = (L + R) / 2
             V = function(C, *popt)
 
-            if(V < target):
+            if (V < target):
                 L = C
             else:
                 R = C
@@ -351,10 +351,10 @@ class ScalingCentral():
 
     def _get_point_on_curve(self, x, graph_x, graph_y):
 
-        if(x < graph_x[0]):
+        if (x < graph_x[0]):
             return 0
 
-        if(x >= graph_x[len(graph_x) - 1]):
+        if (x >= graph_x[len(graph_x) - 1]):
             return 1
 
         xr = graph_x[0]
