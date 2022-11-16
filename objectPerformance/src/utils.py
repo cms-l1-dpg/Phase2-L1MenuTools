@@ -6,7 +6,7 @@ from typing import Union
 import warnings
 
 import numpy as np
-from scipy.stats import beta
+from scipy.stats import beta, norm
 import uproot
 
 
@@ -83,6 +83,12 @@ def tanh(x: float, a: float, b: float):
 def arctanh(x: float, a: float, b: float):
     return (np.arctanh(2 * x - 1) - b) / a
 
+
+def errf(x: float, a: float, b: float, c: float, d: float, e: float):
+    _cdf_front = norm.cdf(a * (x - b), 0, a * c)
+    _exp_turnon = np.exp(-a * (x - b) + a * a * c * c / 2)
+    _cdf_back = norm.cdf(a * (x - b), a * a * c * c, a * c) * (d - e) + e
+    return _cdf_front - _exp_turnon * _cdf_back
 
 ##############
 # Decorators #

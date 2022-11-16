@@ -18,6 +18,9 @@ HT:
       suffix: ""
       label: "Phase1 Puppi HT"
   thresholds: [350]
+  scalings:
+    method: "naive"
+    threshold: 0.90
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
@@ -45,7 +48,9 @@ MHT:
       suffix: "et"
       label: "Phase1 Puppi MHT"
   thresholds: [70, 150]
-  scaling_pct: 0.9
+  scalings:
+    method: "naive"
+    threshold: 0.90
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
