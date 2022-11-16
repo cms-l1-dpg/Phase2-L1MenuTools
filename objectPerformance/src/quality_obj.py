@@ -1,3 +1,24 @@
+class L1IsoCut():
+
+    def __init__(self, ak_arrays, obj: str, IsoBB=-1, IsoEE=-1, l1_iso="iso"):
+        ak_arrays = ak_arrays[obj]  # TODO: remove obj arg
+        self.IsoBB = IsoBB
+        self.IsoEE = IsoEE
+        self.l1_iso = l1_iso
+
+        self.sel_iso_BB = ak_arrays['eta'] > -100
+        self.sel_iso_EE = ak_arrays['eta'] > -100
+
+        if self.IsoBB >= 0:
+            self.sel_iso_BB = ((abs(ak_arrays['eta']) < 1.5)
+                               & (ak_arrays[self.l1_iso] > self.IsoBB))
+        if self.IsoEE >= 0:
+            self.sel_iso_EE = ((abs(ak_arrays['eta']) < 1.5)
+                               & (ak_arrays[self.l1_iso] > self.IsoEE))
+
+    @property
+    def ISO_EEBB(self):
+        return self.sel_iso_EE | self.sel_iso_BB
 
 
 class Quality():

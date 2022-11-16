@@ -15,10 +15,18 @@ ElectronsMatchingBarrel:
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
-      quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
         - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
+    #tkElectronIso:
+    #  suffix: "Pt"
+    #  label: "TkElectron Iso"
+    #  iso_BB: 0.13
+    #  iso_EE: 0.28
+    #  iso_branch: "trkiso"
+    #  quality_id: "QUAL_BarrelNoneEndcap3"
+    #  cuts:
+    #    - "abs({eta}) < 2.4"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   match_dR: 0.15

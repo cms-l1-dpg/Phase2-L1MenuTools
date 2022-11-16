@@ -5,7 +5,7 @@ import numpy as np
 import vector
 
 from plot_config import PlotConfig
-from quality_obj import Quality
+from quality_obj import Quality, L1IsoCut
 import utils
 
 
@@ -215,6 +215,25 @@ class TurnOnCollection():
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
+    def _apply_L1_isolation_cuts(self):
+        """
+        Function to implement isolation criteria.
+        Events not fulfilling L1 Iso EE/BB quality
+        criteria are filtered out.
+        """
+        for test_obj in self.cfg_plot.test_objects:
+            iso_BB = self.cfg_plot.get_iso_BB(test_obj)
+            iso_EE = self.cfg_plot.get_iso_EE(test_obj)
+            l1_iso = self.cfg_plot.get_l1_iso(test_obj)
+
+            if ((iso_BB == -1) & (iso_EE == -1)):
+                return
+
+            isolation = L1IsoCut(self.ak_arrays, test_obj,
+                                 iso_BB, iso_EE, l1_iso)
+            sel = ~getattr(isolation, "ISO_EEBB")
+            self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
+
     def _select_highest_pt_ref_object(self):
         """
         The raw cached arrays of the reference still contain
@@ -343,6 +362,7 @@ class TurnOnCollection():
         self._apply_reference_trafo()
         # Apply cuts on test objects
         self._apply_quality_cuts()
+        self._apply_L1_isolation_cuts()
         self._apply_test_obj_cuts()
 
     def create_hists(self):

@@ -13,6 +13,8 @@ class PlotConfig():
             return self._cfg["reference_object"]["version"]
         except KeyError:
             return self._cfg["default_version"]
+        except TypeError:
+            return None
 
     @property
     def reference_object(self):
@@ -115,6 +117,24 @@ class PlotConfig():
     def get_quality_id(self, obj):
         try:
             return self._cfg["test_objects"][obj]["quality_id"]
+        except KeyError:
+            return None
+
+    def get_iso_BB(self, obj):
+        try:
+            return self._cfg["test_objects"][obj]["iso_BB"]
+        except KeyError:
+            return -1
+
+    def get_iso_EE(self, obj):
+        try:
+            return self._cfg["test_objects"][obj]["iso_EE"]
+        except KeyError:
+            return -1
+
+    def get_l1_iso(self, obj):
+        try:
+            return self._cfg["test_objects"][obj]["iso_branch"]
         except KeyError:
             return None
 
