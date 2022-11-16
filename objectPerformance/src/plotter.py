@@ -58,7 +58,7 @@ class EfficiencyPlotter(Plotter):
         """
         fig, ax = self._create_new_plot()
         xbins = self.turnon_collection.bins
-        xbins = 0.5*(xbins[1:] + xbins[:-1])
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
@@ -86,7 +86,7 @@ class EfficiencyPlotter(Plotter):
         fig, ax = self._create_new_plot()
         for obj_key, ref_hist in self.turnon_collection.hists["ref"].items():
             xbins = self.turnon_collection.bins
-            xbins = 0.5*(xbins[1:] + xbins[:-1])
+            xbins = 0.5 * (xbins[1:] + xbins[:-1])
 
             err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
                           "capsize": 1, "marker": 'o', "markersize": 2,
@@ -180,8 +180,8 @@ class ScalingPlotter(Plotter):
             y_points = np.array(list(points.values()) + [ymax])
             xmax = np.max(x_points)
             ymax = np.max(y_points)
-        ax.set_xlim(0, 350)#xmax)
-        ax.set_ylim(0, 700)#ymax)
+        ax.set_xlim(0, xmax)
+        ax.set_ylim(0, ymax)
 
     def plot(self):
         self._make_output_dirs()
@@ -247,26 +247,27 @@ class ScalingCentral():
         L = 0
         R = np.max(graph_x)
 
-        while(R-L > 1e-4):
-            C = (L+R)/2
+        while(R - L > 0.0001):
+            C = (L + R) / 2
             V = self._get_point_on_curve(C, graph_x, graph_y)
 
-            if(V<Target):
+            if(V < Target):
                 L = C
             else:
                 R = C
 
-        return (R+L)/2.
+        return (R + L) / 2.
 
     def _find_turnon_fit(self, function, popt, _min, _max, target):
-        if ((function(_min,*popt) > target) | (function(_max,*popt) < target)):
+        if ((function(_min, *popt) > target)
+           | (function(_max, *popt) < target)):
             return -1000
 
         L = _min
         R = _max
 
-        while(R-L > 1e-4):
-            C = (L+R)/2
+        while(R - L > 0.0001):
+            C = (L + R) / 2
             V = function(C, *popt)
 
             if(V < target):
@@ -274,7 +275,7 @@ class ScalingCentral():
             else:
                 R = C
 
-        return (R+L)/2
+        return (R + L) / 2
 
     @utils.ignore_warnings
     def _compute_value_of_tanh_at_threshold(self,
@@ -297,52 +298,54 @@ class ScalingCentral():
 
     @utils.ignore_warnings
     def _compute_value_of_errf_at_threshold(self,
-                                           efficiency,
-                                           bins,
-                                           scaling_pct):
+                                            efficiency,
+                                            bins,
+                                            scaling_pct):
         xvals = np.array(bins)
         efficiency = np.array(efficiency)
 
         xvals = xvals[~np.isnan(efficiency)]
         efficiency = efficiency[~np.isnan(efficiency)]
 
-        popt, pcov = curve_fit(utils.errf, xvals, efficiency, p0=[0.02, 80, 20, 1, np.min(efficiency)])
+        popt, pcov = curve_fit(utils.errf, xvals, efficiency,
+                               p0=[0.02, 80, 20, 1, np.min(efficiency)]
+                               )
 
         s_val = self._find_turnon_fit(utils.errf, popt,
-                                      np.min(xvals), np.max(xvals)*10,
+                                      np.min(xvals), np.max(xvals) * 10,
                                       scaling_pct * utils.errf(10000, *popt)
-                                     )
+                                      )
 
         return s_val
 
     def _interpolate(self, H, K1, K2):
 
-        A = np.ones(len(K1))*(-K2)
-        B = [k1i + 2*K2 for k1i in K1]
-        C = np.ones(len(K1))*(-K2)
+        A = np.ones(len(K1)) * (-K2)
+        B = [k1i + 2 * K2 for k1i in K1]
+        C = np.ones(len(K1)) * (-K2)
         D = []
 
         A[0] = 0
         C[-1] = 0
 
-        D = [k1i*h1i for k1i, h1i in zip(K1, H)]
+        D = [k1i * h1i for k1i, h1i in zip(K1, H)]
 
-        D[0] = D[0] + K2*0
-        D[-1] = D[-1] + K2*1
+        D[0] = D[0] + K2 * 0
+        D[-1] = D[-1] + K2 * 1
 
         for i in range(1, len(K1)):
-            F = A[i]/B[i-1]
+            F = A[i] / B[i - 1]
 
-            A[i] = A[i] - B[i-1] * F
-            B[i] = B[i] - C[i-1] * F
+            A[i] = A[i] - B[i - 1] * F
+            B[i] = B[i] - C[i - 1] * F
             C[i] = C[i]
-            D[i] = D[i] - D[i-1] * F
+            D[i] = D[i] - D[i - 1] * F
 
         Y = np.ones(len(K1))
         Y[-1] = D[-1] / B[-1]
 
-        for i in reversed(range(len(K1)-2)):
-            Y[i] = (D[i] - C[i] * Y[i+1])/B[i]
+        for i in reversed(range(len(K1) - 2)):
+            Y[i] = (D[i] - C[i] * Y[i + 1]) / B[i]
 
         return Y
 
@@ -351,17 +354,17 @@ class ScalingCentral():
         if(x < graph_x[0]):
             return 0
 
-        if(x >= graph_x[len(graph_x)-1]):
+        if(x >= graph_x[len(graph_x) - 1]):
             return 1
 
         xr = graph_x[0]
         yr = graph_y[0]
-        for i in range(len(graph_x)-1):
+        for i in range(len(graph_x) - 1):
             xl = xr
             yl = yr
-            xr = graph_x[i+1]
-            yr = graph_y[i+1]
-            if ( (x < xr) & (x >= xl) ):
+            xr = graph_x[i + 1]
+            yr = graph_y[i + 1]
+            if ((x < xr) & (x >= xl)):
                 return yl + (yr - yl) / (xr - xl) * (x - xl)
 
         return -1
@@ -369,7 +372,7 @@ class ScalingCentral():
     def _compute_scalings_naive(self, turnon_collection, scalings,
                                 scaling_pct):
         bins = turnon_collection.bins
-        bins = 0.5*(bins[1:]+bins[:-1])
+        bins = 0.5 * (bins[1:] + bins[:-1])
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
@@ -387,11 +390,11 @@ class ScalingCentral():
 
             K1 = []
             for i in range(len(efficiency)):
-                K1.append(1/(er_dn[i] + er_up[i])/(er_up[i] + er_dn[i]))
+                K1.append(1 / (er_dn[i] + er_up[i]) / (er_up[i] + er_dn[i]))
 
             percentage_point = self._find_turnon_cut(
                 xbins,
-                self._interpolate(efficiency,K1, 100),
+                self._interpolate(efficiency, K1, 100),
                 scaling_pct
             )
             if percentage_point:
@@ -404,7 +407,7 @@ class ScalingCentral():
                                scalings,
                                scaling_pct):
         bins = turnon_collection.bins
-        bins = 0.5*(bins[1:] + bins[:-1])
+        bins = 0.5 * (bins[1:] + bins[:-1])
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
@@ -426,7 +429,7 @@ class ScalingCentral():
                                scalings,
                                scaling_pct):
         bins = turnon_collection.bins
-        bins = 0.5*(bins[1:] + bins[:-1])
+        bins = 0.5 * (bins[1:] + bins[:-1])
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
