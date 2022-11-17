@@ -12,6 +12,7 @@ V22:
         gmtMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, Bx]
         gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]
         tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesLooseTrackID, PassesPhotonID]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesPhotonID, PassesLooseTrackID]
   TT:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/TT_TuneCP5_14TeV-powheg-pythia8/TT_PU200_v22/220407_094308/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
@@ -24,20 +25,25 @@ V22:
         phase1PuppiMHT: "all"
         trackerHT: "all"
         phase1PuppiHT: "all"
-        seededConePuppiJet: ['Pt', 'Et', 'Eta', 'Phi']
-        trackerJet: ['Pt', 'Eta', 'Phi']
+        seededConePuppiJet: [Pt, Et, Eta, Phi]
+        trackerJet: [Pt, Eta, Phi]
         phase1PuppiJet: "all"
         # caloJet: "all"
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/VBFToTauTau_PU200_v22/220407_095503/0000//L1NtuplePhaseII_Step1_*.root
-    trees_branches: {}
+    trees_branches:
+      genTree/L1GenTree:
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]
+      l1PhaseIITree/L1PhaseIITree:
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
   GluGluToGG:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/GluGluHToGG_M125_14TeV_powheg_pythia8_TuneCP5/HGG_PU200_v22/220407_094856/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
       genTree/L1GenTree:
         part_gamma: [Id, Stat, Pt, Eta, Phi]
       l1PhaseIITree/L1PhaseIITree:
-        tkPhoton: ['Pt', 'Et', 'Eta', 'Phi', 'Bx', 'TrkIso', 'HwQual', 'HGC', 'PassesPhotonID']
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesPhotonID]
   GluGluToHHTo2B2Tau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/GGToHHTo2B2Tau_PU200_v22/220408_073133/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:

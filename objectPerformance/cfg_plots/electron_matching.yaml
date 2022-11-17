@@ -12,9 +12,17 @@ ElectronsMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
+      match_dR: 0.15
       cuts:
         - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
@@ -29,7 +37,6 @@ ElectronsMatchingBarrel:
     #    - "abs({eta}) < 2.4"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
-  match_dR: 0.15
   binning:
     min: 0
     max: 150
@@ -49,15 +56,22 @@ ElectronsMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
+      match_dR: 0.15
       cuts:
         - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
-  match_dR: 0.15
   binning:
     min: 0
     max: 150
