@@ -13,7 +13,15 @@ ElectronsMatching_Eta_Pt10to25:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
+    EG:
+      suffix: "Eta"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
     tkElectron:
+      match_dR: 0.15
       suffix: "Eta"
       label: "TkElectron"
       quality_id: "QUAL_BarrelNoneEndcap3"
@@ -22,7 +30,6 @@ ElectronsMatching_Eta_Pt10to25:
         - "{passesloosetrackid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
-  match_dR: 0.15
   binning:
     min: -3
     max: 3
@@ -42,15 +49,22 @@ ElectronsMatching_Eta_Pt25toInf:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
+    EG:
+      suffix: "Eta"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Eta"
       label: "TkElectron"
+      match_dR: 0.15
       cuts:
         - "abs({eta}) < 2.8"
         - "{passesloosetrackid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
-  match_dR: 0.15
   binning:
     min: -3
     max: 3

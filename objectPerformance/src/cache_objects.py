@@ -212,7 +212,7 @@ class ObjectCacher():
 
     def _postprocess_branches(self, arr):
         if self._object.startswith("part"):
-            if "tau" in self._object:
+            if "tau" in self._part_type:
                 ref_parts = self._get_visible_taus(arr.copy())
             else:
                 ref_parts = self._filter_genpart_branches(arr.copy())

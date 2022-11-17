@@ -12,6 +12,13 @@ ElectronsTriggerBarrel:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.8"
+        - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "tkElectron"
@@ -44,6 +51,13 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG Electron"
+      match_dR: 0.2
+      cuts:
+        - "abs({eta}) < 2.8"
+        - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "tkElectron"

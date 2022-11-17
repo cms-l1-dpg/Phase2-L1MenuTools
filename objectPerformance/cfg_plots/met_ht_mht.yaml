@@ -72,7 +72,7 @@ MET:
     puppiMET:
       suffix: "et"
       label: "Puppi MET"
-  thresholds: [70, 150]
+  thresholds: [150]
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   scalings:
