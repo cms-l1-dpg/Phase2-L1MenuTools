@@ -28,7 +28,7 @@ HT:
     max: 750
     step: 20
 
-MHT:
+MHT30:
   sample: TT
   default_version: V22
   reference_object:
@@ -38,12 +38,36 @@ MHT:
     cuts:
       object:
         - "abs({eta}) < 2.4"
-        - "{pt} > 10"
+        - "{pt} > 30"
     trafo: "MHT"
   test_objects:
     trackerMHT:
       suffix: ""
       label: "Tracker MHT"
+  thresholds: [70, 150]
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+MHT15:
+  sample: TT
+  default_version: V22
+  reference_object:
+    object: "jet"
+    suffix: "Pt"
+    label: "Gen MHT"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 15"
+    trafo: "MHT"
+  test_objects:
     phase1PuppiMHT:
       suffix: "et"
       label: "Phase1 Puppi MHT"
@@ -56,7 +80,7 @@ MHT:
   binning:
     min: 0
     max: 500
-    step: 20
+    step: 12
 
 MET:
   sample: TT
