@@ -129,7 +129,8 @@ class TurnOnCollection():
             pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1,
                                keepdims=True)
-            self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
+            if ("iso" not in suffix):
+                self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
             self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
 
     def _flatten_array(self, ak_array, ak_to_np=False):
@@ -339,6 +340,15 @@ class TurnOnCollection():
             self.hists["ref"][test_obj] = np.histogram(ref_flat_np,
                                                        bins=self.bins)
 
+    def _skim_to_hists_dR_matched_Iso(self):
+        for test_obj, cfg in self.cfg_plot.test_objects.items():
+            numerator = self.numerators["test"][test_obj]
+            numerator = self._remove_inner_nones_zeros(numerator)
+            numerator = self._flatten_array(numerator, ak_to_np=True)
+
+            # Create Test Object(s) Numpy Histogram
+            self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
+
     def xerr(self, obj_key: str):
         ref_vals = self.hists["ref"][obj_key][0]
         bin_width = self.cfg_plot.bin_width
@@ -372,5 +382,8 @@ class TurnOnCollection():
             self._skim_to_hists()
         else:
             self._match_test_to_ref()
-            self._skim_to_hists_dR_matched()
+            if self.cfg_plot.iso_vs_eff_plot:
+                self._skim_to_hists_dR_matched_Iso()
+            else:
+                self._skim_to_hists_dR_matched()
 

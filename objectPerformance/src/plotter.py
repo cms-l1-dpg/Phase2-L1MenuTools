@@ -52,6 +52,16 @@ class EfficiencyPlotter(Plotter):
         ax.tick_params(direction="in")
         fig.tight_layout()
 
+    def _get_iso_vs_eff_hist(self, test_hist):
+        """
+        Cumulative ratio of efficiency vs L1 Iso histogram.
+        """
+
+        l1_isolation_histogram = sum(test_hist)
+        l1_cumulative_sum = np.cumsum(test_hist) / l1_isolation_histogram
+
+        return l1_cumulative_sum
+
     @utils.ignore_warnings
     def _plot_efficiency_curve(self):
         """
@@ -79,16 +89,41 @@ class EfficiencyPlotter(Plotter):
                     f"{self.turnon_collection.threshold}.png")
         plt.close()
 
+    @utils.ignore_warnings
+    def _plot_iso_vs_efficiency_curve(self):
+        """
+        Efficiency vs L1 Iso plots.
+        """
+        fig, ax = self._create_new_plot()
+        xbins = self.turnon_collection.bins
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
+
+        for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
+            if obj_key == "ref":
+                continue
+            iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
+            # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
+            label = self.cfg["test_objects"][obj_key]["label"]
+            test_hist = ax.step(xbins, iso_vs_eff_hist, where="mid")
+            err_kwargs = {"capsize": 3, "marker": 'o', "markersize": 8}
+            ax.errorbar(xbins, iso_vs_eff_hist, label=label,
+                        color=test_hist[0].get_color(), **err_kwargs)
+
+        self._style_plot(fig, ax)
+        plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
+                    f"{self.turnon_collection.threshold}.png")
+        plt.close()
+
     def _plot_raw_counts(self):
         """
         Raw counts of objects in bins
         of the efficiency plots.
         """
         fig, ax = self._create_new_plot()
-        for obj_key, ref_hist in self.turnon_collection.hists["ref"].items():
-            xbins = self.turnon_collection.bins
-            xbins = 0.5 * (xbins[1:] + xbins[:-1])
+        xbins = self.turnon_collection.bins
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
 
+        for obj_key, ref_hist in self.turnon_collection.hists["ref"].items():
             err_kwargs = {"xerr": self.turnon_collection.xerr(obj_key),
                           "capsize": 1, "marker": 'o', "markersize": 2,
                           "linestyle": "None"}
@@ -112,8 +147,11 @@ class EfficiencyPlotter(Plotter):
 
     def plot(self):
         self._make_output_dirs(self.version)
-        self._plot_efficiency_curve()
-        self._plot_raw_counts()
+        if "Iso" in self.cfg["xlabel"]:
+            self._plot_iso_vs_efficiency_curve()
+        else:
+            self._plot_efficiency_curve()
+            self._plot_raw_counts()
 
 
 class EfficiencyCentral():
