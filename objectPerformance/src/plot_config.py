@@ -17,6 +17,13 @@ class PlotConfig():
             return None
 
     @property
+    def iso_vs_eff_plot(self):
+        try:
+            return self._cfg["iso_vs_efficiency"]
+        except KeyError:
+            return False
+
+    @property
     def reference_object(self):
         return self._cfg["reference_object"]["object"]
 
