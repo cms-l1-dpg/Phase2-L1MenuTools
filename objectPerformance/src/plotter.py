@@ -104,10 +104,8 @@ class EfficiencyPlotter(Plotter):
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
             # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
             label = self.cfg["test_objects"][obj_key]["label"]
-            test_hist = ax.step(xbins, iso_vs_eff_hist, where="mid")
             err_kwargs = {"capsize": 3, "marker": 'o', "markersize": 8}
-            ax.errorbar(xbins, iso_vs_eff_hist, label=label,
-                        color=test_hist[0].get_color(), **err_kwargs)
+            ax.errorbar(xbins, iso_vs_eff_hist, label=label, **err_kwargs)
 
         self._style_plot(fig, ax)
         plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
