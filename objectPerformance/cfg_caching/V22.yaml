@@ -25,10 +25,10 @@ V22:
         phase1PuppiMHT: "all"
         trackerHT: "all"
         phase1PuppiHT: "all"
+        phase1PuppiJet: "all"
         seededConePuppiJet: [Pt, Et, Eta, Phi]
         trackerJet: [Pt, Eta, Phi]
-        phase1PuppiJet: "all"
-        # caloJet: "all"
+        caloJet: [Et, Pt, Eta, Phi]
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/VBFHToTauTau_M125_14TeV_powheg_pythia8_correctedGridpack_tuneCP5/VBFToTauTau_PU200_v22/220407_095503/0000//L1NtuplePhaseII_Step1_*.root
     trees_branches:
