@@ -36,7 +36,7 @@ typing_extensions
 uhi
 uproot
 vector
-xrootd==5.4.3
+xrootd==5.5.1
 xxhash
 zipp
 zstandard
