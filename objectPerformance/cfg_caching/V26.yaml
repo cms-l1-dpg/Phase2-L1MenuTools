@@ -1,0 +1,8 @@
+V26:
+  GluGluToGG:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Hgg_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID//L1Ntuple_7608426_*.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_gamma: [Id, Stat, Pt, Eta, Phi]
+      l1PhaseIITree/L1PhaseIITree:
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesPhoID]

@@ -221,14 +221,19 @@ class ObjectCacher():
             arr = ref_parts
         return arr
 
-    def _load_branches_from_ntuple(self, fname, arr, branches):
-        with uproot.open(fname) as f:
-            for branch in branches:
-                branch_arr = f[self._tree][branch].arrays(library="ak")[branch]
-                branch_key = branch.removeprefix("part")
-                arr[branch_key] = ak.concatenate(
-                    [arr[branch_key], branch_arr]
-                )
+    def _load_branches_from_ntuple(self, chunk_array, arr, branches):
+        for branch in branches:
+            branch_arr = arr[branch]
+            branch_key = branch.removeprefix("part")
+            chunk_array[branch_key] = branch_arr
+        return chunk_array
+
+    def _ak_array_in_chunk(self, arr, chunk_array, branches):
+        for branch in branches:
+            branch_key = branch.removeprefix("part")
+            arr[branch_key] = ak.concatenate(
+                [arr[branch_key], chunk_array[branch_key]]
+            )
         return arr
 
     @timer("Loading objects files")
@@ -242,17 +247,25 @@ class ObjectCacher():
         for fname in fnames:
             bar.next()
             new_array = {x.removeprefix("part"): [] for x in branches}
-            new_array = self._load_branches_from_ntuple(
-                fname, new_array, branches
-            )
-            new_array = self._postprocess_branches(new_array)
+
+            # Read files in chunks to avoid issues with large size files
+            chunk_name = f"{fname}:{self._tree}"
+            for array in uproot.iterate(chunk_name, step_size=100):
+                chunk_array = {x.removeprefix("part"): [] for x in branches}
+                chunk_array = self._load_branches_from_ntuple(
+                    chunk_array, array, branches
+                )
+                chunk_array = self._postprocess_branches(chunk_array)
+
+                new_array = self._ak_array_in_chunk(
+                    new_array, chunk_array, branches
+                )
 
             # Concatenate array from "fname file" to all_arrays
-            for branch in branches:
-                branch_key = branch.removeprefix("part")
-                all_arrays[branch_key] = ak.concatenate(
-                    [all_arrays[branch_key], new_array[branch_key]]
-                )
+            all_arrays = self._ak_array_in_chunk(
+                all_arrays, new_array, branches
+            )
+
         bar.finish()
 
         if self._object.startswith("part"):
@@ -332,4 +345,5 @@ if __name__ == "__main__":
                         dryrun=args.dry_run
                     )
                     loader.load()
+
 

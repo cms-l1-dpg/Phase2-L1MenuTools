@@ -1,5 +1,5 @@
 TauTriggerBarrel:
-  sample: GluGluToGG
+  sample: GluGluToHHTo2B2Tau 
   default_version: V22
   reference_object:
     object: "part_tau"
@@ -37,7 +37,7 @@ TauTriggerBarrel:
     step: 6
 
 TauTriggerEndcap:
-  sample: GluGluToGG
+  sample: GluGluToHHTo2B2Tau 
   default_version: V22
   reference_object:
     object: "part_tau"
