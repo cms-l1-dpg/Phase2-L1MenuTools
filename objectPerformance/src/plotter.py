@@ -50,6 +50,12 @@ class EfficiencyPlotter(Plotter):
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
+        watermark = f"{self.version}_{self.plot_name}_"\
+                    f"{self.turnon_collection.threshold}"
+        ax.text(0, -0.1, watermark,
+                color="grey", alpha=0.2,
+                fontsize=20,
+                transform=ax.transAxes)
         fig.tight_layout()
 
     def _get_iso_vs_eff_hist(self, test_hist):
@@ -241,6 +247,11 @@ class ScalingPlotter(Plotter):
         ax.legend(loc="lower right")
         ax.set_xlabel("Threshold")
         ax.set_ylabel(f"{int(self.scaling_pct*100)}% Location")
+        watermark = f"{self.version}_{self.plot_name}"
+        ax.text(0, -0.1, watermark,
+                color="grey", alpha=0.2,
+                fontsize=20,
+                transform=ax.transAxes)
         self._set_plot_ranges(ax)
         fig.tight_layout()
 
