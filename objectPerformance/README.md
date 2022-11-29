@@ -6,6 +6,15 @@
   The definition of each object to be tested is detailed in
   this [TWiki page](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
 
+## Table of content
+
+* [Caching the NTuple trees](#caching-the-ntuple-trees)
+  * [Structure of the config files: cache step](#structure-of-the-config-files:-cache-step)
+* [Efficiency and Scalings](#efficiency-and-scalings)
+  * [Structure of the config files: plotting](#structure-of-the-config-files:-plotting)
+  * [Turn-on curves](#turn-on-curves)
+  * [Scalings](#scalings)
+
 ## Caching the NTuple trees
   In order to run the next steps, the object
   `TTrees` from the L1NTuples need to be cached
@@ -48,10 +57,13 @@
   
   * `[Id, Stat, Pt, Eta, Phi]` when any of `part_<PARTICLE>` is used. These refer to the gen-level branches to be loaded and used internally to [`cache_objects.py`](https://github.com/bonanomi/Phase2-L1MenuTools/blob/main/objectPerformance/src/cache_objects.py). This list reflects the fact that in the `.root` ntuples (saved in `<PATH_TO_L1_NTUPLES>`) the gen-level information for these leptons is saved in `genTree/L1GenTree` in the `partId, partStat, partPt, partEta, partPhi`.
 
-  * `"all"` in all the other cases (MET and jets). When the `"all"` keyword is used the framework will load all the branches in `genTree/L1GenTree` that start with `<GEN_PART>` (e.g. for `jet` it will load `jetPt`, `jetEta`, `jetPhi`, `jetM`)
+  * `"all"` in all the other cases (MET and jets). When the `"all"` keyword is used the framework will load all the branches in `genTree/L1GenTree` that start with `<GEN_PART>` (e.g. for `jet` it will load `jetPt`, `jetEta`, `jetPhi`, `jetM`).
+  **Note:** In principle you can use the `"all"` for all the objects. However, if there are empty branches for a given object, the code might crash.
 
   For `<L1_OBJ>` one can specify all the objects that are documented for each release in [this Google Doc](https://docs.google.com/spreadsheets/d/1u3IjbePHyQnABg1nel06ITG1kO1bG0k5yw0zc_KqqHM/edit#gid=1105636672).
   As `<L1_BRANCHES>` one specifies the list of branches to be loaded for a given `<L1_OBJ>`. Similarly to the `<GEN_PART>`, one can use the `"all"` keyword to load all the branches in the `TTree` that start with `<L1_OBJ>`.
+
+  For reference, the branches used for each object in the current `C++` version of the tools can be found [here](https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/source/Messenger.cpp#L222-566).
 
 ## Efficiency and Scalings
   The `plotter.py` script can be used to produce matching efficiencies, turn-on curves, and L1 scaling plots. It can be run with
@@ -140,6 +152,7 @@
   * `test_objects`: several objects can be specified under this field. These define all the L1 objects (*test objects*) for which efficiencies and scalings will be computed. Each test object can be speficied with a new `<TEST_OBJ>` key, which has to reflect the name of the `.parquet` file to be loaded (i.e. `cache/<VERSION>/<VERSION>_<SAMPLE>_<TEST_OBJ>.parquet`), and comes with the following fields:
 
     * `suffix`: the observable to be used for the computation of the efficiencies and in the plots. It has to be the same used for the reference object.
+    **Note:** For `trackerHT`, `phase1PuppiHT`, `trackerMHT`, and `trackerMET` objects the `<OBSERVABLE>` in `suffix` needs to be left empty (i.e. `""`) because for these objects only the transverse momentum is stored in the input ntuples (in a `TBranch` with the same name of the object).
 
     * `label`: label for the test object (used in the legend of the plots).
 
@@ -150,9 +163,9 @@
 
   Additional fields to be specified in the `.yaml` config file are:
 
-    * `xlabel` and `ylabel`: self-explanatory. x and y-label of the plots.
+  * `xlabel` and `ylabel`: self-explanatory. x and y-label of the plots.
 
-    * `binning`: with `min`, `max`, and `step` as fields. These define the range (`min` and `max`) to be used for the plots (or, equivalently, for the efficiency computation) and the number of bins to be used therein (`step`). Hence the `binning` field defines evenly spaced values (`step`) within a given interval (with `min` and `max` as boundaries).
+  * `binning`: with `min`, `max`, and `step` as fields. These define the range (`min` and `max`) to be used for the plots (or, equivalently, for the efficiency computation) and the number of bins to be used therein (`step`). Hence the `binning` field defines evenly spaced values (`step`) within a given interval (with `min` and `max` as boundaries).
 
   The one defined above is the general structure of the config files for the plotting step and can be used to produce matching efficiency plots (i.e. plots in which the efficiency is defined as the ratio of the reference objects with a match to the test object to all the reference objects.) as a function of transverse momentum and pseudorapidity.
   Working examples for the main objects (electron, muons, jets, and taus) can be found in `cfg_plots` under `<OBJECT>_matching.yaml` and `<OBJECT>_matching_eta.yaml` for the matching efficiency as a function of transverse momentum and pseudorapidity, respectively.
@@ -189,6 +202,8 @@
   ```
 
   where `<BARREL_CUT>` and `<ENDCAP_CUT>` define the isolation cuts to be applied in the barrel and endcaps, respectively. `<ISO_BRANCH>` is the lowercase string that defines the name of the `awkward` array (equivalently, `TBranch` in the input `TTree`s) that contains the L1 isolation (e.g. `trkiso` for tracker electrons).
+
+  For reference, to compare with the `C++` version, the distributions used for the computation of the efficiencies are defined [in this (and similar) scripts](https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/Efficiency/scripts/V22EGPlots.sh) under `--numerator` and `--denumerator`. The corresponding objects are defined in [this config file](https://github.com/FHead/Phase2-L1MenuTools/blob/main/ObjectPerformances/V22Processing/config/20220202.config).
  
 #### Scalings
   If the `scalings` field is specified for a given `<TEST_OBJ>`, then scaling plots will be produced.
