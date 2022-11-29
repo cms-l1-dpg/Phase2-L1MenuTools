@@ -9,9 +9,9 @@
 ## Table of content
 
 * [Caching the NTuple trees](#caching-the-ntuple-trees)
-  * [Structure of the config files: cache step](#structure-of-the-config-files:-cache-step)
+  * [Structure of the config files: cache step](#structure-of-the-config-files-cache-step)
 * [Efficiency and Scalings](#efficiency-and-scalings)
-  * [Structure of the config files: plotting](#structure-of-the-config-files:-plotting)
+  * [Structure of the config files: plotting](#structure-of-the-config-files-plotting)
   * [Turn-on curves](#turn-on-curves)
   * [Scalings](#scalings)
 
