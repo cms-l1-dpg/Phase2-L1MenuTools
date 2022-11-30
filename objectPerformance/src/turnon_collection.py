@@ -228,7 +228,7 @@ class TurnOnCollection():
             l1_iso = self.cfg_plot.get_l1_iso(test_obj)
 
             if ((iso_BB == -1) & (iso_EE == -1)):
-                return
+                continue
 
             isolation = L1IsoCut(self.ak_arrays, test_obj,
                                  iso_BB, iso_EE, l1_iso)
