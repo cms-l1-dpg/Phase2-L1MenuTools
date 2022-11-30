@@ -6,7 +6,7 @@
 
   The repository is organized as follows:
 
-  * `objectPerformance`: tools for the measurement of the performance (efficiency, turn-on, scaling) of L1 objects. The definition of the L1 objects should follow the recommendations detailed [here](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
+  * `objectPerformance`: tools for the measurement of the performance (matching efficiency, L1 turn-on efficiency curves, and online-to-offline scalings) of L1 objects. The definition of the L1 objects should follow the recommendations detailed [here](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
 
   * `rates`: tools for the measurement of trigger rates starting from the scalings derived with the tools in `objectPerformance`.
 
