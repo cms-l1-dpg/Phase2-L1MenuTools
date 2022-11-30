@@ -13,7 +13,7 @@ class L1IsoCut():
             self.sel_iso_BB = ((abs(ak_arrays['eta']) < 1.5)
                                & (ak_arrays[self.l1_iso] > self.IsoBB))
         if self.IsoEE >= 0:
-            self.sel_iso_EE = ((abs(ak_arrays['eta']) < 1.5)
+            self.sel_iso_EE = ((abs(ak_arrays['eta']) > 1.5)
                                & (ak_arrays[self.l1_iso] > self.IsoEE))
 
     @property
