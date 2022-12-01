@@ -1,0 +1,67 @@
+TausMatchingBarrel:
+  sample: GluGluToHHTo2B2Tau
+  default_version: V22
+  reference_object:
+    object: "part_tau"
+    suffix: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:
+      suffix: "Pt"
+      label: "NN Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+      match_dR: 0.3
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TausMatchingEndcap:
+  sample: GluGluToHHTo2B2Tau
+  default_version: V22
+  reference_object:
+    object: "part_tau"
+    suffix: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:
+      suffix: "Pt"
+      label: "NN Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau"
+      cuts:
+        - "abs({eta}) < 2.4"
+      match_dR: 0.3
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Endcap)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
