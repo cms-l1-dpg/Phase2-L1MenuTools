@@ -7,6 +7,7 @@ import mplhep as hep
 import numpy as np
 from progress.bar import IncrementalBar
 import yaml
+import json
 
 from turnon_collection import TurnOnCollection
 from scaling_collection import ScalingCollection
@@ -49,6 +50,8 @@ class EfficiencyPlotter(Plotter):
         )
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
+        ax.set_xlim(0, 500)
+        ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
         watermark = f"{self.version}_{self.plot_name}_"\
                     f"{self.turnon_collection.threshold}"
@@ -57,6 +60,56 @@ class EfficiencyPlotter(Plotter):
                 fontsize=20,
                 transform=ax.transAxes)
         fig.tight_layout()
+
+    def _save_json(self, file_name):
+        plot = {}
+
+        xlabel = self.cfg["xlabel"]
+        ylabel = self.cfg["ylabel"].replace(
+            "<threshold>",
+            str(self.turnon_collection.threshold)
+        )
+        watermark = f"{self.version}_{self.plot_name}_"\
+                    f"{self.turnon_collection.threshold}"
+
+        plot["xlabel"] = xlabel
+        plot["ylabel"] = ylabel
+        plot["watermark"] = watermark
+
+        xbins = self.turnon_collection.bins
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
+
+        for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
+            if obj_key == "ref":
+                continue
+
+            _object = {}
+
+            if "Iso" in self.cfg["xlabel"]:
+                efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
+                efficiency = efficiency.tolist()
+                yerr = np.zeros(len(efficiency))
+                xerr = yerr.tolist()
+            else:
+                eff, yerr = self.turnon_collection.get_efficiency(obj_key)
+                efficiency = eff.tolist()
+                xerr = self.turnon_collection.xerr(obj_key).tolist()
+
+            label = self.cfg["test_objects"][obj_key]["label"]
+
+            err_kwargs = {"xerr": xerr,
+                          "capsize": 3, "marker": 'o', "markersize": 8}
+
+            _object["label"] = label
+            _object["efficiency"] = efficiency
+            _object["efficiency_err"] = yerr.tolist()
+            _object["xbins"] = xbins.tolist()
+            _object["err_kwargs"] = err_kwargs
+
+            plot[obj_key] = _object
+
+        with open(f"{file_name}", "w") as outfile:
+            outfile.write(json.dumps(plot, indent=4))
 
     def _get_iso_vs_eff_hist(self, test_hist):
         """
@@ -93,6 +146,8 @@ class EfficiencyPlotter(Plotter):
         ax.set_ylim(0, 1.1)
         plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
+        self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
+                        f"{self.turnon_collection.threshold}.json")
         plt.close()
 
     @utils.ignore_warnings
@@ -108,6 +163,7 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
+
             # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
             label = self.cfg["test_objects"][obj_key]["label"]
             err_kwargs = {"capsize": 3, "marker": 'o', "markersize": 8}
@@ -116,6 +172,8 @@ class EfficiencyPlotter(Plotter):
         self._style_plot(fig, ax)
         plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
+        self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
+                        f"{self.turnon_collection.threshold}.json")
         plt.close()
 
     def _plot_raw_counts(self):
@@ -227,6 +285,31 @@ class ScalingPlotter(Plotter):
         ax.set_xlim(0, xmax)
         ax.set_ylim(0, ymax)
 
+    def save_json(self):
+        file_name = f"outputs/{self.version}/scalings/{self.plot_name}.json"
+        plot = {}
+
+        watermark = f"{self.version}_{self.plot_name}"
+        plot["watermark"] = watermark
+
+        for obj, points in self.scalings.items():
+            _object = {}
+            x_points = list(points.keys())
+            y_points = list(points.values())
+
+            label = (self.cfg_plot["test_objects"][obj]["label"]
+                     + ", "
+                     + self._params_to_func_str(obj))
+
+            _object["xvals"] = x_points
+            _object["yvals"] = y_points
+            _object["label"] = label
+
+            plot[obj] = _object
+
+        with open(f"{file_name}", "w") as outfile:
+            outfile.write(json.dumps(plot, indent=4))
+
     def plot(self):
         self._make_output_dirs(self.version)
 
@@ -332,6 +415,7 @@ class ScalingCentral():
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
                                          scaling_pct, version, params)
                 plotter.plot()
+                plotter.save_json()
                 self._write_scalings_to_file(plot_name, version, params)
 
 
