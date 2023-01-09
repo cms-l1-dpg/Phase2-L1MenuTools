@@ -433,3 +433,4 @@ if __name__ == "__main__":
 
     scalings = ScalingCentral(args.cfg_plots)
     scalings.run()
+
