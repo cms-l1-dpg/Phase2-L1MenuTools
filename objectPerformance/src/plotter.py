@@ -50,7 +50,6 @@ class EfficiencyPlotter(Plotter):
         )
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
-        ax.set_xlim(0, 500)
         ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
         watermark = f"{self.version}_{self.plot_name}_"\
@@ -351,7 +350,7 @@ class ScalingCentral():
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj):
-        if self.scaling_thresholds[test_obj]:
+        if test_obj in self.scaling_thresholds:
             return self.scaling_thresholds[test_obj]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
@@ -394,9 +393,8 @@ class ScalingCentral():
             scalings = {x: {} for x in cfg_plot["test_objects"]}
 
             for test_obj in cfg_plot["test_objects"]:
-                scalings_obj = {test_obj: {}}
+                scal = {test_obj: {}}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
-                thds = self.scaling_thresholds[test_obj]
                 bar = IncrementalBar("Progress", max=len(thds))
                 for threshold in thds:
                     bar.next()
@@ -408,13 +406,13 @@ class ScalingCentral():
                                                         method,
                                                         scaling_pct)
                     version = turnon_collection.version
-                    scalings_obj = scaling_collect._compute_scalings(turnon_collection,
-                                                                     test_obj,
-                                                                     scalings_obj,
-                                                                     scaling_pct,
-                                                                     method)
+                    scal = scaling_collect._compute_scalings(turnon_collection,
+                                                             test_obj,
+                                                             scal,
+                                                             scaling_pct,
+                                                             method)
                 bar.finish()
-                scalings[test_obj] = scalings_obj[test_obj]
+                scalings[test_obj] = scal[test_obj]
 
             params = scaling_collect._fit_linear_functions(scalings)
             if params:
