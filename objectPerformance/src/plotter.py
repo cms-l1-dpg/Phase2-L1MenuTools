@@ -350,7 +350,9 @@ class ScalingCentral():
         with open("./cfg_plots/scaling_thresholds.yaml", 'r') as f:
             self.scaling_thresholds = yaml.safe_load(f)
 
-    def _get_scaling_thresholds(self, cfg_plot):
+    def _get_scaling_thresholds(self, cfg_plot, test_obj):
+        if self.scaling_thresholds[test_obj]:
+            return self.scaling_thresholds[test_obj]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
         if any("Elec" in x or "Photon" in x for x in cfg_plot["test_objects"]):
@@ -389,26 +391,38 @@ class ScalingCentral():
                 continue
             print(f">>> Scalings {plot_name} <<<")
 
-            thds = self._get_scaling_thresholds(cfg_plot)
             scalings = {x: {} for x in cfg_plot["test_objects"]}
 
-            bar = IncrementalBar("Progress", max=len(thds))
-            for threshold in thds:
-                bar.next()
-                turnon_collection = TurnOnCollection(cfg_plot, threshold)
-                turnon_collection.create_hists()
-                scaling_pct = turnon_collection.cfg_plot.scaling_pct
-                method = turnon_collection.cfg_plot.scaling_method
-                scaling_collect = ScalingCollection(cfg_plot,
-                                                    method,
-                                                    scaling_pct)
-                version = turnon_collection.version
-                scalings = scaling_collect._compute_scalings(turnon_collection,
-                                                             scalings,
-                                                             scaling_pct,
-                                                             method)
+            for test_obj in cfg_plot["test_objects"]:
+                scalings_obj = {test_obj: {}}
+                thds = self._get_scaling_thresholds(cfg_plot, test_obj)
+                thds = self.scaling_thresholds[test_obj]
+                bar = IncrementalBar("Progress", max=len(thds))
+                for threshold in thds:
+                    bar.next()
+                    turnon_collection = TurnOnCollection(cfg_plot, threshold)
+                    turnon_collection.create_hists()
+                    scaling_pct = turnon_collection.cfg_plot.scaling_pct
+                    method = turnon_collection.cfg_plot.scaling_method
+                    scaling_collect = ScalingCollection(cfg_plot,
+                                                        method,
+                                                        scaling_pct)
+                    version = turnon_collection.version
+                    scalings_obj = scaling_collect._compute_scalings(turnon_collection,
+                                                                     test_obj,
+                                                                     scalings_obj,
+                                                                     scaling_pct,
+                                                                     method)
+                bar.finish()
+                scalings[test_obj] = scalings_obj[test_obj]
 
-            bar.finish()
+            params = scaling_collect._fit_linear_functions(scalings)
+            if params:
+                plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
+                                         scaling_pct, version, params)
+                plotter.plot()
+                plotter.save_json()
+                self._write_scalings_to_file(plot_name, version, params)
 
             params = scaling_collect._fit_linear_functions(scalings)
             if params:
