@@ -160,14 +160,17 @@ class ScalingCollection():
 
         return -1
 
-    def _compute_scalings_naive(self, turnon_collection, scalings,
+    def _compute_scalings_naive(self,
+                                turnon_collection,
+                                test_obj,
+                                scalings,
                                 scaling_pct):
         bins = turnon_collection.bins
         bins = 0.5 * (bins[1:] + bins[:-1])
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if obj_key == "ref":
+            if ((obj_key == "ref") | (obj_key != test_obj)):
                 continue
             efficiency, yerr = turnon_collection.get_efficiency(obj_key)
 
@@ -195,6 +198,7 @@ class ScalingCollection():
 
     def _compute_scalings_tanh(self,
                                turnon_collection,
+                               test_obj,
                                scalings,
                                scaling_pct):
         bins = turnon_collection.bins
@@ -202,7 +206,7 @@ class ScalingCollection():
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if obj_key == "ref":
+            if ((obj_key == "ref") | (obj_key != test_obj)):
                 continue
             efficiency, _ = turnon_collection.get_efficiency(obj_key)
             percentage_point = self._compute_value_of_tanh_at_threshold(
@@ -217,6 +221,7 @@ class ScalingCollection():
 
     def _compute_scalings_errf(self,
                                turnon_collection,
+                               test_obj,
                                scalings,
                                scaling_pct):
         bins = turnon_collection.bins
@@ -224,7 +229,7 @@ class ScalingCollection():
         threshold = turnon_collection.threshold
 
         for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if obj_key == "ref":
+            if ((obj_key == "ref") | (obj_key != test_obj)):
                 continue
             efficiency, _ = turnon_collection.get_efficiency(obj_key)
             percentage_point = self._compute_value_of_errf_at_threshold(
@@ -237,23 +242,26 @@ class ScalingCollection():
 
         return scalings
 
-    def _compute_scalings(self, turnon_collection, scalings,
+    def _compute_scalings(self, turnon_collection, test_obj, scalings,
                           scaling_pct, method="tanh") -> dict:
         if method == "tanh":
             return self._compute_scalings_tanh(
                 turnon_collection,
+                test_obj,
                 scalings,
                 scaling_pct
             )
         if method == "errf":
             return self._compute_scalings_errf(
                 turnon_collection,
+                test_obj,
                 scalings,
                 scaling_pct
             )
         if method == "naive":
             return self._compute_scalings_naive(
                 turnon_collection,
+                test_obj,
                 scalings,
                 scaling_pct
             )
