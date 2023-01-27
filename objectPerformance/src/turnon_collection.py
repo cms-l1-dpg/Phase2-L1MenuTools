@@ -70,8 +70,10 @@ class ArrayLoader():
         """
         Load test objects.
         """
-        for test_obj in self.turnon_collection.cfg_plot.test_objects:
-            test_array = self._load_array_from_parquet(test_obj)
+        test_objects = self.turnon_collection.cfg_plot.test_objects
+        for test_obj, obj_cfg in test_objects.items():
+            obj_name = self.turnon_collection.cfg_plot.get_base_obj(test_obj)
+            test_array = self._load_array_from_parquet(obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
             self.turnon_collection.ak_arrays[test_obj] = test_array
 
