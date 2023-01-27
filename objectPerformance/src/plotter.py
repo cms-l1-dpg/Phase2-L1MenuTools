@@ -351,7 +351,7 @@ class ScalingCentral():
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj):
-        if self.scaling_thresholds[test_obj]:
+        if test_obj in self.scaling_thresholds:
             return self.scaling_thresholds[test_obj]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
@@ -396,7 +396,6 @@ class ScalingCentral():
             for test_obj in cfg_plot["test_objects"]:
                 scalings_obj = {test_obj: {}}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
-                thds = self.scaling_thresholds[test_obj]
                 bar = IncrementalBar("Progress", max=len(thds))
                 for threshold in thds:
                     bar.next()
