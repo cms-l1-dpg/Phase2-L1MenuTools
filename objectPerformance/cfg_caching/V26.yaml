@@ -1,8 +1,53 @@
-V26:
-  GluGluToGG:
-    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Hgg_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID//L1Ntuple_7608426_*.root
-    trees_branches:
-      genTree/L1GenTree:
-        part_gamma: [Id, Stat, Pt, Eta, Phi]
-      l1PhaseIITree/L1PhaseIITree:
-        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesPhoID]
+V26:                                                                                                                                                                                                        
+  Zmm:                                                                                                                                                                                                      
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Zmm_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID/*.root                         
+    trees_branches:                                                                                                                                                                                         
+      genTree/L1GenTree:                                                                                                                                                                                    
+        part_mu: [Id, Stat, Pt, Eta, Phi]                                                                                                                                                                   
+      l1PhaseIITree/L1PhaseIITree:                                                                                                                                                                          
+        #tkMuon: [Pt, Eta, Phi, Chg, TrkIso, Bx, Qual, zVtx, MuRefPt, MuRefPhi, MuRefEta, DRMuTrack, NMatchedTracks, MuRefChg, Region]                                                                      
+        #globalMuon: [Pt, Eta, Phi, EtaAtVtx, PhiAtVtx, IEt, IEta, IPhi, IEtaAtVtx, IPhiAtVtx, IDEta, IDPhi, Chg, Iso, Qual, TfMuonIdx, Bx]                                                                 
+        #tkGlbMuon: [Pt, Eta, Phi, Chg, TrkIso, Bx, Qual, zVtx, MuRefPt, MuRefPhi, MuRefEta, DRMuTrack, NMatchedTracks]                                                                                     
+        gmtMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, Bx]                                                                                                                
+        gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]                                                                                                      
+  Zee:                                                                                                                                                                                                      
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Zee_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID/*.root                         
+    trees_branches:                                                                                                                                                                                         
+      genTree/L1GenTree:                                                                                                                                                                                    
+        part_e: [Id, Stat, Pt, Eta, Phi]                                                                                                                                                                    
+      l1PhaseIITree/L1PhaseIITree:                                                                                                                                                                          
+        tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesEleID, PassesPhoID]                                                          
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]                                                                                                                               
+  TT:                                                                                                                                                                                                       
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/TTbar_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID/*.root                       
+    trees_branches:                                                                                                                                                                                         
+      genTree/L1GenTree:                                                                                                                                                                                    
+        genMetTrue: "all"                                                                                                                                                                                   
+        jet: "all"                                                                                                                                                                                          
+      l1PhaseIITree/L1PhaseIITree:                                                                                                                                                                          
+        trackerMET: "all"                                                                                                                                                                                   
+        trackerMHT: "all"                                                                                                                                                                                   
+        puppiMET: "all"                                                                                                                                                                                     
+        phase1PuppiMHT: "all"                                                                                                                                                                               
+        trackerHT: "all"                                                                                                                                                                                    
+        phase1PuppiHT: "all"                                                                                                                                                                                
+        seededConePuppiJet: [Pt, Et, Eta, Phi]                                                                                                                                                              
+        trackerJet: [Pt, Eta, Phi]                                                                                                                                                                          
+        phase1PuppiJet: "all"                                                                                                                                                                               
+        # caloJet: "all"                                                                                                                                                                                    
+  Ztt:                                                                                                                                                                                                      
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Ztt_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID/*.root                         
+    trees_branches:                                                                                                                                                                                         
+      genTree/L1GenTree:                                                                                                                                                                                    
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]                                                                                                                                                       
+      l1PhaseIITree/L1PhaseIITree:                                                                                                                                                                          
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]                                                                                                                          
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]                                                                                                                                                        
+  Hgg:                                                                                                                                                                                                      
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/RelVal/CMSSW_12_5_1/Hgg_1251_200PU_condor/NTP/v26_PU200_fixGenMET_EGID/*.root                         
+    trees_branches:                                                                                                                                                                                         
+      genTree/L1GenTree:                                                                                                                                                                                    
+        part_gamma: [Id, Stat, Pt, Eta, Phi]                                                                                                                                                                
+      l1PhaseIITree/L1PhaseIITree:                                                                                                                                                                          
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]                                                                                                                     
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]                       
