@@ -24,9 +24,19 @@ ElectronsTriggerBarrel:
       label: "tkElectron"
       match_dR: 0.15
       cuts:
-        - "{passesloosetrackid} == 1"
         - "abs({eta}) < 2.8"
-  thresholds: [10, 20, 30, 40]
+    tkElectronIso:
+     base_obj: "tkElectron"
+     suffix: "Pt"
+     label: "TkElectron Iso"
+     iso_BB: 0.13
+     iso_EE: 0.28
+     iso_branch: "trkiso"
+     match_dR: 0.15
+     quality_id: "QUAL_BarrelNoneEndcap3"
+     cuts:
+        - "abs({eta}) < 2.8"
+  thresholds: [30] #10, 20, 30, 40]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -35,7 +45,7 @@ ElectronsTriggerBarrel:
   binning:
     min: 0
     max: 150
-    step: 1.5
+    step: 3
 
 ElectronsTriggerEndcap:
   sample: DY
@@ -65,7 +75,18 @@ ElectronsTriggerEndcap:
       cuts:
         - "{passesloosetrackid} == 1"
         - "abs({eta}) < 2.8"
-  thresholds: [10, 20, 30, 40]
+    tkElectronIso:
+     base_obj: "tkElectron"
+     suffix: "Pt"
+     label: "TkElectron Iso"
+     iso_BB: 0.13
+     iso_EE: 0.28
+     iso_branch: "trkiso"
+     match_dR: 0.15
+     quality_id: "QUAL_BarrelNoneEndcap3"
+     cuts:
+        - "abs({eta}) < 2.8"
+  thresholds: [30] #10, 20, 30, 40]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -74,4 +95,4 @@ ElectronsTriggerEndcap:
   binning:
     min: 0
     max: 150
-    step: 1.5
+    step: 3

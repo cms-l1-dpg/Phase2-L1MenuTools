@@ -127,6 +127,12 @@ class PlotConfig():
         except KeyError:
             return None
 
+    def get_base_obj(self, obj):
+        try:
+            return self._cfg["test_objects"][obj]["base_obj"]
+        except KeyError:
+            return obj
+
     def get_iso_BB(self, obj):
         try:
             return self._cfg["test_objects"][obj]["iso_BB"]

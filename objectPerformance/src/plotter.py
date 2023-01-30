@@ -50,8 +50,6 @@ class EfficiencyPlotter(Plotter):
         )
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
-        ax.set_xlim(0, 500)
-        ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
         watermark = f"{self.version}_{self.plot_name}_"\
                     f"{self.turnon_collection.threshold}"
@@ -76,24 +74,33 @@ class EfficiencyPlotter(Plotter):
         plot["ylabel"] = ylabel
         plot["watermark"] = watermark
 
-        xbins = self.turnon_collection.bins
-        xbins = 0.5 * (xbins[1:] + xbins[:-1])
-
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
 
             _object = {}
 
+            xbins = self.turnon_collection.bins
+            xbins = 0.5 * (xbins[1:] + xbins[:-1])
+
             if "Iso" in self.cfg["xlabel"]:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
-                efficiency = efficiency.tolist()
-                yerr = np.zeros(len(efficiency))
-                xerr = yerr.tolist()
+                yerr = np.zeros((2, len(efficiency)))
+                xerr = np.zeros(len(efficiency))
             else:
-                eff, yerr = self.turnon_collection.get_efficiency(obj_key)
-                efficiency = eff.tolist()
-                xerr = self.turnon_collection.xerr(obj_key).tolist()
+                efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
+                xerr = self.turnon_collection.xerr(obj_key)
+
+            yerr = np.array([yerr[0][~np.isnan(efficiency)],
+                            yerr[1][~np.isnan(efficiency)]])
+            xerr = xerr[~np.isnan(efficiency)]
+            xbins = xbins[~np.isnan(efficiency)]
+            efficiency = efficiency[~np.isnan(efficiency)]
+
+            xerr = xerr.tolist()
+            yerr = yerr.tolist()
+            xbins = xbins.tolist()
+            efficiency = efficiency.tolist()
 
             label = self.cfg["test_objects"][obj_key]["label"]
 
@@ -102,8 +109,8 @@ class EfficiencyPlotter(Plotter):
 
             _object["label"] = label
             _object["efficiency"] = efficiency
-            _object["efficiency_err"] = yerr.tolist()
-            _object["xbins"] = xbins.tolist()
+            _object["efficiency_err"] = yerr
+            _object["xbins"] = xbins
             _object["err_kwargs"] = err_kwargs
 
             plot[obj_key] = _object
@@ -147,7 +154,7 @@ class EfficiencyPlotter(Plotter):
         plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
         self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                        f"{self.turnon_collection.threshold}.json")
+                        f"{self.turnon_collection.threshold}_{self.version}.json")
         plt.close()
 
     @utils.ignore_warnings
@@ -173,7 +180,7 @@ class EfficiencyPlotter(Plotter):
         plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
                     f"{self.turnon_collection.threshold}.png")
         self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                        f"{self.turnon_collection.threshold}.json")
+                        f"{self.turnon_collection.threshold}_{self.version}.json")
         plt.close()
 
     def _plot_raw_counts(self):
@@ -285,7 +292,7 @@ class ScalingPlotter(Plotter):
         ax.set_xlim(0, xmax)
         ax.set_ylim(0, ymax)
 
-    def save_json(self):
+    def _save_json(self):
         file_name = f"outputs/{self.version}/scalings/{self.plot_name}.json"
         plot = {}
 
@@ -394,7 +401,7 @@ class ScalingCentral():
             scalings = {x: {} for x in cfg_plot["test_objects"]}
 
             for test_obj in cfg_plot["test_objects"]:
-                scalings_obj = {test_obj: {}}
+                scal = {test_obj: {}}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
                 bar = IncrementalBar("Progress", max=len(thds))
                 for threshold in thds:
@@ -407,20 +414,20 @@ class ScalingCentral():
                                                         method,
                                                         scaling_pct)
                     version = turnon_collection.version
-                    scalings_obj = scaling_collect._compute_scalings(turnon_collection,
-                                                                     test_obj,
-                                                                     scalings_obj,
-                                                                     scaling_pct,
-                                                                     method)
+                    scal = scaling_collect._compute_scalings(turnon_collection,
+                                                             test_obj,
+                                                             scal,
+                                                             scaling_pct,
+                                                             method)
                 bar.finish()
-                scalings[test_obj] = scalings_obj[test_obj]
+                scalings[test_obj] = scal[test_obj]
 
             params = scaling_collect._fit_linear_functions(scalings)
             if params:
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
                                          scaling_pct, version, params)
                 plotter.plot()
-                plotter.save_json()
+                plotter._save_json()
                 self._write_scalings_to_file(plot_name, version, params)
 
             params = scaling_collect._fit_linear_functions(scalings)
@@ -428,7 +435,7 @@ class ScalingCentral():
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
                                          scaling_pct, version, params)
                 plotter.plot()
-                plotter.save_json()
+                plotter._save_json()
                 self._write_scalings_to_file(plot_name, version, params)
 
 
