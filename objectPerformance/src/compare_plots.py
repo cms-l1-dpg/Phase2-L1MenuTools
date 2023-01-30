@@ -81,6 +81,7 @@ class ComparisonCentral(Plotter):
                         label = label, **err_kwargs)
 
         self._style_plot(fig, ax)
+        plt.savefig(f"{self.save_dir}/{self.plot_name}.png")
         plt.savefig(f"{self.save_dir}/{self.plot_name}.pdf")
 
 if __name__ == "__main__":
