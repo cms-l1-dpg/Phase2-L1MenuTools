@@ -27,6 +27,7 @@ class ComparisonCentral(Plotter):
             self.plot_name = plot_name
         self.cfg = self.cfg_plots[self.plot_name]
         self.save_dir = self.cfg["save_dir"]
+        if not os.path.exists(self.save_dir): os.makedirs(self.save_dir)
 
     @property
     def _get_watermark(self):
