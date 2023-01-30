@@ -85,8 +85,8 @@ class EfficiencyPlotter(Plotter):
 
             if "Iso" in self.cfg["xlabel"]:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
-                yerr = np.zeros(len(efficiency))
-                xerr = yerr
+                yerr = np.zeros((2, len(efficiency)))
+                xerr = np.zeros(len(efficiency))
             else:
                 efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
                 xerr = self.turnon_collection.xerr(obj_key)
