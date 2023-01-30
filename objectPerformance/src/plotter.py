@@ -50,8 +50,6 @@ class EfficiencyPlotter(Plotter):
         )
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
-        ax.set_xlim(0, 500)
-        ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
         watermark = f"{self.version}_{self.plot_name}_"\
                     f"{self.turnon_collection.threshold}"
