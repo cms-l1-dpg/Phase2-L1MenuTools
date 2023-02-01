@@ -197,7 +197,7 @@ class EfficiencyPlotter(Plotter):
                           "capsize": 1, "marker": 'o', "markersize": 2,
                           "linestyle": "None"}
 
-            ref_hist = ax.step(xbins, ref_hist[0], where="mid")
+            ref_hist = ax.step(xbins, ref_hist[0], where="mid", label = "ref: " + obj_key , ls = "--", color = "k")
             label = self.cfg["reference_object"]["label"]
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
