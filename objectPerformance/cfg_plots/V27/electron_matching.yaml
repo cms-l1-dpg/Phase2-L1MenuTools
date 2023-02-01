@@ -16,9 +16,9 @@ ElectronsMatchingBarrel:
       suffix: "Pt"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
@@ -60,9 +60,9 @@ ElectronsMatchingEndcap:
       suffix: "Pt"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.4"
-        - "{passessaid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
