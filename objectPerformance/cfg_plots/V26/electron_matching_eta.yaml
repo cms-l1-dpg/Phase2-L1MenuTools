@@ -17,9 +17,10 @@ ElectronsMatching_Eta_Pt10to25:
       suffix: "Eta"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 3.0"
-        - "{passeseleid} == 1"
+#        - "{passeseleid} == 1"
     tkElectron:
       match_dR: 0.15
       suffix: "Eta"
@@ -52,9 +53,10 @@ ElectronsMatching_Eta_Pt25toInf:
       suffix: "Eta"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 3.0"
-        - "{passeseleid} == 1"
+#        - "{passeseleid} == 1"
     tkElectron:
       suffix: "Eta"
       label: "TkElectron"
