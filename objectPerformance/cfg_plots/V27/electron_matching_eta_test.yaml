@@ -1,6 +1,6 @@
-ElectronsMatching_Eta_Pt10to25:
-  sample: Zee
-  default_version: V26
+ElectronsMatching_Eta_Pt25toInf_fixEGID:
+  sample: DYLL_M10to50
+  default_version: V27
   reference_object:
     object: "part_e"
     suffix: "Eta"
@@ -8,10 +8,9 @@ ElectronsMatching_Eta_Pt10to25:
     cuts:
       event:
         - "{dr_0.3} < 0.15"
-        - "{pt} < 25"
-        - "{pt} > 10"
+        - "{pt} > 25"
       object:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
   test_objects:
     EG:
       suffix: "Eta"
@@ -19,17 +18,16 @@ ElectronsMatching_Eta_Pt10to25:
       match_dR: 0.2
       quality_id: "QUAL_125x_EGID"
       cuts:
-        - "abs({eta}) < 3"
-      #  - "{passeseleid} == 1"
+        - "abs({eta}) < 3.0"
     tkElectron:
-      match_dR: 0.15
       suffix: "Eta"
       label: "TkElectron"
+      match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
         - "{passeseleid} == 1"
   xlabel: "Gen. $\\eta$"
-  ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
+  ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
   binning:
     min: -3
     max: 3

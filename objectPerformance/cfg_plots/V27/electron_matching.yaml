@@ -1,6 +1,6 @@
 ElectronsMatchingBarrel:
-  sample: Zee
-  default_version: V26
+  sample: DYLL_M10to50
+  default_version: V27
   reference_object:
     object: "part_e"
     suffix: "Pt"
@@ -19,7 +19,6 @@ ElectronsMatchingBarrel:
       quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.4"
-      #  - "{passeseleid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
@@ -44,15 +43,15 @@ ElectronsMatchingBarrel:
     step: 3
 
 ElectronsMatchingEndcap:
-  sample: Zee
-  default_version: V26
+  sample: DYLL_M10to50
+  default_version: V27
   reference_object:
     object: "part_e"
     suffix: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "{dr_0.3} < 0.15" 
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
@@ -64,7 +63,6 @@ ElectronsMatchingEndcap:
       quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.4"
-      #  - "{passessaid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "TkElectron"
@@ -78,3 +76,4 @@ ElectronsMatchingEndcap:
     min: 0
     max: 150
     step: 3
+

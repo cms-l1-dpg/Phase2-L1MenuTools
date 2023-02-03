@@ -63,6 +63,20 @@ class Quality():
                              & (ak_arrays['region'] == 1))
         self.sel_not_4 = (ak_arrays['region'] == 4)
 
+        ## EG IDs from 125x
+        # for EG: region == HGC
+        self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (ak_arrays['passeseleid'] == 1)
+        self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passessaid'] == 1)
+
+        # for EG: quality = HwQual, alt approach: use HW qual bits directly instead of the menu ntuple variables
+        #self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) == 1)
+        #self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 0)&1) == 1)
+
+    @property
+    def QUAL_125x_EGID(self):
+        return ~(self.sel_EG_barrelID | self.sel_EG_endcapID)
+        #return self.sel_passeseleid
+
     @property
     def QUAL_Overlap12EndcapJaana1345(self):
         return self.sel_qual_12 | self.sel_qualities

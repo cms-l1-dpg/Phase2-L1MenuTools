@@ -16,9 +16,10 @@ ElectronsTriggerBarrel:
       suffix: "Pt"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.8"
-        - "{passeseleid} == 1"
+      #  - "{passeseleid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "tkElectron"
@@ -55,9 +56,10 @@ ElectronsTriggerEndcap:
       suffix: "Pt"
       label: "EG Electron"
       match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 2.8"
-        - "{passessaid} == 1"
+      #  - "{passessaid} == 1"
     tkElectron:
       suffix: "Pt"
       label: "tkElectron"

@@ -1,6 +1,6 @@
-ElectronsMatchingBarrel:
-  sample: Zee
-  default_version: V26
+ElectronsTriggerBarrel:
+  sample: DYLL_M10to50
+  default_version: V27
   reference_object:
     object: "part_e"
     suffix: "Pt"
@@ -10,7 +10,7 @@ ElectronsMatchingBarrel:
         - "{dr_0.3} < 0.15"
         - "abs({eta}) < 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.8"
   test_objects:
     EG:
       suffix: "Pt"
@@ -18,34 +18,28 @@ ElectronsMatchingBarrel:
       match_dR: 0.2
       quality_id: "QUAL_125x_EGID"
       cuts:
-        - "abs({eta}) < 2.4"
-      #  - "{passeseleid} == 1"
+        - "abs({eta}) < 2.8"
     tkElectron:
       suffix: "Pt"
-      label: "TkElectron"
+      label: "tkElectron"
       match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.4"
         - "{passeseleid} == 1"
-    #tkElectronIso:
-    #  suffix: "Pt"
-    #  label: "TkElectron Iso"
-    #  iso_BB: 0.13
-    #  iso_EE: 0.28
-    #  iso_branch: "trkiso"
-    #  quality_id: "QUAL_BarrelNoneEndcap3"
-    #  cuts:
-    #    - "abs({eta}) < 2.4"
-  xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Barrel)"
+        - "abs({eta}) < 2.8"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 1.5
 
-ElectronsMatchingEndcap:
-  sample: Zee
-  default_version: V26
+ElectronsTriggerEndcap:
+  sample: DYLL_M10to50
+  default_version: V27
   reference_object:
     object: "part_e"
     suffix: "Pt"
@@ -55,7 +49,7 @@ ElectronsMatchingEndcap:
         - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.8"
   test_objects:
     EG:
       suffix: "Pt"
@@ -63,18 +57,21 @@ ElectronsMatchingEndcap:
       match_dR: 0.2
       quality_id: "QUAL_125x_EGID"
       cuts:
-        - "abs({eta}) < 2.4"
-      #  - "{passessaid} == 1"
+        - "abs({eta}) < 2.8"
     tkElectron:
       suffix: "Pt"
-      label: "TkElectron"
+      label: "tkElectron"
       match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.4"
         - "{passeseleid} == 1"
-  xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Endcap)"
+        - "abs({eta}) < 2.8"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 1.5
