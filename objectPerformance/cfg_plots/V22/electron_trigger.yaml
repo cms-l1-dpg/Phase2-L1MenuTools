@@ -45,7 +45,7 @@ ElectronsTriggerBarrel:
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 1.5
 
 ElectronsTriggerEndcap:
   sample: DY
@@ -95,4 +95,4 @@ ElectronsTriggerEndcap:
   binning:
     min: 0
     max: 150
-    step: 3
+    step: 1.5
