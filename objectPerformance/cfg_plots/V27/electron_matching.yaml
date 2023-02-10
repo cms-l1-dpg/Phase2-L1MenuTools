@@ -1,5 +1,5 @@
 ElectronsMatchingBarrel:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_e"
@@ -26,15 +26,15 @@ ElectronsMatchingBarrel:
       cuts:
         - "abs({eta}) < 2.4"
         - "{passeseleid} == 1"
-    #tkElectronIso:
-    #  suffix: "Pt"
-    #  label: "TkElectron Iso"
-    #  iso_BB: 0.13
-    #  iso_EE: 0.28
-    #  iso_branch: "trkiso"
-    #  quality_id: "QUAL_BarrelNoneEndcap3"
-    #  cuts:
-    #    - "abs({eta}) < 2.4"
+    tkElectronIso:
+     suffix: "Pt"
+     label: "TkIsoElectron"
+     iso_BB: 0.13
+     iso_EE: 0.28
+     iso_branch: "trkiso"
+     cuts:
+       - "abs({eta}) < 2.4"
+       - "{passeseleid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -43,7 +43,7 @@ ElectronsMatchingBarrel:
     step: 3
 
 ElectronsMatchingEndcap:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_e"
@@ -70,6 +70,15 @@ ElectronsMatchingEndcap:
       cuts:
         - "abs({eta}) < 2.4"
         - "{passeseleid} == 1"
+    tkElectronIso:
+     suffix: "Pt"
+     label: "TkIsoElectron"
+     iso_BB: 0.13
+     iso_EE: 0.28
+     iso_branch: "trkiso"
+     cuts:
+       - "abs({eta}) < 2.4"
+       - "{passeseleid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

@@ -1,5 +1,5 @@
 MuonsMatching_Eta_Pt2to5:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_mu"
@@ -13,6 +13,10 @@ MuonsMatching_Eta_Pt2to5:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    gmtMuon:
+      suffix: "Eta"
+      label: "GMT Muon"
+      match_dR: 0.3
     gmtTkMuon:
       suffix: "Eta"
       label: "GMT TkMuon"
@@ -25,7 +29,7 @@ MuonsMatching_Eta_Pt2to5:
     step: 0.2
 
 MuonsMatching_Eta_Pt15toInf:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_mu"
@@ -38,6 +42,10 @@ MuonsMatching_Eta_Pt15toInf:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    gmtMuon:
+      suffix: "Eta"
+      label: "GMT Muon"
+      match_dR: 0.3
     gmtTkMuon:
       suffix: "Eta"
       label: "GMT TkMuon"

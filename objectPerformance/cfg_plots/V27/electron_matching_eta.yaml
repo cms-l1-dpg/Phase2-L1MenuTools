@@ -1,5 +1,5 @@
 ElectronsMatching_Eta_Pt10to25:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_e"
@@ -35,7 +35,7 @@ ElectronsMatching_Eta_Pt10to25:
     step: 0.2
 
 ElectronsMatching_Eta_Pt25toInf:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_e"

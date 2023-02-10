@@ -1,5 +1,5 @@
 ElectronsIsolation:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   iso_vs_efficiency: True
   reference_object:
