@@ -48,7 +48,7 @@ JetMatching_Eta_Pt100ToInf:
       event:
         - "{pt} > 100"
       object:
-        - "abs({eta}) < 2.5"
+        - "abs({eta}) < 5"
   test_objects:
     phase1PuppiJet:
       match_dR: 0.3
