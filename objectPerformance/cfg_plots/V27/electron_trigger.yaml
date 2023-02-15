@@ -26,6 +26,17 @@ ElectronsTriggerBarrel:
       cuts:
         - "{passeseleid} == 1"
         - "abs({eta}) < 2.8"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "tkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      cuts:
+        - "abs({eta}) < 2.8"
+        - "{passeseleid} == 1"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -65,6 +76,17 @@ ElectronsTriggerEndcap:
       cuts:
         - "{passeseleid} == 1"
         - "abs({eta}) < 2.8"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "tkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      cuts:
+        - "abs({eta}) < 2.8"
+        - "{passeseleid} == 1"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

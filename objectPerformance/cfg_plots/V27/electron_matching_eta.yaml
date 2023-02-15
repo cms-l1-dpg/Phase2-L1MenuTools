@@ -27,6 +27,17 @@ ElectronsMatching_Eta_Pt10to25:
       cuts:
         - "abs({eta}) < 3.0"
         - "{passeseleid} == 1"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Eta"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passeseleid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   binning:
@@ -61,6 +72,17 @@ ElectronsMatching_Eta_Pt25toInf:
       match_dR: 0.15
       cuts:
         - "abs({eta}) < 3.0"
+        - "{passeseleid} == 1"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Eta"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      cuts:
+        - "abs({eta}) < 2.4"
         - "{passeseleid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"

@@ -26,17 +26,18 @@ ElectronsMatchingBarrel:
       cuts:
         - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
-    tkElectronIso:
-     base_obj: "tkElectron"
-     suffix: "Pt"
-     label: "TkElectron Iso"
-     iso_BB: 0.13
-     iso_EE: 0.28
-     iso_branch: "trkiso"
-     match_dR: 0.15
-     quality_id: "QUAL_BarrelNoneEndcap3"
-     cuts:
-       - "abs({eta}) < 2.4"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -72,17 +73,18 @@ ElectronsMatchingEndcap:
       cuts:
         - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
-    tkElectronIso:
-     base_obj: "tkElectron"
-     suffix: "Pt"
-     label: "TkElectron Iso"
-     iso_BB: 0.13
-     iso_EE: 0.28
-     iso_branch: "trkiso"
-     match_dR: 0.15
-     quality_id: "QUAL_BarrelNoneEndcap3"
-     cuts:
-       - "abs({eta}) < 2.4"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

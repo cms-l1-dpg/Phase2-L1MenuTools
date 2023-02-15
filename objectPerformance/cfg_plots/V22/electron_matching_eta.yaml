@@ -11,14 +11,14 @@ ElectronsMatching_Eta_Pt10to25:
         - "{pt} < 25"
         - "{pt} > 10"
       object:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
   test_objects:
     EG:
       suffix: "Eta"
       label: "EG Electron"
       match_dR: 0.2
       cuts:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 3.0"
         - "{passesloosetrackid} == 1"
     tkElectron:
       match_dR: 0.15
@@ -26,7 +26,19 @@ ElectronsMatching_Eta_Pt10to25:
       label: "TkElectron"
       quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
+        - "{passesloosetrackid} == 1"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Eta"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
@@ -47,21 +59,33 @@ ElectronsMatching_Eta_Pt25toInf:
         - "{dr_0.3} < 0.15"
         - "{pt} > 25"
       object:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
   test_objects:
     EG:
       suffix: "Eta"
       label: "EG Electron"
       match_dR: 0.2
       cuts:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 3.0"
         - "{passesloosetrackid} == 1"
     tkElectron:
       suffix: "Eta"
       label: "TkElectron"
       match_dR: 0.15
       cuts:
-        - "abs({eta}) < 2.8"
+        - "abs({eta}) < 3.0"
+        - "{passesloosetrackid} == 1"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Eta"
+      label: "TkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
         - "{passesloosetrackid} == 1"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"

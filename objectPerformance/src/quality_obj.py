@@ -86,9 +86,7 @@ class Quality():
         #self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passesphoid'] == 1)
         if "passesphoid" in ak_arrays.fields:
             self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passesphoid'] == 1)
-            print("Pho ID")
         else:
-            print("use hw")
             self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 2)&1) > 0)
 
         #self.sel_tkPho_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) > 0)

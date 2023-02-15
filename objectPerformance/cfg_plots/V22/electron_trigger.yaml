@@ -25,17 +25,18 @@ ElectronsTriggerBarrel:
       match_dR: 0.15
       cuts:
         - "abs({eta}) < 2.8"
-    tkElectronIso:
-     base_obj: "tkElectron"
-     suffix: "Pt"
-     label: "TkElectron Iso"
-     iso_BB: 0.13
-     iso_EE: 0.28
-     iso_branch: "trkiso"
-     match_dR: 0.15
-     quality_id: "QUAL_BarrelNoneEndcap3"
-     cuts:
-        - "abs({eta}) < 2.8"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "tkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
   thresholds: [30] #10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -75,17 +76,18 @@ ElectronsTriggerEndcap:
       cuts:
         - "{passesloosetrackid} == 1"
         - "abs({eta}) < 2.8"
-    tkElectronIso:
-     base_obj: "tkElectron"
-     suffix: "Pt"
-     label: "TkElectron Iso"
-     iso_BB: 0.13
-     iso_EE: 0.28
-     iso_branch: "trkiso"
-     match_dR: 0.15
-     quality_id: "QUAL_BarrelNoneEndcap3"
-     cuts:
-        - "abs({eta}) < 2.8"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "tkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      quality_id: "QUAL_BarrelNoneEndcap3"
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{passesloosetrackid} == 1"
   thresholds: [30] #10, 20, 30, 40]
   scalings:
     method: "naive"
