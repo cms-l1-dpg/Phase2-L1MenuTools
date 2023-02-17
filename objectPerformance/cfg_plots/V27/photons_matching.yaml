@@ -60,7 +60,7 @@ PhotonsMatching_Endcap:
   test_objects:
     EG:
       suffix: "Pt"
-      label: "EG EleID"
+      label: "EG Photon"
       match_dR: 0.2
       quality_id: "QUAL_125x_EGID"
       cuts:
