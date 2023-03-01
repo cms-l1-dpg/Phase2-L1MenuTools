@@ -101,6 +101,12 @@ JetTurnonForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
+    phase1PuppiJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Histogrammed PuppiJet"
+      cuts:
+        - "abs({eta}) < 2.4"
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Pt"

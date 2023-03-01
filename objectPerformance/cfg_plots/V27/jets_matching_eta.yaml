@@ -14,7 +14,7 @@ JetMatching_Eta_Pt40To100:
   test_objects:
     phase1PuppiJet:
       match_dR: 0.3
-      suffix: "Pt"
+      suffix: "Eta"
       label: "Histogrammed PuppiJet"
       cuts:
         - "abs({eta}) < 5"
@@ -52,7 +52,7 @@ JetMatching_Eta_Pt100ToInf:
   test_objects:
     phase1PuppiJet:
       match_dR: 0.3
-      suffix: "Pt"
+      suffix: "Eta"
       label: "Histogrammed PuppiJet"
       cuts:
         - "abs({eta}) < 5"
