@@ -41,6 +41,7 @@ V27:
         trackerJet: [Pt, Eta, Phi]
         phase1PuppiJet: "all"
         # caloJet: "all"
+        caloJet: [Et, Pt, Eta, Phi]
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/VBFHToTauTau_1252_200PU/NTP/v27_PU200/*.root
     trees_branches:

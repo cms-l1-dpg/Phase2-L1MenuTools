@@ -1,7 +1,7 @@
 JetTurnonBarrel:
   sample: TT
   default_version: V27
-  reference_object: 
+  reference_object:
     object: "jet"
     suffix: "Pt"
     label: "Gen Jets"
@@ -11,6 +11,12 @@ JetTurnonBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 2.5"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Pt"
@@ -37,13 +43,13 @@ JetTurnonBarrel:
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
     min: 0
-    max: 700 
+    max: 700
     step: 10
 
 JetTurnonEndcap:
   sample: TT
   default_version: V27
-  reference_object: 
+  reference_object:
     object: "jet"
     suffix: "Pt"
     label: "Gen Jets"
@@ -53,6 +59,12 @@ JetTurnonEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 5"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Pt"
@@ -85,7 +97,7 @@ JetTurnonEndcap:
 JetTurnonForward:
   sample: TT
   default_version: V27
-  reference_object: 
+  reference_object:
     object: "jet"
     suffix: "Pt"
     label: "Gen Jets"
@@ -95,6 +107,12 @@ JetTurnonForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 5"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Pt"
@@ -115,5 +133,5 @@ JetTurnonForward:
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
     min: 0
-    max: 700 
+    max: 700
     step: 10
