@@ -294,7 +294,7 @@ class ObjectCacher():
         )
 
     def load(self):
-        print(f"Process {self._object + self._part_type} object...")
+        #print(f"Process {self._object + self._part_type} object...")
 
         if self._cache_file_exists():
             return
@@ -330,11 +330,14 @@ if __name__ == "__main__":
     with open(args.cfg, 'r') as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
+        print("Processing: version", version)
         for sample, sample_cfg in samples.items():
+            print("\tSample:", sample)
             for tree, object_branches in sample_cfg["trees_branches"].items():
                 if tree == "ntuple_path":
                     continue
                 for obj, branches in object_branches.items():
+                    print("\t\tObject:", obj)
                     loader = ObjectCacher(
                         version=version,
                         sample=sample,
