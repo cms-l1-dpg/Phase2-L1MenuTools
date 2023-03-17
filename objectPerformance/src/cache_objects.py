@@ -250,7 +250,7 @@ class ObjectCacher():
 
             # Read files in chunks to avoid issues with large size files
             chunk_name = f"{fname}:{self._tree}"
-            for array in uproot.iterate(chunk_name, step_size=100):
+            for array in uproot.iterate(chunk_name, filter_name = branches, step_size="100 MB"):
                 chunk_array = {x.removeprefix("part"): [] for x in branches}
                 chunk_array = self._load_branches_from_ntuple(
                     chunk_array, array, branches
