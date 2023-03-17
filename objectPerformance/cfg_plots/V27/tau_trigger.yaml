@@ -1,5 +1,5 @@
 TauTriggerBarrel:
-  sample: DYLL_M10to50
+  sample: VBFHToTauTau
   default_version: V27
   reference_object:
     object: "part_tau"
@@ -37,7 +37,7 @@ TauTriggerBarrel:
     step: 6
 
 TauTriggerEndcap:
-  sample: DYLL_M10to50
+  sample: VBFHToTauTau
   default_version: V27
   reference_object:
     object: "part_tau"

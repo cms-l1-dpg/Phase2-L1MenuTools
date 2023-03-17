@@ -59,6 +59,12 @@ JetTurnonEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 2.4"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Pt"
@@ -101,6 +107,18 @@ JetTurnonForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 5"
+    phase1PuppiJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Histogrammed PuppiJet"
+      cuts:
+        - "abs({eta}) < 2.4"
     seededConePuppiJet:
       match_dR: 0.35
       suffix: "Pt"

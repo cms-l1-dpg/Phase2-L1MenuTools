@@ -29,6 +29,8 @@ class Quality():
 
     def __init__(self, ak_arrays, obj: str):
         ak_arrays = ak_arrays[obj]  # TODO: remove obj arg
+        print("Computing quality for ", obj)
+
         self.sel_lowEta = ((abs(ak_arrays['eta']) < 0.9)
                            & (ak_arrays['region'] != 1))
         self.sel_midEta = ((abs(ak_arrays['eta']) > 0.9)
@@ -65,17 +67,39 @@ class Quality():
 
         ## EG IDs from 125x
         # for EG: region == HGC
-        self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (ak_arrays['passeseleid'] == 1)
-        self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passessaid'] == 1)
+        if "passeseleid" in ak_arrays.fields:
+            self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (ak_arrays['passeseleid'] == 1)
+        else:
+            self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) > 0)
 
-        # for EG: quality = HwQual, alt approach: use HW qual bits directly instead of the menu ntuple variables
-        #self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) == 1)
-        #self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 0)&1) == 1)
+        if "passessaid" in ak_arrays.fields:
+            self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passessaid'] == 1)
+        else:
+            self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 0)&1) > 0)
+
+        # for EG: quality = HwQual, alt approach: use HW qual bits directly instead of the menu ntuple variables: bit0: SA, 1: Ele, 2: Pho
+        #self.sel_EG_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) > 0)
+        #self.sel_EG_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 0)&1) > 0)
+
+        ## tkPhoton from 125x
+        #self.sel_tkPho_barrelID = (ak_arrays['region'] == 0) & (ak_arrays['passeseleid'] == 1)
+        #self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passesphoid'] == 1)
+        if "passesphoid" in ak_arrays.fields:
+            self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (ak_arrays['passesphoid'] == 1)
+        else:
+            self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 2)&1) > 0)
+
+        #self.sel_tkPho_barrelID = (ak_arrays['region'] == 0) & (((ak_arrays['quality'] >> 1)&1) > 0)
+        #self.sel_tkPho_endcapID = (ak_arrays['region'] == 1) & (((ak_arrays['quality'] >> 2)&1) > 0)
 
     @property
     def QUAL_125x_EGID(self):
         return ~(self.sel_EG_barrelID | self.sel_EG_endcapID)
-        #return self.sel_passeseleid
+
+    @property
+    def QUAL_125x_tkPhoID(self):
+        #return ~(self.sel_tkPho_barrelID | self.sel_tkPho_endcapID)
+        return ~(self.sel_EG_barrelID | self.sel_tkPho_endcapID)
 
     @property
     def QUAL_Overlap12EndcapJaana1345(self):
@@ -150,4 +174,3 @@ class Quality():
     @property
     def QUAL_EndcapJaana1345(self):
         return self.sel_qualities
-

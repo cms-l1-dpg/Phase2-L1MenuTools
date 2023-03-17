@@ -49,7 +49,7 @@ MHT30:
     method: "naive"
     threshold: 0.90
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
     min: 0
     max: 500
@@ -76,7 +76,7 @@ MHT15:
     method: "naive"
     threshold: 0.90
   xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
     min: 0
     max: 500

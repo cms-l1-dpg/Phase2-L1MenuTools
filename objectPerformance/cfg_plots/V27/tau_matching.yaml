@@ -1,5 +1,5 @@
 TausMatchingBarrel:
-  sample: DYLL_M10to50
+  sample: VBFHToTauTau
   default_version: V27
   reference_object:
     object: "part_tau"
@@ -33,7 +33,7 @@ TausMatchingBarrel:
     step: 6
 
 TausMatchingEndcap:
-  sample: DYLL_M10to50
+  sample: VBFHToTauTau
   default_version: V27
   reference_object:
     object: "part_tau"

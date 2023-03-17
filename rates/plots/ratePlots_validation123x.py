@@ -1,6 +1,9 @@
 import sys, os
 import argparse
 
+# set BATCH mode for ROOT
+sys.argv.append( '-b' )
+
 from ROOT import *
 from array import *
 
@@ -12,6 +15,7 @@ parser.add_argument("--outdir", default="/eos/user/j/jheikkil/www/", help="Choos
 parser.add_argument("--indir", default="testOutput", help="Choose the input directory. Default='%(default)s'")
 parser.add_argument("--online", dest='runOnline', action='store_true')
 parser.add_argument("--tag", default="", help="Choose tag for the legend. Default='%(default)s'")
+parser.add_argument('-b',"--batch", dest='batch', action='store_true')
 
 
 args = parser.parse_args()
@@ -55,22 +59,22 @@ h = {}
 
 plots = {
 
-#0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
-#0: ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap']
-   #  0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
-#  1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'], 
-  #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
-#  2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'], 
-  #10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
-#  3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],  
-  #4 : ['puppiPhase1HT', 'trackerHT'],  
-  #5 : ['puppiPhase1MHT', 'trackerMHT'],
-  #6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
-#6 : ['trackerMET'],
-#  7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'], 
-  #8 : ['gmtMuon', 'gmtTkMuon'],
-  #11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
-12: ['CaloTau','CaloTauBarrel','CaloTauEndcap']
+    #0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
+    ##0 : ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap'],
+    0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
+    1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'],
+    #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
+    2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'],
+    10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
+    3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],
+    #4 : ['puppiPhase1HT', 'trackerHT'],
+    #5 : ['puppiPhase1MHT', 'trackerMHT'],
+    6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
+    6 : ['trackerMET'],
+    #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
+    8 : ['gmtMuon', 'gmtTkMuon'],
+    11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
+    12: ['CaloTau','CaloTauBarrel','CaloTauEndcap']
 }
 
 labels = {
@@ -127,12 +131,12 @@ for key,list_plot in plots.iteritems():
     if (obj==list_plot[0]):
       maxVal = 10e5
       minVal = 0
-      if runOnline==False and (obj in off): 
+      if runOnline==False and (obj in off):
           maxVal = max(off[obj])
           minVal = min(off[obj])
-      elif runOnline==True and (obj in onl):  
+      elif runOnline==True and (obj in onl):
           maxVal = max(onl[obj])
-          minVal = min(onl[obj])  
+          minVal = min(onl[obj])
       if "MHT" in obj:
           maxVal = 340
       h = TH1F("","",1,minVal,maxVal*1.05)
@@ -174,7 +178,7 @@ for key,list_plot in plots.iteritems():
         g_off[obj].SetMarkerSize(1.2)
 
     elif runOnline == False:
-	continue
+        continue
 
     if (obj in onl):
         g_onl[obj]= TGraph(len(onl[obj])-1,onl[obj],onlrate[obj])
@@ -187,8 +191,8 @@ for key,list_plot in plots.iteritems():
 
 
     elif runOnline == True:
-        
-	continue
+
+        continue
 
 
     if runOnline == True:
@@ -197,7 +201,7 @@ for key,list_plot in plots.iteritems():
         g_off[obj].Draw("lpsame")
 
 
-    if obj in labels: 
+    if obj in labels:
         label = labels[obj]
     else:
         label = obj
@@ -206,7 +210,7 @@ for key,list_plot in plots.iteritems():
       leg.AddEntry(g_onl[obj],label,"lp")
     else:
       leg.AddEntry(g_off[obj],label,"lp")
-  
+
 
     tex = TLatex()
     tex.SetTextSize(0.03)
@@ -226,11 +230,3 @@ for key,list_plot in plots.iteritems():
   else:
       c1.SaveAs(outPath+"/"+name+"_rate_vs_threshold_test_off.pdf")
       c1.SaveAs(outPath+"/"+name+"_rate_vs_threshold_test_off.png")
-
-
-
-
-
-
-
-

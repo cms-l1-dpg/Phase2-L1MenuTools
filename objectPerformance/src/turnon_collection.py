@@ -214,6 +214,9 @@ class TurnOnCollection():
             if not (quality_id := self.cfg_plot.get_quality_id(test_obj)):
                 return
 
+            ## force quality bit to be int!
+            self.ak_arrays[test_obj]["quality"] = ak.values_astype(self.ak_arrays[test_obj]["quality"], np.int32)
+
             quality = Quality(self.ak_arrays, test_obj)
             sel = ~getattr(quality, quality_id)
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]

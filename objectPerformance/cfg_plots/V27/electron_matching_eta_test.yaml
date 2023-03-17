@@ -1,5 +1,5 @@
 ElectronsMatching_Eta_Pt25toInf_fixEGID:
-  sample: DYLL_M10to50
+  sample: DYLL_M50
   default_version: V27
   reference_object:
     object: "part_e"
