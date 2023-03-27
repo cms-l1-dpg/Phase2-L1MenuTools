@@ -121,7 +121,9 @@ class RateTablePrinter():
         rate_dict = {}
         with open(rates_path, 'r') as f:
             for line in f:
-                if (path := re.search("^\w+(\smenu)?", line).group(0)) in paths:
+                path = re.search("^\w+(\smenu)?",line).group(0)
+                if path in paths:
+                    #print(path)
                     pathrate = re.search("\d+.\d+$", line).group(0)
                     rate_dict[path] = float(pathrate)
         return rate_dict

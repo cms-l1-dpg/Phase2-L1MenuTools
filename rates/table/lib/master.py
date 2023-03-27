@@ -1,4 +1,4 @@
-from functions     import *
+from lib.functions     import *
 from cfg           import *
 from menu          import *
 from sample        import *
