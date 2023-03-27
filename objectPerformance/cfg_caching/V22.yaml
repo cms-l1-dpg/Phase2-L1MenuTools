@@ -52,3 +52,22 @@ V22:
       l1PhaseIITree/L1PhaseIITree:
         nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
         caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+  MinBias:
+    ntuple_path: /eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/minbias_merged_nTuplesEmu_v22_2.root
+    trees_branches:
+      l1PhaseIITree/L1PhaseIITree:
+        # trackerMET: "all"
+        puppiMET: "all"
+        phase1PuppiMHT: "all"
+        # trackerHT: "all"
+        phase1PuppiHT: "all"
+        phase1PuppiJet: "all"
+        seededConePuppiJet: [Pt, Et, Eta, Phi]
+        trackerJet: [Pt, Eta, Phi]
+        caloJet: [Et, Pt, Eta, Phi]
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesPhotonID]
+        gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]
+        tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesLooseTrackID, PassesPhotonID]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesPhotonID, PassesLooseTrackID]
