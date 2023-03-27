@@ -1,10 +1,8 @@
 import sys, os
 import argparse
 
-# set BATCH mode for ROOT
-sys.argv.append( '-b' )
-
 from ROOT import *
+gROOT.SetBatch(True)
 from array import *
 
 import time
