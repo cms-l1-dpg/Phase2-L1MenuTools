@@ -40,9 +40,7 @@ def getRootObj(tfile, objDef):
 	prev = tfile.Get(so[0])
 	for sk in so[1:]:
 		if prev.ClassName()=="TDirectoryFile" and sk==so[-1]:
-			## FIXME: none of this is good, I know...
-			ttree = ROOT.TTree()
-			prev.GetObject(sk, ttree)
+                        ttree = prev.Get(sk)
 			return ttree
 		prev = prev.Get(sk) if "Get" in prev.__dict__ and prev.Get(sk) else prev.GetPrimitive(sk)
 	return prev
