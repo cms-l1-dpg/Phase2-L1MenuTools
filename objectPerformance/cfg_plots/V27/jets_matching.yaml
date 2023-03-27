@@ -1,4 +1,42 @@
-JetTurnonBarrel:
+JetMatchingForward_3p7to7:
+  sample: TT
+  default_version: V27
+  reference_object:
+    object: "jet"
+    suffix: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.7"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    # phase1PuppiJet:
+    #   match_dR: 0.3
+    #   suffix: "Pt"
+    #   label: "Histogrammed PuppiJet"
+    #   cuts:
+    #     - "abs({eta}) < 7"
+    # seededConePuppiJet:
+    #   match_dR: 0.35
+    #   suffix: "Pt"
+    #   label: "Seeded Cone PuppiJet"
+    #   cuts:
+    #     - "abs({eta}) < 7"
+    caloJet:
+      match_dR: 0.3
+      suffix: "Pt"
+      label: "Calo Jet"
+      cuts:
+        - "abs({eta}) < 7"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+  binning:
+    min: 0
+    max: 300
+    step: 5
+
+JetMatchingBarrel:
   sample: TT
   default_version: V27
   reference_object:
@@ -35,10 +73,6 @@ JetTurnonBarrel:
       label: "Tracker Jet"
       cuts:
         - "abs({eta}) < 2.4"
-  thresholds: [50,100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -46,7 +80,7 @@ JetTurnonBarrel:
     max: 700
     step: 10
 
-JetTurnonEndcap:
+JetMatchingEndcap:
   sample: TT
   default_version: V27
   reference_object:
@@ -83,10 +117,6 @@ JetTurnonEndcap:
       label: "Tracker Jet"
       cuts:
         - "abs({eta}) < 2.4"
-  thresholds: [50]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -94,7 +124,7 @@ JetTurnonEndcap:
     max: 900
     step: 20
 
-JetTurnonForward:
+JetMatchingForward:
   sample: TT
   default_version: V27
   reference_object:
@@ -125,13 +155,10 @@ JetTurnonForward:
       label: "Seeded Cone PuppiJet"
       cuts:
         - "abs({eta}) < 5"
-  thresholds: [50,100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
     min: 0
     max: 700
     step: 10
+
