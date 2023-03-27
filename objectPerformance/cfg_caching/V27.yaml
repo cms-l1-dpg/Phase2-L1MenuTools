@@ -50,6 +50,14 @@ V27:
       l1PhaseIITree/L1PhaseIITree:
         nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
         caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+  HHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/HHToTauTau_1252_200PU_crab_v27_PU200_fixHwQual/230320_095340/0000/L1NtuplePhaseII_Step1_1.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]
+      l1PhaseIITree/L1PhaseIITree:
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual]
   Hgg:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/GluGluHToGG_1252_200PU/NTP/v27_PU200/*.root
     trees_branches:
@@ -58,3 +66,25 @@ V27:
       l1PhaseIITree/L1PhaseIITree:
         tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]
         EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]
+  MinBias:
+    #ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/0000/L1NtuplePhaseII_Step1*.root
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1.root
+    trees_branches:
+      l1PhaseIITree/L1PhaseIITree:
+        #trackerMET: "all"
+        #trackerMHT: "all"
+        puppiMET: "all"
+        phase1PuppiMHT: "all"
+        #trackerHT: "all"
+        phase1PuppiHT: "all"
+        seededConePuppiJet: [Pt, Et, Eta, Phi]
+        #trackerJet: [Pt, Eta, Phi]
+        phase1PuppiJet: "all"
+        caloJet: [Et, Pt, Eta, Phi]
+        tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesEleID, PassesPhoID]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]
+        #gmtMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, Bx]
+        gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]
