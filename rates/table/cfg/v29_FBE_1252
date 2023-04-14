@@ -27,7 +27,7 @@ variable :: useNominalBwF    :: False
 ## samples (always all samples are used!)
 ## -----------------------------------------------------------
 
-sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_2x.root; tree:=l1PhaseIITree/L1PhaseIITree
+sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/MinBias_9x.root; tree:=l1PhaseIITree/L1PhaseIITree
 
 
 ## physics objects at trigger level
