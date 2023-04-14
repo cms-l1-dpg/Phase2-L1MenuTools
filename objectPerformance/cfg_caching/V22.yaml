@@ -26,6 +26,8 @@ V22:
         trackerHT: "all"
         phase1PuppiHT: "all"
         phase1PuppiJet: "all"
+        seededConePuppiHT: "all"
+        seededConePuppiMHT: "all"
         seededConePuppiJet: [Pt, Et, Eta, Phi]
         trackerJet: [Pt, Eta, Phi]
         caloJet: [Et, Pt, Eta, Phi]

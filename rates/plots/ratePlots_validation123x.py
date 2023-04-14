@@ -57,22 +57,24 @@ h = {}
 
 plots = {
 
-    #0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
-    ##0 : ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap'],
-    0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
-    1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'],
-    #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
-    2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'],
-    10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
-    3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],
-    #4 : ['puppiPhase1HT', 'trackerHT'],
-    #5 : ['puppiPhase1MHT', 'trackerMHT'],
-    6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
-    6 : ['trackerMET'],
-    #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
-    8 : ['gmtMuon', 'gmtTkMuon'],
-    11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
-    12: ['CaloTau','CaloTauBarrel','CaloTauEndcap']
+    # #0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
+    # ##0 : ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap'],
+    # 0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
+    # 1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'],
+    # #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
+    # 2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'],
+    # 10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
+    # 3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],
+    # #4 : ['puppiPhase1HT', 'trackerHT'],
+    # #5 : ['puppiPhase1MHT', 'trackerMHT'],
+    # 6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
+    # 6 : ['trackerMET'],
+    # #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
+    # 8 : ['gmtMuon', 'gmtTkMuon'],
+    # 11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
+    #12: ['CaloTau','CaloTauBarrel','CaloTauEndcap']
+
+    15: ['CaloTau','CaloTauBarrel','CaloTauEndcap','NNPuppiTauLoose']
 }
 
 labels = {
@@ -127,7 +129,7 @@ for key,list_plot in plots.iteritems():
     if (color==10): color+=1
 
     if (obj==list_plot[0]):
-      maxVal = 10e5
+      maxVal = 200
       minVal = 0
       if runOnline==False and (obj in off):
           maxVal = max(off[obj])
