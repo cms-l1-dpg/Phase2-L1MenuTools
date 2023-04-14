@@ -26,11 +26,20 @@ class ArrayLoader():
         key = raw_key.removeprefix(obj).lower()
         if "qual" in key:
             return "quality"
-        # TODO: implement proper mapping for all objects
-        elif "hgc" in key.lower():
-            return "region"
         else:
             return key
+
+    def _map_region(self, test_array, obj: str):
+        """
+        This method serves to map a 'region' branch
+        to the correct eta region in the detector.
+        Needed from V25 after the barrel and endcap
+        collections have been merged.
+        """
+        if 'hgc' in test_array.fields:
+            test_array["region"] = (ak.where(abs(test_array["eta"]) > 1.48, 1, 0))
+
+        return test_array
 
     def _load_array_from_parquet(self, obj: str):
         """
@@ -75,6 +84,7 @@ class ArrayLoader():
             obj_name = self.turnon_collection.cfg_plot.get_base_obj(test_obj)
             test_array = self._load_array_from_parquet(obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
+            test_array = self._map_region(test_array, test_obj)
             self.turnon_collection.ak_arrays[test_obj] = test_array
 
     def load_arrays(self):
@@ -391,4 +401,3 @@ class TurnOnCollection():
                 self._skim_to_hists_dR_matched_Iso()
             else:
                 self._skim_to_hists_dR_matched()
-
