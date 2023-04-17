@@ -23,10 +23,6 @@ class ComparisonCentral(Plotter):
             print (plot_name)
             self.cfgs[plot_name] = cfg_plot
             if not os.path.exists(cfg_plot['save_dir']): os.makedirs(cfg_plot['save_dir'])
-            # self.plot_name = plot_name
-        # self.cfg = self.cfg_plots[self.plot_name]
-        # self.save_dir = self.cfg["save_dir"]
-        # if not os.path.exists(self.save_dir): os.makedirs(self.save_dir)
 
     def _get_watermark(self,cfg):
        try:
