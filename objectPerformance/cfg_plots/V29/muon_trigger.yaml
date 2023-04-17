@@ -52,6 +52,7 @@ MuonsTrigger_Barrel:
       label: "GMT TkMuon"
       match_dR: 0.3
       cuts:
+        - "({quality}) > 0"
         - "abs({eta}) < 0.83"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
@@ -90,6 +91,7 @@ MuonsTrigger_Overlap:
       label: "GMT TkMuon"
       match_dR: 0.3
       cuts:
+        - "({quality}) > 0"
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   xlabel: "Gen. pT (GeV)"
@@ -127,6 +129,7 @@ MuonsTrigger_Endcap:
       label: "GMT TkMuon"
       match_dR: 0.3
       cuts:
+        - "({quality}) > 0"
         - "abs({eta}) > 1.24"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > 20$ GeV)"
