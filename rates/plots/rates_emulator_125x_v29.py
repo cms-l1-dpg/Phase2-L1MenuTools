@@ -218,6 +218,8 @@ cutrange = {
 
 
 'NNPuppiTauLoose':[10.0,160.0,5.0],
+'NNPuppiTauLooseBarrel':[10.0,160.0,5.0],
+'NNPuppiTauLooseEndcap':[10.0,160.0,5.0],
 'NNPuppiTau2vtxLoose':[10.0,160.0,5.0],
 'CaloTau':[10.0,160.0,5.0],
 'CaloTauBarrel':[10.0,160.0,5.0],
@@ -251,6 +253,8 @@ list_calc = [
     'puppiMET',
     'trackerMET',
     'NNPuppiTauLoose',
+    'NNPuppiTauLooseBarrel',
+    'NNPuppiTauLooseEndcap',
     #   'NNPuppiTau2vtxLoose',
     'CaloTau',
     'CaloTauBarrel',
@@ -350,6 +354,16 @@ for obj in list_calc:
       offlinescalingcut = "( (abs(nnTauEta[])<1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutBarrel(x))+")) || (abs(nnTauEta[])>1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutEndcap(x))+")) )"
       offlinecut = "Sum$( "+offlinescalingcut+" && nnTauPassLooseNN[]>0 && abs(nnTauEta[])<2.4)>0"
       onlinecut  = "Sum$( nnTauEt[]>"+str(x)+"  && nnTauPassLooseNN[]>0 && abs(nnTauEta[])<2.4)>0"
+
+    if (obj=='NNPuppiTauLooseBarrel'):
+      offlinescalingcut = "( (abs(nnTauEta[])<1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutBarrel(x))+")) || (abs(nnTauEta[])>1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutEndcap(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && nnTauPassLooseNN[]>0 && abs(nnTauEta[])<1.5)>0"
+      onlinecut  = "Sum$( nnTauEt[]>"+str(x)+"  && nnTauPassLooseNN[]>0 && abs(nnTauEta[])<1.5)>0"
+
+    if (obj=='NNPuppiTauLooseEndcap'):
+      offlinescalingcut = "( (abs(nnTauEta[])<1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutBarrel(x))+")) || (abs(nnTauEta[])>1.5 && nnTauEt[]>("+str(NNTauLooseOfflineEtCutEndcap(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && nnTauPassLooseNN[]>0 && abs(nnTauEta[])>1.5)>0"
+      onlinecut  = "Sum$( nnTauEt[]>"+str(x)+"  && nnTauPassLooseNN[]>0 && abs(nnTauEta[])>1.5)>0"
 
     if (obj=='NNPuppiTau2vtxLoose'):
       offlinescalingcut = "( (abs(nnTau2vtxEta[])<1.5 && nnTau2vtxEt[]>("+str(NNTau2vtxLooseOfflineEtCutBarrel(x))+")) || (abs(nnTau2vtxEta[])>1.5 && nnTau2vtxEt[]>("+str(NNTau2vtxLooseOfflineEtCutEndcap(x))+")) )"
