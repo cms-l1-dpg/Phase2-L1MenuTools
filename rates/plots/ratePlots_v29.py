@@ -1,15 +1,19 @@
 import sys, os
 import argparse
 
+# set BATCH mode for ROOT
+#sys.argv.append( '-b' )
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
 from ROOT import *
-gROOT.SetBatch(True)
 from array import *
 
 import time
 timestr = time.strftime("%Y%m%d")
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--outdir", default="/eos/user/j/jheikkil/www/", help="Choose the output directory. Default='%(default)s'")
+parser.add_argument("--outdir", default="~/eoswww/L1T/Phase2/menu/rates/test_125x/", help="Choose the output directory. Default='%(default)s'")
 parser.add_argument("--indir", default="testOutput", help="Choose the input directory. Default='%(default)s'")
 parser.add_argument("--online", dest='runOnline', action='store_true')
 parser.add_argument("--tag", default="", help="Choose tag for the legend. Default='%(default)s'")
@@ -56,58 +60,58 @@ h = {}
 
 
 plots = {
-
-    # #0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
-    # ##0 : ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap'],
-    # 0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
-    # 1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'],
-    # #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
-    # 2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'],
-    # 10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
-    # 3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],
-    # #4 : ['puppiPhase1HT', 'trackerHT'],
-    # #5 : ['puppiPhase1MHT', 'trackerMHT'],
-    # 6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
-    # 6 : ['trackerMET'],
-    # #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
-    # 8 : ['gmtMuon', 'gmtTkMuon'],
-    # 11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
-    #12: ['CaloTau','CaloTauBarrel','CaloTauEndcap']
-
-    15: ['CaloTau','CaloTauBarrel','CaloTauEndcap','NNPuppiTauLoose']
+    #0: ['standaloneMuonBarrel', 'standaloneMuonOverlap', 'standaloneMuonEndcap']
+    ##0 : ['gmtMuonBarrel', 'gmtMuonOverlap', 'gmtMuonEndcap'],
+    0 : ['standaloneElectron', 'tkElectron', 'tkIsoElectron', 'tkPhotonIso'],
+    1 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet', 'caloJet'],
+    #9 : ['trackerJet', 'puppiPhase1Jet', 'seededConePuppiJet'],
+    2 : ['puppiPhase1JetExt', 'seededConePuppiJetExt', 'caloJetExt'],
+    10 : ['puppiPhase1JetExt', 'seededConePuppiJetExt'],
+    3 : ['puppiPhase1HT', 'trackerHT', 'caloHT'],
+    #4 : ['puppiPhase1HT', 'trackerHT'],
+    #5 : ['puppiPhase1MHT', 'trackerMHT'],
+    6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
+    6 : ['trackerMET'],
+    #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
+    8 : ['gmtMuon', 'gmtTkMuon'],
+    11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
+    12: ['CaloTau','CaloTauBarrel','CaloTauEndcap'],
+    15: ['CaloTau','CaloTauBarrel','CaloTauEndcap','NNPuppiTauLoose'],
+    100: ["seededConePuppiJet_Barrel","seededConePuppiJet_Endcap"],
+    101: ["puppiPhase1Jet_Barrel","puppiPhase1Jet_Endcap"],
+    102: ["seededConePuppiJet_Barrel","seededConePuppiJet_Endcap","puppiPhase1Jet_Barrel","puppiPhase1Jet_Endcap"],
+    #100: ["seededConePuppiJet_Barrel","seededConePuppiJet_Endcap"]
 }
 
 labels = {
-
-'standaloneElectron' : 'calorimeter-only electron',
-'tkElectron' : 'track-matched electron',
-'tkIsoElectron' : 'track-matched + charged iso. electron',
-'tkPhotonIso' : 'charged iso. photon',
-'standaloneMuon' : 'standalone muon',
-'tkMuon' : 'track-matched muon (tkMuon)',
-'tkMuonStub' : 'track-matched muon (tkMuonStub)',
-'trackerJet' : 'tracker jet',
-'caloJet' : 'calo jet',
-'puppiPhase1Jet' : 'histogr. puppi jet',
-'seededConePuppiJet' : 'seeded cone puppi jet',
-'caloJetExt' : 'calo jet (|#eta|<5)',
-'puppiPhase1JetExt' : 'histogr. puppi jet (|#eta|<5)',
-'seededConePuppiJetExt' : 'seeded cone puppi jet (|#eta|<5)',
-'puppiPhase1HT' : 'histogr. puppi jets H_{T}',
-'trackerHT' : 'tracker H_{T}',
-'caloHT' : 'calo H_{T}',
-'puppiPhase1MHT' : 'histogr. puppi jets #slash{H}_{T}',
-'trackerMHT' : 'tracker #slash{H}_{T}',
-'puppiMET' : 'puppi #slash{E}_{T}',
-'trackerMET' : 'tracker #slash{E}_{T}',
-'gmtMuon' : 'GMT standalone muon',
-'gmtTkMuon' : 'GMT track-matched muon',
-'CaloTau' : 'calo tau',
-'CaloTauEndcap' : 'calo tau, endcap',
-'CaloTauBarrel' : 'calo tau, barrel',
-'NNPuppiTauLoose' : 'nnPuppi tau (loose WP)',
-'NNPuppiTau2vtxLoose' : 'nnPuppi tau (loose WP, 2vtx)',
-
+    'standaloneElectron' : 'calorimeter-only electron',
+    'tkElectron' : 'track-matched electron',
+    'tkIsoElectron' : 'track-matched + charged iso. electron',
+    'tkPhotonIso' : 'charged iso. photon',
+    'standaloneMuon' : 'standalone muon',
+    'tkMuon' : 'track-matched muon (tkMuon)',
+    'tkMuonStub' : 'track-matched muon (tkMuonStub)',
+    'trackerJet' : 'tracker jet',
+    'caloJet' : 'calo jet',
+    'puppiPhase1Jet' : 'histogr. puppi jet',
+    'seededConePuppiJet' : 'seeded cone puppi jet',
+    'caloJetExt' : 'calo jet (|#eta|<5)',
+    'puppiPhase1JetExt' : 'histogr. puppi jet (|#eta|<5)',
+    'seededConePuppiJetExt' : 'seeded cone puppi jet (|#eta|<5)',
+    'puppiPhase1HT' : 'histogr. puppi jets H_{T}',
+    'trackerHT' : 'tracker H_{T}',
+    'caloHT' : 'calo H_{T}',
+    'puppiPhase1MHT' : 'histogr. puppi jets #slash{H}_{T}',
+    'trackerMHT' : 'tracker #slash{H}_{T}',
+    'puppiMET' : 'puppi #slash{E}_{T}',
+    'trackerMET' : 'tracker #slash{E}_{T}',
+    'gmtMuon' : 'GMT standalone muon',
+    'gmtTkMuon' : 'GMT track-matched muon',
+    'CaloTau' : 'calo tau',
+    'CaloTauEndcap' : 'calo tau, endcap',
+    'CaloTauBarrel' : 'calo tau, barrel',
+    'NNPuppiTauLoose' : 'nnPuppi tau (loose WP)',
+    'NNPuppiTau2vtxLoose' : 'nnPuppi tau (loose WP, 2vtx)',
 }
 
 
@@ -129,8 +133,9 @@ for key,list_plot in plots.iteritems():
     if (color==10): color+=1
 
     if (obj==list_plot[0]):
-      maxVal = 200
+      maxVal = 10e5
       minVal = 0
+      print(obj)
       if runOnline==False and (obj in off):
           maxVal = max(off[obj])
           minVal = min(off[obj])

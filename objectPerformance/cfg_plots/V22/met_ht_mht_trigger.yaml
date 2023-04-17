@@ -17,6 +17,9 @@ HT:
     phase1PuppiHT:
       suffix: ""
       label: "Phase1 Puppi HT"
+    seededConePuppiHT:
+      suffix: ""
+      label: "SeededCone HT"
   thresholds: [350]
   scalings:
     method: "naive"
@@ -71,6 +74,9 @@ MHT15:
     phase1PuppiMHT:
       suffix: "et"
       label: "Phase1 Puppi MHT"
+    seededConePuppiMHT:
+      suffix: "et"
+      label: "SeededCone MHT"
   thresholds: [70, 150]
   scalings:
     method: "naive"

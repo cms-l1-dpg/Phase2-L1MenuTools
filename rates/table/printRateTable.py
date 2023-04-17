@@ -11,22 +11,94 @@ import argparse
 from itertools import chain
 import re
 
-
+'''
 CFG_RATE_COMBOS = {
-    "2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x": {
-        "cfg": "cfg/v10_TRIDAS_newThresholds_LHCCReview",
-        "rates": "out/2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu.csv"
+    "123_noMu_FBE":{
+        "cfg": "cfg/FBE_noMu_L1TDRMET_mhtSeed_123x",
+        "rates": "out-bkp/2022-Apr20-v5-baseline-noMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu.csv",
     },
-    "2020-05-26-BugFix_v10_TRIDAS_newThresholds_LHCCReview": {
-        "cfg": "cfg/v10_TRIDAS_newThresholds_LHCCReview",
-        "rates": "out/2020-05-26-MENU-LHCCReview-BugFix_v10_TRIDAS_newThresholds_LHCCReview/thresholds/menu.csv"
+#    "123_noMu_w3Mu":{
+#        "cfg": "cfg/FBE_noMu_L1TDRMET_mhtSeed_123x",
+#        "rates": "out/2022-Apr20-v5-baseline-noMu_with3tkMu_FBE_noMu_L1TDRMET_mhtSeed_123x/thresholds/menu.csv",
+#    },
+#    "1252_lowstat":{
+#        "cfg": "cfg/FBE_1252",
+#        "rates": "out/2023-March-v5-baseline_FBE_1252/thresholds/menu.csv"
+#    },
+#    "1252_w3Mu":{
+#        "cfg": "cfg/FBE_1252",
+#        "rates": "out/2023-March-v0-baseline_OldScaling_FBE_1252_with3Mu/thresholds/menu.csv"
+#    },
+    "1252_no3Mu":{
+        "cfg": "cfg/FBE_1252_oldscaling",
+        "rates": "out-bkp/2023-March-v0-baseline_OldScaling_no3Mu_FBE_1252/thresholds/menu.csv"
+    },
+    "1252_newSc":{
+        "cfg": "cfg/FBE_1252",
+        "rates": "out-bkp/2023-March-v0-baseline_NewScaling_TauJetMET_FBE_1252/thresholds/menu.csv"
+    },
+    "1252_newSc_shrt":{
+        "cfg": "cfg/FBE_1252",
+        "rates": "out/2023-March-v0-baseline_NewScaling_TauJetMET_testshort_FBE_1252/thresholds/menu.csv"
+    },
+    "1252_newSc_shrt2":{
+        "cfg": "cfg/FBE_1252",
+        "rates": "out/2023-March-v0-baseline_NewScaling_TauJetMET_testshort_101112_FBE_1252/thresholds/menu.csv"
+    },
+
+    # "125_oldSc_lowstat":{
+    #     "cfg": "cfg/FBE_1252",
+    #     "rates": "out/2023-March-v0-baseline_OldScaling_short_10to13_FBE_1252_oldscaling/thresholds/menu.csv",
+    # },
+    # "125_newSc_lowstat":{
+    #     "cfg": "cfg/FBE_1252",
+    #     "rates": "out/2023-March-v0-baseline_NewScaling_TauJetMET_testshort_101112_v2_FBE_1252/thresholds/menu.csv",
+    # },
+    "125_newSc_1x2x3x_noMu":{
+        "cfg": "cfg/FBE_1252",
+        "rates": "out/2023-March-v0-baseline_NewScaling_TauJetMET_1x2x3x_FBE_1252/thresholds/menu.csv",
+    },
+    "125_newSc_3x_noMu":{
+        "cfg": "cfg/FBE_1252",
+        "rates": "out/2023-March-v0-baseline_NewScaling_TauJetMET_short_3x_FBE_1252/thresholds/menu.csv",
     },
 }
-
+'''
+'''
+CFG_RATE_COMBOS = {
+    "125_newSc_3x_AllMu":{
+        "cfg":"cfg/FBE_1252_onlyMu",
+        "rates": "out-newsc/2023-March-v0-baseline_NewScaling_TauJetMET_3x_withAllTkMu_FBE_1252_onlyMu/thresholds/menu.csv",
+    },
+    "125_3x_allMu_fixChg":{
+        "cfg":"cfg/FBE_1252_onlyMu",
+        "rates":"out/2023-March-v0-baseline_NewScaling_TauJetMET_3x_withAllTkMu_fixChg_FBE_1252_onlyMu/thresholds/menu.csv"
+    }
+}
+'''
+CFG_RATE_COMBOS = {
+    "HistoJets":{
+        "cfg":"cfg/FBE_1252_GTemu",
+        "rates": "out/GTemu_11seeds_allScalings_10x_FBE_1252_GTemu/thresholds/menu.csv",
+    },
+    "SCJets":{
+        "cfg":"cfg/FBE_1252_GTemu_SeededCone",
+        "rates": "out/GTemu_11seeds_allScalings_10x_FBE_1252_GTemu_SeededCone/thresholds/menu.csv",
+    },
+    "SCjets (Barrel Sc)":{
+        "cfg":"cfg/FBE_1252_GTemu_SeededCone_BarrelOnlySC",
+        "rates": "out/GTemu_11seeds_BarrelScalings_10x_FBE_1252_GTemu_SeededCone_BarrelOnlySC/thresholds/menu.csv",
+    },
+    "HistoJets (Barrel Sc)":{
+        "cfg":"cfg/FBE_1252_GTemu_histoJets_BarrelOnlySC",
+        "rates": "out/GTemu_11seeds_BarrelScalings_10x_FBE_1252_GTemu_histoJets_BarrelOnlySC/thresholds/menu.csv",
+    },
+}
 
 PATH_NAME_MAP = {
     "L1_SingleTkMu": "Single TkMuon",
     "L1_DoubleTkMu": "Double TkMuon",
+    "L1_DoubleTkMu9_SQ": "Double TkMuon 9 SQ",
     "L1_SingleTkEle": "Single TkElectron",
     "L1_SingleTkEleIso": "Single TkIsoElectron",
     "L1_SingleTkPhoIso": "Single TkIsoPhoton",
@@ -41,7 +113,8 @@ PATH_NAME_MAP = {
     "L1_PFIsoTau_PFMet": "PuppiTau-PuppiMET",
     "L1_SinglePfJet": "Single PuppiJet",
     "L1_DoublePFJet_dEtaMax": "DoublePuppiJet",
-    "L1_PFHTT": "PuppiMHT",
+    "L1_PFHTT": "PuppiHT",
+    "L1_PFMHTT": "PuppiMHT",
     "L1_PFMet": "PuppiMET",
     "L1_tkMet": "TrackerMET",
     "L1_PFHTT_QuadJet": "QuadPuppiJets-PuppiHT",
@@ -54,7 +127,7 @@ PATH_NAME_MAP = {
     "L1_DoubleTkEle_PFHTT": "DoubleTkEleElectron-PuppiHT",
     "L1_TkEleIso_PFHTT": "TkIsoElectron-PuppiHT",
     "L1_TkEle_PFJet_dRMin": "TkElectron-PuppiJet-dRMin",
-    "L1_DoublePFJet_MassMin": "Double PuppiJets",
+    "L1_DoublePFJet_MassMin": "Double PuppiJets Minv>620",
     "L1_SingleEGEle": "Single StaEG",
     "L1_DoubleEGEle": "Double StaEG",
     "L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4": "Double TkMuon 0er1p5_SQ_OS_dR_Max1p4",

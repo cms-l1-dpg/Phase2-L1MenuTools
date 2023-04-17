@@ -1,6 +1,6 @@
 HT:
   sample: TT
-  default_version: V27
+  default_version: V29
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -33,7 +33,7 @@ HT:
 
 MHT30:
   sample: TT
-  default_version: V27
+  default_version: V29
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -60,7 +60,7 @@ MHT30:
 
 MHT15:
   sample: TT
-  default_version: V27
+  default_version: V29
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -90,7 +90,7 @@ MHT15:
 
 MET:
   sample: TT
-  default_version: V27
+  default_version: V29
   reference_object:
     object: "genMetTrue"
     suffix: ""

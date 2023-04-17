@@ -26,7 +26,7 @@ opts = optparse.Values(parser.get_default_values().__dict__)
 opts._update_careful(opts_no_defaults.__dict__)
 
 if len(args)<1:
-	print "Please provide a config file!"
+	print("Please provide a config file!")
 	sys.exit()
 
 MM = master.Master(args, opts, opts_no_defaults)

@@ -10,7 +10,7 @@ TAxis().SetMoreLogLabels(1)
 parser = argparse.ArgumentParser()
 parser.add_argument("--outdir", default="testOutput", help="Choose the output directory. Default='%(default)s'")
 
-args = parser.parse_args()	
+args = parser.parse_args()
 
 outDir = args.outdir
 if not os.path.isdir(outDir):
@@ -28,8 +28,9 @@ rates_file.write("onl = {}\n")
 rates_file.write("onlrate = {}\n\n")
 
 
-f = TFile("/eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/minbias_merged_nTuplesEmu_v22_2.root","READ")
- 
+#f = TFile("/eos/cms/store/cmst3/group/l1tr/phase2Menu/EmuDev/minbias_merged_nTuplesEmu_v22_2.root","READ")
+#f = TFile("/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_2x.root","READ")
+f = TFile("/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/MinBias_9x.root","READ")
 t = f.Get("l1PhaseIITree/L1PhaseIITree")
 
 ntot = t.GetEntriesFast()
@@ -80,7 +81,7 @@ def Phase1PuppiJetOfflineEtCutForward(offline) : return (offline-35.609357)/1.49
 
 #function :: Phase1PuppiMHTOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+9.724987)/1.037459
 #function :: Phase1PuppiHT090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-46.674588)/1.113875
-def Phase1PuppiHTOfflineEtCut(offline) : return (offline-46.674588)/1.113875 
+def Phase1PuppiHTOfflineEtCut(offline) : return (offline-46.674588)/1.113875
 def Phase1PuppiMHTOfflineEtCut(offline) : return (offline+9.724987)/1.037459
 
 #function :: PuppiMET090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-62.120627)/1.382451
@@ -211,6 +212,13 @@ cutrange = {
 'caloJet':[40.0,440.0,20.0],
 'caloJetExt':[40.0,440.0,20.0],
 
+'seededConePuppiJet_Barrel':[40.0,440.0,20.0],
+'seededConePuppiJet_Endcap':[40.0,440.0,20.0],
+'puppiPhase1Jet_Barrel':[40.0,440.0,20.0],
+'puppiPhase1Jet_Endcap':[40.0,440.0,20.0],
+'caloJet_Barrel':[40.0,440.0,20.0],
+'caloJet_Endcap':[40.0,440.0,20.0],
+
 
 'NNPuppiTauLoose':[10.0,160.0,5.0],
 'NNPuppiTau2vtxLoose':[10.0,160.0,5.0],
@@ -222,34 +230,40 @@ cutrange = {
 }
 
 list_calc = [
-    #   'gmtTkMuon',
-    #   'gmtMuon',
-    # #   'gmtMuonEndcap',
-    # #   'gmtMuonBarrel',
-    # #   'gmtMuonOverlap',
-    #   'tkElectron',
-    #   'tkIsoElectron',
-    #   'standaloneElectron',
-    #   'tkPhotonIso',
-    #   'seededConePuppiJet',
-    #   'seededConePuppiJetExt',
-    #   'puppiPhase1Jet',
-    #   'puppiPhase1JetExt',
-    #   'trackerJet',
-    #   'caloJet',
-    #   'caloJetExt',
-    #   'puppiPhase1HT',
-    #   'trackerHT',
-    #   'caloHT',
-    #   'puppiPhase1MHT',
-    #   'trackerMHT',
-    #   'puppiMET',
-    #   'trackerMET',
-    #   'NNPuppiTauLoose',
-    # #   'NNPuppiTau2vtxLoose',
+    'gmtTkMuon',
+    'gmtMuon',
+    'gmtMuonEndcap',
+    'gmtMuonBarrel',
+    'gmtMuonOverlap',
+    'tkElectron',
+    'tkIsoElectron',
+    'standaloneElectron',
+    'tkPhotonIso',
+    'seededConePuppiJet',
+    'seededConePuppiJetExt',
+    'puppiPhase1Jet',
+    'puppiPhase1JetExt',
+    'trackerJet',
+    'caloJet',
+    'caloJetExt',
+    'puppiPhase1HT',
+    'trackerHT',
+    'caloHT',
+    'puppiPhase1MHT',
+    'trackerMHT',
+    'puppiMET',
+    'trackerMET',
+    'NNPuppiTauLoose',
+    #   'NNPuppiTau2vtxLoose',
     'CaloTau',
-    #'CaloTauBarrel',
-    #'CaloTauEndcap',
+    'CaloTauBarrel',
+    'CaloTauEndcap',
+    'seededConePuppiJet_Barrel',
+    'seededConePuppiJet_Endcap',
+    'puppiPhase1Jet_Barrel',
+    'puppiPhase1Jet_Endcap',
+    'caloJet_Barrel',
+    'caloJet_Endcap',
 ]
 
 
@@ -261,11 +275,11 @@ for obj in list_calc:
   offrate[obj] = array('d',[])
   onl[obj] = array('d',[])
   onlrate[obj] = array('d',[])
-  
+
   x = cutrange[obj][0]
   while (x<cutrange[obj][1]):
 
-
+  #print(obj)
 ########################################
 #######################################
 
@@ -303,24 +317,33 @@ for obj in list_calc:
 
     if (obj=='tkElectron'):
       offlinescalingcut = "( (abs(tkElectronEta[])<1.479 && tkElectronEt[]>("+str(TkElectronOfflineEtCutBarrel(x))+")) || (abs(tkElectronEta[])>1.479 && tkElectronEt[]>("+str(TkElectronOfflineEtCutEndcap(x))+")) )"
-      offlinecut = "Sum$( "+offlinescalingcut+" && tkElectronBx[]==0 && tkElectronPassesLooseTrackID[] && abs(tkElectronEta[])<2.4)>0"
-      onlinecut  = "Sum$( tkElectronEt[]>"+str(x)+" && tkElectronBx[]==0 && tkElectronPassesLooseTrackID[] && abs(tkElectronEta[])<2.4)>0"
+
+      offlinecut = "Sum$( "+offlinescalingcut+" && tkElectronBx[]==0 && tkElectronPassesEleID[] && abs(tkElectronEta[])<2.4)>0"
+      onlinecut  = "Sum$( tkElectronEt[]>"+str(x)+" && tkElectronBx[]==0 && tkElectronPassesEleID[] && abs(tkElectronEta[])<2.4)>0"
 
     if (obj=='tkIsoElectron'):
-      offlinescalingcut = "( (abs(tkElectronEta[])<1.479 && tkElectronEt[]>("+str(TkIsoElectronOfflineEtCutBarrel(x))+") && tkElectronTrkIso[]<("+str(iso_EG_barrel)+") ) || (abs(tkElectronEta[])>1.479 && tkElectronEt[]>("+str(TkIsoElectronOfflineEtCutEndcap(x))+") && tkElectronTrkIso[]<("+str(iso_EG_endcap)+") && tkElectronHwQual[]=="+str(tkEG_hwQual)+" ) )"
+      offlinescalingcut = "( (abs(tkElectronEta[])<1.479 && tkElectronEt[]>("+str(TkIsoElectronOfflineEtCutBarrel(x))+") && tkElectronTrkIso[]<("+str(iso_EG_barrel)+") ) || (abs(tkElectronEta[])>1.479 && tkElectronEt[]>("+str(TkIsoElectronOfflineEtCutEndcap(x))+") && tkElectronTrkIso[]<("+str(iso_EG_endcap)+") && tkElectronPassesEleID[] ) )"
       offlinecut = "Sum$( "+offlinescalingcut+" && tkElectronBx[]==0 &&  abs(tkElectronEta[])<2.4)>0"
-      onlinecut  = "Sum$( ((abs(tkElectronEta[])<1.479 && tkElectronEt[]>("+str(x)+") && tkElectronTrkIso[]<("+str(iso_EG_barrel)+")) || (abs(tkElectronEta[])>1.479 && tkElectronEt[]>("+str(x)+") && tkElectronTrkIso[]<("+str(iso_EG_endcap)+") && tkElectronHwQual[]=="+str(tkEG_hwQual)+")) && tkElectronBx[]==0 && abs(tkElectronEta[])<2.4)>0"
+      onlinecut  = "Sum$( ((abs(tkElectronEta[])<1.479 && tkElectronEt[]>("+str(x)+") && tkElectronTrkIso[]<("+str(iso_EG_barrel)+")) || (abs(tkElectronEta[])>1.479 && tkElectronEt[]>("+str(x)+") && tkElectronTrkIso[]<("+str(iso_EG_endcap)+") && tkElectronPassesEleID)) && tkElectronBx[]==0 && abs(tkElectronEta[])<2.4)>0"
 
     if (obj=='standaloneElectron'):
       offlinescalingcut = "( (abs(EGEta[])<1.479 && EGEt[]>("+str(EGElectronOfflineEtCutBarrel(x))+")) || (abs(EGEta[])>1.479 && EGEt[]>("+str(EGElectronOfflineEtCutEndcap(x))+")) )"
-      offlinecut = "Sum$( "+offlinescalingcut+" && EGBx[]==0 && EGPassesLooseTrackID[] && abs(EGEta[])<2.4)>0"
-      onlinecut  = "Sum$( EGEt[]>"+str(x)+" && EGBx[]==0 && EGPassesLooseTrackID[] && abs(EGEta[])<2.4)>0"
+      # offlinecut = "Sum$( "+offlinescalingcut+" && EGBx[]==0 && EGPassesEleID[] && abs(EGEta[])<2.4)>0"
+      # onlinecut  = "Sum$( EGEt[]>"+str(x)+" && EGBx[]==0 && EGPassesEleID[] && abs(EGEta[])<2.4)>0"
+
+      IDcut = "(!EGHGC[] && EGPassesEleID[]) || (EGHGC[] && EGPassesSaID[])"
+      #IDcut = "(abs(EGEta[])<1.479 && EGPassesEleID[]) || (abs(EGEta[])>=1.479 && EGPassesSaID[])"
+      offlinecut = "Sum$( "+offlinescalingcut+" && EGBx[]==0 && (" + IDcut + ") && abs(EGEta[])<2.4)>0"
+      onlinecut  = "Sum$( EGEt[]>"+str(x)+" && EGBx[]==0 && ("+ IDcut +") && abs(EGEta[])<2.4)>0"
 
 
     if (obj=='tkPhotonIso'):
       offlinescalingcut = "( (abs(tkPhotonEta[])<1.479 && tkPhotonEt[]>("+str(TkIsoPhotonOfflineEtCutBarrel(x))+")) || (abs(tkPhotonEta[])>1.479 && tkPhotonEt[]>("+str(TkIsoPhotonOfflineEtCutEndcap(x))+")) )"
-      offlinecut = "Sum$( "+offlinescalingcut+" &&  ( (abs(tkPhotonEta[])<1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_barrel)+"  ) || (abs(tkPhotonEta[])>1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_endcap)+") ) && tkPhotonBx[]==0 && tkPhotonPassesLooseTrackID[] && abs(tkPhotonEta[])<2.4)>0"
-      onlinecut  = "Sum$( tkPhotonEt[]>"+str(x)+" && ( (abs(tkPhotonEta[])<1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_barrel)+" ) || (abs(tkPhotonEta[])>1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_endcap)+") ) && tkPhotonBx[]==0 && tkPhotonPassesLooseTrackID[] && abs(tkPhotonEta[])<2.4)>0"
+      IDcut = "(!tkPhotonHGC[] && tkPhotonPassesEleID[]) || (tkPhotonHGC[] && tkPhotonPassesPhoID[])"
+
+
+      offlinecut = "Sum$( "+offlinescalingcut+" &&  ( (abs(tkPhotonEta[])<1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_barrel)+ "  ) || (abs(tkPhotonEta[])>1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_endcap)+") ) && tkPhotonBx[]==0 && (" + IDcut + ") && abs(tkPhotonEta[])<2.4)>0"
+      onlinecut  = "Sum$( tkPhotonEt[]>"+str(x)+" && ( (abs(tkPhotonEta[])<1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_barrel)+" ) || (abs(tkPhotonEta[])>1.479 && tkPhotonTrkIso[]<"+str(iso_gamma_endcap)+") ) && tkPhotonBx[]==0 && (" + IDcut + ") && abs(tkPhotonEta[])<2.4)>0"
 
 
 
@@ -389,8 +412,35 @@ for obj in list_calc:
       offlinecut = "Sum$( "+offlinescalingcut+" && abs(caloJetEta[])<5)>0"
       onlinecut  = "Sum$( caloJetEt[]>"+str(x)+" && abs(caloJetEta[])<5)>0"
 
+### SPLIT JET IN BARREL AND ENDCAP
+    if (obj=='seededConePuppiJet_Barrel'):
+      offlinescalingcut = "( (abs(seededConePuppiJetEta[])<1.5 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutBarrel(x))+")) || (abs(seededConePuppiJetEta[])>1.5 && abs(seededConePuppiJetEta[])<2.4 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutEndcap(x))+")) || (abs(seededConePuppiJetEta[])>2.4 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(seededConePuppiJetEta[])<1.5)>0"
+      onlinecut  = "Sum$( seededConePuppiJetEt[]>"+str(x)+" && abs(seededConePuppiJetEta[])<1.5)>0"
 
+    if (obj=='seededConePuppiJet_Endcap'):
+      offlinescalingcut = "( (abs(seededConePuppiJetEta[])<1.5 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutBarrel(x))+")) || (abs(seededConePuppiJetEta[])>1.5 && abs(seededConePuppiJetEta[])<2.4 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutEndcap(x))+")) || (abs(seededConePuppiJetEta[])>2.4 && seededConePuppiJetEt[]>("+str(SeededConePuppiJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(seededConePuppiJetEta[])>1.5)>0"
+      onlinecut  = "Sum$( seededConePuppiJetEt[]>"+str(x)+" && abs(seededConePuppiJetEta[])>1.5)>0"
 
+    if (obj=='puppiPhase1Jet_Barrel'):
+      offlinescalingcut = "( (abs(phase1PuppiJetEta[])<1.5 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutBarrel(x))+")) || (abs(phase1PuppiJetEta[])>1.5 && abs(phase1PuppiJetEta[])<2.4 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutEndcap(x))+")) || (abs(phase1PuppiJetEta[])>2.4 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(phase1PuppiJetEta[])<1.5)>0"
+      onlinecut  = "Sum$( phase1PuppiJetEt[]>"+str(x)+" && abs(phase1PuppiJetEta[])<1.5)>0"
+
+    if (obj=='puppiPhase1Jet_Endcap'):
+      offlinescalingcut = "( (abs(phase1PuppiJetEta[])<1.5 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutBarrel(x))+")) || (abs(phase1PuppiJetEta[])>1.5 && abs(phase1PuppiJetEta[])<2.4 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutEndcap(x))+")) || (abs(phase1PuppiJetEta[])>2.4 && phase1PuppiJetEt[]>("+str(Phase1PuppiJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(phase1PuppiJetEta[])>1.5)>0"
+      onlinecut  = "Sum$( phase1PuppiJetEt[]>"+str(x)+" && abs(phase1PuppiJetEta[])>1.5)>0"
+
+    if (obj=='caloJet_Barrel'):
+      offlinescalingcut = "( (abs(caloJetEta[])<1.5 && caloJetEt[]>("+str(CaloJetOfflineEtCutBarrel(x))+")) || (abs(caloJetEta[])>1.5 && abs(caloJetEta[])<2.4 && caloJetEt[]>("+str(CaloJetOfflineEtCutEndcap(x))+")) || (abs(caloJetEta[])>2.4 && caloJetEt[]>("+str(CaloJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(caloJetEta[])<1.5)>0"
+      onlinecut  = "Sum$( caloJetEt[]>"+str(x)+" && abs(caloJetEta[])<1.5)>0"
+    if (obj=='caloJet_Endcap'):
+      offlinescalingcut = "( (abs(caloJetEta[])<1.5 && caloJetEt[]>("+str(CaloJetOfflineEtCutBarrel(x))+")) || (abs(caloJetEta[])>1.5 && abs(caloJetEta[])<2.4 && caloJetEt[]>("+str(CaloJetOfflineEtCutEndcap(x))+")) || (abs(caloJetEta[])>2.4 && caloJetEt[]>("+str(CaloJetOfflineEtCutForward(x))+")) )"
+      offlinecut = "Sum$( "+offlinescalingcut+" && abs(caloJetEta[])>1.5)>0"
+      onlinecut  = "Sum$( caloJetEt[]>"+str(x)+" && abs(caloJetEta[])>1.5)>0"
 
 #--------------------HT--------------------
 
@@ -410,7 +460,7 @@ for obj in list_calc:
       offlinecut = offlinescalingcut
       onlinecut  = " trackerHT[0]>"+str(x)
 
-    if (obj=='caloHT'): 
+    if (obj=='caloHT'):
       offlinescalingcut = "(caloJetHT[0]>("+str(CaloHTOfflineEtCut(x))+"))"
       offlinecut = offlinescalingcut
       onlinecut  = " caloJetHT[0]>"+str(x)
@@ -453,22 +503,22 @@ for obj in list_calc:
       onlinecut  = " trackerMET>"+str(x)
 
 
-  
+
 
     npass = t.GetEntries(offlinecut)
     off[obj].append(x)
     offrate[obj].append(round(float(npass)/float(ntot)*31038.,1))
-   
+
     #print x,round(float(npass)/float(ntot)*31038.,1)
 
     npass = t.GetEntries(onlinecut)
     onl[obj].append(x)
     onlrate[obj].append(round(float(npass)/float(ntot)*31038.,1))
-   
- 
+
+
     x+=cutrange[obj][2]
 
-  
+
 
   print ""
   print ""
@@ -486,14 +536,9 @@ for obj in list_calc:
   rates_file.write("\n")
   rates_file.write("onlrate['"+obj+"'] = "+str(onlrate[obj]))
   rates_file.write("\n")
-  rates_file.write("\n") 
+  rates_file.write("\n")
   rates_file.flush()
   os.fsync(rates_file.fileno())
-   
+
 rates_file.close()
 f.Close()
-
-
-
-
-
