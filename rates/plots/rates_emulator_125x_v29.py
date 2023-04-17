@@ -56,7 +56,7 @@ iso_gamma_endcap = 0.205
 tkEG_hwQual = 3
 
 #scalings
-
+## Updated on 17/04 using V29 scalings obtained with new menu tools
 
 ### Muons EMU
 
@@ -70,9 +70,6 @@ def gmtMuonOfflineEtCutEndcap(offline) : return (offline-11.219)/1.503
 def gmtTkMuonOfflineEtCutBarrel(offline) : return (offline-0.988)/1.049
 def gmtTkMuonOfflineEtCutOverlap(offline) : return (offline-1.075)/1.052
 def gmtTkMuonOfflineEtCutEndcap(offline) : return (offline-1.333)/1.07
-
-
-##New scalings by Yi in December 2021
 
 #function :: Phase1PuppiJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-12.381481)/1.331251 if abs(Eta)<1.5 else (Et>(offline-21.649515)/1.372602 if abs(Eta)<2.4 else (Et>(offline-35.609357)/1.493540))
 def Phase1PuppiJetOfflineEtCutBarrel(offline) : return (offline-15.497)/1.383
