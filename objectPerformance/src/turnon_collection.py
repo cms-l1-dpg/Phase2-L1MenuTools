@@ -37,7 +37,7 @@ class ArrayLoader():
         collections have been merged.
         """
         if 'hgc' in test_array.fields:
-            test_array["region"] = (ak.where(abs(test_array["eta"]) > 1.48, 1, 0))
+            test_array["region"] = (ak.where(abs(test_array["eta"]) > 1.479, 1, 0))
 
         return test_array
 
