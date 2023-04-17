@@ -1,0 +1,30 @@
+BJetEff_Pt:
+  files:
+    JetMatching_Pt_Pt30ToInf_genBJets_-999_V27:
+      object: seededConeExtendedPuppiJet
+      dir: outputs/V27/turnons/
+      label: "Signal: Matched b-jets"
+    JetMatching_Pt_Pt30ToInf_genNotBJets_-999_V27:
+      object: seededConeExtendedPuppiJet
+      dir: outputs/V27/turnons/
+      label: "Background: Unmatched b-jets"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency"
+  watermark: "BJet_Pt"
+  save_dir: "outputs/BJet/turnons"
+
+
+BJetEff_Eta:
+  files:
+    JetMatching_Eta_Pt30ToInf_genBJets_-999_V27:
+      object: seededConeExtendedPuppiJet
+      dir: outputs/V27/turnons/
+      label: "Signal: Matched b-jets"
+    JetMatching_Eta_Pt30ToInf_genNotBJets_-999_V27:
+      object: seededConeExtendedPuppiJet
+      dir: outputs/V27/turnons/
+      label: "Background: Unmatched b-jets"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency"
+  watermark: "BJet_Eta"
+  save_dir: "outputs/BJet/turnons"
