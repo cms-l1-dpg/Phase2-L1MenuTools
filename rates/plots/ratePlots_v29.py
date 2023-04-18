@@ -73,7 +73,6 @@ plots = {
     6 : ['puppiMET', 'trackerMET'], #'trackerMET_FBE'],
     7: ['puppiMET'],
     9: ['trackerMET'],
-    # 6 : ['trackerMET'],
     #7 : ['standaloneMuon', 'tkMuon', 'tkMuonStub'],
     8 : ['gmtMuon', 'gmtTkMuon'],
     11 : ['CaloTau', 'NNPuppiTauLoose'], #, 'NNPuppiTau2vtxLoose'],
