@@ -80,7 +80,8 @@ def Phase1PuppiJetOfflineEtCutForward(offline) : return (offline-75.542)/1.41
 #function :: Phase1PuppiHT090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-46.674588)/1.113875
 def Phase1PuppiHTOfflineEtCut(offline) : return (offline-51.672)/1.099
 def Phase1PuppiMHTOfflineEtCut(offline) : return (offline-48.725)/1.324
-
+def seededConePuppiHTOfflineEtCut(offline) : return (offline-45.124)/1.086
+ 
 #function :: PuppiMET090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-62.120627)/1.382451
 def PuppiMETOfflineEtCut(offline) : return (offline-64.337)/1.461
 
@@ -135,7 +136,7 @@ def TkIsoPhotonOfflineEtCutEndcap(offline) : return (offline-5.038)/1.067
 #function :: NNPuppiTau090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-3.778738)/1.642246 if abs(Eta)<1.5 else (Et>(offline-14.808886)/1.716542)
 
 def CaloTauOfflineEtCutBarrel(offline) : return (offline+2.381)/1.521
-def CaloTauOfflineEtCutEndcap(offline) : return	(offline-0.045)/1.937
+def CaloTauOfflineEtCutEndcap(offline) : return (offline-0.045)/1.937
 
 def NNTauLooseOfflineEtCutBarrel(offline) : return (offline+2.871)/1.92
 def NNTauLooseOfflineEtCutEndcap(offline) : return (offline-21.639)/1.551
@@ -192,6 +193,7 @@ cutrange = {
 'puppiPhase1HT':[50.0,1000.0,25.0],
 'trackerHT':[50.0,1000.0,25.0],
 'caloHT':[50.0,1000.0,25.0],
+'seededConePuppiHT':[50.0,1000.0,25.0],
 
 'puppiPhase1MHT':[50.0,1000.0,25.0],
 'trackerMHT':[50.0,1000.0,25.0],
@@ -229,42 +231,43 @@ cutrange = {
 }
 
 list_calc = [
-    'gmtTkMuon',
-    'gmtMuon',
-    'gmtMuonEndcap',
-    'gmtMuonBarrel',
-    'gmtMuonOverlap',
-    'tkElectron',
-    'tkIsoElectron',
-    'standaloneElectron',
-    'tkPhotonIso',
-    'seededConePuppiJet',
-    'seededConePuppiJetExt',
-    'puppiPhase1Jet',
-    'puppiPhase1JetExt',
-    'trackerJet',
-    'caloJet',
-    'caloJetExt',
-    'puppiPhase1HT',
-    'trackerHT',
-    'caloHT',
-    'puppiPhase1MHT',
-    'trackerMHT',
-    'puppiMET',
-    'trackerMET',
-    'NNPuppiTauLoose',
-    'NNPuppiTauLooseBarrel',
-    'NNPuppiTauLooseEndcap',
+   'gmtTkMuon',
+   'gmtMuon',
+   'gmtMuonEndcap',
+   'gmtMuonBarrel',
+   'gmtMuonOverlap',
+   'tkElectron',
+   'tkIsoElectron',
+   'standaloneElectron',
+   'tkPhotonIso',
+   'seededConePuppiJet',
+   'seededConePuppiJetExt',
+   'puppiPhase1Jet',
+   'puppiPhase1JetExt',
+   'trackerJet',
+   'caloJet',
+   'caloJetExt',
+   'puppiPhase1HT',
+   'trackerHT',
+   'caloHT',
+   'seededConePuppiHT',
+   'puppiPhase1MHT',
+   'trackerMHT',
+   'puppiMET',
+   'trackerMET',
+   'NNPuppiTauLoose',
+   'NNPuppiTauLooseBarrel',
+   'NNPuppiTauLooseEndcap',
     #   'NNPuppiTau2vtxLoose',
-    'CaloTau',
-    'CaloTauBarrel',
-    'CaloTauEndcap',
-    'seededConePuppiJet_Barrel',
-    'seededConePuppiJet_Endcap',
-    'puppiPhase1Jet_Barrel',
-    'puppiPhase1Jet_Endcap',
-    'caloJet_Barrel',
-    'caloJet_Endcap',
+   'CaloTau',
+   'CaloTauBarrel',
+   'CaloTauEndcap',
+   'seededConePuppiJet_Barrel',
+   'seededConePuppiJet_Endcap',
+   'puppiPhase1Jet_Barrel',
+   'puppiPhase1Jet_Endcap',
+   'caloJet_Barrel',
+   'caloJet_Endcap',
 ]
 
 
@@ -455,11 +458,11 @@ for obj in list_calc:
 
 #--------------------HT--------------------
 
-    #if (obj=='seededConePuppiHT'):
+    if (obj=='seededConePuppiHT'):
       #Not available
-    #  offlinescalingcut = "(seededConePuppiHT[0]>("+str(seededConePuppiHTOfflineEtCut(x))+"))"
-    #  offlinecut = offlinescalingcut
-    #  onlinecut  = " seededConePuppiHT[0]>"+str(x)
+      offlinescalingcut = "(seededConePuppiHT[0]>("+str(seededConePuppiHTOfflineEtCut(x))+"))"
+      offlinecut = offlinescalingcut
+      onlinecut  = " seededConePuppiHT[0]>"+str(x)
 
     if (obj=='puppiPhase1HT'):
       offlinescalingcut = "(phase1PuppiHT[0]>("+str(Phase1PuppiHTOfflineEtCut(x))+"))"
