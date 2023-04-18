@@ -45,7 +45,7 @@ PhotonsTrigger_Barrel:
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 1.5
 
 PhotonsTrigger_Endcap:
@@ -96,5 +96,5 @@ PhotonsTrigger_Endcap:
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 1.5
