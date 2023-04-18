@@ -28,7 +28,7 @@ MuonsMatchingBarrel:
   ylabel: "Matching Efficiency (barrel)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3
 
 MuonsMatchingOverlap:
@@ -64,7 +64,7 @@ MuonsMatchingOverlap:
   ylabel: "Matching Efficiency (overlap)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3
 
 MuonsMatchingEndcap:
@@ -100,5 +100,5 @@ MuonsMatchingEndcap:
   ylabel: "Matching Efficiency (endcap)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3

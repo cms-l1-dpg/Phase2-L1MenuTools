@@ -290,10 +290,9 @@ for obj in list_calc:
 
 #-------------muons--------------
     if (obj=='gmtTkMuon'):
-      offlinescalingcut = "( ( abs(gmtTkMuonEta[])<0.83 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutBarrel(x))+")) || (abs(gmtTkMuonEta[])>0.83 && abs(gmtTkMuonEta[])<1.24 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutOverlap(x))+")) || (abs(gmtTkMuonEta[])>1.24 &&  abs(gmtTkMuonEta[])<2.4 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutEndcap(x))+")) )"
+      offlinescalingcut = "(((gmtTkMuonPt[] < 8 && gmtTkMuonQual > 0) || (gmtTkMuonPt[] > 8)) && ( ( abs(gmtTkMuonEta[])<0.83 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutBarrel(x))+")) || (abs(gmtTkMuonEta[])>0.83 && abs(gmtTkMuonEta[])<1.24 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutOverlap(x))+")) || (abs(gmtTkMuonEta[])>1.24 &&  abs(gmtTkMuonEta[])<2.4 && gmtTkMuonPt[]>("+str(gmtTkMuonOfflineEtCutEndcap(x))+")) ))"
       offlinecut = "Sum$( "+offlinescalingcut+"  && abs(gmtTkMuonEta[])<2.4)>0"
-      onlinecut  = "Sum$( gmtTkMuonPt[]>"+str(x)+" && gmtTkMuonBx[]==0 && abs(gmtTkMuonEta[])<2.4)>0"
-
+      onlinecut  = "Sum$(((gmtTkMuonPt[] < 8 && gmtTkMuonQual > 0) || (gmtTkMuonPt[] > 8)) && ((gmtTkMuonPt[]>"+str(x)+" && gmtTkMuonBx[]==0 && abs(gmtTkMuonEta[])<2.4)))>0"
 
     if (obj=='gmtMuon'):
       offlinescalingcut = "( ( abs(gmtMuonEta[])<0.83 && gmtMuonPt[]>("+str(gmtMuonOfflineEtCutBarrel(x))+")) || (abs(gmtMuonEta[])>0.83 && abs(gmtMuonEta[])<1.24 && gmtMuonQual[]>=12 && gmtMuonPt[]>("+str(gmtMuonOfflineEtCutOverlap(x))+")) || (abs(gmtMuonEta[])>1.24 &&  abs(gmtMuonEta[])<2.4 && gmtMuonPt[]>("+str(gmtMuonOfflineEtCutEndcap(x))+")) )"
