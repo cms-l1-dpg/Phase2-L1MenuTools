@@ -49,7 +49,7 @@ PhotonsMatching_Eta_Pt10to25:
     max: 3
     step: 0.2
 
-PhotonsMatching_Eta_Pt25:
+PhotonsMatching_Eta_Pt25toInf:
   sample: Hgg
   default_version: V29
   reference_object:
@@ -65,12 +65,12 @@ PhotonsMatching_Eta_Pt25:
   test_objects:
     EG:
       suffix: "Eta"
-      label: "EG EleID"
+      label: "EG"
       match_dR: 0.2
       quality_id: "QUAL_125x_EGID"
       cuts:
         - "abs({eta}) < 3"
-        - "{passeseleid} == 1"
+        #- "{passeseleid} == 1"
     tkPhoton:
       match_dR: 0.15
       suffix: "Eta"
