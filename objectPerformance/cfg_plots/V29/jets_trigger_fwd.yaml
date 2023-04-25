@@ -11,12 +11,12 @@ JetTurnonFwd_3p7to7:
       object:
         - "abs({eta}) < 7"
   test_objects:
-    caloJet:
-      match_dR: 0.3
-      suffix: "Pt"
-      label: "Calo Jet"
-      cuts:
-        - "abs({eta}) < 7"
+    # caloJet:
+    #   match_dR: 0.3
+    #   suffix: "Pt"
+    #   label: "Calo Jet"
+    #   cuts:
+    #     - "abs({eta}) < 7"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Pt"

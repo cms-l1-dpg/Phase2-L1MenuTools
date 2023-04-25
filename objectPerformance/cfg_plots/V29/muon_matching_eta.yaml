@@ -21,6 +21,8 @@ MuonsMatching_Eta_Pt2to5:
       suffix: "Eta"
       label: "GMT TkMuon"
       match_dR: 0.1
+      cuts:
+        - "({quality}) > 0"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -50,6 +52,8 @@ MuonsMatching_Eta_Pt15toInf:
       suffix: "Eta"
       label: "GMT TkMuon"
       match_dR: 0.1
+      cuts:
+        - "({quality}) > 0"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

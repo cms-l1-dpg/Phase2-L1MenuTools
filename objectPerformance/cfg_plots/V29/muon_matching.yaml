@@ -23,11 +23,12 @@ MuonsMatchingBarrel:
       match_dR: 0.1
       cuts:
         - "abs({eta}) < 0.83"
+        - "({quality}) > 0"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3
 
 MuonsMatchingOverlap:
@@ -56,13 +57,14 @@ MuonsMatchingOverlap:
       label: "GMT TkMuon"
       match_dR: 0.1
       cuts:
+        - "({quality}) > 0"
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3
 
 MuonsMatchingEndcap:
@@ -93,9 +95,10 @@ MuonsMatchingEndcap:
       cuts:
         - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
+        - "({quality}) > 0"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3

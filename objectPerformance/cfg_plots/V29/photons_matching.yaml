@@ -41,7 +41,7 @@ PhotonsMatching_Barrel:
   ylabel: "Matching Efficiency (Barrel)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3
 
 PhotonsMatching_Endcap:
@@ -88,5 +88,5 @@ PhotonsMatching_Endcap:
   ylabel: "Matching Efficiency (Endcap)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 3

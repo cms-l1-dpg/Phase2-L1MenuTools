@@ -1,0 +1,10 @@
+V27:
+  TT:
+    ntuple_path: /afs/cern.ch/work/e/ejclemen/TJM/BJetNN/Phase2-L1MenuTools/ntuples_dr4.root
+    trees_branches:
+      genTree/L1GenTree:
+        genMetTrue: "all"
+        jet: "all"
+      l1PhaseIITree/L1PhaseIITree:
+        seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
+        seededConePuppiJet: [Pt, Et, Eta, Phi]

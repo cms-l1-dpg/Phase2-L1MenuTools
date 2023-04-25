@@ -12,12 +12,12 @@ JetMatching_Eta_Pt40To100:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    caloJet:
-      match_dR: 0.3
-      suffix: "Eta"
-      label: "Calo Jet"
-      cuts:
-        - "abs({eta}) < 5"
+    # caloJet:
+    #   match_dR: 0.3
+    #   suffix: "Eta"
+    #   label: "Calo Jet"
+    #   cuts:
+    #     - "abs({eta}) < 5"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Eta"
@@ -56,12 +56,12 @@ JetMatching_Eta_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    caloJet:
-      match_dR: 0.3
-      suffix: "Eta"
-      label: "Calo Jet"
-      cuts:
-        - "abs({eta}) < 5"
+    # caloJet:
+    #   match_dR: 0.3
+    #   suffix: "Eta"
+    #   label: "Calo Jet"
+    #   cuts:
+    #     - "abs({eta}) < 5"
     phase1PuppiJet:
       match_dR: 0.3
       suffix: "Eta"

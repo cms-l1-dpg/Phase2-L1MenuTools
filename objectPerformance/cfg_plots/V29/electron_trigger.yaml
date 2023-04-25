@@ -45,7 +45,7 @@ ElectronsTriggerBarrel:
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 1.5
 
 ElectronsTriggerEndcap:
@@ -95,5 +95,5 @@ ElectronsTriggerEndcap:
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   binning:
     min: 0
-    max: 150
+    max: 100
     step: 1.5
