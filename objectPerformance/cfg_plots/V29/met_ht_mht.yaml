@@ -44,6 +44,12 @@ MHT30:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
+    phase1PuppiMHT:
+      suffix: "et"
+      label: "Phase1 Puppi MHT"
+    seededConePuppiMHT:
+      suffix: "et"
+      label: "SeededCone MHT"
     trackerMHT:
       suffix: ""
       label: "Tracker MHT"
