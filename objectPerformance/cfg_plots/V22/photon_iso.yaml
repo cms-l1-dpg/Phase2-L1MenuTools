@@ -39,6 +39,7 @@ PhotonIsolation_Endcap:
       event:
         - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.479"
+        - "abs({eta}) < 2.4"
       object:
         - "abs({eta}) > 1.479"
   test_objects:
@@ -49,6 +50,7 @@ PhotonIsolation_Endcap:
       quality_id: "QUAL_123x_tkPhoID"
       cuts:
         - "abs({eta}) > 1.479"
+        - "abs({eta}) < 2.4"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:
