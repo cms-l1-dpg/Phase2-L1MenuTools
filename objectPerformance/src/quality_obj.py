@@ -10,10 +10,10 @@ class L1IsoCut():
         self.sel_iso_EE = ak_arrays['eta'] > -100
 
         if self.IsoBB >= 0:
-            self.sel_iso_BB = ((abs(ak_arrays['eta']) < 1.5)
+            self.sel_iso_BB = ((abs(ak_arrays['eta']) < 1.479)
                                & (ak_arrays[self.l1_iso] > self.IsoBB))
         if self.IsoEE >= 0:
-            self.sel_iso_EE = ((abs(ak_arrays['eta']) > 1.5)
+            self.sel_iso_EE = ((abs(ak_arrays['eta']) > 1.479)
                                & (ak_arrays[self.l1_iso] > self.IsoEE))
 
     @property
@@ -65,6 +65,11 @@ class Quality():
                              & (ak_arrays['region'] == 1))
         self.sel_not_4 = (ak_arrays['region'] == 4)
 
+
+        ### EG IDs from 123x
+        self.sel_tkIsoPho_123 = ((ak_arrays['quality'] > 0 ) & (abs(ak_arrays['eta']) < 1.479)) | ((ak_arrays['quality'] == 3 ) & (abs(ak_arrays['eta']) >= 1.479))
+
+
         ## EG IDs from 125x
         # for EG: region == HGC
         if "passeseleid" in ak_arrays.fields:
@@ -100,6 +105,10 @@ class Quality():
     def QUAL_125x_tkPhoID(self):
         #return ~(self.sel_tkPho_barrelID | self.sel_tkPho_endcapID)
         return ~(self.sel_EG_barrelID | self.sel_tkPho_endcapID)
+
+    @property
+    def QUAL_123x_tkPhoID(self):
+        return ~(self.sel_tkIsoPho_123)
 
     @property
     def QUAL_Overlap12EndcapJaana1345(self):
