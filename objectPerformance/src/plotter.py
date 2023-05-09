@@ -151,10 +151,15 @@ class EfficiencyPlotter(Plotter):
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                    f"{self.turnon_collection.threshold}.png")
-        self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                        f"{self.turnon_collection.threshold}_{self.version}.json")
+        plot_fname = f"outputs/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
+        for ext in [".png",".pdf"]:
+            plt.savefig(f"{plot_fname}{ext}")
+        self._save_json(f"{plot_fname}.json")
+
+        ## save config
+        with open(f"{plot_fname}.yaml", "w") as outfile:
+            yaml.dump({self.plot_name:self.cfg}, outfile, default_flow_style=False)
+
         plt.close()
 
     @utils.ignore_warnings
@@ -177,10 +182,17 @@ class EfficiencyPlotter(Plotter):
             ax.errorbar(xbins, iso_vs_eff_hist, label=label, **err_kwargs)
 
         self._style_plot(fig, ax)
-        plt.savefig(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                    f"{self.turnon_collection.threshold}.png")
-        self._save_json(f"outputs/{self.version}/turnons/{self.plot_name}_"
-                        f"{self.turnon_collection.threshold}_{self.version}.json")
+
+
+        plot_fname = f"outputs/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
+        for ext in [".png",".pdf"]:
+            plt.savefig(f"{plot_fname}{ext}")
+        self._save_json(f"{plot_fname}.json")
+
+        ## save config
+        with open(f"{plot_fname}.yaml", "w") as outfile:
+            yaml.dump({self.plot_name:self.cfg}, outfile, default_flow_style=False)
+
         plt.close()
 
     def _plot_raw_counts(self):
@@ -210,8 +222,11 @@ class EfficiencyPlotter(Plotter):
                         color=test_hist[0].get_color(), **err_kwargs)
 
         self._style_plot(fig, ax)
-        plt.savefig(f"outputs/{self.version}/distributions/{self.plot_name}"
-                    f"_{self.turnon_collection.threshold}_dist.png")
+        plot_fname = f"outputs/{self.version}/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist_{self.version}"
+        for ext in [".png",".pdf"]:
+            plt.savefig(f"{plot_fname}{ext}")
+        #self._save_json(f"{plot_fname}.json")
+
         plt.close()
 
     def plot(self):
@@ -292,8 +307,8 @@ class ScalingPlotter(Plotter):
         ax.set_xlim(0, xmax)
         ax.set_ylim(0, ymax)
 
-    def _save_json(self):
-        file_name = f"outputs/{self.version}/scalings/{self.plot_name}.json"
+    def _save_json(self, file_name):
+        # file_name =  = f"outputs/{self.version}/scalings/{self.plot_name}.json"
         plot = {}
 
         watermark = f"{self.version}_{self.plot_name}"
@@ -345,7 +360,15 @@ class ScalingPlotter(Plotter):
         self._set_plot_ranges(ax)
         fig.tight_layout()
 
-        plt.savefig(f"outputs/{self.version}/scalings/{self.plot_name}.png")
+        plot_fname = f"outputs/{self.version}/scalings/{self.plot_name}_{self.version}"
+        for ext in [".png",".pdf"]:
+            plt.savefig(f"{plot_fname}{ext}")
+        self._save_json(f"{plot_fname}.json")
+
+        ## save config
+        with open(f"{plot_fname}.yaml", "w") as outfile:
+            yaml.dump({self.plot_name:self.cfg_plot}, outfile, default_flow_style=False)
+
         plt.close()
 
 
@@ -377,17 +400,17 @@ class ScalingCentral():
     def _rate_config_function(self, name: str, a: float, b: float):
         pm = '+' if b > 0 else ''
         f_string = (f"function :: {name}Scaling :: "
-                    f"args:=(offline); lambda:={a}*offline{pm}{b}")
+                    f"args:=(offline); lambda:=(offline{pm}-{b})/{a}")
         return f_string
 
     def _write_scalings_to_file(self,
                                 plot_name: str,
                                 version: str,
                                 params: dict):
-        with open(f"outputs/{version}/scalings/{plot_name}.txt", 'w+') as f:
+        with open(f"outputs/{version}/scalings/{plot_name}_scalings.txt", 'w+') as f:
             f.write('')
 
-        with open(f"outputs/{version}/scalings/{plot_name}.txt", 'a') as f:
+        with open(f"outputs/{version}/scalings/{plot_name}_scalings.txt", 'a') as f:
             for obj, obj_params in params.items():
                 a, b = obj_params
                 f.write(self._rate_config_function(obj, a, b) + "\n")
@@ -427,15 +450,6 @@ class ScalingCentral():
                 plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
                                          scaling_pct, version, params)
                 plotter.plot()
-                plotter._save_json()
-                self._write_scalings_to_file(plot_name, version, params)
-
-            params = scaling_collect._fit_linear_functions(scalings)
-            if params:
-                plotter = ScalingPlotter(plot_name, cfg_plot, scalings,
-                                         scaling_pct, version, params)
-                plotter.plot()
-                plotter._save_json()
                 self._write_scalings_to_file(plot_name, version, params)
 
 
