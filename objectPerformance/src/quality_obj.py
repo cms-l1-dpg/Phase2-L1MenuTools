@@ -29,7 +29,7 @@ class Quality():
 
     def __init__(self, ak_arrays, obj: str):
         ak_arrays = ak_arrays[obj]  # TODO: remove obj arg
-        print("Computing quality for ", obj)
+        #print("Computing quality for ", obj)
 
         self.sel_lowEta = ((abs(ak_arrays['eta']) < 0.9)
                            & (ak_arrays['region'] != 1))
