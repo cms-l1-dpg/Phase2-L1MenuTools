@@ -387,7 +387,11 @@ class ScalingCentral():
             return self.scaling_thresholds["Muon"]
         if any("Elec" in x or "Photon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["EG"]
-        if any("HT" in x or "MET" in x for x in cfg_plot["test_objects"]):
+        if any("MHT" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["MHT"]
+        if any("MET" in x for x in cfg_plot["test_objects"]):
+            return self.scaling_thresholds["MET"]
+        if any(("HT" in x) and ("MHT" not in x) for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["HT"]
         if any("Tau" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Tau"]
