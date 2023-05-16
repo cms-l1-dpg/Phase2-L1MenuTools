@@ -16,7 +16,7 @@ HT:
       label: "Tracker HT"
     phase1PuppiHT:
       suffix: ""
-      label: "Phase1 Puppi HT"
+      label: "Histogrammed Puppi HT"
   thresholds: [350]
   scalings:
     method: "naive"
@@ -70,7 +70,7 @@ MHT15:
   test_objects:
     phase1PuppiMHT:
       suffix: "et"
-      label: "Phase1 Puppi MHT"
+      label: "Histogrammed Puppi MHT"
   thresholds: [70, 150]
   scalings:
     method: "naive"

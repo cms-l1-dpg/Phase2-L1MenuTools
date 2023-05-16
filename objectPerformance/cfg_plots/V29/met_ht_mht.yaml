@@ -31,7 +31,7 @@ HT:
     max: 750
     step: 20
 
-MHT30:
+MHT_50perc:
   sample: TT
   default_version: V29
   reference_object:
@@ -44,18 +44,45 @@ MHT30:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
+    trackerMHT:
+      suffix: ""
+      label: "Tracker MHT"
     phase1PuppiMHT:
       suffix: "et"
       label: "Phase1 Puppi MHT"
     seededConePuppiMHT:
       suffix: "et"
       label: "SeededCone MHT"
+  thresholds: [70, 150]
+  scalings:
+    method: "naive"
+    threshold: 0.50
+  xlabel: "Gen. MHT30 (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+MHT_90perc:
+  sample: TT
+  default_version: V29
+  reference_object:
+    object: "jet"
+    suffix: "Pt"
+    label: "Gen MHT"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 30"
+    trafo: "MHT"
+  test_objects:
     trackerMHT:
       suffix: ""
       label: "Tracker MHT"
     phase1PuppiMHT:
       suffix: "et"
-      label: "Histogrammed Puppi MHT"
+      label: "Phase1 Puppi MHT"
     seededConePuppiMHT:
       suffix: "et"
       label: "SeededCone MHT"
@@ -69,39 +96,6 @@ MHT30:
     min: 0
     max: 500
     step: 20
-
-MHT15:
-  sample: TT
-  default_version: V29
-  reference_object:
-    object: "jet"
-    suffix: "Pt"
-    label: "Gen MHT"
-    cuts:
-      object:
-        - "abs({eta}) < 2.4"
-        - "{pt} > 15"
-    trafo: "MHT"
-  test_objects:
-    trackerMHT:
-      suffix: ""
-      label: "Tracker MHT"
-    phase1PuppiMHT:
-      suffix: "et"
-      label: "Histogrammed Puppi MHT"
-    seededConePuppiMHT:
-      suffix: "et"
-      label: "SeededCone MHT"
-  thresholds: [70, 150]
-  scalings:
-    method: "naive"
-    threshold: 0.90
-  xlabel: "Gen. MHT15 (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV)"
-  binning:
-    min: 0
-    max: 500
-    step: 12
 
 MET:
   sample: TT
