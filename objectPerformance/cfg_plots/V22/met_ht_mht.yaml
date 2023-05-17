@@ -1,6 +1,6 @@
 HT_90perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -17,9 +17,6 @@ HT_90perc:
     phase1PuppiHT:
       suffix: ""
       label: "Histogrammed Puppi HT"
-    seededConePuppiHT:
-      suffix: ""
-      label: "SeededCone HT"
   thresholds: [350]
   scalings:
     method: "naive"
@@ -33,7 +30,7 @@ HT_90perc:
 
 HT_50perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -50,9 +47,6 @@ HT_50perc:
     phase1PuppiHT:
       suffix: ""
       label: "Histogrammed Puppi HT"
-    seededConePuppiHT:
-      suffix: ""
-      label: "SeededCone HT"
   thresholds: [350]
   scalings:
     method: "naive"
@@ -66,7 +60,7 @@ HT_50perc:
 
 MHT_50perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -82,10 +76,7 @@ MHT_50perc:
       label: "Tracker MHT"
     phase1PuppiMHT:
       suffix: "et"
-      label: "Phase1 Puppi MHT"
-    seededConePuppiMHT:
-      suffix: "et"
-      label: "SeededCone MHT"
+      label: "Histogrammed Puppi MHT"
   thresholds: [70, 150]
   scalings:
     method: "naive"
@@ -99,7 +90,7 @@ MHT_50perc:
 
 MHT_90perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "jet"
     suffix: "Pt"
@@ -115,10 +106,7 @@ MHT_90perc:
       label: "Tracker MHT"
     phase1PuppiMHT:
       suffix: "et"
-      label: "Phase1 Puppi MHT"
-    seededConePuppiMHT:
-      suffix: "et"
-      label: "SeededCone MHT"
+      label: "Histogrammed Puppi MHT"
   thresholds: [70, 150]
   scalings:
     method: "naive"
@@ -132,7 +120,7 @@ MHT_90perc:
 
 MET_90perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "genMetTrue"
     suffix: ""
@@ -157,7 +145,7 @@ MET_90perc:
 
 MET_50perc:
   sample: TT
-  default_version: V29
+  default_version: V22
   reference_object:
     object: "genMetTrue"
     suffix: ""
