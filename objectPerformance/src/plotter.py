@@ -350,8 +350,8 @@ class ScalingPlotter(Plotter):
             ax.plot(x, y, color=pts[0].get_color(), label=label)
 
         ax.legend(loc="lower right")
-        ax.set_xlabel("Threshold")
-        ax.set_ylabel(f"{int(self.scaling_pct*100)}% Location")
+        ax.set_xlabel("L1 threshold [GeV]")
+        ax.set_ylabel(f"{int(self.scaling_pct*100)}% Location (gen, GeV)")
         watermark = f"{self.version}_{self.plot_name}"
         ax.text(0, -0.1, watermark,
                 color="grey", alpha=0.2,
@@ -402,19 +402,19 @@ class ScalingCentral():
         )
 
     def _rate_config_function(self, name: str, a: float, b: float):
-        pm = '+' if b > 0 else ''
-        f_string = (f"function :: {name}Scaling :: "
-                    f"args:=(offline); lambda:=(offline{pm}-{b})/{a}")
+        pm = '+' if b < 0 else ''
+        f_string = (f"function :: {name}OfflineEtCut :: "
+                    f"args:=(offline); lambda:=(offline{pm}{-b:.3f})/{a:.3f}")
         return f_string
 
     def _write_scalings_to_file(self,
                                 plot_name: str,
                                 version: str,
                                 params: dict):
-        with open(f"outputs/{version}/scalings/{plot_name}_scalings.txt", 'w+') as f:
+        with open(f"outputs/{version}/scalings/{plot_name}_scalings_{version}.txt", 'w+') as f:
             f.write('')
 
-        with open(f"outputs/{version}/scalings/{plot_name}_scalings.txt", 'a') as f:
+        with open(f"outputs/{version}/scalings/{plot_name}_scalings_{version}.txt", 'a') as f:
             for obj, obj_params in params.items():
                 a, b = obj_params
                 f.write(self._rate_config_function(obj, a, b) + "\n")
