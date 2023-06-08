@@ -4,7 +4,7 @@
 
 ## general options
 ## -----------------------------------------------------------
-variable :: bundledate       :: v29_all_withMHT50_allSamples
+variable :: bundledate       :: v29_WithSoftMuons
 variable :: nBunches         :: 2760
 variable :: revFreq          :: 11246
 
