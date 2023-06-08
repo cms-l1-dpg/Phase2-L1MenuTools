@@ -16,7 +16,7 @@ HT:
       label: "Tracker HT"
     phase1PuppiHT:
       suffix: ""
-      label: "Phase1 Puppi HT"
+      label: "Histogrammed Puppi HT"
     seededConePuppiHT:
       suffix: ""
       label: "SeededCone HT"
@@ -73,7 +73,7 @@ MHT15:
   test_objects:
     phase1PuppiMHT:
       suffix: "et"
-      label: "Phase1 Puppi MHT"
+      label: "Histogrammed Puppi MHT"
     seededConePuppiMHT:
       suffix: "et"
       label: "SeededCone MHT"

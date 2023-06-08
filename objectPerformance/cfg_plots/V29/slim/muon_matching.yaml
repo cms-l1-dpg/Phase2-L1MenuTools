@@ -1,0 +1,104 @@
+MuonsMatching_5:
+  sample: DYLL_M50
+  default_version: V29
+  reference_object:
+    object: "part_mu"
+    suffix: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon (L1 $p_{T}$ > 5 GeV)"
+      match_dR: 0.3
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 5"
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon (L1 $p_{T}$ > 5 GeV)"
+      match_dR: 0.1
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 5"
+        - "({quality}) > 0"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatching_15:
+  sample: DYLL_M50
+  default_version: V29
+  reference_object:
+    object: "part_mu"
+    suffix: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon (L1 $p_{T}$ > 15 GeV)"
+      match_dR: 0.3
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 15"
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon (L1 $p_{T}$ > 15 GeV)"
+      match_dR: 0.1
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 15"
+        - "({quality}) > 0"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatching_20:
+  sample: DYLL_M50
+  default_version: V29
+  reference_object:
+    object: "part_mu"
+    suffix: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    gmtMuon:
+      suffix: "Pt"
+      label: "GMT Muon (L1 $p_{T}$ > 20 GeV)"
+      match_dR: 0.3
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 20"
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon (L1 $p_{T}$ > 20 GeV)"
+      match_dR: 0.1
+      cuts:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 20"
+        - "({quality}) > 0"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 100
+    step: 3

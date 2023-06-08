@@ -37,7 +37,7 @@ ElectronsMatchingBarrel:
       quality_id: "QUAL_BarrelNoneEndcap3"
       cuts:
         - "abs({eta}) < 2.4"
-        - "{passesloosetrackid} == 1"
+      #  - "{passesloosetrackid} == 1"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:

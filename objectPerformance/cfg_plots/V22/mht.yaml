@@ -13,7 +13,7 @@ MHT30:
   test_objects:
     phase1PuppiMHT:
       suffix: "et"
-      label: "Phase1 Puppi MHT"
+      label: "Histogrammed Puppi MHT"
     seededConePuppiMHT:
       suffix: "et"
       label: "SeededCone MHT"

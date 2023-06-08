@@ -9,19 +9,19 @@ PhotonIsolation_Barrel:
     cuts:
       event:
         - "{dr_0.3} < 0.15"
-        - "abs({eta}) < 1.5"
+        - "abs({eta}) < 1.479"
       object:
-        - "abs({eta}) < 1.5"
+        - "abs({eta}) < 1.479"
   test_objects:
     tkPhoton:
       suffix: "trkiso"
       label: "TkPhoton"
       match_dR: 0.15
       cuts:
-        - "abs({eta}) < 1.5"
-        - "{passesphoid} == 1"
+        - "abs({eta}) < 1.479"
+        - "{passeseleid} == 1"
   xlabel: "Isolation"
-  ylabel: "Efficiency"
+  ylabel: "Efficiency (Barrel)"
   binning:
     min: 0
     max: 0.5
@@ -38,19 +38,21 @@ PhotonIsolation_Endcap:
     cuts:
       event:
         - "{dr_0.3} < 0.15"
-        - "abs({eta}) > 1.5"
+        - "abs({eta}) > 1.479"
       object:
-        - "abs({eta}) > 1.5"
+        - "abs({eta}) < 2.4"
+        - "abs({eta}) > 1.479"
   test_objects:
     tkPhoton:
       suffix: "trkiso"
       label: "TkPhoton"
       match_dR: 0.15
       cuts:
-        - "abs({eta}) > 1.5"
+        - "abs({eta}) > 1.479"
+        - "abs({eta}) < 2.4"
         - "{passesphoid} == 1"
   xlabel: "Isolation"
-  ylabel: "Efficiency"
+  ylabel: "Efficiency (Endcap)"
   binning:
     min: 0
     max: 0.5
