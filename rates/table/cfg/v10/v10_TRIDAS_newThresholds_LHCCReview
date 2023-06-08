@@ -1,0 +1,350 @@
+#format is like this:
+#typeOfParameter :: parameterOrObjectName :: option1=value2; option2=(this,is,a,list)
+
+
+## general options
+## -----------------------------------------------------------
+variable :: bundledate       :: 2020-05-26-MENU-LHCCReview-BugFix
+variable :: nBunches         :: 2760
+variable :: revFreq          :: 11246
+
+#variable :: tiers            :: (variations)
+variable :: tiers            :: (thresholds)
+
+variable :: varBins          :: (30,50)
+#variable :: varBins          :: (10,20,30,40,50,60,70,80,90,100)
+##variable :: varBins          :: (100,140,275,425,575,700,850,1000)
+variable :: varError         :: 0.2
+variable :: varInterpol      :: linear
+variable :: varLeg           :: 1
+variable :: varCut           :: 1
+variable :: varPrecision     :: 2
+variable :: varIterations    :: 5
+variable :: useNominalBwF    :: False
+
+
+
+## samples (always all samples are used!)
+## -----------------------------------------------------------
+
+sample   :: neutrinos        :: path:=/eos/cms/store/cmst3/user/botta/NeutrinoGun_E_10GeV_V10p7_MERGED.root; tree:=l1PhaseIITree/L1PhaseIITree 
+#sample   :: neutrinos        :: path:=/eos/cms/store/cmst3/user/botta/NeutrinoGun_E_10GeV_V10p7_MERGED_140.root; tree:=l1PhaseIITree/L1PhaseIITree 
+#sample   :: neutrinos        :: path:=/eos/cms/store/cmst3/user/botta/NeutrinoGun_E_10GeV_V10p7_MERGED_250.root; tree:=l1PhaseIITree/L1PhaseIITree 
+#sample   :: neutrinos        :: path:=/eos/cms/store/cmst3/user/botta/NeutrinoGun_E_10GeV_V10p7_MERGED_300.root; tree:=l1PhaseIITree/L1PhaseIITree 
+
+
+
+## physics objects at trigger level
+## -----------------------------------------------------------
+
+## Electrons and Photons
+object :: EG           :: basebranch:=EG        ; variables:=(Et,Eta,Phi,Iso,zVtx,PassesLooseTrackID,PassesPhotonID,HwQual); \
+                          leading:=Et; lengthbranch:=nEG; onToOff:=0
+object :: tkElectron   :: basebranch:=tkElectronV2      ; variables:=(Et,Eta,Phi,TrkIso,zVtx,PassesLooseTrackID,PassesPhotonID,HwQual); \
+                          leading:=Et; lengthbranch:=nTkElectronsV2; onToOff:=0
+object :: tkPhoton     :: basebranch:=tkPhoton      ; variables:=(Et,Eta,Phi,TrkIso,TrkIsoPV,zVtx,PassesLooseTrackID,passesPhotonID,HwQual); \
+                          leading:=Et; lengthbranch:=nTkPhotons; onToOff:=0
+
+## Muons
+object :: mu            :: basebranch:=standaloneMuon    ; variables:=(Pt,Pt2,Eta,Phi,Chg,Qual,DXY); \
+                           leading:=Pt; lengthbranch:=nStandaloneMuons; onToOff:=0
+object :: tkMu          :: basebranch:=tkMuon    ; variables:=(Pt,Eta,Phi,Chg,Iso,TrkIso,Qual,zVtx,MuRefPt,Region); \
+                           leading:=Pt; lengthbranch:=nTkMuons; onToOff:=0
+object :: tkMuStub      :: basebranch:=tkMuonStubs ; variables:=(Pt,Eta,Phi,Chg,Iso,TrkIso,Qual,zVtx,Region); \
+                           leading:=Pt; lengthbranch:=nTkMuonStubs; onToOff:=0
+
+## Taus
+object :: pfTau        :: basebranch:=pfTau     ; variables:=(Et,Eta,Phi,PassesMediumIso,Z0); \
+                          leading:=Et; lengthbranch:=nPFTaus; onToOff:=0
+object :: puppiTau     :: basebranch:=nnTau     ; variables:=(Et,Eta,Phi,PassLooseNN,PassTightNN); \
+                          leading:=Et; lengthbranch:=nNNTaus; onToOff:=0
+object :: tkEGTau      :: basebranch:=tkEGTau     ; variables:=(Et,Eta,Phi,zVtx); \
+                          leading:=Et; lengthbranch:=nTkEGTau; onToOff:=0
+object :: caloTau      :: basebranch:=caloTau     ; variables:=(Et,Eta,Phi); \
+                          leading:=Et; lengthbranch:=nCaloTaus; onToOff:=0
+
+## Jets
+object :: puppiJet     :: basebranch:=pfPhase1L1Jet  ; variables:=(Et,Eta,Phi); \
+                          leading:=Et; lengthbranch:=nPfPhase1L1Jets; onToOff:=0
+object :: caloJet      :: basebranch:=caloJet ; variables:=(Et,Eta,Phi); \
+                          leading:=Et; lengthbranch:=nCaloJets; onToOff:=0
+object :: trackerJet   :: basebranch:=trackerJet; variables:=(Et,Eta,Phi,zVtx); \
+                          leading:=Et; lengthbranch:=nTrackerJets; onToOff:=0
+
+## HT
+object :: trackerHt    :: basebranch:=trackerHT  ; variables:=(Et=); \
+                          leading:=Et; isFlat:=True; fixedIndex:=0; onToOff:=0 
+object :: puppiHt      :: basebranch:=pfPhase1L1HT   ; variables:=(Et=); \
+                          leading:=Et; isFlat:=True; fixedIndex:=0; onToOff:=0 
+object :: caloHt       :: basebranch:=caloJetHT   ; variables:=(Et=); \
+                          leading:=Et; isFlat:=True; fixedIndex:=0; onToOff:=0 
+
+## MET
+object :: trackerMet   :: basebranch:=trackerMet  ; variables:=(Et,Phi,SumEt); \
+                          leading:=Et; isFlat:=True; onToOff:=0
+object :: puppiMet     :: basebranch:=puppiMET    ; variables:=(Et,Phi); \
+                          leading:=Et; isFlat:=True; onToOff:=0
+
+## zVtx
+object :: puppiVtx     :: basebranch:=z0Puppi  ; variables:=(Et=); \
+                          leading:=Et; isFlat:=True; onToOff:=0
+
+
+
+## function aliases
+## -----------------------------------------------------------
+function :: notMatched       :: args:=(eta1,eta2,phi1,phi2); lambda:= math.sqrt(math.pow(abs(abs(eta1)-abs(eta2)),2) + math.pow(abs(phi1-phi2) if abs(phi1-phi2)<=math.pi else 2*math.pi-abs(phi1-phi2),2))>0.1
+function :: deltaR           :: args:=(eta1,eta2,phi1,phi2); lambda:= math.sqrt(math.pow(abs(eta1-eta2),2) + math.pow(abs(phi1-phi2) if abs(phi1-phi2)<=math.pi else 2*math.pi-abs(phi1-phi2),2))
+function :: deltaEta           :: args:=(eta1,eta2); lambda:= abs(eta1-eta2)
+function :: etaRangeCutLess      :: args:=(x,eta,etaRange,cutInRange,cutOutRange); lambda:= x<cutInRange if abs(eta)<etaRange else x<cutOutRange
+function :: etaRangeCutGreater   :: args:=(x,eta,etaRange,cutInRange,cutOutRange); lambda:= x>cutInRange if abs(eta)<etaRange else x>cutOutRange
+function :: pairInvMass          :: args:=(pt1,pt2,eta1,eta2,phi1,phi2); lambda:= math.sqrt(2.0*pt1*pt2*(math.cosh(eta1-eta2)-math.cos(phi1-phi2)))
+function :: pfJetEtaVeto         :: args:=(Eta); lambda:= abs(Eta)<2.5 or abs(Eta)>3.0
+
+# For V10p7 Scalings
+function :: MuonStaQualCut :: args:=(Qual,Eta); lambda:=Qual>=0 if abs(Eta)<0.9 else (Qual>=12 if abs(Eta)<1.2 else Qual>=0)
+function :: TkElectronIsoQualCut :: args:=(HwQual,Eta); lambda:=HwQual==5 if abs(Eta)>1.479 else HwQual>=0
+
+function :: PuppiHTOfflineEtCut :: args:=(offline); lambda:=(offline-4.63573)/1.0087
+function :: TTbarPuppiHTOfflineEtCut :: args:=(offline); lambda:=(offline+12.84)/1.03535
+function :: HadronicTTbarPuppiHTOfflineEtCut :: args:=(offline); lambda:=(offline+6.18248)/1.03343
+function :: PFPhase1HTOfflineEtCut :: args:=(offline); lambda:=(offline-7.00327)/1.01015
+function :: TTbarPFPhase1HTOfflineEtCut :: args:=(offline); lambda:=(offline+5.29584)/1.03089
+function :: HadronicTTbarPFPhase1HTOfflineEtCut :: args:=(offline); lambda:=(offline-2.19174)/1.03043
+function :: TrackerHTOfflineEtCut :: args:=(offline); lambda:=(offline+2.47118)/1.95961
+function :: TTbarTrackerHTOfflineEtCut :: args:=(offline); lambda:=(offline+46.31)/2.20021
+function :: HadronicTTbarTrackerHTOfflineEtCut :: args:=(offline); lambda:=(offline+38.7746)/2.13034
+function :: CaloHTOfflineEtCut :: args:=(offline); lambda:=(offline+73.8289)/0.923594
+function :: TTbarCaloHTOfflineEtCut :: args:=(offline); lambda:=(offline+90.1537)/0.957146
+function :: HadronicTTbarCaloHTOfflineEtCut :: args:=(offline); lambda:=(offline+88.5201)/0.93691
+function :: PuppiHT090OfflineEtCut :: args:=(offline); lambda:=(offline-47.9233)/1.08345
+function :: PFPhase1HT090OfflineEtCut :: args:=(offline); lambda:=(offline-53.7549)/1.08834
+function :: TrackerHT090OfflineEtCut :: args:=(offline); lambda:=(offline-35.1578)/2.66569
+function :: CaloHT090OfflineEtCut :: args:=(offline); lambda:=(offline+1.30634)/0.997298
+function :: TTbarPuppiHT090OfflineEtCut :: args:=(offline); lambda:=(offline-42.6661)/1.0753
+function :: TTbarPFPhase1HT090OfflineEtCut :: args:=(offline); lambda:=(offline-53.7965)/1.07331
+function :: TTbarTrackerHT090OfflineEtCut :: args:=(offline); lambda:=(offline-15.5172)/2.76786
+function :: TTbarCaloHT090OfflineEtCut :: args:=(offline); lambda:=(offline+9.15257)/1.06462
+function :: HadronicTTbarPuppiHT090OfflineEtCut :: args:=(offline); lambda:=(offline-51.8588)/1.06447
+function :: HadronicTTbarPFPhase1HT090OfflineEtCut :: args:=(offline); lambda:=(offline-64.5616)/1.06039
+function :: HadronicTTbarTrackerHT090OfflineEtCut :: args:=(offline); lambda:=(offline-9.34255)/2.64851
+function :: HadronicTTbarCaloHT090OfflineEtCut :: args:=(offline); lambda:=(offline+9.37574)/1.02455
+function :: PuppiMETOfflineEtCut :: args:=(offline); lambda:=(offline-19.1432)/1.07251
+function :: TrackerMETOfflineEtCut :: args:=(offline); lambda:=(offline+0.600811)/3.11669
+function :: TTbarPuppiMETOfflineEtCut :: args:=(offline); lambda:=(offline+6.79552)/1.23709
+function :: TTbarTrackerMETOfflineEtCut :: args:=(offline); lambda:=(offline+104.886)/3.73323
+function :: PuppiMET090OfflineEtCut :: args:=(offline); lambda:=(offline-87.0446)/1.1511
+function :: TrackerMET090OfflineEtCut :: args:=(offline); lambda:=(offline-221.122)/2.74021
+function :: TTbarPuppiMET090OfflineEtCut :: args:=(offline); lambda:=(offline-51.5627)/1.36698
+function :: TTbarTrackerMET090OfflineEtCut :: args:=(offline); lambda:=(offline+14.2411)/5.21706
+
+
+function :: TkElectronOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-0.252031)/1.09043 if abs(Eta)<1.5 else Et>(offline-5.27586)/1.16298
+function :: TkIsoElectronOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-0.315819)/1.08834 if abs(Eta)<1.5 else Et>(offline-4.62976)/1.16961
+function :: TkIsoPhotonOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-1.92377)/1.01512 if abs(Eta)<1.5 else Et>(offline-5.92531)/1.05584
+function :: PFTauOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+1.02859)/1.04655 if abs(Eta)<1.5 else Et>(offline+0.873734)/1.12528
+function :: PFIsoTauOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+0.715016)/1.0354 if abs(Eta)<1.5 else Et>(offline-0.619152)/1.07797
+function :: NNTauTightOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+1.22271)/1.02652 if abs(Eta)<1.5 else Et>(offline+4.45279)/1.12063
+function :: NNTauLooseOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-0.0282565)/1.00757 if abs(Eta)<1.5 else Et>(offline+1.7323)/1.07902
+function :: TkEGTauOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+0.200375)/1.01773 if abs(Eta)<1.5 else Et>(offline+1.68334)/1.22362
+function :: CaloTauOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+6.604)/1.14519 if abs(Eta)<1.5 else Et>(offline+4.19867)/1.06606
+function :: PFTau090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+11.5292)/2.08813 if abs(Eta)<1.5 else Et>(offline-2.45302)/1.85321
+function :: PFIsoTau090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+4.72956)/1.80821 if abs(Eta)<1.5 else Et>(offline-11.0478)/1.55742
+function :: NNTauTight090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+21.3166)/1.84293 if abs(Eta)<1.5 else Et>(offline+1.47361)/1.39273
+function :: NNTauLoose090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+9.16702)/1.69784 if abs(Eta)<1.5 else Et>(offline-3.12516)/1.36535
+function :: TkEGTau090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+91.7613)/5.12908 if abs(Eta)<1.5 else Et>(offline+13.6892)/3.89439
+function :: CaloTau090OfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline+0.937512)/1.38032 if abs(Eta)<1.5 else Et>(offline-1.92178)/1.26272
+function :: TrackerJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-39.5772)/4.3296 if abs(Eta)<1.5 else Et>(offline-52.663)/5.63404
+function :: TTbarTrackerJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-45.6922)/4.2229 if abs(Eta)<1.5 else Et>(offline-97.3989)/4.27346
+function :: EGPhotonOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-2.80694)/0.979067 if abs(Eta)<1.5 else (Et>(offline-7.66012)/1.03665 if abs(Eta)<2.4 else Et>(offline-2.63103)/1.4081)
+function :: EGElectronOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-2.95953)/1.0434 if abs(Eta)<1.5 else (Et>(offline-7.79311)/1.10045 if abs(Eta)<2.4 else Et>(offline-5.43055)/1.28648)
+function :: PuppiJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-39.7621)/1.10472 if abs(Eta)<1.5 else (Et>(offline-59.4759)/1.05225 if abs(Eta)<2.4 else Et>(offline-6.47801)/1.99057)
+function :: PFPhase1JetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-35.6078)/1.2042 if abs(Eta)<1.5 else (Et>(offline-61.8214)/1.09898 if abs(Eta)<2.4 else Et>(offline-1.08496)/2.15502)
+function :: CaloJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-24.8298)/1.1863 if abs(Eta)<1.5 else (Et>(offline-26.8634)/1.17171 if abs(Eta)<2.4 else Et>(offline+31.0189)/2.16122)
+function :: TTbarPuppiJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-16.2875)/1.25257 if abs(Eta)<1.5 else (Et>(offline-25.8625)/1.24229 if abs(Eta)<2.4 else Et>(offline-9.68567)/1.94574)
+function :: TTbarPFPhase1JetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-12.7315)/1.37302 if abs(Eta)<1.5 else (Et>(offline-25.211)/1.35985 if abs(Eta)<2.4 else Et>(offline-15.711)/1.88226)
+function :: TTbarCaloJetOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-17.4134)/1.29985 if abs(Eta)<1.5 else (Et>(offline-49.7045)/1.09395 if abs(Eta)<2.4 else Et>(offline-3.99523)/1.68789)
+function :: TkMuonOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-0.480586)/1.05326 if abs(Eta)<0.9 else (Et>(offline-0.789258)/1.03509 if abs(Eta)<1.2 else Et>(offline-0.784553)/1.03251)
+function :: TkMuonStubOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-0.710744)/1.04185 if abs(Eta)<0.9 else (Et>(offline-0.805149)/1.04062 if abs(Eta)<1.2 else Et>(offline-0.554819)/1.04354)
+function :: StandaloneMuonOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>(offline-3.88566)/1.01712 if abs(Eta)<0.9 else (Et>(offline+1.16016)/1.31345 if abs(Eta)<1.2 else (Et>(offline-0.389879)/1.18579 if abs(Eta)<2.4 else Et>(offline+28.4221)/5.51244))
+
+
+
+
+
+
+## trigger paths
+## -----------------------------------------------------------
+
+## muon
+
+trigger  :: L1_SingleTkMu     :: leg1:=(tkMu  , TkMuonOfflineEtCut(22.0,Pt,Eta), abs(Eta)<2.4); \
+
+trigger  :: L1_DoubleTkMu     :: leg1:=(tkMu   , TkMuonOfflineEtCut(15.0,Pt,Eta), abs(Eta)<2.4); \
+                                 leg2:=(tkMu   , TkMuonOfflineEtCut(7.0,Pt,Eta), abs(Eta)<2.4, abs(leg1.zVtx-zVtx)<1); \
+
+trigger  :: L1_TripleTkMu    :: leg1:=(tkMu, TkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4); \
+                                leg2:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+                                leg3:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+
+# e/gamma
+
+trigger  :: L1_SingleTkEle    :: leg1:=(tkElectron , TkElectronOfflineEtCut(36.0,Et,Eta), abs(Eta)<2.4, PassesLooseTrackID); \
+
+trigger  :: L1_SingleTkEleIso :: leg1:=(tkElectron , TkIsoElectronOfflineEtCut(28.0,Et,Eta), TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.10,0.125)); \
+
+trigger  :: L1_SingleTkPhoIso :: leg1:=(tkPhoton   , TkIsoPhotonOfflineEtCut(36.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID, etaRangeCutLess(TrkIso,Eta,1.479,0.29,0.39)); \
+
+trigger  :: L1_TkEleIso_EG    :: leg1:=(tkElectron , TkIsoElectronOfflineEtCut(22.0,Et,Eta), abs(Eta)<2.4,  TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.10,0.125)); \
+                                 leg2:=(EG         , EGElectronOfflineEtCut(12.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID, notMatched(Eta, leg1.Eta, Phi, leg1.Phi)); \
+
+trigger  :: L1_DoubleTkEle    :: leg1:=(tkElectron   , TkElectronOfflineEtCut(25.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID); \
+                                 leg2:=(tkElectron   , TkElectronOfflineEtCut(12.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_DoubleTkPhoIso  :: leg1:=(tkPhoton   , TkIsoPhotonOfflineEtCut(22.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID, etaRangeCutLess(TrkIso,Eta,1.479,0.29,0.39)); \
+                                  leg2:=(tkPhoton   , TkIsoPhotonOfflineEtCut(12.0,Et,Eta), abs(Eta)<2.4,  PassesLooseTrackID, etaRangeCutLess(TrkIso,Eta,1.479,0.29,0.39)); \
+
+
+
+# tau stuff
+
+
+trigger  :: L1_SinglePFTau    :: leg1:=(caloTau  , CaloTau090OfflineEtCut(150.0,Et,Eta), abs(Eta)<2.172); \
+
+trigger  :: L1_PFTau_PFTau    :: leg1:=(caloTau  , CaloTau090OfflineEtCut(90.0,Et,Eta), abs(Eta)<2.172); \
+                                 leg2:=(caloTau  , CaloTau090OfflineEtCut(90.0,Et,Eta), abs(Eta)<2.172, deltaR(Eta, leg1.Eta, Phi, leg1.Phi)>0.5); \
+
+
+trigger  :: L1_PFIsoTau_PFIsoTau  :: leg1:=(puppiTau  , NNTauLoose090OfflineEtCut(52.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+                                     leg2:=(puppiTau  , NNTauLoose090OfflineEtCut(52.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0, deltaR(Eta, leg1.Eta, Phi, leg1.Phi)>0.5); \
+
+trigger  :: L1_PFIsoTau_TkMu  :: leg1:=(puppiVtx ,leading>-99999.0); \
+	    		      	 leg2:=(tkMu  , TkMuonOfflineEtCut(18.0,Pt,Eta), abs(Eta)<2.1, abs(zVtx-leg1.Et)<1); \
+                                 leg3:=(puppiTau , NNTauLoose090OfflineEtCut(42.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \  
+
+trigger  :: L1_TkEleIso_PFIsoTau :: leg1:=(puppiVtx ,leading>-99999.0); \
+	    			    leg2:=(tkElectron, TkIsoElectronOfflineEtCut(22.0,Et,Eta), abs(Eta)<2.1, TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.10,0.125), abs(zVtx-leg1.Et)<1); \
+                                    leg3:=(puppiTau, NNTauLoose090OfflineEtCut(45.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+
+trigger  :: L1_PFIsoTau_PFMet    :: leg1:=(puppiTau, NNTauLoose090OfflineEtCut(55.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+                                    leg2:=(puppiMet, Et>TTbarPuppiMET090OfflineEtCut(190.0)); \
+
+
+# Jets
+trigger  :: L1_SinglePfJet    :: leg1:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(180.0,Et,Eta), abs(Eta)<2.4); \
+
+trigger  :: L1_DoublePFJet_dEtaMax :: leg1:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(112.0,Et,Eta), abs(Eta)<2.4); \
+                                      leg2:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(112.0,Et,Eta), abs(Eta)<2.4, deltaEta(Eta,leg1.Eta)<1.6); \
+
+# HT, MET
+trigger  :: L1_PFHTT          :: leg1:=(puppiHt , leading>HadronicTTbarPFPhase1HT090OfflineEtCut(450.0)); \
+
+trigger  :: L1_PFMet          :: leg1:=(puppiMet, Et>TTbarPuppiMET090OfflineEtCut(200.0)); \
+
+trigger  :: L1_PFHTT_QuadJet  :: leg1:=(puppiHt , leading>HadronicTTbarPFPhase1HT090OfflineEtCut(400.0)); \
+                                 leg2:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(70.0,Et,Eta), Et>25.0, abs(Eta)<2.4); \                             
+                                 leg3:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(55.0,Et,Eta), Et>25.0, abs(Eta)<2.4); \
+                                 leg4:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta), Et>25.0, abs(Eta)<2.4); \
+                                 leg5:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta), Et>25.0, abs(Eta)<2.4); \
+
+# EG+Mu
+trigger  :: L1_TkMu_TkEleIso :: leg1:=(tkMu, TkMuonOfflineEtCut(7.0,Pt,Eta), abs(Eta)<2.4); \
+                                leg2:=(tkElectron, TkIsoElectronOfflineEtCut(20.0,Et,Eta),  abs(Eta)<2.4, TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.10,0.125), abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_TkMu_TkEle    :: leg1:=(tkMu, TkMuonOfflineEtCut(7.0,Pt,Eta), abs(Eta)<2.4); \
+                                leg2:=(tkElectron, TkElectronOfflineEtCut(23.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_TkEle_TkMu    :: leg1:=(tkElectron , TkElectronOfflineEtCut(10.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID); \
+                                leg2:=(tkMu , TkMuonOfflineEtCut(20.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_TkMu_DoubleTkEle :: leg1:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID); \
+                                   leg2:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID, abs(zVtx-leg1.zVtx)<1); \
+                                   leg3:=(tkMu , TkMuonOfflineEtCut(6.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \                             
+
+trigger  :: L1_DoubleTkMu_TkEle :: leg1:=(tkElectron , TkElectronOfflineEtCut(9.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID); \
+                                   leg2:=(tkMu , TkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \                             
+                                   leg3:=(tkMu , TkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \                             
+                                   
+
+# Lep+Jet/HT
+trigger  :: L1_TkMu_PfHTT      :: leg1:=(puppiVtx,leading>-99999.0); \
+                                  leg2:=(tkMu, TkMuonOfflineEtCut(6.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                  leg3:=(puppiHt, leading>HadronicTTbarPFPhase1HT090OfflineEtCut(320.0)); \
+
+trigger  :: L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax  :: leg1:=(puppiVtx,leading>-99999.0); \
+                                   leg2:=(tkMu,  TkMuonOfflineEtCut(12.0,Pt,Eta), Qual>=8, abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                   leg3:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta),  abs(Eta)<2.4, deltaR(Eta,leg2.Eta,Phi,leg2.Phi)<0.4); \
+                                   leg4:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta),  abs(Eta)<2.4); \
+                                   leg5:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta),  abs(Eta)<2.4, deltaEta(Eta,leg4.Eta)<1.6); \
+
+trigger  :: L1_TkMu_PfJet_PfMet      :: leg1:=(puppiVtx,leading>-99999.0); \
+                                        leg2:=(tkMu,  TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.1, abs(zVtx-leg1.Et)<1); \
+                                        leg3:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(110.0,Et,Eta), abs(Eta)<2.5); \
+                                        leg4:=(puppiMet, Et>TTbarPuppiMET090OfflineEtCut(120.0)); \
+
+trigger  :: L1_DoubleTkMu_PfJet_PfMet   :: leg1:=(puppiVtx,leading>-99999.0); \
+                                           leg2:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                           leg3:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                           leg4:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(60.0,Et,Eta), abs(Eta)<2.4); \
+                                           leg5:=(puppiMet, Et>TTbarPuppiMET090OfflineEtCut(130.0)); 
+
+trigger  :: L1_DoubleTkMu_PfHTT      :: leg1:=(puppiVtx,leading>-99999.0); \
+                                        leg2:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                        leg3:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.Et)<1); \
+                                        leg4:=(puppiHt, leading>HadronicTTbarPFPhase1HT090OfflineEtCut(300.0));
+
+trigger  :: L1_DoubleTkEle_PFHTT :: leg1:=(puppiVtx,leading>-99999.0); \
+                                    leg2:=(tkElectron   , TkElectronOfflineEtCut(8.0,Et,Eta),  abs(Eta)<2.5,  PassesLooseTrackID, abs(zVtx-leg1.Et)<1); \
+                                    leg3:=(tkElectron   , TkElectronOfflineEtCut(8.0,Et,Eta),  abs(Eta)<2.5,  PassesLooseTrackID, abs(zVtx-leg1.Et)<1); \
+                                    leg4:=(puppiHt, leading>HadronicTTbarPFPhase1HT090OfflineEtCut(390.0));
+                                    
+
+trigger  :: L1_TkEleIso_PFHTT :: leg1:=(puppiVtx,leading>-99999.0); \
+                                 leg2:=(tkElectron , TkIsoElectronOfflineEtCut(26.0,Et,Eta),  abs(Eta)<2.1,  TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.10,0.125), abs(zVtx-leg1.Et)<1); \
+                                 leg3:=(puppiHt , leading>HadronicTTbarPFPhase1HT090OfflineEtCut(190.0));
+
+trigger  :: L1_TkEle_PFJet_dRMin :: leg1:=(puppiVtx,leading>-99999.0); \
+                                    leg2:=(tkElectron , TkElectronOfflineEtCut(28.0,Et,Eta), abs(Eta)<2.1,  PassesLooseTrackID,  abs(zVtx-leg1.Et)<1); \
+                                    leg3:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(40.0,Et,Eta), abs(Eta)<2.4, deltaR(Eta, leg2.Eta, Phi, leg2.Phi)>0.3); \
+
+
+
+
+# VBF
+trigger  :: L1_DoublePFJet_MassMin :: leg1:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(160.0,Et,Eta)); \
+                                      leg2:=(puppiJet, TTbarPFPhase1JetOfflineEtCut(35.0,Et,Eta), pairInvMass(Et,leg1.Et,Eta,leg1.Eta,Phi,leg1.Phi)>620.0); \
+
+
+
+# BPH 
+trigger  :: L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4 :: leg1:=(tkMu, abs(Eta)<1.5); \
+                                                   leg2:=(tkMu, abs(Eta)<1.5, deltaR(Eta, leg1.Eta, Phi, leg1.Phi)<1.4, leg1.Chg*Chg<0.0, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_DoubleTkMu4_SQ_OS_dR_Max1p2 :: leg1:=(tkMu, TkMuonOfflineEtCut(4.0,Pt,Eta), abs(Eta)<2.4); \
+                                              leg2:=(tkMu, TkMuonOfflineEtCut(4.0,Pt,Eta), abs(Eta)<2.4, deltaR(Eta, leg1.Eta, Phi, leg1.Phi)<1.2, leg1.Chg*Chg<0.0, abs(zVtx-leg1.zVtx)<1); \
+
+
+trigger  :: L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18 :: leg1:=(tkMu, TkMuonOfflineEtCut(4.5,Pt,Eta), abs(Eta)<2.0); \
+                                                     leg2:=(tkMu, TkMuonOfflineEtCut(4.5,Pt,Eta), abs(Eta)<2.0, pairInvMass(Pt,leg1.Pt,Eta,leg1.Eta,Phi,leg1.Phi)>7.0, pairInvMass(Pt,leg1.Pt,Eta,leg1.Eta,Phi,leg1.Phi)<18.0, leg1.Chg*Chg<0.0, abs(zVtx-leg1.zVtx)<1); \
+
+
+#trigger  :: L1_DoubleTkMu9_SQ :: leg1:=(tkMu, TkMuonOfflineEtCut(9.0,Pt,Eta), abs(Eta)<2.4); \
+#                                 leg2:=(tkMu, TkMuonOfflineEtCut(9.0,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9 :: leg1:=(tkMu, TkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4); \
+                                                                      leg2:=(tkMu, TkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, pairInvMass(Pt,leg1.Pt,Eta,leg1.Eta,Phi,leg1.Phi)<9.0, leg1.Chg*Chg<0.0, abs(zVtx-leg1.zVtx)<1); \
+                                                                      leg3:=(tkMu, Pt>0.0, abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+
+trigger  :: L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17  :: leg1:=(tkMu, TkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4); \
+                                                      leg2:=(tkMu, TkMuonOfflineEtCut(3.5,Pt,Eta), abs(Eta)<2.4, abs(zVtx-leg1.zVtx)<1); \
+                                                      leg3:=(tkMu, TkMuonOfflineEtCut(2.5,Pt,Eta), abs(Eta)<2.4, leg1.Chg*Chg<0.0, pairInvMass(Pt,leg1.Pt,Eta,leg1.Eta,Phi,leg1.Phi)>5.0, pairInvMass(Pt,leg1.Pt,Eta,leg1.Eta,Phi,leg1.Phi)<17.0, abs(zVtx-leg1.zVtx)<1); \
+
+
+
+# Standalone path: recover efficiency and robustness
+
+trigger  :: L1_SingleEGEle    :: leg1:=(EG , EGElectronOfflineEtCut(51.0,Et,Eta),  abs(Eta)<2.4, PassesLooseTrackID); \
+
+trigger  :: L1_DoubleEGEle    :: leg1:=(EG , EGElectronOfflineEtCut(37.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID ); \
+                                 leg2:=(EG , EGElectronOfflineEtCut(24.0,Et,Eta),  abs(Eta)<2.4,  PassesLooseTrackID, notMatched(Eta, leg1.Eta, Phi, leg1.Phi)); \
+
