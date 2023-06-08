@@ -4,7 +4,8 @@
 
 ## general options
 ## -----------------------------------------------------------
-variable :: bundledate       :: v27_May23_NewScalingAll_2x3x_NoLowPtMu_fixMHT_50perc
+variable :: bundledate       :: v27_May23_NewScalingAll_1x2x3x_NoLowPtMu_MHT_50perc
+#variable :: bundledate       :: v27_May23_NewScalingAll_NoLowPtMu_MHT_50perc_test1
 variable :: nBunches         :: 2760
 variable :: revFreq          :: 11246
 
@@ -27,9 +28,13 @@ variable :: useNominalBwF    :: False
 ## samples (always all samples are used!)
 ## -----------------------------------------------------------
 
+## SMALL STAT FOR TEST
+#sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/0000/L1NtuplePhaseII_Step1_10.root; tree:=l1PhaseIITree/L1PhaseIITree
+
+## LARGE STAT
 sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_3x.root; tree:=l1PhaseIITree/L1PhaseIITree
 sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_2x.root; tree:=l1PhaseIITree/L1PhaseIITree
-#sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_1x.root; tree:=l1PhaseIITree/L1PhaseIITree
+sample   :: neutrinos        :: path:=/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/MinBias_TuneCP5_14TeV-pythia8/MinBias_1252_200PU_crb_v27_PU200/230213_192753/L1NtuplePhaseII_Step1_1x.root; tree:=l1PhaseIITree/L1PhaseIITree
 
 
 ## physics objects at trigger level
@@ -211,12 +216,12 @@ trigger  :: L1_PFIsoTau_PFIsoTau  :: leg1:=(puppiTau  , NNTauLoose090OfflineEtCu
 				     leg2:=(puppiTau  , NNTauLoose090OfflineEtCut(52.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0, deltaR(Eta, leg1.Eta, Phi, leg1.Phi)>0.5); \
 
 trigger  :: L1_PFIsoTau_TkMu  :: leg1:=(puppiVtx ,leading>-99999.0); \
-				 leg2:=(tkGmtMu  , GMTTkMuonOfflineEtCut(18.0,Pt,Eta), abs(Eta)<2.1, abs(Z0-leg1.Et)<1); \
-				 leg3:=(puppiTau , NNTauLoose090OfflineEtCut(42.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+				leg2:=(puppiTau , NNTauLoose090OfflineEtCut(42.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+				leg3:=(tkGmtMu  , GMTTkMuonOfflineEtCut(18.0,Pt,Eta), abs(Eta)<2.1, abs(Z0-leg1.Et)<1); \
 
 trigger  :: L1_TkEleIso_PFIsoTau :: leg1:=(puppiVtx ,leading>-99999.0); \
-				    leg2:=(tkElectron, TkIsoElectronOfflineEtCut(22.0,Et,Eta), abs(Eta)<2.1, TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.13,0.28), abs(zVtx-leg1.Et)<1); \
-				    leg3:=(puppiTau, NNTauLoose090OfflineEtCut(45.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
+				leg2:=(tkElectron, TkIsoElectronOfflineEtCut(22.0,Et,Eta), abs(Eta)<2.1, TkElectronIsoQualCut(HwQual,Eta), etaRangeCutLess(TrkIso,Eta,1.479,0.13,0.28), abs(zVtx-leg1.Et)<1); \
+				leg3:=(puppiTau, NNTauLoose090OfflineEtCut(45.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
 
 trigger  :: L1_PFIsoTau_PFMet    :: leg1:=(puppiTau, NNTauLoose090OfflineEtCut(55.0,Et,Eta), abs(Eta)<2.172, PassLooseNN>0); \
 				    leg2:=(puppiMet, Et>PuppiMET090OfflineEtCut(190.0)); \
@@ -252,9 +257,10 @@ trigger  :: L1_TkMu_TkEle    :: leg1:=(tkGmtMu, GMTTkMuonOfflineEtCut(7.0,Pt,Eta
 trigger  :: L1_TkEle_TkMu    :: leg1:=(tkElectron , TkElectronOfflineEtCut(10.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID); \
 				leg2:=(tkGmtMu , GMTTkMuonOfflineEtCut(20.0,Pt,Eta), abs(Eta)<2.4, abs(Z0-leg1.zVtx)<1 ); \
 
-trigger  :: L1_TkMu_DoubleTkEle :: leg1:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID); \
-				   leg2:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID, abs(zVtx-leg1.zVtx)<1); \
-				   leg3:=(tkGmtMu , GMTTkMuonOfflineEtCut(6.0,Pt,Eta), abs(Eta)<2.4, abs(Z0-leg1.zVtx)<1 ); \
+trigger  :: L1_TkMu_DoubleTkEle :: \
+			leg1:=(tkGmtMu , GMTTkMuonOfflineEtCut(6.0,Pt,Eta), abs(Eta)<2.4); \
+			leg2:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID, abs(zVtx-leg1.Z0)<1 ); \
+			leg3:=(tkElectron , TkElectronOfflineEtCut(17.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID, abs(zVtx-leg1.Z0)<1); \
 
 # trigger  :: L1_DoubleTkMu_TkEle :: leg1:=(tkElectron , TkElectronOfflineEtCut(9.0,Et,Eta),  abs(Eta)<2.4,  PassesEleID); \
 #				   leg2:=(tkGmtMu , GMTTkMuonOfflineEtCut(5.0,Pt,Eta), abs(Eta)<2.4, abs(Z0-leg1.zVtx)<1 ); \
@@ -286,7 +292,7 @@ trigger  :: L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax  :: leg1:=(puppiVtx,leading>-9
 # trigger  :: L1_DoubleTkMu_PfHTT      :: leg1:=(puppiVtx,leading>-99999.0); \
 #				       leg2:=(tkGmtMu, GMTTkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(Z0-leg1.Et)<1 ); \
 #				       leg3:=(tkGmtMu, GMTTkMuonOfflineEtCut(3.0,Pt,Eta), abs(Eta)<2.4, abs(Z0-leg1.Et)<1 ); \
-				       leg4:=(puppiHt, leading>Phase1PuppiHT090OfflineEtCut(300.0));
+#				       leg4:=(puppiHt, leading>Phase1PuppiHT090OfflineEtCut(300.0));
 
 trigger  :: L1_DoubleTkEle_PFHTT :: leg1:=(puppiVtx,leading>-99999.0); \
 				    leg2:=(tkElectron   , TkElectronOfflineEtCut(8.0,Et,Eta),  abs(Eta)<2.5,  PassesEleID, abs(zVtx-leg1.Et)<1); \
@@ -343,3 +349,4 @@ trigger  :: L1_SingleEGEle    :: leg1:=(EG , EGElectronOfflineEtCut(51.0,Et,Eta)
 
 trigger  :: L1_DoubleEGEle    :: leg1:=(EG , EGElectronOfflineEtCut(37.0,Et,Eta),  abs(Eta)<2.4,  EGID(PassesEleID, PassesSaID, Eta) ); \
 				 leg2:=(EG , EGElectronOfflineEtCut(24.0,Et,Eta),  abs(Eta)<2.4,  EGID(PassesEleID, PassesSaID, Eta), notMatched(Eta, leg1.Eta, Phi, leg1.Phi)); \
+
