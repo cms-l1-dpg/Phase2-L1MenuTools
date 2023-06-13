@@ -191,7 +191,7 @@ function :: GMTTkMuonOfflineEtCut :: args:=(offline,Et,Eta); lambda:=Et>offline 
 trigger  :: L1_SingleTkMu     :: leg1:=(tkGmtMu  , GMTTkMuonOfflineEtCut(22.0,Pt,Eta), abs(Eta)<2.4 ); \
 
 trigger  :: L1_DoubleTkMu     :: leg1:=(tkGmtMu   , GMTTkMuonOfflineEtCut(15.0,Pt,Eta), abs(Eta)<2.4); \
-				                 leg2:=(tkGmtMu   , GMTTkMuonOfflineEtCut(7.0,Pt,Eta), abs(Eta)<2.4, abs(leg1.Z0-Z0)<1); \
+								 leg2:=(tkGmtMu   , Pt > 7, abs(Eta)<2.4, abs(leg1.Z0-Z0)<1, Qual > 0); \
 
 # trigger  :: L1_TripleTkMu    :: leg1:=(tkGmtMu, Pt>5, abs(Eta)<2.4, Qual>0 ); \
 #                                 leg2:=(tkGmtMu, Pt>3, abs(Eta)<2.4, abs(Z0-leg1.Z0)<1, Qual>0 ); \
