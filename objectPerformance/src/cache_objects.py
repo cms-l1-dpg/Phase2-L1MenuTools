@@ -92,21 +92,34 @@ class ObjectCacher():
             behavior=array.behavior
         )
 
-    def _get_visible_taus(self, all_parts):
+    def _get_visible_taus(self, all_parts, status_check = True):
         """
         Create a collection of gen-level taus.
         Leptonic taus are discarded.
         Only the visible component (i.e. no neutrinos)
         of hadronically-decaying taus is considered.
         """
+        all_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
+
+        if status_check:
+
+            sel = ( (all_parts.id == 15) &
+                    (all_parts.stat == 2)
+                  )
+
+            is_tau = ak.any(sel, axis=-1)
+            all_parts = ak.where(is_tau, all_parts, ak.full_like(all_parts, -1000))
+
+        all_parts = {f: field for f, field in zip(['Id','Stat','Pt','Eta','Phi','Parent','E'],ak.unzip(all_parts))}
+
         sel_no_nu_e = abs(all_parts["Id"]) != 12
         sel_no_nu_mu = abs(all_parts["Id"]) != 14
         sel_no_nu_tau = abs(all_parts["Id"]) != 16
-        sel = sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
+        sel_no_nan = abs(all_parts["Id"]) != 1000
+        sel = sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau & sel_no_nan
 
         for branch in all_parts:
             all_parts[branch] = all_parts[branch][sel]
-
         all_tau_p = all_parts.copy()
         all_tau_m = all_parts.copy()
 
@@ -163,18 +176,32 @@ class ObjectCacher():
 
         return all_arrays
 
-    def _filter_fspart_branches(self, all_parts):
+    def _filter_fspart_branches(self, all_parts, status_check = True):
         """
         Select all the final state particles.
         This collection is used only for dR matching
         and Isolation computations, but it's not saved.
         Neutrino final state particles are not considered.
         """
+        all_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
+
+        if status_check:
+
+            sel = ( (all_parts.id == 15) &
+                    (all_parts.stat == 2)
+                  )
+
+            is_tau = ak.any(sel, axis=-1)
+            all_parts = ak.where(is_tau, all_parts, ak.full_like(all_parts, -1000))
+
+        all_parts = {f: field for f, field in zip(['Id','Stat','Pt','Eta','Phi','Parent','E'],ak.unzip(all_parts))}
+
         sel_no_nu_e = abs(all_parts["Id"]) != 12
         sel_no_nu_mu = abs(all_parts["Id"]) != 14
         sel_no_nu_tau = abs(all_parts["Id"]) != 16
+        sel_no_nan = abs(all_parts["Id"]) != 1000
         sel_fs = all_parts["Stat"] == 1
-        sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
+        sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau & sel_no_nan
 
         for branch in all_parts:
             all_parts[branch] = all_parts[branch][sel]
@@ -348,5 +375,3 @@ if __name__ == "__main__":
                         dryrun=args.dry_run
                     )
                     loader.load()
-
-
