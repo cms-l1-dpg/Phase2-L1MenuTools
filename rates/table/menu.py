@@ -4,7 +4,9 @@ import numpy as np
 from glob import glob
 
 import yaml, re
+
 from utils import *
+from menu_config import MenuConfig
 
 import uproot
 import awkward as ak
@@ -12,38 +14,21 @@ import vector
 
 vector.register_awkward()
 
-class MenuConfigurator:
-    def __init__(self, scalings, menu):
-        self.scalings = self.get_scalings(scalings)
-        self.menu = menu
-        self.menu_dict = self.parse_menu()
-        self.menu_branches = self.trignames_to_branch()
+class MenuTable:
+    def __init__(self, cfg):
+        self.cfg = MenuConfig(cfg)
+        self.fname = self.cfg.sample
+        self.cfg_fname = self.cfg.menu_cfg
+        self.scalings = self.get_scalings(self.cfg.scalings)
         self.trig_seeds = self.get_trig_seeds()
-        self.fname = "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/13X/v29_RelVal/RelValTTbar_14TeV/RelVal_13X_TT_200PU_crab_v29_13X_RelVal_FixGenTree/230710_081407/L1NtuplePhaseII_Step1_hadd.root"
 
     def get_scalings(self, scalings):
         with open(f'{scalings}', 'r') as infile:
             scalings_eta = yaml.safe_load(infile.read())
         return scalings_eta
 
-    def parse_menu(self):
-        with open(f'{self.menu}', 'r') as infile:
-            obj_dict = yaml.safe_load(infile.read())
-        return obj_dict
-
-    def trignames_to_branch(self):
-        trignames_to_branch = {}
-        for obj,items in self.menu_dict.items():
-            br = items["basebranch"]
-                    
-            trignames_to_branch[obj] = br
-
-        return trignames_to_branch
-
     def get_trig_seeds(self):
-        cfg_fname = "./v29_menu_config_cleaned.yml"
-
-        with open(cfg_fname, 'r') as infile:
+        with open(self.cfg_fname, 'r') as infile:
             test_trig_seeds = yaml.safe_load(infile.read())
 
         return test_trig_seeds
@@ -126,77 +111,7 @@ class MenuConfigurator:
         arr = self.scale_pt(obj, arr)
         
         return arr
-
-    def get_cut_str(self, leg, cut, trig_object, cut_str):
-        for var in trig_object["variables"]:
-            var = var.lower()
-            if var in cut:
-                # replace var only it not preceeded by legX where X is a digit
-                pattern = r"(?<!leg\d\.)"+var
-                cut_str = re.sub(pattern, f"{leg}.{var}", cut_str).lower()
-
-        return cut_str
-
-    def get_masks(self, leg, trig_object, items):
-        leg_mask = []
-        cross_mask = []
-
-        for cut in items["obj_cuts"]:
-            cut = cut.replace("\n","")
-
-            if "OfflineEtCut" in cut:
-                cut = cut.replace(")","")
-                pt_cut = cut.split("OfflineEtCut(")[1].split(",")[0]
-                leg_mask.append(f"({leg}.offline_pt >= {pt_cut})")
-            elif "leading" in cut:
-                leg_mask.append("("+cut.replace("leading",f"{leg}.et")+")")
-            else:
-                cut = cut.replace("etaRangeCutLess","RangeCutLess")
-                cut = cut.replace("deltaEta(Eta,","abs(Eta-").lower()
-                
-                cut_str = cut
-                cut_str = self.get_cut_str(leg, cut, trig_object, cut_str)
-                cut_str = cut_str.replace("deltar","deltaR")
-
-                if "leg" in cut:
-                    cross_mask.append(cut_str)
-                else:
-                    leg_mask.append(cut_str)
-
-        return leg_mask, cross_mask
-
-    def decode_leg_cuts(self, leg, items):        
-        obj = items["obj"]
-
-        trig_object = self.menu_dict[obj]
-
-        leg_mask, cross_mask = self.get_masks(leg, trig_object, items)
-
-        return leg_mask, cross_mask
-
-    def decode_seed(self, trig_seed):
-        ## make leg masks etc
-        seed_legs = {}
-        cross_masks_str = []
-        cross_seeds = []
-
-        ### 0. decompose trig_seed
-        for leg, items in trig_seed.items():
-            if "leg" in leg:
-                obj = items["obj"]
-                leg_mask, cross_mask = self.decode_leg_cuts(leg, items)
-
-                if len(cross_mask) > 0: cross_masks_str.append(cross_mask)
-
-                seed_legs[leg] = { "obj": self.menu_branches[obj],
-                                   "leg_mask": leg_mask
-                                 }
-            elif leg == "x-seeds":
-                if isinstance(items, list): cross_seeds+=items
-                else: cross_seeds.append(items)
-                    
-        return seed_legs, cross_masks_str, cross_seeds
-
+    
     def get_legs(self, seed_legs):
         all_arrs = {}
         leg_arrs = {}
@@ -271,8 +186,19 @@ class MenuConfigurator:
 
         return eval_str
 
-    def get_npass(self, trig_seed):
-        seed_legs, cross_masks_str, cross_seeds = self.decode_seed(trig_seed)
+    def seeds_from_cfg(self, seed):
+        seed_legs = {l: self.trig_seeds[seed][l] for l in self.trig_seeds[seed] if "leg" in l}
+        cross_masks_str = self.trig_seeds[seed]["cross_masks"]
+        if len(cross_masks_str)>0: cross_masks_str = [cross_masks_str]
+        cross_seeds = []
+        for leg, items in self.trig_seeds[seed].items():
+            if leg == "x-seeds":
+                if isinstance(items, list): cross_seeds+=items
+                else: cross_seeds.append(items)
+        return seed_legs, cross_masks_str, cross_seeds
+
+    def get_npass(self, seed, trig_seed):
+        seed_legs, cross_masks_str, cross_seeds = self.seeds_from_cfg(seed) 
         leg_arrs, combos = self.get_legs_and_masks(seed_legs)
 
         ## define leg arrays
@@ -300,7 +226,7 @@ class MenuConfigurator:
 
         ## Add cross-seeds:
         for xseed in cross_seeds:
-            xseed_mask = get_npass(self.trig_seeds[xseed])
+            xseed_mask = self.get_npass(self.trig_seeds[xseed])
             total_mask = total_mask & xseed_mask
 
         total_mask = ak.fill_none(total_mask, False)
@@ -312,12 +238,11 @@ class MenuConfigurator:
         seeds = self.trig_seeds
 
         for seed in sorted(seeds):
-
             if "PFTau" in seed: continue
             
             print(seed)
             
-            mask = self.get_npass(self.trig_seeds[seed])
+            mask = self.get_npass(seed, self.trig_seeds[seed])
             npass = np.sum(mask)
             print("##### Npasses:", npass,"\n")
 
