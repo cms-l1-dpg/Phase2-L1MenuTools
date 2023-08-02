@@ -2,13 +2,34 @@
 
 import os, yaml
 from glob import glob
+from menu_config import MenuConfig
 
 class Scaler:
-    def __init__(self, path_to_scalings):
-        self.dir = path_to_scalings
-        self.fnames = glob(f"{self.dir}/*.txt")
+    '''
+        Base class that takes as input the scalings computed
+        in `objectPerformance` and aggregates all of them together
+        to be used for the rates computation.
+    '''
+    def __init__(self, cfg):
+        self.cfg = MenuConfig(cfg)
+        self.scalings_path = self.cfg.scalings_path
+        self.scalings_file = self.cfg.scalings_file
+        self.scalings_outdir = self.cfg.scalings_outdir
+        self.do_scalings = self.cfg.do_scalings
+        self.fnames = glob(f"{self.scalings_path}/*.txt")
         self.scaling_dict = {}
-#         self.scaling_file = None
+        self.init_log
+
+    @property
+    def init_log(self):
+        print(f"::: The scalings file used is: {self.scalings_outdir}/{self.scalings_file} :::")
+        if (not os.path.isfile(f"{self.scalings_outdir}/{self.scalings_file}")) and (not self.do_scalings):
+            print(f"::: WARNING!! You are trying to use {self.scalings_outdir}/{self.scalings_file}, but the file does not exist! :::")
+            print("::: WARNING!! Set do_scalings to True in config or specify a different location for the scalings file! :::")
+        if self.do_scalings:
+            print(f"::: Will collect scalings from scratch and recreate {self.scalings_file} :::")
+            print(f"::: Will load scalings from {self.scalings_path} :::")
+            print(f"::: Will dump scalings into {self.scalings_outdir} :::")
 
     def get_lines(self, fname):
         with open(fname) as f:
@@ -17,16 +38,21 @@ class Scaler:
         return lines
 
     def get_basename(self, fname):
+        # TODO: Harmonize the naming of the scaligns in `objectPerformance`
+        # so that we can drop this function.
         basename = os.path.basename(fname).replace(".txt","")
         basename = basename.replace(
             "Turnon","").replace(
             "Trigger","").replace(
-            "Matching","").replace(
             "_","")
 
         return basename
 
     def eta_ranges(self, obj, suffix):
+        '''
+            Wrapper function that defines the Barrel/Overlap/Endcap
+            range definitions for different objects.
+        '''
         eta_range = None
         if obj == "Muons":
             if suffix == "Barrel":
@@ -46,22 +72,30 @@ class Scaler:
         return eta_range
                 
     def get_eta_range(self, fname):
-
+        '''
+            Wrapper function that calls `eta_ranges`
+            and returns the object and the relevant eta ranges
+            for the various detector regions.
+        '''
         basename = self.get_basename(fname)
-        
+
         for suffix in ["Barrel","Endcap","Overlap"]:
             if suffix in basename:
                 obj = basename.split(suffix)[0]
                 eta_range = self.eta_ranges(obj, suffix)
-                                        
+
                 if eta_range is None:
                     print("Not found! ", basename, obj)
                 else:
                     return obj, suffix, eta_range
-                
+
         return None
 
     def decode_scaling(self, line):
+        '''
+            Function that parses the syntax used in the scaling.txt files
+            and returns the slope and offset of the scaling law for each object.
+        '''
         line = line.replace(" ","")
         items = line.split("::")
 
@@ -73,19 +107,24 @@ class Scaler:
 
     @property
     def collect_scalings(self):
+        '''
+            Property that collects the scalings for all the objects available
+            and saves them to `self.scaling_dict`.
+            This function works only if `do_scalings` is set to True in the config.
+        '''
+        if not self.do_scalings: return
         for fname in self.fnames:
             r = self.get_eta_range(os.path.basename(fname))
 
-            if r is None: 
-                print(30*"#", r)
+            if r is None:
                 objcat = None
                 region = None
                 eta_range = (None,None)
             else:
                 objcat,region,eta_range = r
-            
+
             lines = self.get_lines(fname)
-            
+
             for line in lines:
                 obj,slope,offset = self.decode_scaling(line)
                 d = { region : {
@@ -101,7 +140,13 @@ class Scaler:
     
     @property
     def dump_scalings(self):
-        with open('scalings.yml', 'w') as outfile:
+        '''
+            Property that dumps to file the content of `self.scaling_dict`.
+            This function works only if `do_scalings` is set to True in the config.
+        '''
+        if not self.do_scalings: return
+        os.makedirs(f"{self.scalings_outdir}", exist_ok=True)
+        with open(f'{self.scalings_outdir}/{self.scalings_file}', 'w') as outfile:
             yaml.dump(self.scaling_dict,
                       outfile,
                       default_flow_style=False)

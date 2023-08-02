@@ -20,12 +20,12 @@ def egid(EleID, SaID, Eta):
     return EleID * abs(Eta)<1.5 + SaID * (abs(Eta)>=1.5)
 
 def TkEleQualHIGH(Et,Eta,PassesEleID): return PassesEleID
-def TkEleQualLOW(Et,Eta,PassesEleID): return PassesEleID * (abs(Eta)<1.479) + (abs(Eta)<1.479)
+def TkEleQualLOW(Et,Eta,PassesEleID): return PassesEleID * (abs(Eta)<1.479) + (abs(Eta)>1.479)
 def TkEleIsoQualHIGH(Et,Eta,PassesEleID): return PassesEleID  * (abs(Eta)>1.479) +  (abs(Eta)<1.479)
 def TkEleIsoQualLOW(Et,Eta,PassesEleID): return (PassesEleID>=0) # this should be always true: we can remove this condition from the menu
 
 def tkelequalhigh(et,eta,passeseleid): return passeseleid
-def tkelequallow(et,eta,passeseleid): return passeseleid * (abs(eta)<1.479) + (abs(eta)<1.479)
+def tkelequallow(et,eta,passeseleid): return passeseleid * (abs(eta)<1.479) + (abs(eta)>1.479)
 def tkeleisoqualhigh(et,eta,passeseleid): return passeseleid  * (abs(eta)>1.479) +  (abs(eta)<1.479)
 def tkeleisoquallow(et,eta,passeseleid): return (passeseleid>=0) # this should be always true: we can remove this condition from the menu
 

@@ -3,7 +3,7 @@ import numpy as np
 
 from glob import glob
 
-import yaml, re
+import yaml, re, os
 
 from utils import *
 from menu_config import MenuConfig
@@ -15,25 +15,67 @@ import vector
 vector.register_awkward()
 
 class MenuTable:
+    '''
+        Base class that defines the rates table.
+        This class contains method to read the minbias sample,
+        convert online to offline pT, and compute the trigger rates.
+        All the relevant information is dumped to a csv table.
+    '''
     def __init__(self, cfg):
         self.cfg = MenuConfig(cfg)
+        self.version = self.cfg.version
         self.fname = self.cfg.sample
+        self.table_outdir = self.cfg.table_outdir
+        self.table_fname = self.cfg.table_fname
         self.cfg_fname = self.cfg.menu_cfg
-        self.scalings = self.get_scalings(self.cfg.scalings)
+        self.scalings = self.get_scalings(os.path.join(self.cfg.scalings_outdir,
+                                                       self.cfg.scalings_file))
         self.trig_seeds = self.get_trig_seeds()
 
+    def load_minbias(self, obj):
+        '''
+            Function to load the minbias sample to be used for the rates computation.
+            The name of the file is specified in the config used for the MenuTable init.
+        '''
+        with uproot.open(self.fname) as f:
+            arr = f["l1PhaseIITree/L1PhaseIITree"].arrays(
+                filter_name = f"{obj}*", 
+                how = "zip"
+                ) 
+        return arr
+
     def get_scalings(self, scalings):
+        '''
+            Get the list of scalings for all the L1 objects.
+            Scalings are collected by the Scaler() class and
+            saved to a yaml file.
+            The inputs used are the files created in `objectPerformance`
+            and saved in `objectPerformance/output/VX/scalings/*.txt`
+        '''
         with open(f'{scalings}', 'r') as infile:
             scalings_eta = yaml.safe_load(infile.read())
         return scalings_eta
 
     def get_trig_seeds(self):
+        '''
+            Get the menu definition.
+            Load a yaml file containing the definition of the objects
+            and the cuts of each leg for the different trigger paths.
+        '''
         with open(self.cfg_fname, 'r') as infile:
             test_trig_seeds = yaml.safe_load(infile.read())
 
         return test_trig_seeds
 
     def add_offline_pt(self, arr, obj_scalings, pt_var = None):
+        '''
+            Use the scalings to convert online pT to offline pT.
+            The `pt_var` argument can be used to specify which observables
+            should be used as "pT" for a given object.
+            If `pt_var` is not specified, `pt` or `et` are used.
+            For each object, a dedicated scaling in the barrel/endcap regions
+            is applied to the online pT.
+        '''
         # initialise array of zeros identical to the original pt        
         if pt_var is not None: pt_orig = arr[pt_var]
         elif "pt" in arr.fields: pt_orig = arr.pt
@@ -50,7 +92,7 @@ class MenuTable:
             new_pt = ak.zeros_like(pt_orig)
             
             # loop through eta regions with it's scaling parameters
-            for region,values in obj_scalings.items():
+            for region, values in obj_scalings.items():
                 # create eta mask for this eta region
                 eta_mask = (abs(arr.eta) >= values["eta_min"]) & (abs(arr.eta) < values["eta_max"])
                 # scale pt for non-masked elements of this eta region
@@ -59,6 +101,11 @@ class MenuTable:
         return ak.with_field(arr, new_pt, "offline_pt")
 
     def scale_pt(self, obj, arr):
+        '''
+            Wrapper function that calls `add_offline_pt` if the scaling is defined.
+            If the scaling for a given object is not found, `offline_pt` is set to
+            be equal to the online pt.
+        '''
         if obj in self.scalings:
             arr = self.add_offline_pt(arr, self.scalings[obj])
         else:
@@ -74,6 +121,14 @@ class MenuTable:
         return arr
 
     def format_values(self, arr):
+        '''
+            Function to format values in the array.
+            The `et` branch is converted to `pt`, if no `pt` is found in the array.
+            If neither `pt` nor `et` are found in the array, the corresponding
+            entries will be left empty or filled with the unique field of the array.
+            The ID branches (`["passeseleid","passessaid","passesphoid"]`) are
+            converted into boolean variables for easier usage in the triggers definition.
+        '''
         if "et" not in arr.fields: 
             if "pt" in arr.fields:
                 arr["et"] = arr.pt
@@ -90,18 +145,13 @@ class MenuTable:
 
         return arr
 
-    def load_minbias(self, obj):
-        with uproot.open(self.fname) as f:
-            arr = f["l1PhaseIITree/L1PhaseIITree"].arrays(
-                filter_name = f"{obj}*", 
-                how = "zip"
-                ) 
-        return arr
-
-    def get_obj_arr(self, obj,
-                    sample = "MinBias",
-                    vers = "V29_part"):
-
+    def get_obj_arr(self, obj):
+        '''
+            Function that loads the minbias sample and gets the relevant object from the TTree.
+            The TBranches are loaded in an awkward array, `format_values` is used to parse the
+            `pt`, `et`, and ID branches.
+            The `scale_pt` function is used to convert the online pT into offline using the scalings.
+        '''
         arr = self.load_minbias(obj)
         if "jagged0" in arr.fields:
             arr = arr["jagged0"]
@@ -113,6 +163,12 @@ class MenuTable:
         return arr
     
     def get_legs(self, seed_legs):
+        '''
+            Function that parses the config file (menu definition)
+            to get the cuts to be used for the definition of each trigger leg
+            and the L1 object used.
+            The function returns the awkard array after the application of the cuts.
+        '''
         all_arrs = {}
         leg_arrs = {}
 
@@ -138,14 +194,18 @@ class MenuTable:
         return leg_arrs
 
     def get_combos(self, leg_arrs, seed_legs):
-        
+        '''
+            For multi-leg triggers, this function creates the combination of the legs.
+            After the trigger legs are combined, the resulting array corresponding to the
+            AND of all the conditions on each leg is returned.
+        '''
         if len(leg_arrs) > 1:
             combos = ak.cartesian(leg_arrs)
         else:
             combos = leg_arrs
 
         ## duplicate handling (exclude combinations)
-        ### first check whether objects are repeating
+        ## first check whether objects are repeating
         objs = [o["obj"] for o in seed_legs.values()]
         obj_cnts = {i: objs.count(i) for i in objs}
 
@@ -167,6 +227,11 @@ class MenuTable:
         return combos
 
     def get_legs_and_masks(self, seed_legs):
+        '''
+            Wrapper function that calls `get_legs` and `get_combos`.
+            This function returns the awkward arrays with the legs definition
+            and the definition of the combinations in case of multi-leg triggers.
+        '''
         ### load all legs
         leg_arrs = self.get_legs(seed_legs)
 
@@ -175,7 +240,11 @@ class MenuTable:
 
         return leg_arrs, combos
 
-    def get_eval_string(self, leg_arrs):   
+    def get_eval_string(self, leg_arrs):
+        '''
+            Function that selects only relevant entries in the arrays and returns the
+            awkward array corresponding to events which satisfy the cuts on the trigger legs.
+        '''  
         eval_str = []
         for leg, leg_arr in leg_arrs.items():
             if "var" in str(leg_arr.type): 
@@ -187,6 +256,10 @@ class MenuTable:
         return eval_str
 
     def seeds_from_cfg(self, seed):
+        '''
+            Function that loads the information from the menu config.
+            Returns the legs, cross_masks, and cross-triggers (if present).
+        '''
         seed_legs = {l: self.trig_seeds[seed][l] for l in self.trig_seeds[seed] if "leg" in l}
         cross_masks_str = self.trig_seeds[seed]["cross_masks"]
         if len(cross_masks_str)>0: cross_masks_str = [cross_masks_str]
@@ -198,6 +271,12 @@ class MenuTable:
         return seed_legs, cross_masks_str, cross_seeds
 
     def get_npass(self, seed, trig_seed):
+        '''
+            Main function that computes the nr of events passing each trigger.
+            After loading the minbias sample and the menu definition,
+            each leg is selected and the masks are applied (together with cross-masks/seeds).
+            The function returns the total mask that defines the trigger.
+        '''
         seed_legs, cross_masks_str, cross_seeds = self.seeds_from_cfg(seed) 
         leg_arrs, combos = self.get_legs_and_masks(seed_legs)
 
@@ -233,6 +312,11 @@ class MenuTable:
         return total_mask
 
     def prepare_masks(self):
+        '''
+            Wrapper function that calls `get_npass`
+            for each object defined in the menu.
+            The function returns the masks for each object.
+        '''
         trig_masks = {}
 
         seeds = self.trig_seeds
@@ -250,8 +334,13 @@ class MenuTable:
 
         return trig_masks
 
-    @property
     def make_table(self):
+        '''
+            Function that prints to screen the rates table.
+            Returns a list containing the csv-compatible table.
+        '''
+        table = []
+        table.append("Seed,NPass,Eff,Rate\n")
         total_mask = 0
         trig_masks = self.prepare_masks()
 
@@ -261,6 +350,7 @@ class MenuTable:
             npass = np.sum(mask)
             eff = npass/len(mask)
             rate = eff * 2760*11246 / 1e3
+            table.append(f"{seed},{npass},{eff},{rate}\n")
             print(seed.ljust(50), ":\t%8i\t%.5f\t%.1f" %(npass, eff, rate))
 
         ## total
@@ -269,7 +359,21 @@ class MenuTable:
         rate = eff * 2760*11246 / 1e3
 
         tot_str = "Total:".ljust(50)+ "\t%8i\t%.5f\t%.1f" %(npass, eff, rate)
+        table.append(f"Total,{npass},{eff},{rate}\n")
+        table.append(f"Total nev,{len(total_mask)},,\n")
         print((len(tot_str)+5)*"-")
         print(tot_str)
 
         print("Total nev: %i" % len(total_mask))
+
+        return table
+
+    def dump_table(self, table):
+        '''
+            Function that dumps to file the table produced by `make_table`.
+        '''
+        os.makedirs(f"{self.table_outdir}", exist_ok=True)
+        f = open(f"{self.table_outdir}/{self.table_fname}_{self.version}.csv", "w")
+        for line in table:
+            f.write(line)
+        f.close()

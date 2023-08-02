@@ -1,18 +1,17 @@
 L1_DoubleEGEle:
   cross_masks:
   - leg1.deltaR(leg2) > 0.1 
-  - leg1.offline_pt + leg2.offline_pt > 40
   leg1:
     leg_mask:
     - leg1.offline_pt >= 37.0
     - abs(leg1.eta)<2.4
-    - egid(leg1.passeseleid,leg1.passessaid,leg1.eta)
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passessaid * (abs(leg1.eta) >= 1.5)
     obj: EG
   leg2:
     leg_mask:
     - leg2.offline_pt >= 24.0
     - abs(leg2.eta)<2.4
-    - egid(leg2.passeseleid,leg2.passessaid,leg2.eta)
+    - leg2.passeseleid * (abs(leg2.eta)<1.5) + leg2.passessaid * (abs(leg2.eta) >= 1.5)
     obj: EG
 L1_DoubleTkEle:
   cross_masks:
@@ -21,13 +20,13 @@ L1_DoubleTkEle:
     leg_mask:
     - leg1.offline_pt >= 25.0
     - abs(leg1.eta)<2.4
-    - tkelequallow(leg1.et,leg1.eta,leg1.passeseleid)
+    - leg1.passeseleid * (abs(leg1.eta)<1.479) + (abs(leg1.eta)>1.479)
     obj: tkElectron
   leg2:
     leg_mask:
     - leg2.offline_pt >= 12.0
     - abs(leg2.eta)<2.4
-    - tkelequallow(leg2.et,leg2.eta,leg2.passeseleid)
+    - leg2.passeseleid * (abs(leg2.eta)<1.479) + (abs(leg2.eta)>1.479)
     obj: tkElectron
 L1_DoubleTkMu:
   cross_masks:
@@ -48,15 +47,15 @@ L1_DoubleTkPhoIso:
     leg_mask:
     - leg1.offline_pt >= 22.0
     - abs(leg1.eta)<2.4
-    - phoid(leg1.passeseleid,leg1.passesphoid,leg1.eta)
-    - rangecutless(leg1.trkiso,leg1.eta,1.479,0.25,0.205)
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passesphoid * (abs(leg1.eta) >= 1.5)
+    - (leg1.trkiso<0.25) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.205) * (abs(leg1.eta)>=1.479)
     obj: tkPhoton
   leg2:
     leg_mask:
     - leg2.offline_pt >= 12.0
     - abs(leg2.eta)<2.4
-    - phoid(leg2.passeseleid,leg2.passesphoid,leg2.eta)
-    - rangecutless(leg2.trkiso,leg2.eta,1.479,0.25,0.205)
+    - leg2.passeseleid * (abs(leg2.eta)<1.5) + leg2.passesphoid * (abs(leg2.eta) >= 1.5)
+    - (leg2.trkiso<0.25) * (abs(leg2.eta)<1.479) + (leg2.trkiso<0.205) * (abs(leg2.eta)>=1.479)
     obj: tkPhoton
 L1_PFHTT:
   cross_masks: []
@@ -121,7 +120,7 @@ L1_SingleEGEle:
     leg_mask:
     - leg1.offline_pt >= 51.0
     - abs(leg1.eta)<2.4
-    - egid(leg1.passeseleid,leg1.passessaid,leg1.eta)
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passessaid * (abs(leg1.eta) >= 1.5)
     obj: EG
 L1_SinglePfJet:
   cross_masks: []
@@ -137,15 +136,15 @@ L1_SingleTkEle:
     leg_mask:
     - leg1.offline_pt >= 36.0
     - abs(leg1.eta)<2.4
-    - tkelequalhigh(leg1.et,leg1.eta,leg1.passeseleid)
+    - leg1.passeseleid >= 0
     obj: tkElectron
 L1_SingleTkEleIso:
   cross_masks: []
   leg1:
     leg_mask:
     - leg1.offline_pt >= 28.0
-    - tkeleisoquallow(leg1.et,leg1.eta,leg1.passeseleid)
-    - rangecutless(leg1.trkiso,leg1.eta,1.479,0.13,0.28)
+    - leg1.passeseleid * (abs(leg1.eta)<1.479) + (abs(leg1.eta)>1.479)
+    - (leg1.trkiso<0.13) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.28) * (abs(leg1.eta)>=1.479)
     obj: tkElectron
 L1_SingleTkMu:
   cross_masks: []
@@ -160,8 +159,8 @@ L1_SingleTkPhoIso:
     leg_mask:
     - leg1.offline_pt >= 36.0
     - abs(leg1.eta)<2.4
-    - phoid(leg1.passeseleid,leg1.passesphoid,leg1.eta)
-    - rangecutless(leg1.trkiso,leg1.eta,1.479,0.25,0.205)
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passesphoid * (abs(leg1.eta) >= 1.5)
+    - (leg1.trkiso<0.25) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.205) * (abs(leg1.eta)>=1.479)
     obj: tkPhoton
 L1_TkEleIso_EG:
   cross_masks:
@@ -170,14 +169,14 @@ L1_TkEleIso_EG:
     leg_mask:
     - leg1.offline_pt >= 22.0
     - abs(leg1.eta)<2.4
-    - tkeleisoquallow(leg1.et,leg1.eta,leg1.passeseleid)
-    - rangecutless(leg1.trkiso,leg1.eta,1.479,0.13,0.28)
+    - leg.passeseleid >= 0
+    - (leg1.trkiso<0.13) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.28) * (abs(leg1.eta)>=1.479)
     obj: tkElectron
   leg2:
     leg_mask:
     - leg2.offline_pt >= 12.0
     - abs(leg2.eta)<2.4
-    - egid(leg2.passeseleid,leg2.passessaid,leg2.eta)
+    - leg2.passeseleid * (abs(leg2.eta)<1.5) + leg2.passessaid * (abs(leg2.eta) >= 1.5)
     obj: EG
 L1_TripleTkMu:
   cross_masks:
@@ -201,4 +200,3 @@ L1_TripleTkMu:
     - abs(leg3.eta)<2.4
     - leg3.qual>0
     obj: gmtTkMuon
-
