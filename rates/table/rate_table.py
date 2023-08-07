@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg",
-        default="cfg_caching/V22.yaml",
+        default="cfg/v29/v29_cfg.yml",
         help=""
     )
     args = parser.parse_args()
