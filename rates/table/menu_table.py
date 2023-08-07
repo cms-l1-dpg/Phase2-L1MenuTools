@@ -152,6 +152,11 @@ class MenuTable:
             `pt`, `et`, and ID branches.
             The `scale_pt` function is used to convert the online pT into offline using the scalings.
         '''
+        # TODO: Implement reading from parquet
+        # vers = self.version
+        # fname = f"/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/cache/{vers}/{vers}_MinBias_{obj}.parquet"
+        # arr = ak.from_parquet(fname) 
+
         arr = self.load_minbias(obj)
         if "jagged0" in arr.fields:
             arr = arr["jagged0"]
@@ -217,7 +222,7 @@ class MenuTable:
                     if i>=j: continue
                     ## check that the legs are the same type object, skip otherwise
                     if seed_legs[l1]["obj"] != seed_legs[l2]["obj"]: continue
-                    nodup_masks.append(combos[l1].idx < combos[l2].idx)
+                    nodup_masks.append(combos[l1].idx != combos[l2].idx)
 
             if len(nodup_masks) > 0:
                 eval_str = " & ".join([f"nodup_masks[{i}]" for i in range(len(nodup_masks))])

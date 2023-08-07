@@ -1,0 +1,200 @@
+EG:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 2.707
+    slope: 1.188
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 1.572
+    slope: 1.249
+caloTau:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: -2.553
+    slope: 1.525
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 1.273
+    slope: 1.968
+gmtMuon:
+  Barrel:
+    eta_max: 0.83
+    eta_min: 0
+    offset: -0.2379695
+    slope: 1.13674
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.24
+    offset: 11.219282
+    slope: 1.5027
+  Overlap:
+    eta_max: 1.24
+    eta_min: 0.83
+    offset: -2.5687838
+    slope: 1.34598
+gmtTkMuon:
+  Barrel:
+    eta_max: 0.83
+    eta_min: 0
+    offset: 0.986
+    slope: 1.049
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.24
+    offset: 0.792 #1.075
+    slope: 1.054 # 1.052
+  Overlap:
+    eta_max: 1.24
+    eta_min: 0.83
+    offset: 1.075 # 0.792
+    slope: 1.052 # 1.054
+nnTau:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: -2.065
+    slope: 1.899
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 19.596
+    slope: 1.584
+phase1PuppiHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 54.550
+    slope: 1.087
+phase1PuppiJet:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 15.497
+    slope: 1.383
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 9.362
+    slope: 1.959
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 75.5
+    slope: 1.41
+phase1PuppiMHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 49.175
+    slope: 1.321
+puppiMET:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 63.781
+    slope: 1.465
+seededConePuppiHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 47.986
+    slope: 1.084
+seededConePuppiJet:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 20.10841
+    slope: 1.30781
+  Endcap:
+    eta_max: 2.4
+    eta_min: 1.5
+    offset: 7.971
+    slope: 2.05
+  # null:
+  #  eta_max: null
+  #  eta_min: null
+  #  offset: 72.567
+  #  slope: 1.418
+seededConePuppiMHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 55.097
+    slope: 1.202
+tkIsoElectron:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 1.441
+    slope: 1.159
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 1.256
+    slope: 1.217
+tkElectron:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 1.638
+    slope: 1.144
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 1.219
+    slope: 1.214
+tkIsoPhoton:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 2.697
+    slope: 1.096
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 5.038
+    slope: 1.067
+tkPhoton:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 2.697
+    slope: 1.096
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 5.038
+    slope: 1.067
+trackerHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: -25.35696
+    slope: 3.622799
+trackerJet:
+  Barrel:
+    eta_max: 1.5
+    eta_min: 0
+    offset: 446.22001
+    slope: 0.341314
+  Endcap:
+    eta_max: 2.5
+    eta_min: 1.5
+    offset: 477.198
+    slope: 0.04346206
+trackerMET:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 417.67308
+    slope: 0.2483366
+trackerMHT:
+  null:
+    eta_max: null
+    eta_min: null
+    offset: 410.9299
+    slope: 0.295772

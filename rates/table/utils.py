@@ -14,10 +14,10 @@ def pairinvmass(pt1,pt2,eta1,eta2,phi1,phi2):
     return np.sqrt(2.0*pt1*pt2*(np.cosh(eta1-eta2)-np.cos(phi1-phi2)))
 
 def phoid(EleID, PhoID, Eta):
-    return EleID * (abs(Eta)<1.5) + PhoID * (abs(Eta)>=1.5)
+    return (EleID * (abs(Eta)<1.5)) + (PhoID * (abs(Eta)>=1.5))
 
 def egid(EleID, SaID, Eta): 
-    return EleID * abs(Eta)<1.5 + SaID * (abs(Eta)>=1.5)
+    return (EleID * (abs(Eta)<1.5)) + (SaID * (abs(Eta)>=1.5))
 
 def TkEleQualHIGH(Et,Eta,PassesEleID): return PassesEleID
 def TkEleQualLOW(Et,Eta,PassesEleID): return PassesEleID * (abs(Eta)<1.479) + (abs(Eta)>1.479)
