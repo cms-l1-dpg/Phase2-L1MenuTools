@@ -326,9 +326,7 @@ class MenuTable:
 
         seeds = self.trig_seeds
 
-        for seed in sorted(seeds):
-            if "PFTau" in seed: continue
-            
+        for seed in sorted(seeds):            
             print(seed)
             
             mask = self.get_npass(seed, self.trig_seeds[seed])
