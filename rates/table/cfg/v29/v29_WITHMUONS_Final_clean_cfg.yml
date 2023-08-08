@@ -584,7 +584,8 @@ L1_TkMu_TkEle:
   - abs(leg2.zvtx-leg1.z0)<1
   leg1:
     leg_mask:
-    - leg1.offline_pt >= 7.0
+    #- leg1.offline_pt >= 7.0
+    - leg1.pt>7
     - abs(leg1.eta)<2.4
     obj: gmtTkMuon
   leg2:
