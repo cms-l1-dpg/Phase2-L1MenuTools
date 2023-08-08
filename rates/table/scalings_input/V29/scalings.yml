@@ -18,7 +18,7 @@ caloTau:
   Endcap:
     eta_max: 2.5
     eta_min: 1.5
-    offset: 1.273
+    offset: -1.273
     slope: 1.968
 gmtMuon:
   Barrel:
@@ -114,11 +114,11 @@ seededConePuppiJet:
     eta_min: 1.5
     offset: 7.971
     slope: 2.05
-  # null:
-  #  eta_max: null
-  #  eta_min: null
-  #  offset: 72.567
-  #  slope: 1.418
+  Forward:
+    eta_max: 6
+    eta_min: 2.4
+    offset: 72.567
+    slope: 1.418
 seededConePuppiMHT:
   null:
     eta_max: null
