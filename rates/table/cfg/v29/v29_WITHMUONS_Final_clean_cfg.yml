@@ -348,12 +348,12 @@ L1_PFTau_PFTau:
   - leg1.deltaR(leg2)>0.5
   leg1:
     leg_mask:
-    - leg1.offline_pt >= 90.0
+    - leg1.offline_pt > 90.0
     - abs(leg1.eta)<2.172
     obj: caloTau
   leg2:
     leg_mask:
-    - leg2.offline_pt >= 90.0
+    - leg2.offline_pt > 90.0
     - abs(leg2.eta)<2.172
     obj: caloTau
 L1_SingleEGEle:
@@ -368,7 +368,7 @@ L1_SinglePFTau:
   cross_masks: []
   leg1:
     leg_mask:
-    - leg1.offline_pt >= 150.0
+    - leg1.offline_pt > 150.0
     - abs(leg1.eta)<2.172
     obj: caloTau
 L1_SinglePfJet:
