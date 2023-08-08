@@ -335,8 +335,6 @@ class MenuTable:
 
         for seed in sorted(seeds):    
 
-            if "TkEle" not in seed: continue
-
             print(seed)
             
             mask = self.get_npass(seed, self.trig_seeds[seed])
@@ -356,6 +354,7 @@ class MenuTable:
         table.append("Seed,NPass,Eff,Rate\n")
         total_mask = 0
         trig_masks = self.prepare_masks()
+        self.trig_masks = trig_masks
 
         for seed, mask in trig_masks.items():
             
@@ -380,6 +379,19 @@ class MenuTable:
         print("Total nev: %i" % len(total_mask))
 
         return table
+    
+    def dump_masks(self):
+        '''
+            Function that dumps to file the masks produced by `prepare_masks`.
+        '''
+        if hasattr(self, "trig_masks"):
+            os.makedirs(f"{self.table_outdir}", exist_ok=True)
+            fname = f"{self.table_outdir}/{self.table_fname}_{self.version}_masks.parquet"
+            print(f"Dumping masks to parquet in: {fname}")
+
+            ak.to_parquet(ak.zip(self.trig_masks), fname)
+        else:
+            print("No masks created! Run `prepare_masks` first.")
 
     def dump_table(self, table):
         '''
