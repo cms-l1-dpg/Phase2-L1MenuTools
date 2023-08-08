@@ -143,21 +143,6 @@ L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
     - abs(leg2.eta)<2.0
     - leg2.qual>0
     obj: gmtTkMuon
-L1_DoubleTkMu9_SQ:
-  cross_masks:
-  - abs(leg2.z0-leg1.z0)<1
-  leg1:
-    leg_mask:
-    - leg1.offline_pt >= 9.0
-    - abs(leg1.eta)<2.4
-    - leg1.qual>0
-    obj: gmtTkMuon
-  leg2:
-    leg_mask:
-    - leg2.offline_pt >= 9.0
-    - abs(leg2.eta)<2.4
-    - leg2.qual>0
-    obj: gmtTkMuon
 L1_DoubleTkMu_PfHTT:
   cross_masks:
   - abs(leg2.z0-leg1.et)<1
