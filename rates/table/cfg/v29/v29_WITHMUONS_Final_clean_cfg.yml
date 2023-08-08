@@ -376,10 +376,10 @@ L1_SingleTkEleIso:
   cross_masks: []
   leg1:
     leg_mask:
-    - leg1.offline_pt >= 28.0
-    - leg1.passeseleid * (abs(leg1.eta)<1.479) + (abs(leg1.eta)>1.479)
+    - leg1.offline_pt > 28.0
+    - leg1.passeseleid >= 0
     - (leg1.trkiso<0.13) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.28) * (abs(leg1.eta)>=1.479)
-    obj: tkElectron
+    obj: tkIsoElectron
 L1_SingleTkMu:
   cross_masks: []
   leg1:
@@ -403,9 +403,9 @@ L1_TkEleIso_EG:
     leg_mask:
     - leg1.offline_pt >= 22.0
     - abs(leg1.eta)<2.4
-    - leg1.passeseleid * (abs(leg1.eta)<1.479) + (abs(leg1.eta)>1.479)
+    - leg1.passeseleid >= 0
     - (leg1.trkiso<0.13) * (abs(leg1.eta)<1.479) + (leg1.trkiso<0.28) * (abs(leg1.eta)>=1.479)
-    obj: tkElectron
+    obj: tkIsoElectron
   leg2:
     leg_mask:
     - leg2.offline_pt >= 12.0
@@ -423,9 +423,9 @@ L1_TkEleIso_PFHTT:
     leg_mask:
     - leg2.offline_pt >= 26.0
     - abs(leg2.eta)<2.1
-    - leg2.passeseleid * (abs(leg2.eta)<1.479) + (abs(leg2.eta)>1.479)
+    - leg2.passeseleid >= 0
     - (leg2.trkiso<0.13) * (abs(leg2.eta)<1.479) + (leg2.trkiso<0.28) * (abs(leg2.eta)>=1.479)
-    obj: tkElectron
+    obj: tkIsoElectron
   leg3:
     leg_mask:
     - leg3.offline_pt >= 190.0
@@ -441,9 +441,9 @@ L1_TkEleIso_PFIsoTau:
     leg_mask:
     - leg2.offline_pt >= 22.0
     - abs(leg2.eta)<2.1
-    - leg2.passeseleid * (abs(leg2.eta)<1.479) + (abs(leg2.eta)>1.479)
+    - leg2.passeseleid >= 0
     - (leg2.trkiso<0.13) * (abs(leg2.eta)<1.479) + (leg2.trkiso<0.28) * (abs(leg2.eta)>=1.479)
-    obj: tkElectron
+    obj: tkIsoElectron
   leg3:
     leg_mask:
     - leg3.offline_pt >= 45.0
@@ -606,9 +606,9 @@ L1_TkMu_TkEleIso:
     leg_mask:
     - leg2.offline_pt >= 20.0
     - abs(leg2.eta)<2.4
-    - leg2.passeseleid * (abs(leg2.eta)<1.479) + (abs(leg2.eta)>1.479)
+    - leg2.passeseleid >= 0 
     - (leg2.trkiso<0.13) * (abs(leg2.eta)<1.479) + (leg2.trkiso<0.28) * (abs(leg2.eta)>=1.479)
-    obj: tkElectron
+    obj: tkIsoElectron
 L1_TripleTkMu:
   cross_masks:
   - abs(leg2.z0-leg1.z0)<1

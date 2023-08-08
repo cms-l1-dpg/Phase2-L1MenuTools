@@ -78,8 +78,8 @@ class MenuTable:
         '''
         # initialise array of zeros identical to the original pt        
         if pt_var is not None: pt_orig = arr[pt_var]
-        elif "pt" in arr.fields: pt_orig = arr.pt
         elif "et" in arr.fields: pt_orig = arr.et
+        elif "pt" in arr.fields: pt_orig = arr.pt
         elif  ""  in arr.fields: pt_orig = arr[""][:,0]
         else:
             print("Error! Unknown pt branch")
@@ -106,7 +106,9 @@ class MenuTable:
             If the scaling for a given object is not found, `offline_pt` is set to
             be equal to the online pt.
         '''
+
         if obj in self.scalings:
+            # print(self.scalings[obj])
             arr = self.add_offline_pt(arr, self.scalings[obj])
         else:
             print("No scalings found for " + obj)
@@ -157,12 +159,17 @@ class MenuTable:
         # fname = f"/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/cache/{vers}/{vers}_MinBias_{obj}.parquet"
         # arr = ak.from_parquet(fname) 
 
-        arr = self.load_minbias(obj)
+        load_obj = obj
+
+        if obj == "tkIsoElectron": load_obj = "tkElectron"
+
+        arr = self.load_minbias(load_obj)
         if "jagged0" in arr.fields:
             arr = arr["jagged0"]
         
-        arr = ak.zip({f.replace(obj,"").lower():arr[f] for f in arr.fields})
+        arr = ak.zip({f.replace(load_obj,"").lower():arr[f] for f in arr.fields})
         arr = self.format_values(arr)
+
         arr = self.scale_pt(obj, arr)
         
         return arr
@@ -326,7 +333,10 @@ class MenuTable:
 
         seeds = self.trig_seeds
 
-        for seed in sorted(seeds):            
+        for seed in sorted(seeds):    
+
+            if "TkEle" not in seed: continue
+
             print(seed)
             
             mask = self.get_npass(seed, self.trig_seeds[seed])
