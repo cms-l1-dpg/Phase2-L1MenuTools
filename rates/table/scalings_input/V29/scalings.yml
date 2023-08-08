@@ -121,10 +121,8 @@ seededConePuppiJet:
     slope: 1.418
 seededConePuppiMHT:
   null:
-    eta_max: null
-    eta_min: null
-    offset: 55.097
-    slope: 1.202
+    offset: -20.499
+    slope: 1.170
 tkIsoElectron:
   Barrel:
     eta_max: 1.5
