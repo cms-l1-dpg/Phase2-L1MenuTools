@@ -27,3 +27,5 @@ if __name__ == "__main__":
         menu_config = MenuTable(menu_cfg)
         table = menu_config.make_table()
         menu_config.dump_table(table)
+
+        menu_config.dump_masks()

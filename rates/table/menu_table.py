@@ -3,7 +3,7 @@ import numpy as np
 
 from glob import glob
 
-import yaml, re, os
+import yaml, re, os, math
 
 from utils import *
 from menu_config import MenuConfig
@@ -78,8 +78,8 @@ class MenuTable:
         '''
         # initialise array of zeros identical to the original pt        
         if pt_var is not None: pt_orig = arr[pt_var]
-        elif "pt" in arr.fields: pt_orig = arr.pt
         elif "et" in arr.fields: pt_orig = arr.et
+        elif "pt" in arr.fields: pt_orig = arr.pt
         elif  ""  in arr.fields: pt_orig = arr[""][:,0]
         else:
             print("Error! Unknown pt branch")
@@ -106,7 +106,9 @@ class MenuTable:
             If the scaling for a given object is not found, `offline_pt` is set to
             be equal to the online pt.
         '''
+
         if obj in self.scalings:
+            # print(self.scalings[obj])
             arr = self.add_offline_pt(arr, self.scalings[obj])
         else:
             print("No scalings found for " + obj)
@@ -157,12 +159,17 @@ class MenuTable:
         # fname = f"/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/cache/{vers}/{vers}_MinBias_{obj}.parquet"
         # arr = ak.from_parquet(fname) 
 
-        arr = self.load_minbias(obj)
+        load_obj = obj
+
+        if obj == "tkIsoElectron": load_obj = "tkElectron"
+
+        arr = self.load_minbias(load_obj)
         if "jagged0" in arr.fields:
             arr = arr["jagged0"]
         
-        arr = ak.zip({f.replace(obj,"").lower():arr[f] for f in arr.fields})
+        arr = ak.zip({f.replace(load_obj,"").lower():arr[f] for f in arr.fields})
         arr = self.format_values(arr)
+
         arr = self.scale_pt(obj, arr)
         
         return arr
@@ -326,9 +333,8 @@ class MenuTable:
 
         seeds = self.trig_seeds
 
-        for seed in sorted(seeds):
-            if "PFTau" in seed: continue
-            
+        for seed in sorted(seeds):    
+
             print(seed)
             
             mask = self.get_npass(seed, self.trig_seeds[seed])
@@ -348,6 +354,7 @@ class MenuTable:
         table.append("Seed,NPass,Eff,Rate\n")
         total_mask = 0
         trig_masks = self.prepare_masks()
+        self.trig_masks = trig_masks
 
         for seed, mask in trig_masks.items():
             
@@ -372,6 +379,19 @@ class MenuTable:
         print("Total nev: %i" % len(total_mask))
 
         return table
+    
+    def dump_masks(self):
+        '''
+            Function that dumps to file the masks produced by `prepare_masks`.
+        '''
+        if hasattr(self, "trig_masks"):
+            os.makedirs(f"{self.table_outdir}", exist_ok=True)
+            fname = f"{self.table_outdir}/{self.table_fname}_{self.version}_masks.parquet"
+            print(f"Dumping masks to parquet in: {fname}")
+
+            ak.to_parquet(ak.zip(self.trig_masks), fname)
+        else:
+            print("No masks created! Run `prepare_masks` first.")
 
     def dump_table(self, table):
         '''

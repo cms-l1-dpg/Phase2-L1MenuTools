@@ -47,7 +47,7 @@ L1_SingleTkEleIso:
     - leg1.offline_pt >= 28.0
     - leg1.passeseleid>=0
     - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.13, leg1.trkiso<0.28)
-    obj: tkElectron
+    obj: tkIsoElectron
 L1_SingleTkMu:
   cross_masks: []
   leg1:
@@ -73,7 +73,7 @@ L1_TkEleIso_EG:
     - abs(leg1.eta)<2.4
     - leg1.passeseleid >= 0
     - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.13, leg1.trkiso<0.28)
-    obj: tkElectron
+    obj: tkIsoElectron
   leg2:
     leg_mask:
     - leg2.offline_pt > 12.0

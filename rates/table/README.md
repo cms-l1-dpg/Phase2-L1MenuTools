@@ -33,20 +33,3 @@ The other fields that can be specified are:
 * `scalings`: this block defines the properties of the scalings file to be used. If `collect_scalings` is `False`,
 the scalings file in `scalings_outdir` will be used (`scalings.yml` in the example above corresponds to the `v29` scalings used for AR). If `collect_scalings` is `True`, then the `Scaler` (cf `scaler.py`) class is used to create a new scalings file, with the name specified in `scalings_file` (which will be located in `scalings_outdir`), starting from the per-object `.txt` scalings saved under `scalings_path` (i.e. the output of the `objectPerformance` code);
 * `table`: this block defines the properties of the rates table that will be dumped to a `.csv` file. The table will be saved under `table_outdir` with `table_fname` as name.
-
-## Outdated: Rate table for the Phase-2 L1 Trigger Menu 
-To run the rate table, for example for the L1 TDR results, do
-```
-python run.py cfg/v10_TRIDAS_newThresholds_LHCCReview
-```
-
-For the firmware-based emulators under 123x, utilise `FBE_noMu_L1TDRMET_mhtSeed_123x` (`FBE_noMu_L1TDRMET_mhtSeed_123x_singleJetEta5` only includes forward region for the singleJet seed).
-  
-To display the rates in an easy-to-read format, run
-```
-python3 printRateTable.py -c cfg/v10_TRIDAS_newThresholds_LHCCReview -r out/2020-05-26-MENU-LHCCReview-BugFix_v10_TRIDAS_newThresholds_LHCCReview/thresholds/menu.csv
-```
-You can also edit the `CFG_RATE_COMBOS` dictionary at the top of
-the file and run the script without any arguments `python3 printRateTable.py`.
-This way multiple rate tables can be compared quickly. 
-
