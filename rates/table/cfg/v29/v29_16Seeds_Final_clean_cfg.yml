@@ -1,0 +1,208 @@
+L1_DoubleEGEle:
+  cross_masks:
+  - ak.where(abs(leg2.phi-leg1.phi)<math.pi, np.sqrt(abs(abs(leg2.eta)-abs(leg1.eta))**2 + abs(leg2.phi-leg1.phi)**2), np.sqrt(abs(abs(leg2.eta)-abs(leg1.eta))**2 + (2*math.pi-abs(leg2.phi-leg1.phi))**2)) > 0.1
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 37
+    - abs(leg1.eta)<2.4
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passessaid * (abs(leg1.eta) >= 1.5)
+    # - ak.where(abs(leg1.eta)<1.5, leg1.passeseleid, leg1.passessaid)
+    obj: EG
+  leg2:
+    leg_mask:
+    - leg2.offline_pt >= 24
+    - abs(leg2.eta)<2.4
+    - leg2.passeseleid * (abs(leg2.eta)<1.5) + leg2.passessaid * (abs(leg2.eta) >= 1.5)
+    # - ak.where(abs(leg2.eta)<1.5, leg2.passeseleid, leg2.passessaid)
+    obj: EG
+L1_SingleEGEle:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 51.0
+    - abs(leg1.eta)<2.4
+    - leg1.passeseleid * (abs(leg1.eta)<1.5) + leg1.passessaid * (abs(leg1.eta) >= 1.5)
+    obj: EG
+L1_SinglePfJet:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 230.0
+    - leg1.et>25
+    - abs(leg1.eta)<2.4
+    obj: seededConePuppiJet
+L1_SingleTkEle:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 36.0
+    - abs(leg1.eta)<2.4
+    - leg1.passeseleid
+    # - leg1.passeseleid > 0
+    obj: tkElectron
+L1_SingleTkEleIso:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 28.0
+    - leg1.passeseleid>=0
+    - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.13, leg1.trkiso<0.28)
+    obj: tkIsoElectron
+L1_SingleTkMu:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 22.0
+    - abs(leg1.eta)<2.4
+    obj: gmtTkMuon
+L1_SingleTkPhoIso:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 36.0
+    - abs(leg1.eta)<2.4
+    - ak.where(abs(leg1.eta)<1.5, leg1.passeseleid, leg1.passesphoid)
+    - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.25, leg1.trkiso<0.205)
+    obj: tkPhoton
+L1_TkEleIso_EG:
+  cross_masks:
+  - leg2.deltaR(leg1) > 0.1
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 22.0
+    - abs(leg1.eta)<2.4
+    - leg1.passeseleid >= 0
+    - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.13, leg1.trkiso<0.28)
+    obj: tkIsoElectron
+  leg2:
+    leg_mask:
+    - leg2.offline_pt > 12.0
+    - abs(leg2.eta)<2.4
+    - ak.where(abs(leg2.eta)<1.5, leg2.passeseleid, leg2.passessaid)
+    obj: EG
+L1_TripleTkMu:
+  cross_masks:
+  - abs(leg2.z0-leg1.z0)<1
+  - abs(leg3.z0-leg1.z0)<1
+  leg1:
+    leg_mask:
+    - leg1.pt>5
+    - abs(leg1.eta)<2.4
+    - leg1.qual>0
+    obj: gmtTkMuon
+  leg2:
+    leg_mask:
+    - leg2.pt>3
+    - abs(leg2.eta)<2.4
+    - leg2.qual>0
+    obj: gmtTkMuon
+  leg3:
+    leg_mask:
+    - leg3.pt>3
+    - abs(leg3.eta)<2.4
+    - leg3.qual>0
+    obj: gmtTkMuon
+L1_DoubleTkEle:
+  cross_masks:
+  - abs(leg2.zvtx-leg1.zvtx)<1
+  leg1:
+    leg_mask:
+    - leg1.offline_pt >= 25.0
+    - abs(leg1.eta)<2.4
+    - (((leg1.passeseleid) * (abs(leg1.eta)<1.479)) + ((abs(leg1.eta)>1.479)))
+    obj: tkElectron
+  leg2:
+    leg_mask:
+    - leg2.offline_pt >= 12.0
+    - abs(leg2.eta)<2.4
+    - (((leg2.passeseleid) * (abs(leg2.eta)<1.479)) + ((abs(leg2.eta)>1.479)))
+    obj: tkElectron
+L1_DoubleTkMu:
+  cross_masks:
+  - abs(leg1.z0-leg2.z0)<1
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 15.0
+    - abs(leg1.eta)<2.4
+    obj: gmtTkMuon
+  leg2:
+    leg_mask:
+    - leg2.pt > 7.0
+    - abs(leg2.eta)<2.4
+    - leg2.qual > 0
+    obj: gmtTkMuon
+L1_DoubleTkPhoIso:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 22.0
+    - abs(leg1.eta)<2.4
+    - ak.where(abs(leg1.eta)<1.5, leg1.passeseleid, leg1.passesphoid)
+    - ak.where(abs(leg1.eta)<1.479, leg1.trkiso<0.25, leg1.trkiso<0.205)
+    obj: tkPhoton
+  leg2:
+    leg_mask:
+    - leg2.offline_pt > 12.0
+    - abs(leg2.eta)<2.4
+    - ak.where(abs(leg2.eta)<1.5, leg2.passeseleid, leg2.passesphoid)
+    - ak.where(abs(leg2.eta)<1.479, leg2.trkiso<0.25, leg2.trkiso<0.205)
+    obj: tkPhoton
+L1_PFHTT:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    # - leg1.pt > 372.9
+    - leg1.offline_pt > 450
+    obj: seededConePuppiHT
+L1_PFHTT_QuadJet:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 400.0
+    obj: seededConePuppiHT
+  leg2:
+    leg_mask:
+    - leg2.offline_pt > 70.0
+    - leg2.et>25.0
+    - abs(leg2.eta)<2.4
+    obj: seededConePuppiJet
+  leg3:
+    leg_mask:
+    - leg3.offline_pt > 55.0
+    - leg3.et>25.0
+    - abs(leg3.eta)<2.4
+    obj: seededConePuppiJet
+  leg4:
+    leg_mask:
+    - leg4.offline_pt > 40.0
+    - leg4.et>25.0
+    - abs(leg4.eta)<2.4
+    obj: seededConePuppiJet
+  leg5:
+    leg_mask:
+    - leg5.offline_pt > 40.0
+    - leg5.et>25.0
+    - abs(leg5.eta)<2.4
+    obj: seededConePuppiJet
+L1_PFIsoTau_PFIsoTau:
+  cross_masks:
+  # - ak.where(abs(leg2.phi-leg1.phi)<math.pi, np.sqrt(abs(abs(leg2.eta)-abs(leg1.eta))**2 + abs(leg2.phi-leg1.phi)**2), np.sqrt(abs(abs(leg2.eta)-abs(leg1.eta))**2 + (2*math.pi-abs(leg2.phi-leg1.phi))**2)) > 0.5
+  - leg1.deltaR(leg2) > 0.5
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 52.0
+    - abs(leg1.eta)<2.172
+    - leg1.passloosenn>0
+    obj: nnTau
+  leg2:
+    leg_mask:
+    - leg2.offline_pt > 52.0
+    - abs(leg2.eta)<2.172
+    - leg2.passloosenn>0
+    obj: nnTau
+L1_PFMet:
+  cross_masks: []
+  leg1:
+    leg_mask:
+    - leg1.offline_pt > 200.0
+    obj: puppiMET

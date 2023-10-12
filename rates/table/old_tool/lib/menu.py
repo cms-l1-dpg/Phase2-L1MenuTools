@@ -69,8 +69,8 @@ class MenuTable:
                 print refs
 		names = refs.keys()[:]
 		names.sort()
-		fs = "%-"+str(maxlength)+"s:  %9.2f"
-		fss = fs + "      %1.5f      %3.3f"
+		fs = "%-"+str(maxlength)+"s\t%9.2f"
+		fss = fs + "      \t%1.5f      \t%3.3f"
 		print 
 		print "MENU RESULT:"
 		for tname in names:
