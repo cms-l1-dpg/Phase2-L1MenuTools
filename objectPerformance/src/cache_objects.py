@@ -1,4 +1,4 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv/bin/python
 import argparse
 import glob
 import os
@@ -317,7 +317,7 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            where=self.cache_out_path + f"{self.parquet_fname}.parquet"
+            destination=self.cache_out_path + f"{self.parquet_fname}.parquet"
         )
 
     def load(self):

@@ -16,37 +16,17 @@
 ## Setup of Python environment
   **Note:** The code should run without any setup on `lxplus`.
 
-  In the event of failure of the
-  central setup, the following steps are required to
-  install a new Python environment.
+  A standard venv with Python3.11 can be created on lxplus
+  via `python3.11 -m venv <name_of_venv>` and all necessary
+  dependencies installed via `pip install -r requirements.txt`.
 
-### Install miniconda
-  To install `miniconda` run the following commands:
-
-    cd ~
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh
-
-### Install the environment for the framework
-  Specify the path to your `miniconda3` installation under `prefix`
-  in `environment.yml` (working examples of `environment.yml` files
-  are provided in the `objectPerformance` and `rates` folders) and run
-
-    conda env create -f environment.yml
-
-  This will create a new environment named `py310`.
-
-  To execute the scripts in the repo you need to modify the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29)
+  You can then execute the scripts either with `python <path_to_script>.py`
+  or by modifying the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
   (the very first line of the executable `.py` files which starts
   with `#!`) to point
   to your newly set up Python installation. To find the path run
 
-    conda activate py310  
+    source <name_of_venv>/bin/activate
     which python
 
   and replace the current path in the shebang with the output.
-
-  More details on how to set up a `conda` environment using a shared
-  `.yml` file can be found
-  [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment).
-

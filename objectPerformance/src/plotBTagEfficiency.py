@@ -1,4 +1,4 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
+#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv/bin/python
 import argparse
 import os
 
