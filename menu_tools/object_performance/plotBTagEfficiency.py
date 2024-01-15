@@ -8,7 +8,7 @@ import numpy as np
 import yaml
 import json
 
-from plotter import Plotter
+from menu_tools.object_performance.plotter import Plotter
 
 plt.style.use(hep.style.CMS)
 

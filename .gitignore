@@ -2,10 +2,9 @@
 **/*.png
 **/.DS_Store
 **/*.parquet
-**/rates.py
-objectPerformance/**/*.root
-objectPerformance/outputs/**/*
+**/*.root
 rates/table/out/*
 rates/table/cache/**/*
 rates/table/lib/*
 **/tmp/*
+outputs
