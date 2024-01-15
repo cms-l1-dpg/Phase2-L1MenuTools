@@ -381,7 +381,7 @@ class ScalingCentral:
     def __init__(self, cfg_plots_path):
         with open(cfg_plots_path, 'r') as f:
             self.cfg_plots = yaml.safe_load(f)
-        with open("./configs/object_performance_plots/scaling_thresholds.yaml", 'r') as f:
+        with open("./configs/scaling_thresholds.yaml", 'r') as f:
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj):
