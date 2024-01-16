@@ -18,7 +18,13 @@
 
   A standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
-  dependencies installed via `pip install -r requirements.txt`.
+  dependencies installed via `pip install -r requirements.txt`:
+
+  ```bash
+  python3.11 -m venv <name_of_venv>
+  source <name_of_venv>/bin/activate
+  pip install -r requirements.txt
+  ```
 
   You can then execute the scripts either with `python <path_to_script>.py`
   or by modifying the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
