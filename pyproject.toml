@@ -22,11 +22,12 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.11.0"
-awkward = "2.1.0"
+awkward = "2.5.2"
+fsspec = "2023.12.2"
 pyyaml = "6.0.1"
 matplotlib = "3.8.2"
 mplhep = "0.3.31"
-numpy = "1.23.5"
+numpy = "^1.23.0"
 pandas = "2.1.4"
 progress = "1.6"
 pyarrow = "14.0.2"
