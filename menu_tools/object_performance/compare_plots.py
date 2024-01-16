@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv-ak2.0/bin/python
 import argparse
 import os
 

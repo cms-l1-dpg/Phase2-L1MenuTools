@@ -23,16 +23,11 @@
   ```bash
   python3.11 -m venv <name_of_venv>
   source <name_of_venv>/bin/activate
-  pip install -r requirements.txt
+  pip install .
   ```
 
-  You can then execute the scripts either with `python <path_to_script>.py`
-  or by modifying the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
-  (the very first line of the executable `.py` files which starts
-  with `#!`) to point
-  to your newly set up Python installation. To find the path run
+  You can then execute the tools (e.g. for object performance) via
 
-    source <name_of_venv>/bin/activate
-    which python
-
-  and replace the current path in the shebang with the output.
+  ```python
+  python -m menu_tools.object_performance.plotter <path_to_config>
+  ```
