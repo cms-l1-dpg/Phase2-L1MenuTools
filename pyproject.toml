@@ -59,4 +59,4 @@ testpaths = [
 disable_error_code = [
     "import-untyped"
 ]
-mypy_path = "$MYPY_CONFIG_FILE_DIR/menu_tools"
+explicit_package_bases = true
