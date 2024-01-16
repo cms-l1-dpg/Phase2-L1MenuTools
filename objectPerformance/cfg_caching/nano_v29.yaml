@@ -1,0 +1,41 @@
+# V29_nano:
+#   test:
+#     ntuple_path: /afs/cern.ch/work/e/ejclemen/public/ForArtur/perfNano_withOfflineJets.root
+#     trees_branches:
+#       Events:
+#         scPuppiCorrJets_: "all"
+#         #"scPuppiCorrJets_": "all"
+#         #scPuppiCorrJets: [_pt, _eta, _phi]
+#         #scPuppiCorrJets: ["pt", "eta", "phi"]
+
+# V29_nano:
+#   test:
+#     ntuple_path: /eos/home-a/alobanov/L1T/phase2/menu/ntuples/gt_emu/L1Nano_Full_19Oct.root
+#     trees_branches:
+#       Events:
+#         L1scJet_: "all"
+#         GenJet_: "all"
+#         # L1tkElectron: ["_pt"]
+#         # L1GTtkElectron: ["pt"]
+#         # L1GTtkElectron_: "all"
+#         # L1tkElectron_: ["pt"]
+#         #"scPuppiCorrJets_": "all"
+#         #scPuppiCorrJets: [_pt, _eta, _phi]
+#         #scPuppiCorrJets: ["pt", "eta", "phi"]
+
+V31_nano:
+  test:
+    ntuple_path: /eos/home-a/alobanov/L1T/phase2/menu/ntuples/nano/L1Ph2Nano_131content_tkEonly_dy.root
+    trees_branches:
+      Events:
+        # L1scJet_: "all"
+        # GenJet_: "all"
+        L1tkElectron_: "all"
+        GenPart_: "all"
+        # L1tkElectron: ["_pt"]
+        # L1GTtkElectron: ["pt"]
+        # L1GTtkElectron_: "all"
+        # L1tkElectron_: ["pt"]
+        #"scPuppiCorrJets_": "all"
+        #scPuppiCorrJets: [_pt, _eta, _phi]
+        #scPuppiCorrJets: ["pt", "eta", "phi"]

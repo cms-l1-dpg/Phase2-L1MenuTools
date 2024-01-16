@@ -99,9 +99,9 @@ class ObjectCacher():
         Only the visible component (i.e. no neutrinos)
         of hadronically-decaying taus is considered.
         """
-        sel_no_nu_e = abs(all_parts["Id"]) != 12
-        sel_no_nu_mu = abs(all_parts["Id"]) != 14
-        sel_no_nu_tau = abs(all_parts["Id"]) != 16
+        sel_no_nu_e = abs(all_parts["pdgId"]) != 12
+        sel_no_nu_mu = abs(all_parts["pdgId"]) != 14
+        sel_no_nu_tau = abs(all_parts["pdgId"]) != 16
         sel = sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
 
         for branch in all_parts:
@@ -155,10 +155,12 @@ class ObjectCacher():
         """
         Filter genparticle branches by Id.
         """
-        partId = abs(all_arrays["Id"])
-        sel_id = (partId == get_pdg_id(self._part_type))
+        print(all_arrays.keys())
+        #partId = abs(all_arrays["pdgId"])
+        partId = abs(all_arrays["pdgId"])
+        # sel_id = (partId == get_pdg_id(self._part_type))
         for branch in all_arrays:
-            all_arrays[branch] = all_arrays[branch][sel_id]
+            # all_arrays[branch] = all_arrays[branch][sel_id]
             all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
 
         return all_arrays
@@ -170,10 +172,11 @@ class ObjectCacher():
         and Isolation computations, but it's not saved.
         Neutrino final state particles are not considered.
         """
-        sel_no_nu_e = abs(all_parts["Id"]) != 12
-        sel_no_nu_mu = abs(all_parts["Id"]) != 14
-        sel_no_nu_tau = abs(all_parts["Id"]) != 16
-        sel_fs = all_parts["Stat"] == 1
+        sel_no_nu_e = abs(all_parts["pdgId"]) != 12
+        sel_no_nu_mu = abs(all_parts["pdgId"]) != 14
+        sel_no_nu_tau = abs(all_parts["pdgId"]) != 16
+        #sel_fs = all_parts["Stat"] == 1
+        sel_fs = all_parts["status"] == 1
         sel = sel_fs & sel_no_nu_e & sel_no_nu_mu & sel_no_nu_tau
 
         for branch in all_parts:
@@ -186,6 +189,7 @@ class ObjectCacher():
         Compute Isolation on selected gen-leptons
         that are matched to final state particles.
         """
+        print("HERE")
         leptons = ak.zip({k.lower(): ref_parts[k] for k in ref_parts.keys()})
         fs_parts = ak.zip({k.lower(): fs_parts[k] for k in fs_parts.keys()})
 
@@ -211,7 +215,7 @@ class ObjectCacher():
             )
 
     def _postprocess_branches(self, arr):
-        if self._object.startswith("part"):
+        if self._object.startswith("GenPart"):
             if "tau" in self._part_type:
                 ref_parts = self._get_visible_taus(arr.copy())
             else:
@@ -223,14 +227,15 @@ class ObjectCacher():
 
     def _load_branches_from_ntuple(self, chunk_array, arr, branches):
         for branch in branches:
+            print(80*"%", "\n", branch)
             branch_arr = arr[branch]
-            branch_key = branch.removeprefix("part")
+            branch_key = branch.removeprefix("GenPart_")
             chunk_array[branch_key] = branch_arr
         return chunk_array
 
     def _ak_array_in_chunk(self, arr, chunk_array, branches):
         for branch in branches:
-            branch_key = branch.removeprefix("part")
+            branch_key = branch.removeprefix("GenPart_")
             arr[branch_key] = ak.concatenate(
                 [arr[branch_key], chunk_array[branch_key]]
             )
@@ -241,17 +246,19 @@ class ObjectCacher():
         fnames = glob.glob(self._ntuple_path)[:]
         bar = IncrementalBar("Progress", max=len(fnames))
 
-        branches = [self._object + x for x in self._branches]
-        all_arrays = {x.removeprefix("part"): [] for x in branches}
+        #branches = [self._object + x for x in self._branches]
+        branches = self._branches
+
+        all_arrays = {x.removeprefix("GenPart_"): [] for x in branches}
 
         for fname in fnames:
             bar.next()
-            new_array = {x.removeprefix("part"): [] for x in branches}
+            new_array = {x.removeprefix("GenPart_"): [] for x in branches}
 
             # Read files in chunks to avoid issues with large size files
             chunk_name = f"{fname}:{self._tree}"
             for array in uproot.iterate(chunk_name, filter_name = branches, step_size="100 MB"):
-                chunk_array = {x.removeprefix("part"): [] for x in branches}
+                chunk_array = {x.removeprefix("GenPart_"): [] for x in branches}
                 chunk_array = self._load_branches_from_ntuple(
                     chunk_array, array, branches
                 )
@@ -268,7 +275,7 @@ class ObjectCacher():
 
         bar.finish()
 
-        if self._object.startswith("part"):
+        if self._object.startswith("GenPart"):
             all_arrays = {**all_arrays, **self._ref_part_iso}
         if len(all_arrays) > 1:
             self._final_ak_array = ak.zip({**all_arrays})

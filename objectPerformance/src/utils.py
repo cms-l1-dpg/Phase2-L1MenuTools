@@ -60,11 +60,14 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
         all_branches = f[tree].keys()
         if "GenTree" in tree:
             prefix = "Generator/"
+        elif "Events" in tree:
+            prefix = "Events"
         else:
             prefix = "L1PhaseII/"
 
     obj_branches = [
-        x.removeprefix(prefix + obj) for x in all_branches if obj in x
+        #x.removeprefix(prefix + obj) for x in all_branches if obj in x
+        x.removeprefix(prefix + obj) for x in all_branches if x.startswith(obj)
     ]
 
     return obj_branches

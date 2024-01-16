@@ -24,10 +24,11 @@ class ArrayLoader():
         to "quality"/"region".
         """
         key = raw_key.removeprefix(obj).lower()
+        # print(raw_key, key)
         if "qual" in key:
             return "quality"
         else:
-            return key
+            return key.replace("_","")
 
     def _map_region(self, test_array, obj: str):
         """
@@ -261,6 +262,7 @@ class TurnOnCollection():
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
 
     def _apply_list_of_reference_cuts(self, cut_list):
+        print(self.ak_arrays['ref'].fields)
         for cut in cut_list:
             cut = re.sub(r"{([^&|]*)}",
                          r"self.ak_arrays['ref']['\1']",
