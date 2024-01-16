@@ -6,7 +6,7 @@
   The definition of each object to be tested is detailed in
   this [TWiki page](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
 
-  A detailed description of each step, together with instructions on how to set up the configuration files for the cache and plotting steps, is given in [the Wiki pages](https://github.com/bonanomi/Phase2-L1MenuTools/wiki/Cache-objects-and-performance-plots).
+  A detailed description of each step, together with instructions on how to set up the configuration files for the cache and plotting steps, is given in [the Wiki pages](https://github.com/cms-l1-dpg/Phase2-L1MenuTools/wiki).
 
   The following presents the minimal set of commands to be run to produce the standard set of validation plots (cf. [these slides](https://twiki.cern.ch/twiki/pub/CMS/PhaseIIL1TriggerMenuTools/Phase2Menu_validation123x-3.pdf)).
 
