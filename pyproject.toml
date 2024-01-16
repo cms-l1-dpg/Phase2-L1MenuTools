@@ -21,7 +21,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11.0"
+python = "~3.11.0"
 awkward = "2.5.2"
 fsspec = "2023.12.2"
 pyyaml = "6.0.1"
@@ -54,3 +54,9 @@ pythonpath = [
 testpaths = [
     "tests",
 ]
+
+[tool.mypy]
+disable_error_code = [
+    "import-untyped"
+]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/menu_tools"
