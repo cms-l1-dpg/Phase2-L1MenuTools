@@ -1,4 +1,5 @@
 import argparse
+from typing import Any
 import os
 
 import matplotlib.pyplot as plt
@@ -19,12 +20,12 @@ plt.style.use(hep.style.CMS)
 class Plotter:
     outdir_base = "outputs/object_performance/"
 
-    def _make_output_dirs(self, version: str):
+    def _make_output_dirs(self, version: str) -> None:
         os.makedirs(f"{self.outdir_base}/{version}/turnons", exist_ok=True)
         os.makedirs(f"{self.outdir_base}/{version}/distributions", exist_ok=True)
         os.makedirs(f"{self.outdir_base}/{version}/scalings", exist_ok=True)
 
-    def _create_new_plot(self):
+    def _create_new_plot(self) -> tuple[plt.Figure, plt.Axes]:
         fig, ax = plt.subplots(figsize=(10, 10))
         hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
         return fig, ax
@@ -340,10 +341,7 @@ class ScalingPlotter(Plotter):
         ax.set_ylim(0, ymax)
 
     def _save_json(self, fpath: str) -> None:
-        plot = {}
-
-        watermark = f"{self.version}_{self.plot_name}"
-        plot["watermark"] = watermark
+        plot: dict[str, Any] = {"watermark": f"{self.version}_{self.plot_name}"}
 
         for obj, points in self.scalings.items():
             _object = {}

@@ -18,7 +18,7 @@ class ScalingCollection:
         self.cfg = cfg
         self.method = method
         self.plateau_pct = plateau_pct
-        self.scalings = {x: {} for x in self.cfg["test_objects"]}
+        self.scalings: dict[str, dict] = {x: {} for x in self.cfg["test_objects"]}
         self.fit_function_params = None
 
     def _find_percentage_point(self, hist, bins, scaling_pct):

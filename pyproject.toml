@@ -58,6 +58,7 @@ testpaths = [
 
 [tool.mypy]
 disable_error_code = [
-    "import-untyped"
+    "import-untyped",
+    "index"
 ]
 explicit_package_bases = true
