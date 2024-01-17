@@ -1,0 +1,51 @@
+part_e:
+  label: "Gen Electron"
+  eta_ranges:
+    range_0: [0, 5]
+  ids:
+    gen_electron_default:
+      cuts:
+        range_0:
+          - "{dr_0.3} < 0.15"
+
+# full obj name: tkElectron_NoIso, tkElectron_Iso
+tkElectron:
+  match_dR: 0.15
+  eta_ranges:
+    range_0: [0, 5]
+    range_1: [0, 1.479]
+    range_2: [1.479, 5]
+  ids:
+    NoIso:
+      label: "TkElectron"
+      cuts:
+        eta_range_0:
+          - "abs({eta}) < 2.4"
+          - "{passeseleid} == 1"
+    Iso:
+      label: "TkIsoElectron"
+      cuts:
+        range_0:
+          - "abs({eta}) < 2.4"  # electron_trigger.yaml: 2.8, in menu two uses w/o eta cut and w/ cut@2.4
+          - "{passeseleid} == 1"
+        range_1:
+          - "abs({trkiso}) > 0.13"
+        range_2:
+          - "abs({trkiso}) > 0.28"
+
+EG:
+  match_dR: 0.2
+  eta_ranges:
+    range_0: [0, 5]
+    range_1: [0, 1.479]
+    range_2: [1.479, 2.4]
+  label: "EG"
+  ids:
+    default:
+      cuts:
+        range_0:
+          - "abs({eta}) < 2.4"
+        range_1:
+          - "{passeseleid} == 0"
+        range_2:
+          - "{passessaid} == 0"
