@@ -3,15 +3,10 @@ import os
 
 import matplotlib.pyplot as plt
 import mplhep as hep
-import numpy as np
-from progress.bar import IncrementalBar
 import yaml
 import json
 
-from menu_tools.object_performance.turnon_collection import TurnOnCollection
-from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.object_performance.plotter import Plotter
-from menu_tools.utils import utils
 
 
 plt.style.use(hep.style.CMS)

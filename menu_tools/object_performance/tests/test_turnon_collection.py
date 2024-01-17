@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import awkward as ak
 
-from turnon_collection import TurnOnCollection
+from menu_tools.object_performance.turnon_collection import TurnOnCollection
 
 
 def test_select_highest_pt_ref_object():

@@ -236,6 +236,8 @@ class ScalingCollection:
             return self._compute_scalings_naive(
                 turnon_collection, test_obj, scalings, scaling_pct
             )
+        else:
+            raise ValueError(f"`{method}` is not a valid scaling method!")
 
     def _fit_linear_functions(self, scalings):
         params = {}

@@ -3,7 +3,6 @@ import os
 
 import matplotlib.pyplot as plt
 import mplhep as hep
-import numpy as np
 import yaml
 import json
 

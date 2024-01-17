@@ -17,12 +17,12 @@ plt.style.use(hep.style.CMS)
 
 
 class Plotter:
-    outdir = "outputs/object_performance/"
+    outdir_base = "outputs/object_performance/"
 
     def _make_output_dirs(self, version: str):
-        os.makedirs(f"{self.outdir}/{version}/turnons", exist_ok=True)
-        os.makedirs(f"{self.outdir}/{version}/distributions", exist_ok=True)
-        os.makedirs(f"{self.outdir}/{version}/scalings", exist_ok=True)
+        os.makedirs(f"{self.outdir_base}/{version}/turnons", exist_ok=True)
+        os.makedirs(f"{self.outdir_base}/{version}/distributions", exist_ok=True)
+        os.makedirs(f"{self.outdir_base}/{version}/scalings", exist_ok=True)
 
     def _create_new_plot(self):
         fig, ax = plt.subplots(figsize=(10, 10))
@@ -36,22 +36,27 @@ class EfficiencyPlotter(Plotter):
         self.cfg = cfg
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
+        self.threshold = self.turnon_collection.threshold
         self.bin_width = turnon_collection.cfg_plot.bin_width
 
+    @property
+    def _outdir_turnons(self) -> str:
+        return os.path.join(self.outdir_base, self.version, "turnons")
+
+    @property
+    def _outdir_distributions(self) -> str:
+        return os.path.join(self.outdir_base, self.version, "distributions")
+
     def _style_plot(self, fig, ax, legend_loc="lower right"):
-        ax.axvline(self.turnon_collection.threshold, ls=":", c="k")
+        ax.axvline(self.threshold, ls=":", c="k")
         ax.axhline(1, ls=":", c="k")
         ax.legend(loc=legend_loc, frameon=False)
         ax.set_xlabel(rf"{self.cfg['xlabel']}")
-        ylabel = self.cfg["ylabel"].replace(
-            "<threshold>", str(self.turnon_collection.threshold)
-        )
+        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.threshold))
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
         ax.tick_params(direction="in")
-        watermark = (
-            f"{self.version}_{self.plot_name}_" f"{self.turnon_collection.threshold}"
-        )
+        watermark = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
         ax.text(
             0,
             -0.1,
@@ -67,12 +72,8 @@ class EfficiencyPlotter(Plotter):
         plot = {}
 
         xlabel = self.cfg["xlabel"]
-        ylabel = self.cfg["ylabel"].replace(
-            "<threshold>", str(self.turnon_collection.threshold)
-        )
-        watermark = (
-            f"{self.version}_{self.plot_name}_" f"{self.turnon_collection.threshold}"
-        )
+        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.threshold))
+        watermark = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
 
         plot["xlabel"] = xlabel
         plot["ylabel"] = ylabel
@@ -158,14 +159,16 @@ class EfficiencyPlotter(Plotter):
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        plot_fname = f"{self.outdir}/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
-        for ext in [".png", ".pdf"]:
-            plt.savefig(f"{plot_fname}{ext}")
-        self._save_json(f"{plot_fname}.json")
 
-        ## save config
-        with open(f"{plot_fname}.yaml", "w") as outfile:
-            yaml.dump({self.plot_name: self.cfg}, outfile, default_flow_style=False)
+        # Save figure
+        plot_fname = f"{self.plot_name}_{self.threshold}_{self.version}"
+        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.png"))
+        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"))
+        self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
+
+        # Save config
+        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
+            yaml.dump({self.plot_name: self.cfg}, f, default_flow_style=False)
 
         plt.close()
 
@@ -190,14 +193,15 @@ class EfficiencyPlotter(Plotter):
 
         self._style_plot(fig, ax)
 
-        plot_fname = f"{self.outdir}/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
-        for ext in [".png", ".pdf"]:
-            plt.savefig(f"{plot_fname}{ext}")
-        self._save_json(f"{plot_fname}.json")
+        # Save figure
+        plot_fname = f"{self.plot_name}_{self.threshold}_{self.version}"
+        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.png"))
+        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"))
+        self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
 
-        ## save config
-        with open(f"{plot_fname}.yaml", "w") as outfile:
-            yaml.dump({self.plot_name: self.cfg}, outfile, default_flow_style=False)
+        # Save config
+        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
+            yaml.dump({self.plot_name: self.cfg}, f, default_flow_style=False)
 
         plt.close()
 
@@ -245,10 +249,10 @@ class EfficiencyPlotter(Plotter):
             )
 
         self._style_plot(fig, ax)
-        plot_fname = f"{self.outdir}/{self.version}/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist_{self.version}"
-        for ext in [".png", ".pdf"]:
-            plt.savefig(f"{plot_fname}{ext}")
-        # self._save_json(f"{plot_fname}.json")
+        # Save figure
+        plot_fname = f"{self.plot_name}_{self.threshold}_dist_{self.version}"
+        plt.savefig(os.path.join(self._outdir_distributions, f"{plot_fname}.png"))
+        plt.savefig(os.path.join(self._outdir_distributions, f"{plot_fname}.pdf"))
 
         plt.close()
 
@@ -335,8 +339,7 @@ class ScalingPlotter(Plotter):
         ax.set_xlim(0, xmax)
         ax.set_ylim(0, ymax)
 
-    def _save_json(self, file_name):
-        # file_name =  = f"{self.outdir}/{self.version}/scalings/{self.plot_name}.json"
+    def _save_json(self, fpath: str) -> None:
         plot = {}
 
         watermark = f"{self.version}_{self.plot_name}"
@@ -359,7 +362,7 @@ class ScalingPlotter(Plotter):
 
             plot[obj] = _object
 
-        with open(f"{file_name}", "w") as outfile:
+        with open(fpath, "w") as outfile:
             outfile.write(json.dumps(plot, indent=4))
 
     def plot(self):

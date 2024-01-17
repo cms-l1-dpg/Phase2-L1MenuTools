@@ -1,4 +1,4 @@
-from turnon_collection import TurnOnCollection
+from menu_tools.object_performance.turnon_collection import TurnOnCollection
 
 
 def off_test_turnon_collection_met(met_config):
