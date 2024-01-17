@@ -57,6 +57,9 @@ testpaths = [
 ]
 
 [tool.mypy]
+files = [
+    "menu_tools"
+]
 disable_error_code = [
     "import-untyped",
     "index"
