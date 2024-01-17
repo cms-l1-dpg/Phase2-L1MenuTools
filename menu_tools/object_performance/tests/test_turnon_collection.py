@@ -17,16 +17,13 @@ def test_select_highest_pt_ref_object():
     TurnOnCollection._set_bins = MagicMock()
     turnon_collection = TurnOnCollection(None, None)
     arr_content = [[], [None]] + [
-        [float(f"{i}.{k}") for k in range(3)]
-        for i in range(5)
+        [float(f"{i}.{k}") for k in range(3)] for i in range(5)
     ]
-    idx_empty = [i for i, x in enumerate(arr_content)
-                 if len(x) == 0 or x[0] is None]
+    idx_empty = [i for i, x in enumerate(arr_content) if len(x) == 0 or x[0] is None]
     turnon_collection.ak_arrays = {}
-    turnon_collection.ak_arrays["ref"] = ak.Array({
-        "pt": arr_content,
-        "other": arr_content
-    })
+    turnon_collection.ak_arrays["ref"] = ak.Array(
+        {"pt": arr_content, "other": arr_content}
+    )
 
     # Execute selection of highest pt reference object
     turnon_collection._select_highest_pt_ref_object()

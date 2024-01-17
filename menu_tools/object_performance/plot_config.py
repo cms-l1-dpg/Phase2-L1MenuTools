@@ -1,5 +1,4 @@
-class PlotConfig():
-
+class PlotConfig:
     def __init__(self, cfg: dict):
         self._cfg = cfg
 
@@ -150,4 +149,3 @@ class PlotConfig():
             return self._cfg["test_objects"][obj]["iso_branch"]
         except KeyError:
             return None
-

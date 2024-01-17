@@ -12,12 +12,12 @@ import uproot
 
 def str_to_op(x: str):
     op_map = {
-        '<': operator.lt,
-        '<=': operator.le,
-        '==': operator.eq,
-        '!=': operator.ne,
-        '>=': operator.ge,
-        '>': operator.gt,
+        "<": operator.lt,
+        "<=": operator.le,
+        "==": operator.eq,
+        "!=": operator.ne,
+        ">=": operator.ge,
+        ">": operator.gt,
     }
     return op_map[x]
 
@@ -38,14 +38,14 @@ def clopper_pearson_err(x_hist, n_hist, alpha=1 - 0.68, warn="ignore"):
 
 def get_pdg_id(particle: str):
     id_map = {
-        'e': 11,
-        'ele': 11,
-        'electron': 11,
-        'mu': 13,
-        'muon': 13,
-        'tau': 15,
-        'photon': 22,
-        'gamma': 22,
+        "e": 11,
+        "ele": 11,
+        "electron": 11,
+        "mu": 13,
+        "muon": 13,
+        "tau": 15,
+        "photon": 22,
+        "gamma": 22,
     }
     return id_map[particle.lower()]
 
@@ -63,9 +63,7 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
         else:
             prefix = "L1PhaseII/"
 
-    obj_branches = [
-        x.removeprefix(prefix + obj) for x in all_branches if obj in x
-    ]
+    obj_branches = [x.removeprefix(prefix + obj) for x in all_branches if obj in x]
 
     return obj_branches
 
@@ -90,6 +88,7 @@ def errf(x: float, a: float, b: float, c: float, d: float, e: float):
     _cdf_back = norm.cdf(a * (x - b), a * a * c * c, a * c) * (d - e) + e
     return _cdf_front - _exp_turnon * _cdf_back
 
+
 ##############
 # Decorators #
 ##############
@@ -100,6 +99,7 @@ def ignore_warnings(func):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             return func(*args, **kwargs)
+
     return wrapper
 
 
@@ -110,9 +110,9 @@ def timer(task: str):
             t0 = time.time()
             result = func(*args, **kwargs)
             t1 = time.time()
-            print(f"{task} completed in "
-                  f"{timedelta(seconds=round(t1 - t0, 0))}s")
+            print(f"{task} completed in " f"{timedelta(seconds=round(t1 - t0, 0))}s")
             return result
-        return wrapper
-    return decorator
 
+        return wrapper
+
+    return decorator

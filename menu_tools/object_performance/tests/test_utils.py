@@ -2,10 +2,10 @@ import utils
 
 
 def test_get_pdg_id():
-    electrons = ['e', 'ele', 'electron']
-    muons = ['mu', 'muon']
-    taus = ['tau']
-    photons = ['photon', 'gamma']
+    electrons = ["e", "ele", "electron"]
+    muons = ["mu", "muon"]
+    taus = ["tau"]
+    photons = ["photon", "gamma"]
 
     for particle in electrons:
         assert utils.get_pdg_id(particle) == 11
@@ -21,12 +21,12 @@ def test_get_pdg_id():
 
 
 def test_str_to_op():
-    op_less_than = utils.str_to_op('<')
-    op_less_equal = utils.str_to_op('<=')
-    op_equal = utils.str_to_op('==')
-    op_unequal = utils.str_to_op('!=')
-    op_greater_than = utils.str_to_op('>')
-    op_greater_equal = utils.str_to_op('>=')
+    op_less_than = utils.str_to_op("<")
+    op_less_equal = utils.str_to_op("<=")
+    op_equal = utils.str_to_op("==")
+    op_unequal = utils.str_to_op("!=")
+    op_greater_than = utils.str_to_op(">")
+    op_greater_equal = utils.str_to_op(">=")
 
     assert op_less_than(2, 5)
     assert not op_less_than(5, 2)

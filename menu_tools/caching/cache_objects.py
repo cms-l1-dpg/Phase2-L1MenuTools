@@ -14,22 +14,18 @@ from menu_tools.utils import utils
 vector.register_awkward()
 
 
-class ObjectCacher():
-
-    def __init__(self, version, sample, obj, tree, branches, cfg_file,
-                 dryrun=False):
+class ObjectCacher:
+    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
         self._version = version
         self._sample = sample
         self._cfg_file = cfg_file
-        self._object = obj.split('_')[0]
+        self._object = obj.split("_")[0]
         self._tree = tree
         self._final_ak_array = None
         self._ref_part_iso_dR_vals = [0.1, 0.15, 0.2, 0.3, 1.5]
-        self._ref_part_iso = {
-            f"dr_{dR}": [] for dR in self._ref_part_iso_dR_vals
-        }
+        self._ref_part_iso = {f"dr_{dR}": [] for dR in self._ref_part_iso_dR_vals}
         try:
-            self._part_type = obj.split('_')[1]
+            self._part_type = obj.split("_")[1]
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
@@ -47,11 +43,7 @@ class ObjectCacher():
         Returns the name of the output file
         that the object will produce.
         """
-        fname = (
-            self._version
-            + '_' + self._sample
-            + "_" + self._object
-        )
+        fname = self._version + "_" + self._sample + "_" + self._object
         if self._part_type:
             fname += "_" + self._part_type
         return fname
@@ -65,7 +57,7 @@ class ObjectCacher():
         if glob.glob(local_ntuple_path):
             return local_ntuple_path
 
-        with open(self._cfg_file, 'r') as f:
+        with open(self._cfg_file, "r") as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
         return cfg["ntuple_path"]
 
@@ -86,10 +78,10 @@ class ObjectCacher():
                 "E": ak.sum(array.E, axis=axis, keepdims=True),
             },
             with_name="Momentum4D",
-            behavior=array.behavior
+            behavior=array.behavior,
         )
 
-    def _get_visible_taus(self, all_parts, status_check = True):
+    def _get_visible_taus(self, all_parts, status_check=True):
         """
         Create a collection of gen-level taus.
         Leptonic taus are discarded.
@@ -99,15 +91,17 @@ class ObjectCacher():
         all_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
 
         if status_check:
-
-            sel = ( (all_parts.id == 15) &
-                    (all_parts.stat == 2)
-                  )
+            sel = (all_parts.id == 15) & (all_parts.stat == 2)
 
             is_tau = ak.any(sel, axis=-1)
             all_parts = ak.where(is_tau, all_parts, ak.full_like(all_parts, -1000))
 
-        all_parts = {f: field for f, field in zip(['Id','Stat','Pt','Eta','Phi','Parent','E'],ak.unzip(all_parts))}
+        all_parts = {
+            f: field
+            for f, field in zip(
+                ["Id", "Stat", "Pt", "Eta", "Phi", "Parent", "E"], ak.unzip(all_parts)
+            )
+        }
 
         sel_no_nu_e = abs(all_parts["Id"]) != 12
         sel_no_nu_mu = abs(all_parts["Id"]) != 14
@@ -120,11 +114,11 @@ class ObjectCacher():
         all_tau_p = all_parts.copy()
         all_tau_m = all_parts.copy()
 
-        sel = all_tau_p['Parent'] == 15
+        sel = all_tau_p["Parent"] == 15
         for branch in all_tau_p:
             all_tau_p[branch] = all_tau_p[branch][sel]
 
-        sel = all_tau_m['Parent'] == -15
+        sel = all_tau_m["Parent"] == -15
         for branch in all_tau_m:
             all_tau_m[branch] = all_tau_m[branch][sel]
 
@@ -134,13 +128,13 @@ class ObjectCacher():
         all_tau_p = ak.zip({k.lower(): all_tau_p[k] for k in all_tau_p.keys()})
         all_tau_p = ak.with_name(all_tau_p, "Momentum4D")
 
-        sel_ele = ak.any(abs(all_tau_p['id']) == 11, axis=-1)
-        sel_mu = ak.any(abs(all_tau_p['id']) == 13, axis=-1)
+        sel_ele = ak.any(abs(all_tau_p["id"]) == 11, axis=-1)
+        sel_mu = ak.any(abs(all_tau_p["id"]) == 13, axis=-1)
         sel_lep = sel_ele | sel_mu
         all_tau_p = ak.mask(all_tau_p, sel_lep, valid_when=False)
 
-        sel_ele = ak.any(abs(all_tau_m['id']) == 11, axis=-1)
-        sel_mu = ak.any(abs(all_tau_m['id']) == 13, axis=-1)
+        sel_ele = ak.any(abs(all_tau_m["id"]) == 11, axis=-1)
+        sel_mu = ak.any(abs(all_tau_m["id"]) == 13, axis=-1)
         sel_lep = sel_ele | sel_mu
         all_tau_m = ak.mask(all_tau_m, sel_lep, valid_when=False)
 
@@ -150,13 +144,13 @@ class ObjectCacher():
         # Parent, Id and Stat are dummy branches, only needed
         # for technical consistency.
         final_taus = {
-            'Pt': ak.concatenate([fs_tau_p.pt, fs_tau_m.pt], axis=-1),
-            'Eta': ak.concatenate([fs_tau_p.eta, fs_tau_m.eta], axis=-1),
-            'Phi': ak.concatenate([fs_tau_p.phi, fs_tau_m.phi], axis=-1),
-            'E': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
-            'Parent': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
-            'Id': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
-            'Stat': ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1)
+            "Pt": ak.concatenate([fs_tau_p.pt, fs_tau_m.pt], axis=-1),
+            "Eta": ak.concatenate([fs_tau_p.eta, fs_tau_m.eta], axis=-1),
+            "Phi": ak.concatenate([fs_tau_p.phi, fs_tau_m.phi], axis=-1),
+            "E": ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            "Parent": ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            "Id": ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
+            "Stat": ak.concatenate([fs_tau_p.E, fs_tau_m.E], axis=-1),
         }
 
         return final_taus
@@ -166,14 +160,14 @@ class ObjectCacher():
         Filter genparticle branches by Id.
         """
         partId = abs(all_arrays["Id"])
-        sel_id = (partId == utils.get_pdg_id(self._part_type))
+        sel_id = partId == utils.get_pdg_id(self._part_type)
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_id]
             all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
 
         return all_arrays
 
-    def _filter_fspart_branches(self, all_parts, status_check = True):
+    def _filter_fspart_branches(self, all_parts, status_check=True):
         """
         Select all the final state particles.
         This collection is used only for dR matching
@@ -183,15 +177,17 @@ class ObjectCacher():
         all_parts = ak.zip({k.lower(): all_parts[k] for k in all_parts.keys()})
 
         if status_check:
-
-            sel = ( (all_parts.id == 15) &
-                    (all_parts.stat == 2)
-                  )
+            sel = (all_parts.id == 15) & (all_parts.stat == 2)
 
             is_tau = ak.any(sel, axis=-1)
             all_parts = ak.where(is_tau, all_parts, ak.full_like(all_parts, -1000))
 
-        all_parts = {f: field for f, field in zip(['Id','Stat','Pt','Eta','Phi','Parent','E'],ak.unzip(all_parts))}
+        all_parts = {
+            f: field
+            for f, field in zip(
+                ["Id", "Stat", "Pt", "Eta", "Phi", "Parent", "E"], ak.unzip(all_parts)
+            )
+        }
 
         sel_no_nu_e = abs(all_parts["Id"]) != 12
         sel_no_nu_mu = abs(all_parts["Id"]) != 14
@@ -255,9 +251,7 @@ class ObjectCacher():
     def _ak_array_in_chunk(self, arr, chunk_array, branches):
         for branch in branches:
             branch_key = branch.removeprefix("part")
-            arr[branch_key] = ak.concatenate(
-                [arr[branch_key], chunk_array[branch_key]]
-            )
+            arr[branch_key] = ak.concatenate([arr[branch_key], chunk_array[branch_key]])
         return arr
 
     @utils.timer("Loading objects files")
@@ -274,21 +268,19 @@ class ObjectCacher():
 
             # Read files in chunks to avoid issues with large size files
             chunk_name = f"{fname}:{self._tree}"
-            for array in uproot.iterate(chunk_name, filter_name = branches, step_size="100 MB"):
+            for array in uproot.iterate(
+                chunk_name, filter_name=branches, step_size="100 MB"
+            ):
                 chunk_array = {x.removeprefix("part"): [] for x in branches}
                 chunk_array = self._load_branches_from_ntuple(
                     chunk_array, array, branches
                 )
                 chunk_array = self._postprocess_branches(chunk_array)
 
-                new_array = self._ak_array_in_chunk(
-                    new_array, chunk_array, branches
-                )
+                new_array = self._ak_array_in_chunk(new_array, chunk_array, branches)
 
             # Concatenate array from "fname file" to all_arrays
-            all_arrays = self._ak_array_in_chunk(
-                all_arrays, new_array, branches
-            )
+            all_arrays = self._ak_array_in_chunk(all_arrays, new_array, branches)
 
         bar.finish()
 
@@ -314,11 +306,11 @@ class ObjectCacher():
         """
         ak.to_parquet(
             self._final_ak_array,
-            destination=self.cache_out_path + f"{self.parquet_fname}.parquet"
+            destination=self.cache_out_path + f"{self.parquet_fname}.parquet",
         )
 
     def load(self):
-        #print(f"Process {self._object + self._part_type} object...")
+        # print(f"Process {self._object + self._part_type} object...")
 
         if self._cache_file_exists():
             return
@@ -336,21 +328,20 @@ class ObjectCacher():
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg",
-        help="Path to the config file in yaml format. Defaults in `configs/caching`."
+        help="Path to the config file in yaml format. Defaults in `configs/caching`.",
     )
     parser.add_argument(
         "--dry-run",
         "-d",
         action="store_true",
-        help="Only do print-out of objects and branches to be loaded."
+        help="Only do print-out of objects and branches to be loaded.",
     )
     args = parser.parse_args()
 
-    with open(args.cfg, 'r') as f:
+    with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
         print("Processing: version", version)
@@ -368,6 +359,6 @@ if __name__ == "__main__":
                         obj=obj,
                         branches=branches,
                         cfg_file=args.cfg,
-                        dryrun=args.dry_run
+                        dryrun=args.dry_run,
                     )
                     loader.load()
