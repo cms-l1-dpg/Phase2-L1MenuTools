@@ -1,9 +1,10 @@
 JetMatchingForward_3p7to7:
-  sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    sample: TT
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -11,24 +12,7 @@ JetMatchingForward_3p7to7:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    # phase1PuppiJet:
-    #   match_dR: 0.3
-    #   suffix: "Pt"
-    #   label: "Histogrammed PuppiJet"
-    #   cuts:
-    #     - "abs({eta}) < 7"
-    # seededConePuppiJet:
-    #   match_dR: 0.35
-    #   suffix: "Pt"
-    #   label: "Seeded Cone PuppiJet"
-    #   cuts:
-    #     - "abs({eta}) < 7"
-    caloJet:
-      match_dR: 0.3
-      suffix: "Pt"
-      label: "Calo Jet"
-      cuts:
-        - "abs({eta}) < 7"
+    caloJet-default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
@@ -37,11 +21,12 @@ JetMatchingForward_3p7to7:
     step: 5
 
 JetMatchingBarrel:
-  sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    sample: TT
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -49,30 +34,9 @@ JetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # caloJet:
-    #   match_dR: 0.3
-    #   suffix: "Pt"
-    #   label: "Calo Jet"
-    #   cuts:
-    #     - "abs({eta}) < 2.5"
-    phase1PuppiJet:
-      match_dR: 0.3
-      suffix: "Pt"
-      label: "Histogrammed PuppiJet"
-      cuts:
-        - "abs({eta}) < 2.4"
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) < 2.4"
-    trackerJet:
-      match_dR: 0.4
-      suffix: "Pt"
-      label: "Tracker Jet"
-      cuts:
-        - "abs({eta}) < 2.4"
+    phase1PuppiJet-barrel: "Pt"
+    seededConePuppiJet-barrel: "Pt"
+    trackerJet-barrel: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -81,11 +45,12 @@ JetMatchingBarrel:
     step: 10
 
 JetMatchingEndcap:
-  sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    sample: TT
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -93,30 +58,9 @@ JetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # caloJet:
-    #   match_dR: 0.3
-    #   suffix: "Pt"
-    #   label: "Calo Jet"
-    #   cuts:
-    #     - "abs({eta}) < 5"
-    phase1PuppiJet:
-      match_dR: 0.3
-      suffix: "Pt"
-      label: "Histogrammed PuppiJet"
-      cuts:
-        - "abs({eta}) < 2.4"
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) < 2.4"
-    trackerJet:
-      match_dR: 0.4
-      suffix: "Pt"
-      label: "Tracker Jet"
-      cuts:
-        - "abs({eta}) < 2.4"
+    phase1PuppiJet-barrel: "Pt"
+    seededConePuppiJet-barrel: "Pt"
+    trackerJet-barrel: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -125,11 +69,12 @@ JetMatchingEndcap:
     step: 10
 
 JetMatchingForward:
-  sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    sample: TT
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -137,28 +82,11 @@ JetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    # caloJet:
-    #   match_dR: 0.3
-    #   suffix: "Pt"
-    #   label: "Calo Jet"
-    #   cuts:
-    #     - "abs({eta}) < 5"
-    phase1PuppiJet:
-      match_dR: 0.3
-      suffix: "Pt"
-      label: "Histogrammed PuppiJet"
-      cuts:
-        - "abs({eta}) < 5"
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Pt"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) < 5"
+    phase1PuppiJet-forward: "Pt"
+    seededConePuppiJet-forward: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
     min: 0
     max: 500
     step: 10
-

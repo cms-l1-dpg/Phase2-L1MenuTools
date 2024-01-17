@@ -1,0 +1,56 @@
+caloJet:
+  sample: TT
+  match_dR: 0.3
+  label: "Calo Jet"
+  eta_ranges:
+    range0: [0, 7]
+  cuts:
+    range0:
+      - "abs({eta}) < 7"
+  ids:
+    default:
+      sample: TT
+
+phase1PuppiJet:
+  sample: TT
+  match_dR: 0.3
+  label: "Histogrammed PuppiJet"
+  eta_ranges:
+    range0: [0, 7]
+  ids:
+    barrel:
+      cuts:
+        range0:
+          - "abs({eta}) < 2.4"
+    forward:
+      cuts:
+        range0:
+          - "abs({eta}) < 5"
+
+seededConePuppiJet:
+  sample: TT
+  match_dR: 0.35
+  label: "Seeded Cone PuppiJet"
+  eta_ranges:
+    range0: [0, 7]
+  ids:
+    barrel:
+      cuts:
+        range0:
+          - "abs({eta}) < 2.4"
+    forward:
+      cuts:
+        range0:
+          - "abs({eta}) < 5"
+
+trackerJet:
+  sample: TT
+  match_dR: 0.4
+  label: "Tracker Jet"
+  eta_ranges:
+    range0: [0, 7]
+  ids:
+    barrel:
+      cuts:
+        range0:
+          - "abs({eta}) < 2.4"

@@ -263,20 +263,15 @@ class TurnOnCollection:
                         r"{([^&|]*)}", r"self.ak_arrays[test_obj.name]['\1']", cut
                     )
                     eta_sel = (
-                        self.ak_arrays[test_obj.name]["eta"]
+                        abs(self.ak_arrays[test_obj.name]["eta"])
                         > test_obj.eta_ranges[range_i][0]
                     ) & (
-                        self.ak_arrays[test_obj.name]["eta"]
+                        abs(self.ak_arrays[test_obj.name]["eta"])
                         < test_obj.eta_ranges[range_i][1]
                     )
-                    print(test_obj.eta_ranges[range_i], cut, " with `test_obj.name=", test_obj.name)
 
-                    sel = eval(cut) | ~eta_sel
+                    sel = eval(cut) + ~eta_sel
                     self.ak_arrays[test_obj.name] = self.ak_arrays[test_obj.name][sel]
-                print(test_obj.name)
-                print(np.sum(ak.any(self.ak_arrays[test_obj.name]["pt"], axis=-1)))
-            # assert ak.all(self.ak_arrays["caloJet_default"]["eta"] < 5)
-            # print("assert passed")
 
     def _skim_to_hists(self):
         ref_field = self.cfg_plot.reference_field
@@ -285,8 +280,6 @@ class TurnOnCollection:
 
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[test_obj.name][x_arg] > self.threshold
-            # for i in range(200):
-            #     print(sel[i], self.ak_arrays["ref"][ref_field][i])
             sel = [False if not ak.any(x) else True for x in sel]  # TODO: FIX THIS !!!!
             self.ak_arrays["ref"][ref_field]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
