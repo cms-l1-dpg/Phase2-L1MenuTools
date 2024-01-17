@@ -1,10 +1,12 @@
-class PlotConfig():
+from typing import Any
 
-    def __init__(self, cfg: dict):
+
+class PlotConfig:
+    def __init__(self, cfg: dict[str, Any]):
         self._cfg = cfg
 
     @property
-    def sample(self):
+    def sample(self) -> str:
         return self._cfg["sample"]
 
     @property
@@ -49,7 +51,7 @@ class PlotConfig():
             return None
 
     @property
-    def test_objects(self):
+    def test_objects(self) -> dict[str, dict]:
         return self._cfg["test_objects"]
 
     def get_match_dR(self, test_obj):
@@ -150,4 +152,3 @@ class PlotConfig():
             return self._cfg["test_objects"][obj]["iso_branch"]
         except KeyError:
             return None
-

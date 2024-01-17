@@ -3,7 +3,6 @@ import os
 
 import matplotlib.pyplot as plt
 import mplhep as hep
-import numpy as np
 import yaml
 import json
 
@@ -13,23 +12,23 @@ plt.style.use(hep.style.CMS)
 
 
 class ComparisonCentral(Plotter):
-
     def __init__(self, cfg_plots_path):
-        with open(cfg_plots_path, 'r') as f:
+        with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
         self.cfgs = {}
         for plot_name, cfg_plot in self.cfg_plots.items():
-            print (plot_name)
+            print(plot_name)
             self.cfgs[plot_name] = cfg_plot
-            if not os.path.exists(cfg_plot['save_dir']): os.makedirs(cfg_plot['save_dir'])
+            if not os.path.exists(cfg_plot["save_dir"]):
+                os.makedirs(cfg_plot["save_dir"])
 
-    def _get_watermark(self,cfg):
-       try:
-           return cfg["watermark"]
-       except KeyError:
-           return " "
+    def _get_watermark(self, cfg):
+        try:
+            return cfg["watermark"]
+        except KeyError:
+            return " "
 
-    def _get_files(self,cfg):
+    def _get_files(self, cfg):
         try:
             return cfg["files"]
         except KeyError:
@@ -48,16 +47,21 @@ class ComparisonCentral(Plotter):
         ax.set_ylabel(rf"{ylabel}")
         ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
-        ax.text(0, -0.1, self._get_watermark(cfg),
-                color="grey", alpha=0.2,
-                fontsize=20,
-                transform=ax.transAxes)
+        ax.text(
+            0,
+            -0.1,
+            self._get_watermark(cfg),
+            color="grey",
+            alpha=0.2,
+            fontsize=20,
+            transform=ax.transAxes,
+        )
         fig.tight_layout()
 
     def run(self):
         for plot_name, cfg in self.cfgs.items():
             files = self._get_files(cfg)
-            fig, ax =  self._create_new_plot()
+            fig, ax = self._create_new_plot()
             for file in files:
                 fname = os.path.join(files[file]["dir"], file)
                 test_object = files[file]["object"]
@@ -69,25 +73,28 @@ class ComparisonCentral(Plotter):
 
                 err_kwargs = dict_to_plot[test_object]["err_kwargs"]
 
-                ax.errorbar(dict_to_plot[test_object]["xbins"],
-                            dict_to_plot[test_object]["efficiency"],
-                            yerr = dict_to_plot[test_object]["efficiency_err"],
-                            label = label, **err_kwargs)
+                ax.errorbar(
+                    dict_to_plot[test_object]["xbins"],
+                    dict_to_plot[test_object]["efficiency"],
+                    yerr=dict_to_plot[test_object]["efficiency_err"],
+                    label=label,
+                    **err_kwargs,
+                )
 
             self._style_plot(cfg, fig, ax)
-            print ("Saving plot to : ",plot_name)
+            print("Saving plot to : ", plot_name)
             plt.savefig(f"{cfg['save_dir']}/{plot_name}.png")
             plt.savefig(f"{cfg['save_dir']}/{plot_name}.pdf")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots",
         default="cfg_plots/bJetEff.yaml",
-        help="Path of YAML file specifying the desired plots."
+        help="Path of YAML file specifying the desired plots.",
     )
     args = parser.parse_args()
 
     plotter = ComparisonCentral(args.cfg_plots)
     plotter.run()
-

@@ -12,8 +12,7 @@ from menu_tools.utils import utils
 vector.register_awkward()
 
 
-class ArrayLoader():
-
+class ArrayLoader:
     def __init__(self, turnon_collection):
         self.turnon_collection = turnon_collection
 
@@ -36,8 +35,8 @@ class ArrayLoader():
         Needed from V25 after the barrel and endcap
         collections have been merged.
         """
-        if 'hgc' in test_array.fields:
-            test_array["region"] = (ak.where(abs(test_array["eta"]) > 1.479, 1, 0))
+        if "hgc" in test_array.fields:
+            test_array["region"] = ak.where(abs(test_array["eta"]) > 1.479, 1, 0)
 
         return test_array
 
@@ -55,10 +54,7 @@ class ArrayLoader():
             f"{obj}.parquet"
         )
         array = ak.from_parquet(fname)
-        array_dict = {
-            self._transform_key(key, obj): array[key]
-            for key in array.fields
-        }
+        array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
         if self.turnon_collection.cfg_plot.reference_trafo:
             array = ak.Array(array_dict)
         else:
@@ -95,8 +91,7 @@ class ArrayLoader():
         self._load_test_branches()
 
 
-class TurnOnCollection():
-
+class TurnOnCollection:
     def __init__(self, cfg_plot, threshold):
         self.cfg_plot = PlotConfig(cfg_plot)
         self.version = self.cfg_plot.version_ref_object
@@ -131,19 +126,25 @@ class TurnOnCollection():
         for test_obj, obj_cfg in self.cfg_plot.test_objects.items():
             suffix = obj_cfg["suffix"].lower()
             ref_test = ak.cartesian(
-                {"ref": self.ak_arrays["ref"],
-                 "test": self.ak_arrays[test_obj]},
-                nested=True
+                {"ref": self.ak_arrays["ref"], "test": self.ak_arrays[test_obj]},
+                nested=True,
             )
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
             pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
-            pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1,
-                               keepdims=True)
-            if ("iso" not in suffix):
-                self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
-            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][pt_max][:, :, 0]  # noqa
+            pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
+            if "iso" not in suffix:
+                self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][
+                    pt_max
+                ][
+                    :, :, 0
+                ]  # noqa
+            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][
+                pt_max
+            ][
+                :, :, 0
+            ]  # noqa
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """
@@ -170,8 +171,8 @@ class TurnOnCollection():
         _px = self.ak_arrays["ref"].px
         _py = self.ak_arrays["ref"].py
         _mht = np.sqrt(
-            ak.sum(_px[:, :], axis=-1, keepdims=True)**2
-            + ak.sum(_py[:, :], axis=-1, keepdims=True)**2
+            ak.sum(_px[:, :], axis=-1, keepdims=True) ** 2
+            + ak.sum(_py[:, :], axis=-1, keepdims=True) ** 2
         )
         return _mht
 
@@ -186,8 +187,7 @@ class TurnOnCollection():
             field = cfg["suffix"].lower()
             try:
                 self.ak_arrays[test_obj][field] = ak.max(
-                    self.ak_arrays[test_obj][field],
-                    axis=1
+                    self.ak_arrays[test_obj][field], axis=1
                 )
             except ValueError:
                 pass
@@ -202,10 +202,7 @@ class TurnOnCollection():
             return
 
         if trafo == "HT":
-            self.ak_arrays["ref"]["HT"] = ak.sum(
-                self.ak_arrays["ref"]["pt"],
-                axis=-1
-            )
+            self.ak_arrays["ref"]["HT"] = ak.sum(self.ak_arrays["ref"]["pt"], axis=-1)
 
         if trafo == "MHT":
             gen_mht = self._compute_MHT()
@@ -225,7 +222,9 @@ class TurnOnCollection():
                 return
 
             ## force quality bit to be int!
-            self.ak_arrays[test_obj]["quality"] = ak.values_astype(self.ak_arrays[test_obj]["quality"], np.int32)
+            self.ak_arrays[test_obj]["quality"] = ak.values_astype(
+                self.ak_arrays[test_obj]["quality"], np.int32
+            )
 
             quality = Quality(self.ak_arrays, test_obj)
             sel = ~getattr(quality, quality_id)
@@ -242,11 +241,10 @@ class TurnOnCollection():
             iso_EE = self.cfg_plot.get_iso_EE(test_obj)
             l1_iso = self.cfg_plot.get_l1_iso(test_obj)
 
-            if ((iso_BB == -1) & (iso_EE == -1)):
+            if (iso_BB == -1) & (iso_EE == -1):
                 continue
 
-            isolation = L1IsoCut(self.ak_arrays, test_obj,
-                                 iso_BB, iso_EE, l1_iso)
+            isolation = L1IsoCut(self.ak_arrays, test_obj, iso_BB, iso_EE, l1_iso)
             sel = ~getattr(isolation, "ISO_EEBB")
             self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
@@ -262,9 +260,7 @@ class TurnOnCollection():
 
     def _apply_list_of_reference_cuts(self, cut_list):
         for cut in cut_list:
-            cut = re.sub(r"{([^&|]*)}",
-                         r"self.ak_arrays['ref']['\1']",
-                         cut)
+            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
             sel = eval(cut)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
@@ -301,28 +297,23 @@ class TurnOnCollection():
             if not (cuts := self.cfg_plot.get_object_cuts(test_obj)):
                 continue
             for cut in cuts:
-                cut = re.sub(r"{([^&|]*)}",
-                             r"self.ak_arrays[test_obj]['\1']",
-                             cut)
+                cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays[test_obj]['\1']", cut)
                 sel = eval(cut)
                 self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
 
     def _skim_to_hists(self):
         ref_field = self.cfg_plot.reference_field
-        if (trafo := self.cfg_plot.reference_trafo):
+        if trafo := self.cfg_plot.reference_trafo:
             ref_field = trafo
 
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             field = cfg["suffix"].lower()
             sel = self.ak_arrays[test_obj][field] > self.threshold
-            ak_array = self._flatten_array(
-                self.ak_arrays["ref"][sel][ref_field]
-            )
+            ak_array = self._flatten_array(self.ak_arrays["ref"][sel][ref_field])
             self.hists[test_obj] = np.histogram(ak_array, bins=self.bins)
 
             self.hists["ref"][test_obj] = np.histogram(
-                self._flatten_array(self.ak_arrays["ref"][ref_field]),
-                bins=self.bins
+                self._flatten_array(self.ak_arrays["ref"][ref_field]), bins=self.bins
             )
 
     def _remove_inner_nones_zeros(self, arr):
@@ -334,9 +325,7 @@ class TurnOnCollection():
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
 
-        ref_obj = self._remove_inner_nones_zeros(
-            self.ak_arrays["ref"][ref_field]
-        )
+        ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
 
         for test_obj, cfg in self.cfg_plot.test_objects.items():
             sel_threshold = self.numerators["test"][test_obj] >= self.threshold
@@ -352,8 +341,7 @@ class TurnOnCollection():
                 ref_obj = self.numerators["ref"][test_obj]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists["ref"][test_obj] = np.histogram(ref_flat_np,
-                                                       bins=self.bins)
+            self.hists["ref"][test_obj] = np.histogram(ref_flat_np, bins=self.bins)
 
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, cfg in self.cfg_plot.test_objects.items():

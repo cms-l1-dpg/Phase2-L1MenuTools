@@ -21,7 +21,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11.0"
+python = "~3.11.0"
 awkward = "2.5.2"
 fsspec = "2023.12.2"
 pyyaml = "6.0.1"
@@ -38,6 +38,7 @@ vector = "1.1.1.post1"
 [tool.poetry.group.dev.dependencies]
 black = "23.12.1"
 mypy = "1.8.0"
+flake8 = "^7.0.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.4.3"
@@ -54,3 +55,13 @@ pythonpath = [
 testpaths = [
     "tests",
 ]
+
+[tool.mypy]
+files = [
+    "menu_tools"
+]
+disable_error_code = [
+    "import-untyped",
+    "index"
+]
+explicit_package_bases = true
