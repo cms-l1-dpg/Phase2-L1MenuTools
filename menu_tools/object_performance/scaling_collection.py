@@ -2,8 +2,8 @@
 from scipy.optimize import curve_fit
 import numpy as np
 
-from plot_config import PlotConfig
-import utils
+from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.utils import utils
 
 
 class ScalingCollection():

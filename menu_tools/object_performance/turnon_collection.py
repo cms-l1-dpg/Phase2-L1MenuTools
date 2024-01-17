@@ -4,9 +4,9 @@ import awkward as ak
 import numpy as np
 import vector
 
-from plot_config import PlotConfig
-from quality_obj import Quality, L1IsoCut
-import utils
+from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.object_performance.quality_obj import Quality, L1IsoCut
+from menu_tools.utils import utils
 
 
 vector.register_awkward()

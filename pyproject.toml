@@ -1,0 +1,56 @@
+# pyproject.toml
+[build-system]
+build-backend = 'poetry.core.masonry.api'
+requires = [
+    "poetry-core~=1.0"
+]
+
+[tool.poetry]
+name = "menu-tools"
+version = "0.1.0"
+description = "Tools to evaluate performance of L1 objects and triggers in the menu for Phase-II."
+license = "MIT"
+authors = [
+    "Matteo Bonanomi <matteo.bonanomi@cern.ch>",
+    "Daniel Hundhausen <daniel.hundhausen@cern.ch>",
+    "Artur Lobanov <artur.lobanov@cern.ch>",
+]
+readme = "README.md"
+packages = [
+    { include = "menu_tools" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11.0"
+awkward = "2.5.2"
+fsspec = "2023.12.2"
+pyyaml = "6.0.1"
+matplotlib = "3.8.2"
+mplhep = "0.3.31"
+numpy = "^1.23.0"
+pandas = "2.1.4"
+progress = "1.6"
+pyarrow = "14.0.2"
+scipy = "1.10.1"
+uproot = "5.0.4"
+vector = "1.1.1.post1"
+
+[tool.poetry.group.dev.dependencies]
+black = "23.12.1"
+mypy = "1.8.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "7.4.3"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    'ignore:A NumPy version',
+]
+pythonpath = [
+    "src"
+]
+testpaths = [
+    "tests",
+]

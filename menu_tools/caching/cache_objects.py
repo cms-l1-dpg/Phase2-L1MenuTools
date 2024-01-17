@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv-ak2.0/bin/python
 import argparse
 import glob
 import os
@@ -9,9 +8,7 @@ import uproot
 import vector
 import yaml
 
-from utils import get_pdg_id
-from utils import get_branches
-from utils import timer
+from menu_tools.utils import utils
 
 
 vector.register_awkward()
@@ -38,7 +35,7 @@ class ObjectCacher():
         self._dryrun = dryrun
         # Get Branches
         if not isinstance(branches, list):
-            self._branches = get_branches(self._ntuple_path, tree, obj)
+            self._branches = utils.get_branches(self._ntuple_path, tree, obj)
         else:
             self._branches = branches
         self.cache_out_path = f"cache/{version}/"
@@ -169,7 +166,7 @@ class ObjectCacher():
         Filter genparticle branches by Id.
         """
         partId = abs(all_arrays["Id"])
-        sel_id = (partId == get_pdg_id(self._part_type))
+        sel_id = (partId == utils.get_pdg_id(self._part_type))
         for branch in all_arrays:
             all_arrays[branch] = all_arrays[branch][sel_id]
             all_arrays[branch] = ak.fill_none(all_arrays[branch], -999)
@@ -263,7 +260,7 @@ class ObjectCacher():
             )
         return arr
 
-    @timer("Loading objects files")
+    @utils.timer("Loading objects files")
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
         bar = IncrementalBar("Progress", max=len(fnames))
@@ -343,8 +340,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg",
-        default="cfg_caching/V22.yaml",
-        help=""
+        help="Path to the config file in yaml format. Defaults in `configs/caching`."
     )
     parser.add_argument(
         "--dry-run",

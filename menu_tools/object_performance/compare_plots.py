@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv-ak2.0/bin/python
 import argparse
 import os
 
@@ -9,10 +8,10 @@ from progress.bar import IncrementalBar
 import yaml
 import json
 
-from turnon_collection import TurnOnCollection
-from scaling_collection import ScalingCollection
-from plotter import Plotter
-import utils
+from menu_tools.object_performance.turnon_collection import TurnOnCollection
+from menu_tools.object_performance.scaling_collection import ScalingCollection
+from menu_tools.object_performance.plotter import Plotter
+from menu_tools.utils import utils
 
 
 plt.style.use(hep.style.CMS)

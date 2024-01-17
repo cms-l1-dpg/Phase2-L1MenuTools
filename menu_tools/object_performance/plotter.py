@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv-ak2.0/bin/python
 import argparse
 import os
 
@@ -9,9 +8,9 @@ from progress.bar import IncrementalBar
 import yaml
 import json
 
-from turnon_collection import TurnOnCollection
-from scaling_collection import ScalingCollection
-import utils
+from menu_tools.object_performance.turnon_collection import TurnOnCollection
+from menu_tools.object_performance.scaling_collection import ScalingCollection
+from menu_tools.utils import utils
 
 
 plt.style.use(hep.style.CMS)
@@ -19,10 +18,12 @@ plt.style.use(hep.style.CMS)
 
 class Plotter():
 
+    outdir = "outputs/object_performance/"
+
     def _make_output_dirs(self, version: str):
-        os.makedirs(f"outputs/{version}/turnons", exist_ok=True)
-        os.makedirs(f"outputs/{version}/distributions", exist_ok=True)
-        os.makedirs(f"outputs/{version}/scalings", exist_ok=True)
+        os.makedirs(f"{self.outdir}/{version}/turnons", exist_ok=True)
+        os.makedirs(f"{self.outdir}/{version}/distributions", exist_ok=True)
+        os.makedirs(f"{self.outdir}/{version}/scalings", exist_ok=True)
 
     def _create_new_plot(self):
         fig, ax = plt.subplots(figsize=(10, 10))
@@ -151,7 +152,7 @@ class EfficiencyPlotter(Plotter):
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
-        plot_fname = f"outputs/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
+        plot_fname = f"{self.outdir}/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
         for ext in [".png",".pdf"]:
             plt.savefig(f"{plot_fname}{ext}")
         self._save_json(f"{plot_fname}.json")
@@ -184,7 +185,7 @@ class EfficiencyPlotter(Plotter):
         self._style_plot(fig, ax)
 
 
-        plot_fname = f"outputs/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
+        plot_fname = f"{self.outdir}/{self.version}/turnons/{self.plot_name}_{self.turnon_collection.threshold}_{self.version}"
         for ext in [".png",".pdf"]:
             plt.savefig(f"{plot_fname}{ext}")
         self._save_json(f"{plot_fname}.json")
@@ -222,7 +223,7 @@ class EfficiencyPlotter(Plotter):
                         color=test_hist[0].get_color(), **err_kwargs)
 
         self._style_plot(fig, ax)
-        plot_fname = f"outputs/{self.version}/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist_{self.version}"
+        plot_fname = f"{self.outdir}/{self.version}/distributions/{self.plot_name}_{self.turnon_collection.threshold}_dist_{self.version}"
         for ext in [".png",".pdf"]:
             plt.savefig(f"{plot_fname}{ext}")
         #self._save_json(f"{plot_fname}.json")
@@ -308,7 +309,7 @@ class ScalingPlotter(Plotter):
         ax.set_ylim(0, ymax)
 
     def _save_json(self, file_name):
-        # file_name =  = f"outputs/{self.version}/scalings/{self.plot_name}.json"
+        # file_name =  = f"{self.outdir}/{self.version}/scalings/{self.plot_name}.json"
         plot = {}
 
         watermark = f"{self.version}_{self.plot_name}"
@@ -360,7 +361,7 @@ class ScalingPlotter(Plotter):
         self._set_plot_ranges(ax)
         fig.tight_layout()
 
-        plot_fname = f"outputs/{self.version}/scalings/{self.plot_name}_{self.version}"
+        plot_fname = f"{self.outdir}/{self.version}/scalings/{self.plot_name}_{self.version}"
         for ext in [".png",".pdf"]:
             plt.savefig(f"{plot_fname}{ext}")
         self._save_json(f"{plot_fname}.json")
@@ -372,12 +373,14 @@ class ScalingPlotter(Plotter):
         plt.close()
 
 
-class ScalingCentral():
+class ScalingCentral:
+
+    outdir = "outputs/object_performance/"
 
     def __init__(self, cfg_plots_path):
         with open(cfg_plots_path, 'r') as f:
             self.cfg_plots = yaml.safe_load(f)
-        with open("./cfg_plots/scaling_thresholds.yaml", 'r') as f:
+        with open("./configs/scaling_thresholds.yaml", 'r') as f:
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj):
@@ -411,10 +414,10 @@ class ScalingCentral():
                                 plot_name: str,
                                 version: str,
                                 params: dict):
-        with open(f"outputs/{version}/scalings/{plot_name}_scalings_{version}.txt", 'w+') as f:
+        with open(f"{self.outdir}/{version}/scalings/{plot_name}_scalings_{version}.txt", 'w+') as f:
             f.write('')
 
-        with open(f"outputs/{version}/scalings/{plot_name}_scalings_{version}.txt", 'a') as f:
+        with open(f"{self.outdir}/{version}/scalings/{plot_name}_scalings_{version}.txt", 'a') as f:
             for obj, obj_params in params.items():
                 a, b = obj_params
                 f.write(self._rate_config_function(obj, a, b) + "\n")

@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/Phase2-L1MenuTools/pyenv-ak2.0/bin/python
 import argparse
 import os
 
@@ -8,7 +7,7 @@ import numpy as np
 import yaml
 import json
 
-from plotter import Plotter
+from menu_tools.object_performance.plotter import Plotter
 
 plt.style.use(hep.style.CMS)
 
