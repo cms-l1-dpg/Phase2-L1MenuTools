@@ -109,7 +109,9 @@ class EfficiencyPlotter(Plotter):
             xbins = xbins.tolist()
             efficiency = efficiency.tolist()
 
-            label = obj_key  # TODO: FIX THIS!!! self.cfg["test_objects"][obj_key]["label"]
+            label = (
+                obj_key  # TODO: FIX THIS!!! self.cfg["test_objects"][obj_key]["label"]
+            )
 
             err_kwargs = {"xerr": xerr, "capsize": 3, "marker": "o", "markersize": 8}
 
@@ -148,7 +150,9 @@ class EfficiencyPlotter(Plotter):
                 continue
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
-            label = obj_key  # TODO: fix this! self.cfg["test_objects"][obj_key]["label"]
+            label = (
+                obj_key  # TODO: fix this! self.cfg["test_objects"][obj_key]["label"]
+            )
 
             err_kwargs = {
                 "xerr": self.turnon_collection.xerr(obj_key),
@@ -238,7 +242,8 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
             yerr = np.sqrt(gen_hist_trig[0])
-            label = obj_key  # TODO: fix this!!! -- self.cfg["test_objects"][obj_key]["label"]
+            label = obj_key  # TODO: fix this!!!
+            # self.cfg["test_objects"][obj_key]["label"]
             test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
             ax.errorbar(
                 xbins,

@@ -46,7 +46,7 @@ class PlotConfig:
             return None
 
     @property
-    def test_objects(self) -> dict[str, str]:
+    def test_objects(self) -> dict[str, Any]:
         test_obj = {
             x: {"base_obj": x.split("-")[0], "id": x.split("-")[1], "x_arg": x_arg}
             for x, x_arg in self._cfg["test_objects"].items()

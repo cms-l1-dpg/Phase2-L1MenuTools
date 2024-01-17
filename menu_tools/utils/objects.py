@@ -1,4 +1,5 @@
 import glob
+from typing import Optional
 import yaml
 
 
@@ -36,7 +37,7 @@ class Object:
         Returns:
             nano_obj_configs: dictionary containing the object parameters and ids
         """
-        nano_obj_configs = {}
+        nano_obj_configs: dict[str, dict] = {}
         config_path = f"configs/{self.version}/objects/*.y*ml"
         config_files = glob.glob(config_path)
 
@@ -91,7 +92,7 @@ class Object:
         return self._object_params["eta_ranges"]
 
     @property
-    def cuts(self) -> dict[str, list[str]]:
+    def cuts(self) -> Optional[dict[str, list[str]]]:
         try:
             return self._object_params["cuts"]
         except KeyError:

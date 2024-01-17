@@ -1,3 +1,4 @@
+from typing import Any
 import re
 
 import awkward as ak
@@ -84,9 +85,9 @@ class TurnOnCollection:
         self.cfg_plot = PlotConfig(cfg_plot)
         self.version = self.cfg_plot.version
         self.threshold = threshold
-        self.ak_arrays = {}
-        self.numerators = {"ref": {}, "test": {}}
-        self.hists = {"ref": {}}
+        self.ak_arrays: dict[str, Any] = {}
+        self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
+        self.hists: dict[str, Any] = {"ref": {}}
 
     @property
     def test_objects(self) -> list[tuple[Object, str]]:
