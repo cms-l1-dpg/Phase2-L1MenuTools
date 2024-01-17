@@ -109,7 +109,7 @@ class EfficiencyPlotter(Plotter):
             xbins = xbins.tolist()
             efficiency = efficiency.tolist()
 
-            label = self.cfg["test_objects"][obj_key]["label"]
+            label = "foo"  # TODO: FIX THIS!!! self.cfg["test_objects"][obj_key]["label"]
 
             err_kwargs = {"xerr": xerr, "capsize": 3, "marker": "o", "markersize": 8}
 
@@ -148,7 +148,7 @@ class EfficiencyPlotter(Plotter):
                 continue
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
-            label = self.cfg["test_objects"][obj_key]["label"]
+            label = "foo"  # TODO: fix this! self.cfg["test_objects"][obj_key]["label"]
 
             err_kwargs = {
                 "xerr": self.turnon_collection.xerr(obj_key),
@@ -188,7 +188,7 @@ class EfficiencyPlotter(Plotter):
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
 
             # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
-            label = self.cfg["test_objects"][obj_key]["label"]
+            label = "foo"  # TODO: fix -- self.cfg["test_objects"][obj_key]["label"]
             err_kwargs = {"capsize": 3, "marker": "o", "markersize": 8}
             ax.errorbar(xbins, iso_vs_eff_hist, label=label, **err_kwargs)
 
@@ -238,7 +238,7 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
             yerr = np.sqrt(gen_hist_trig[0])
-            label = self.cfg["test_objects"][obj_key]["label"]
+            label = "foo"  # TODO: fix this!!! -- self.cfg["test_objects"][obj_key]["label"]
             test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
             ax.errorbar(
                 xbins,
@@ -259,7 +259,7 @@ class EfficiencyPlotter(Plotter):
 
     def plot(self):
         self._make_output_dirs(self.version)
-        if "Iso" in self.cfg["xlabel"]:
+        if "iso" in self.cfg["xlabel"].lower():
             self._plot_iso_vs_efficiency_curve()
         else:
             self._plot_efficiency_curve()

@@ -2,21 +2,12 @@ from typing import Any
 
 
 class PlotConfig:
-    def __init__(self, cfg: dict[str, Any]):
+    def __init__(self, cfg: dict[str, Any]) -> None:
         self._cfg = cfg
 
     @property
-    def sample(self) -> str:
-        return self._cfg["sample"]
-
-    @property
-    def version_ref_object(self):
-        try:
-            return self._cfg["reference_object"]["version"]
-        except KeyError:
-            return self._cfg["default_version"]
-        except TypeError:
-            return None
+    def version(self) -> str:
+        return self._cfg["version"]
 
     @property
     def iso_vs_eff_plot(self):
@@ -28,6 +19,10 @@ class PlotConfig:
     @property
     def reference_object(self):
         return self._cfg["reference_object"]["object"]
+
+    @property
+    def reference_object_sample(self):
+        return self._cfg["reference_object"]["sample"]
 
     @property
     def reference_event_cuts(self):
@@ -51,42 +46,24 @@ class PlotConfig:
             return None
 
     @property
-    def test_objects(self) -> dict[str, dict]:
-        return self._cfg["test_objects"]
+    def test_objects(self) -> dict[str, str]:
+        test_obj = {
+            x: {"base_obj": x.split("-")[0], "id": x.split("-")[1], "x_arg": x_arg}
+            for x, x_arg in self._cfg["test_objects"].items()
+        }
+        return test_obj
 
-    def get_match_dR(self, test_obj):
+    @property
+    def matching(self):
         try:
-            return self._cfg["test_objects"][test_obj]["match_dR"]
+            return self._cfg["match_test_to_ref"]
         except KeyError:
-            return self._cfg["match_dR"]
-
-    @property
-    def matching_configured(self):
-        if "match_dR" in self._cfg.keys():
-            return True
-        for test_obj in self._cfg["test_objects"].values():
-            test_keys = test_obj.keys()
-            if "match_dR" not in test_keys:
-                return False
-        return True
-
-    @property
-    def reference_object_field(self):
-        ref_obj = self._cfg["reference_object"]["object"]
-        field = self._cfg["reference_object"]["suffix"]
-        return ref_obj + field
+            return False
 
     @property
     def reference_field(self):
-        field = self._cfg["reference_object"]["suffix"]
+        field = self._cfg["reference_object"]["x_arg"]
         return field.lower()
-
-    @property
-    def reference_iso_threshold(self):
-        try:
-            return self._cfg["reference_object"]["iso_threshold"]
-        except KeyError:
-            return None
 
     @property
     def bin_width(self):
@@ -107,48 +84,3 @@ class PlotConfig:
     @property
     def scaling_method(self):
         return self._cfg["scalings"]["method"]
-
-    def get_object_cuts(self, obj):
-        obj_cfg = self._cfg["test_objects"][obj]
-        try:
-            return obj_cfg["cuts"]
-        except KeyError:
-            return None
-
-    def get_test_object_version(self, obj):
-        obj_cfg = self._cfg["test_objects"][obj]
-
-        try:
-            return obj_cfg["version"]
-        except KeyError:
-            return self._cfg["default_version"]
-
-    def get_quality_id(self, obj):
-        try:
-            return self._cfg["test_objects"][obj]["quality_id"]
-        except KeyError:
-            return None
-
-    def get_base_obj(self, obj):
-        try:
-            return self._cfg["test_objects"][obj]["base_obj"]
-        except KeyError:
-            return obj
-
-    def get_iso_BB(self, obj):
-        try:
-            return self._cfg["test_objects"][obj]["iso_BB"]
-        except KeyError:
-            return -1
-
-    def get_iso_EE(self, obj):
-        try:
-            return self._cfg["test_objects"][obj]["iso_EE"]
-        except KeyError:
-            return -1
-
-    def get_l1_iso(self, obj):
-        try:
-            return self._cfg["test_objects"][obj]["iso_branch"]
-        except KeyError:
-            return None

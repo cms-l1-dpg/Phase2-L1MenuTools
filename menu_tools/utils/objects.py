@@ -25,7 +25,7 @@ class Object:
         self.nano_obj_name = nano_obj_name
         self.obj_id_name = obj_id_name
         self.version = version
-        self.obj_name = f"{nano_obj_name}_{obj_id_name}"
+        self.name = f"{nano_obj_name}_{obj_id_name}"
 
     @property
     def _nano_obj(self) -> dict[str, dict]:
@@ -37,7 +37,7 @@ class Object:
             nano_obj_configs: dictionary containing the object parameters and ids
         """
         nano_obj_configs = {}
-        config_path = f"configs/{self.version}/objects/e*.y*ml"
+        config_path = f"configs/{self.version}/objects/*.y*ml"
         config_files = glob.glob(config_path)
 
         for config in config_files:
@@ -92,12 +92,22 @@ class Object:
 
     @property
     def cuts(self) -> dict[str, list[str]]:
-        return self._object_params["cuts"]
+        try:
+            return self._object_params["cuts"]
+        except KeyError:
+            return None
+
+    @property
+    def sample(self) -> str:
+        return self._object_params["sample"]
 
 
 if __name__ == "__main__":
     x = Object("tkElectron", "Iso", "V29")
+    x = Object("caloJet", "default", "V29")
+    print(x.name)
     print(x.match_dR)
     print(x.plot_label)
     print(x.eta_ranges)
     print(x.cuts)
+    print(x.sample)
