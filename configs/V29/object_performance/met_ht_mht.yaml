@@ -108,7 +108,7 @@ MHT_90perc:
 
 MET_90perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "genMetTrue"
     x_arg: ""
@@ -129,7 +129,7 @@ MET_90perc:
 
 MET_50perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "genMetTrue"
     x_arg: ""
