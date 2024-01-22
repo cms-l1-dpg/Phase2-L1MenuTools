@@ -70,10 +70,10 @@ JetMatchingEndcap:
 
 JetMatchingForward:
   version: V29
+  sample: TT
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
