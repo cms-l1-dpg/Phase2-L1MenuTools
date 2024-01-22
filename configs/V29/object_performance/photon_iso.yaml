@@ -1,10 +1,11 @@
 PhotonIsolation_Barrel:
   sample: Hgg
-  default_version: V29
+  version: V29
   iso_vs_efficiency: True
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -13,13 +14,7 @@ PhotonIsolation_Barrel:
       object:
         - "abs({eta}) < 1.479"
   test_objects:
-    tkPhoton:
-      suffix: "trkiso"
-      label: "TkPhoton"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 1.479"
-        - "{passeseleid} == 1"
+    tkPhoton:barrel: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Barrel)"
   binning:
@@ -29,11 +24,12 @@ PhotonIsolation_Barrel:
 
 PhotonIsolation_Endcap:
   sample: Hgg
-  default_version: V29
+  version: V29
   iso_vs_efficiency: True
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -43,14 +39,7 @@ PhotonIsolation_Endcap:
       object:
         - "abs({eta}) > 1.479"
   test_objects:
-    tkPhoton:
-      suffix: "trkiso"
-      label: "TkPhoton"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) > 1.479"
-        - "abs({eta}) < 2.4"
-        - "{passesphoid} == 1"
+    tkPhoton:endcap: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:
