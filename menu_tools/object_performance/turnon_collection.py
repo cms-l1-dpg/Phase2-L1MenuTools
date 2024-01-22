@@ -282,9 +282,6 @@ class TurnOnCollection:
 
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[test_obj.name][x_arg] > self.threshold
-            # print(sel)
-            sel = [False if not ak.any(x) else True for x in sel]  # TODO: FIX THIS !!!!
-            self.ak_arrays["ref"][ref_field]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
             self.hists[test_obj.name] = np.histogram(ak_array, bins=self.bins)
 
@@ -321,6 +318,7 @@ class TurnOnCollection:
 
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, _ in self.test_objects:
+            print(test_obj.name)
             numerator = self.numerators["test"][test_obj.name]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)

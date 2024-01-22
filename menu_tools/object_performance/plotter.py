@@ -10,8 +10,9 @@ import yaml
 import json
 
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
+from menu_tools.object_performance.plot_config import PlotConfig
 from menu_tools.object_performance.scaling_collection import ScalingCollection
-from menu_tools.utils import utils
+from menu_tools.utils import utils, objects
 
 
 plt.style.use(hep.style.CMS)
@@ -34,7 +35,7 @@ class Plotter:
 class EfficiencyPlotter(Plotter):
     def __init__(self, name, cfg, turnon_collection):
         self.plot_name = name
-        self.cfg = cfg
+        self.cfg = PlotConfig(cfg)
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
         self.threshold = self.turnon_collection.threshold
@@ -52,10 +53,10 @@ class EfficiencyPlotter(Plotter):
         ax.axvline(self.threshold, ls=":", c="k")
         ax.axhline(1, ls=":", c="k")
         ax.legend(loc=legend_loc, frameon=False)
-        ax.set_xlabel(rf"{self.cfg['xlabel']}")
-        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.threshold))
+        ax.set_xlabel(rf"{self.cfg.xlabel}")
+        ylabel = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
         ax.set_ylabel(rf"{ylabel}")
-        ax.set_xlim(self.cfg["binning"]["min"], self.cfg["binning"]["max"])
+        ax.set_xlim(self.cfg.bin_min, self.cfg.bin_max)
         ax.tick_params(direction="in")
         watermark = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
         ax.text(
@@ -71,25 +72,23 @@ class EfficiencyPlotter(Plotter):
 
     def _save_json(self, file_name):
         plot = {}
-
-        xlabel = self.cfg["xlabel"]
-        ylabel = self.cfg["ylabel"].replace("<threshold>", str(self.threshold))
-        watermark = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
-
-        plot["xlabel"] = xlabel
-        plot["ylabel"] = ylabel
-        plot["watermark"] = watermark
+        plot["xlabel"] = self.cfg.xlabel
+        plot["ylabel"] = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
+        plot["watermark"] = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
-
-            _object = {}
+            obj = objects.Object(
+                nano_obj_name=obj_key.split("_")[0],
+                obj_id_name=obj_key.split("_")[1],
+                version=self.version,
+            )
 
             xbins = self.turnon_collection.bins
             xbins = 0.5 * (xbins[1:] + xbins[:-1])
 
-            if "Iso" in self.cfg["xlabel"]:
+            if self.cfg.iso_vs_eff_plot:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
                 yerr = np.zeros((2, len(efficiency)))
                 xerr = np.zeros(len(efficiency))
@@ -100,28 +99,26 @@ class EfficiencyPlotter(Plotter):
             yerr = np.array(
                 [yerr[0][~np.isnan(efficiency)], yerr[1][~np.isnan(efficiency)]]
             )
-            xerr = xerr[~np.isnan(efficiency)]
-            xbins = xbins[~np.isnan(efficiency)]
-            efficiency = efficiency[~np.isnan(efficiency)]
+            xerr = xerr[np.isfinite(efficiency)]
+            xbins = xbins[np.isfinite(efficiency)]
+            efficiency = efficiency[np.isfinite(efficiency)]
 
             xerr = xerr.tolist()
             yerr = yerr.tolist()
             xbins = xbins.tolist()
             efficiency = efficiency.tolist()
 
-            label = (
-                obj_key  # TODO: FIX THIS!!! self.cfg["test_objects"][obj_key]["label"]
-            )
-
-            err_kwargs = {"xerr": xerr, "capsize": 3, "marker": "o", "markersize": 8}
-
-            _object["label"] = label
-            _object["efficiency"] = efficiency
-            _object["efficiency_err"] = yerr
-            _object["xbins"] = xbins
-            _object["err_kwargs"] = err_kwargs
-
-            plot[obj_key] = _object
+            plot[obj_key] = {}
+            plot[obj_key]["label"] = obj.plot_label
+            plot[obj_key]["efficiency"] = efficiency
+            plot[obj_key]["efficiency_err"] = yerr
+            plot[obj_key]["xbins"] = xbins
+            plot[obj_key]["err_kwargs"] = {
+                "xerr": xerr,
+                "capsize": 3,
+                "marker": "o",
+                "markersize": 8,
+            }
 
         with open(f"{file_name}", "w") as outfile:
             outfile.write(json.dumps(plot, indent=4))
@@ -131,7 +128,7 @@ class EfficiencyPlotter(Plotter):
         Cumulative ratio of efficiency vs L1 Iso histogram.
         """
 
-        l1_isolation_histogram = sum(test_hist)
+        l1_isolation_histogram = np.sum(test_hist)
         l1_cumulative_sum = np.cumsum(test_hist) / l1_isolation_histogram
 
         return l1_cumulative_sum
@@ -150,8 +147,10 @@ class EfficiencyPlotter(Plotter):
                 continue
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
-            label = (
-                obj_key  # TODO: fix this! self.cfg["test_objects"][obj_key]["label"]
+            obj = objects.Object(
+                nano_obj_name=obj_key.split("_")[0],
+                obj_id_name=obj_key.split("_")[1],
+                version=self.version,
             )
 
             err_kwargs = {
@@ -160,7 +159,9 @@ class EfficiencyPlotter(Plotter):
                 "marker": "o",
                 "markersize": 8,
             }
-            ax.errorbar(xbins, efficiency, yerr=yerr, label=label, **err_kwargs)
+            ax.errorbar(
+                xbins, efficiency, yerr=yerr, label=obj.plot_label, **err_kwargs
+            )
 
         self._style_plot(fig, ax)
         ax.set_ylim(0, 1.1)
@@ -173,7 +174,9 @@ class EfficiencyPlotter(Plotter):
 
         # Save config
         with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
-            yaml.dump({self.plot_name: self.cfg}, f, default_flow_style=False)
+            yaml.dump(
+                {self.plot_name: self.cfg.config_dict}, f, default_flow_style=False
+            )
 
         plt.close()
 
@@ -191,10 +194,15 @@ class EfficiencyPlotter(Plotter):
                 continue
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
 
+            obj = objects.Object(
+                nano_obj_name=obj_key.split("_")[0],
+                obj_id_name=obj_key.split("_")[1],
+                version=self.version,
+            )
+
             # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
-            label = obj_key  # TODO: fix -- self.cfg["test_objects"][obj_key]["label"]
             err_kwargs = {"capsize": 3, "marker": "o", "markersize": 8}
-            ax.errorbar(xbins, iso_vs_eff_hist, label=label, **err_kwargs)
+            ax.errorbar(xbins, iso_vs_eff_hist, label=obj.plot_label, **err_kwargs)
 
         self._style_plot(fig, ax)
 
@@ -206,7 +214,9 @@ class EfficiencyPlotter(Plotter):
 
         # Save config
         with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
-            yaml.dump({self.plot_name: self.cfg}, f, default_flow_style=False)
+            yaml.dump(
+                {self.plot_name: self.cfg.config_dict}, f, default_flow_style=False
+            )
 
         plt.close()
 
@@ -242,8 +252,7 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
             yerr = np.sqrt(gen_hist_trig[0])
-            label = obj_key  # TODO: fix this!!!
-            # self.cfg["test_objects"][obj_key]["label"]
+            label = obj_key
             test_hist = ax.step(xbins, gen_hist_trig[0], where="mid")
             ax.errorbar(
                 xbins,
@@ -264,7 +273,7 @@ class EfficiencyPlotter(Plotter):
 
     def plot(self):
         self._make_output_dirs(self.version)
-        if "iso" in self.cfg["xlabel"].lower():
+        if self.cfg.iso_vs_eff_plot:
             self._plot_iso_vs_efficiency_curve()
         else:
             self._plot_efficiency_curve()

@@ -9,7 +9,9 @@ caloJet:
       - "abs({eta}) < 7"
   ids:
     default:
-      sample: TT
+      cuts:
+        range0:
+          - "abs({eta}) < 7"
 
 phase1PuppiJet:
   sample: TT
@@ -18,14 +20,10 @@ phase1PuppiJet:
   eta_ranges:
     range0: [0, 7]
   ids:
-    barrel:
+    default:
       cuts:
         range0:
-          - "abs({eta}) < 2.4"
-    forward:
-      cuts:
-        range0:
-          - "abs({eta}) < 5"
+          - "abs({eta}) < 7"
 
 seededConePuppiJet:
   sample: TT
@@ -34,14 +32,10 @@ seededConePuppiJet:
   eta_ranges:
     range0: [0, 7]
   ids:
-    barrel:
+    default:
       cuts:
         range0:
-          - "abs({eta}) < 2.4"
-    forward:
-      cuts:
-        range0:
-          - "abs({eta}) < 5"
+          - "abs({eta}) < 7"
 
 trackerJet:
   sample: TT
@@ -50,7 +44,7 @@ trackerJet:
   eta_ranges:
     range0: [0, 7]
   ids:
-    barrel:
+    default:
       cuts:
         range0:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 7"

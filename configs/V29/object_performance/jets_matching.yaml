@@ -1,9 +1,9 @@
 JetMatchingForward_3p7to7:
+  sample: TT
   version: V29
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
@@ -12,7 +12,7 @@ JetMatchingForward_3p7to7:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    caloJet-default: "Pt"
+    caloJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
@@ -21,11 +21,11 @@ JetMatchingForward_3p7to7:
     step: 5
 
 JetMatchingBarrel:
+  sample: TT
   version: V29
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
@@ -34,9 +34,9 @@ JetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet-barrel: "Pt"
-    seededConePuppiJet-barrel: "Pt"
-    trackerJet-barrel: "Pt"
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -45,11 +45,11 @@ JetMatchingBarrel:
     step: 10
 
 JetMatchingEndcap:
+  sample: TT
   version: V29
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
@@ -58,9 +58,9 @@ JetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet-barrel: "Pt"
-    seededConePuppiJet-barrel: "Pt"
-    trackerJet-barrel: "Pt"
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -82,8 +82,8 @@ JetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet-forward: "Pt"
-    seededConePuppiJet-forward: "Pt"
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:

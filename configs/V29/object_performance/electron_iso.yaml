@@ -1,10 +1,11 @@
 ElectronsIsolation_Barrel:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   iso_vs_efficiency: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -13,13 +14,7 @@ ElectronsIsolation_Barrel:
       object:
         - "abs({eta}) < 1.479"
   test_objects:
-    tkElectron:
-      suffix: "trkiso"
-      label: "TkElectron"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
+    tkElectron:NoIso: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Barrel)"
   binning:
@@ -29,11 +24,12 @@ ElectronsIsolation_Barrel:
 
 ElectronsIsolation_Endcap:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   iso_vs_efficiency: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -42,13 +38,7 @@ ElectronsIsolation_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    tkElectron:
-      suffix: "trkiso"
-      label: "TkElectron"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        #- "{passeseleid} == 1"
+    tkElectron:Iso: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:

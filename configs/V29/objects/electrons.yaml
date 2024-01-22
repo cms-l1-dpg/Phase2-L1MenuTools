@@ -28,9 +28,9 @@ tkElectron:
           - "abs({eta}) < 2.4"
           - "{passeseleid} == 1"
         range_1:
-          - "abs({trkiso}) > 0.13"
+          - "abs({trkiso}) < 0.13"
         range_2:
-          - "abs({trkiso}) > 0.28"
+          - "abs({trkiso}) < 0.28"
 
 EG:
   match_dR: 0.2
@@ -45,6 +45,6 @@ EG:
         range_0:
           - "abs({eta}) < 2.4"
         range_1:
-          - "{passeseleid} == 0"
+          - "{passeseleid} == 1"
         range_2:
-          - "{passessaid} == 0"
+          - "{passessaid} == 1"
