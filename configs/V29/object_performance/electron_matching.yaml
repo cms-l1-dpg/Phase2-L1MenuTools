@@ -1,9 +1,10 @@
 ElectronsMatchingBarrel:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -12,31 +13,9 @@ ElectronsMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 2.4"
-    tkElectron:
-      suffix: "Pt"
-      label: "TkElectron"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Pt"
-      label: "TkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
+    EG:default: "Pt"
+    tkElectron:NoIso: "Pt"
+    tkElectron:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -46,10 +25,11 @@ ElectronsMatchingBarrel:
 
 ElectronsMatchingEndcap:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -58,31 +38,9 @@ ElectronsMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 2.4"
-    tkElectron:
-      suffix: "Pt"
-      label: "TkElectron"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Pt"
-      label: "TkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
+    EG:default: "Pt"
+    tkElectron:NoIso: "Pt"
+    tkElectron:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

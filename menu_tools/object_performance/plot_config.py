@@ -15,7 +15,10 @@ class PlotConfig:
 
     @property
     def version(self) -> str:
-        return self._cfg["version"]
+        try:
+            return self._cfg["version"]
+        except KeyError:
+            raise KeyError("No version configured for plot!")
 
     @property
     def iso_vs_eff_plot(self):
@@ -58,10 +61,18 @@ class PlotConfig:
 
     @property
     def test_objects(self) -> dict[str, Any]:
+
+        # Parse to detect faulty config
+        if not all([":" in x for x in self._cfg["test_objects"]]):
+            raise ValueError("Misconfigured obj:id key!")
+        if not all([x for x in self._cfg["test_objects"].values()]):
+            raise ValueError("Misconfigured x variable in test objects!")
+
         test_obj = {
             x: {"base_obj": x.split(":")[0], "id": x.split(":")[1], "x_arg": x_arg}
             for x, x_arg in self._cfg["test_objects"].items()
         }
+
         return test_obj
 
     @property
