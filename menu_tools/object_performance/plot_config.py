@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 class PlotConfig:
     def __init__(self, cfg: dict[str, Any]) -> None:
+        self.plot_name = list(cfg.keys())[0]
         self._cfg = cfg
 
     @property
@@ -18,7 +19,7 @@ class PlotConfig:
         try:
             return self._cfg["version"]
         except KeyError:
-            raise KeyError("No version configured for plot!")
+            raise KeyError("No version configured for {self.plot_name}!")
 
     @property
     def iso_vs_eff_plot(self):
@@ -57,16 +58,17 @@ class PlotConfig:
         try:
             return self._cfg["reference_object"]["label"]
         except KeyError:
-            raise KeyError("No label defined for reference object!")
+            raise KeyError("No label defined for reference object in {self.plot_name}!")
 
     @property
     def test_objects(self) -> dict[str, Any]:
-
         # Parse to detect faulty config
         if not all([":" in x for x in self._cfg["test_objects"]]):
-            raise ValueError("Misconfigured obj:id key!")
+            raise ValueError("Misconfigured obj:id key in {self.plot_name}!")
         if not all([x for x in self._cfg["test_objects"].values()]):
-            raise ValueError("Misconfigured x variable in test objects!")
+            raise ValueError(
+                "Misconfigured x variable in test objects in {self.plot_name}!"
+            )
 
         test_obj = {
             x: {"base_obj": x.split(":")[0], "id": x.split(":")[1], "x_arg": x_arg}
