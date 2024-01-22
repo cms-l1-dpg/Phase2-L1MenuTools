@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 import re
 
 import awkward as ak
@@ -79,8 +79,8 @@ class ArrayLoader:
 
 
 class TurnOnCollection:
-    def __init__(self, cfg_plot: dict, threshold: float):
-        self.cfg_plot = PlotConfig(cfg_plot)
+    def __init__(self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None):
+        self.cfg_plot = PlotConfig(cfg_plot, plot_name)
         self.version = self.cfg_plot.version
         self.threshold = threshold
         self.ak_arrays: dict[str, Any] = {}

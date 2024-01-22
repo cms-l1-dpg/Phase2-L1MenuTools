@@ -1,4 +1,5 @@
 import glob
+import re
 from typing import Optional
 import yaml
 
@@ -94,8 +95,13 @@ class Object:
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
         try:
+            if not all([re.match(r"^range\d", x) for x in self._object_params["cuts"]]):
+                raise ValueError(
+                    "Cuts for objects have to be specified eta ranges `range0/1/2` ..."
+                )
             return self._object_params["cuts"]
         except KeyError:
+            print(f"No cuts will be applied for {self.name}!")
             return None
 
 

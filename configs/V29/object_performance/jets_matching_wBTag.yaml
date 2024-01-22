@@ -1,9 +1,10 @@
 JetMatching_Eta_Pt40To100_ExtendedVsRegular:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Jets"
     cuts:
       event:
@@ -12,18 +13,8 @@ JetMatching_Eta_Pt40To100_ExtendedVsRegular:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-        - "abs({eta}) < 5"
-    seededConeExtendedPuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-        - "abs({eta}) < 5"
+    seededConePuppiJet:default: "Eta"
+    seededConeExtendedPuppiJet:default: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (40-100 GeV)"
   binning:
@@ -33,10 +24,11 @@ JetMatching_Eta_Pt40To100_ExtendedVsRegular:
 
 JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Jets"
     cuts:
       event:
@@ -44,18 +36,8 @@ JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    seededConePuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
-    seededConeExtendedPuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
+    seededConePuppiJet:default: "Eta"
+    seededConeExtendedPuppiJet:default: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:
@@ -65,10 +47,11 @@ JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
 
 JetMatching_Eta_Pt30ToInf_genBJets:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Jets"
     cuts:
       event:
@@ -77,16 +60,9 @@ JetMatching_Eta_Pt30ToInf_genBJets:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    seededConeExtendedPuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
-       - "{bjetnn}>0.71"
+    seededConeExtendedPuppiJet:bjetnn: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>30 GeV)"
-  # thresholds: [0.0,0.5,0.7,0.71,0.72]
   binning:
     min: -2.4
     max: 2.4
@@ -94,10 +70,11 @@ JetMatching_Eta_Pt30ToInf_genBJets:
 
 JetMatching_Eta_Pt30ToInf_genNotBJets:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Jets"
     cuts:
       event:
@@ -106,16 +83,9 @@ JetMatching_Eta_Pt30ToInf_genNotBJets:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    seededConeExtendedPuppiJet:
-      match_dR: 0.35
-      suffix: "Eta"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
-       - "{bjetnn}>0.71"
+    seededConeExtendedPuppiJet:bjetnn: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>30 GeV)"
-  # thresholds: [0.0,0.5,0.7,0.71,0.72]
   binning:
     min: -2.4
     max: 2.4
@@ -123,10 +93,11 @@ JetMatching_Eta_Pt30ToInf_genNotBJets:
 
 JetMatching_Pt_Pt30ToInf_genBJets:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -134,17 +105,9 @@ JetMatching_Pt_Pt30ToInf_genBJets:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    seededConeExtendedPuppiJet:
-      match_dR: 0.4
-      suffix: "Pt"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
-       - "{bjetnn}>0.71"
+    seededConeExtendedPuppiJet:bjetnn: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency"
-  # thresholds: [-999,0,0.5,0.68,0.71,0.74,0.9]
-  # thresholds: [0.0,0.5,0.7,0.71,0.72]
   binning:
     min: 30
     max: 200
@@ -152,10 +115,11 @@ JetMatching_Pt_Pt30ToInf_genBJets:
 
 JetMatching_Pt_Pt30ToInf_genNotBJets:
   sample: TT
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object: 
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -163,16 +127,9 @@ JetMatching_Pt_Pt30ToInf_genNotBJets:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    seededConeExtendedPuppiJet:
-      match_dR: 0.35
-      suffix: "Pt"
-      label: "Seeded Cone Extended PuppiJet"
-      cuts:
-       - "abs({eta}) < 5"
-       - "{bjetnn}>0.71"
+    seededConeExtendedPuppiJet:bjetnn: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency"
-  # thresholds: [0.0,0.5,0.7,0.71,0.72]
   binning:
     min: 30
     max: 200

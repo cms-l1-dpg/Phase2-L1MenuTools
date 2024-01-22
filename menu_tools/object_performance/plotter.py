@@ -35,7 +35,7 @@ class Plotter:
 class EfficiencyPlotter(Plotter):
     def __init__(self, name, cfg, turnon_collection):
         self.plot_name = name
-        self.cfg = PlotConfig(cfg)
+        self.cfg = PlotConfig(cfg, name)
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
         self.threshold = self.turnon_collection.threshold
@@ -312,7 +312,7 @@ class EfficiencyCentral:
         for plot_name, cfg_plot in self.cfg_plots.items():
             for threshold in self.get_thresholds(cfg_plot):
                 print(f">>> Turn On {plot_name} ({threshold} GeV) <<<")
-                turnon_collection = TurnOnCollection(cfg_plot, threshold)
+                turnon_collection = TurnOnCollection(cfg_plot, threshold, plot_name)
                 turnon_collection.create_hists()
 
                 plotter = EfficiencyPlotter(plot_name, cfg_plot, turnon_collection)

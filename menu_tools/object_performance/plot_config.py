@@ -2,9 +2,9 @@ from typing import Any, Optional
 
 
 class PlotConfig:
-    def __init__(self, cfg: dict[str, Any]) -> None:
-        self.plot_name = list(cfg.keys())[0]
+    def __init__(self, cfg: dict[str, Any], name: Optional[str] = None) -> None:
         self._cfg = cfg
+        self.plot_name = name
 
     @property
     def config_dict(self) -> dict[str, Any]:
@@ -19,7 +19,7 @@ class PlotConfig:
         try:
             return self._cfg["version"]
         except KeyError:
-            raise KeyError("No version configured for {self.plot_name}!")
+            raise KeyError(f"No version configured for {self.plot_name}!")
 
     @property
     def iso_vs_eff_plot(self):
