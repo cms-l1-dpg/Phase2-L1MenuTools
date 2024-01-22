@@ -397,7 +397,7 @@ class ScalingPlotter(Plotter):
 
         ax.legend(loc="lower right")
         ax.set_xlabel("L1 threshold [GeV]")
-        ax.set_ylabel(f"{int(self.scaling_pct*100)}% Location (gen, GeV)")
+        ax.set_ylabel(f"{int(self.scaling_pct * 100)}% Location (gen, GeV)")
         watermark = f"{self.version}_{self.plot_name}"
         ax.text(
             0,
@@ -455,7 +455,7 @@ class ScalingCentral:
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _rate_config_function(self, name: str, a: float, b: float):
+    def _LEGACY_rate_config_function(self, name: str, a: float, b: float):
         pm = "+" if b < 0 else ""
         f_string = (
             f"function :: {name}OfflineEtCut :: "
@@ -463,7 +463,9 @@ class ScalingCentral:
         )
         return f_string
 
-    def _write_scalings_to_file(self, plot_name: str, version: str, params: dict):
+    def _LEGACY_write_scalings_to_file(
+        self, plot_name: str, version: str, params: dict
+    ):
         with open(
             f"{self.outdir}/{version}/scalings/{plot_name}_scalings_{version}.txt", "w+"
         ) as f:
@@ -474,7 +476,7 @@ class ScalingCentral:
         ) as f:
             for obj, obj_params in params.items():
                 a, b = obj_params
-                f.write(self._rate_config_function(obj, a, b) + "\n")
+                f.write(self._LEGACY_rate_config_function(obj, a, b) + "\n")
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
@@ -508,15 +510,14 @@ class ScalingCentral:
                     plot_name, cfg_plot, scalings, scaling_pct, version, params
                 )
                 plotter.plot()
-                self._write_scalings_to_file(plot_name, version, params)
+                self._LEGACY_write_scalings_to_file(plot_name, version, params)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots",
-        default="cfg_plots/muons.yaml",
-        help="Path of YAML file specifying the desired plots.",
+        help="Path of YAML configuration file specifying the desired plots.",
     )
     args = parser.parse_args()
 

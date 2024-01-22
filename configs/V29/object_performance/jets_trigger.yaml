@@ -1,9 +1,9 @@
 JetTurnonBarrel:
   version: V29
+  sample: TT
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
@@ -12,10 +12,10 @@ JetTurnonBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet-barrel: "Pt"
-    seededConePuppiJet-barrel: "Pt"
-    trackerJet-barrel: "Pt"
-  thresholds: [50,100]
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    trackerJet:default: "Pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -28,10 +28,10 @@ JetTurnonBarrel:
 
 JetTurnonEndcap:
   version: V29
+  sample: TT
   match_test_to_ref: True
   reference_object:
     object: "jet"
-    sample: TT
     x_arg: "Pt"
     label: "Gen Jets"
     cuts:
@@ -40,9 +40,9 @@ JetTurnonEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet-barrel: "Pt"
-    seededConePuppiJet-barrel: "Pt"
-    trackerJet-barrel: "Pt"
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    trackerJet:default: "Pt"
   thresholds: [50]
   scalings:
     method: "naive"
@@ -56,9 +56,9 @@ JetTurnonEndcap:
 
 JetTurnonForward:
   version: V29
+  sample: TT
   match_test_to_ref: True
   reference_object:
-    sample: TT
     object: "jet"
     x_arg: "Pt"
     label: "Gen Jets"
@@ -68,9 +68,9 @@ JetTurnonForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet-forward: "Pt"
-    seededConePuppiJet-forward: "Pt"
-  thresholds: [50,100]
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
