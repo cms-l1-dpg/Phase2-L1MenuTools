@@ -48,3 +48,10 @@ EG:
           - "{passeseleid} == 1"
         range_2:
           - "{passessaid} == 1"
+    eleid:
+      cuts:
+        range_0:
+          - "abs({eta}) < 3.0"
+          - "{passeseleid} == 1"
+        range_2:
+          - "{passessaid} == 1"
