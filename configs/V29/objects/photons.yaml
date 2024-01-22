@@ -2,7 +2,23 @@ tkPhoton:
   match_dR: 0.15
   eta_ranges:
     range0: [0, 5]
+    range1: [0, 1.479]
+    range2: [1.479, 5]
   ids:
+    NoIso:
+      label: "tkPhoton"
+      cuts:
+        range0:
+          - "abs({eta}) < 3.0" # TODO: implement QUAL 125x tkPhoID here in default!!
+    Iso:
+      label: "tkIsoPhoton"
+      cuts:
+        range0:
+          - "abs({eta}) < 3.0" # TODO: implement QUAL 125x tkPhoID here in default!!
+        range1:
+          - "abs({trkiso}) < 0.2"
+        range2:
+          - "abs({trkiso}) < 0.2"
     barrel:
       label: "TkPhoton"
       cuts:
@@ -16,3 +32,4 @@ tkPhoton:
           - "abs({eta}) > 1.479"
           - "abs({eta}) < 2.4"
           - "{passesphoid} == 1"
+
