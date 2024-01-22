@@ -226,6 +226,10 @@ class TurnOnCollection:
             cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
             sel = eval(cut)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        if not isinstance(
+            self.ak_arrays["ref"], vector.backends.awkward.MomentumArray4D
+        ):
+            self.ak_arrays["ref"] = ak.with_name(self.ak_arrays["ref"], "Momentum4D")
 
     def _apply_reference_cuts(self) -> None:
         """Applies configured cuts on reference objects.
@@ -233,21 +237,19 @@ class TurnOnCollection:
         Should be applied before any matching and before the
         selection of the highest pT object.
         """
-        if self.cfg_plot.reference_trafo:
-            ref_object_cuts = self.cfg_plot.reference_object_cuts
-            ref_event_cuts = self.cfg_plot.reference_event_cuts
-
-            self._apply_list_of_reference_cuts(ref_object_cuts)
-            return
         if "met" in self.cfg_plot.reference_object.lower():
             # TODO: Maybe we want to modify it and allow possible cuts on MET
             return
 
         ref_object_cuts = self.cfg_plot.reference_object_cuts
-        ref_event_cuts = self.cfg_plot.reference_event_cuts
-
         self._apply_list_of_reference_cuts(ref_object_cuts)
+
+        if self.cfg_plot.reference_trafo:
+            # In this case each event is reduced to a single value already
+            return None
+
         self._select_highest_pt_ref_object()
+        ref_event_cuts = self.cfg_plot.reference_event_cuts
         self._apply_list_of_reference_cuts(ref_event_cuts)
 
     def _apply_test_obj_cuts(self):
@@ -320,7 +322,6 @@ class TurnOnCollection:
 
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, _ in self.test_objects:
-            print(test_obj.name)
             numerator = self.numerators["test"][test_obj.name]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
