@@ -1,9 +1,10 @@
 MuonsMatchingBarrel:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_mu"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -11,19 +12,8 @@ MuonsMatchingBarrel:
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    gmtMuon:
-      suffix: "Pt"
-      label: "GMT Muon"
-      match_dR: 0.3
-      cuts:
-        - "abs({eta}) < 0.83"
-    gmtTkMuon:
-      suffix: "Pt"
-      label: "GMT TkMuon"
-      match_dR: 0.1
-      cuts:
-        - "abs({eta}) < 0.83"
-        - "({quality}) > 0"
+    gmtMuon:barrel: "Pt"
+    gmtTkMuon:barrel: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   binning:
@@ -33,10 +23,11 @@ MuonsMatchingBarrel:
 
 MuonsMatchingOverlap:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_mu"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -45,21 +36,8 @@ MuonsMatchingOverlap:
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   test_objects:
-    gmtMuon:
-      suffix: "Pt"
-      label: "GMT Muon"
-      match_dR: 0.3
-      cuts:
-        - "abs({eta}) > 0.83"
-        - "abs({eta}) < 1.24"
-    gmtTkMuon:
-      suffix: "Pt"
-      label: "GMT TkMuon"
-      match_dR: 0.1
-      cuts:
-        - "({quality}) > 0"
-        - "abs({eta}) > 0.83"
-        - "abs({eta}) < 1.24"
+    gmtMuon:overlap: "Pt"
+    gmtTkMuon:overlap: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
   binning:
@@ -69,10 +47,11 @@ MuonsMatchingOverlap:
 
 MuonsMatchingEndcap:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_mu"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -81,21 +60,8 @@ MuonsMatchingEndcap:
         - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
   test_objects:
-    gmtMuon:
-      suffix: "Pt"
-      label: "GMT Muon"
-      match_dR: 0.3
-      cuts:
-        - "abs({eta}) > 1.24"
-        - "abs({eta}) < 2.4"
-    gmtTkMuon:
-      suffix: "Pt"
-      label: "GMT TkMuon"
-      match_dR: 0.1
-      cuts:
-        - "abs({eta}) > 1.24"
-        - "abs({eta}) < 2.4"
-        - "({quality}) > 0"
+    gmtMuon:endcap: "Pt"
+    gmtTkMuon:endcap: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   binning:
