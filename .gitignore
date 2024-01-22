@@ -7,5 +7,6 @@
 rates/table/out/*
 rates/table/cache/**/*
 rates/table/lib/*
+rates/table/rates_tables/*
 **/tmp/*
 outputs

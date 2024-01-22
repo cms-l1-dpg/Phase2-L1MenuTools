@@ -18,7 +18,7 @@
 
   A standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
-  dependencies installed via `pip install -r requirements.txt`:
+  dependencies installed via `pip install .` as follows`:
 
   ```bash
   python3.11 -m venv <name_of_venv>

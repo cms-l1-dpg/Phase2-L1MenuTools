@@ -57,34 +57,35 @@ L1_DoubleTkEle:
     obj: tkElectron
 L1_DoubleTkEle_PFHTT:
   cross_masks:
-  - abs(leg2.zvtx-leg1.et)<1
-  - abs(leg3.zvtx-leg1.et)<1
+  - (abs(leg2.zvtx-leg1.et)<1 & (leg2.deltaR(leg3)>0))
+  - (abs(leg3.zvtx-leg1.et)<1 & (leg2.deltaR(leg3)>0))
+  - (leg3.deltaR(leg2)>0)
   leg1:
     leg_mask:
     - leg1.et>-99999.0
     obj: z0L1TkPV
   leg2:
     leg_mask:
-    - leg2.offline_pt >= 8.0
+    - leg2.offline_pt > 8.0
     - abs(leg2.eta)<2.5
     - leg2.passeseleid * (abs(leg2.eta)<1.479) + (abs(leg2.eta)>1.479)
     obj: tkElectron
   leg3:
     leg_mask:
-    - leg3.offline_pt >= 8.0
+    - leg3.offline_pt > 8.0
     - abs(leg3.eta)<2.5
     - leg3.passeseleid * (abs(leg3.eta)<1.479) + (abs(leg3.eta)>1.479)
     obj: tkElectron
   leg4:
     leg_mask:
-    - leg4.offline_pt >= 390.0
+    - leg4.offline_pt > 390.0
     obj: seededConePuppiHT
 L1_DoubleTkMu:
   cross_masks:
-  - abs(leg1.z0-leg2.z0)<1
+  - ((abs(leg1.z0-leg2.z0)<1) & (leg1.deltaR(leg2)>0))
   leg1:
     leg_mask:
-    - leg1.offline_pt >= 15.0
+    - leg1.offline_pt > 15.0
     - abs(leg1.eta)<2.4
     obj: gmtTkMuon
   leg2:
@@ -95,9 +96,10 @@ L1_DoubleTkMu:
     obj: gmtTkMuon
 L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4:
   cross_masks:
-  - leg1.deltaR(leg2)<1.4
-  - leg1.chg*leg2.chg<0.0
-  - abs(leg2.z0-leg1.z0)<1
+  - ((leg1.deltaR(leg2)<1.4))
+  - ((leg1.chg*leg2.chg<0.0))
+  - ((abs(leg2.z0-leg1.z0)<1))
+  - ((leg1.deltaR(leg2)>0))
   leg1:
     leg_mask:
     - abs(leg1.eta)<1.5
@@ -110,9 +112,9 @@ L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4:
     obj: gmtTkMuon
 L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
   cross_masks:
-  - leg1.deltaR(leg2)<1.2
-  - leg1.chg*leg2.chg<0.0
-  - abs(leg2.z0-leg1.z0)<1
+  - ((leg1.deltaR(leg2)<1.2) & (leg1.deltaR(leg2)>0))
+  - ((leg1.chg*leg2.chg<0.0) & (leg1.deltaR(leg2)>0))
+  - ((abs(leg2.z0-leg1.z0)<1) & (leg1.deltaR(leg2)>0))
   leg1:
     leg_mask:
     - leg1.pt>4
@@ -127,10 +129,10 @@ L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
     obj: gmtTkMuon
 L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
   cross_masks:
-  - pairinvmass(leg2.pt,leg1.pt,leg2.eta,leg1.eta,leg2.phi,leg1.phi)>7.0
-  - pairinvmass(leg2.pt,leg1.pt,leg2.eta,leg1.eta,leg2.phi,leg1.phi)<18.0
-  - leg1.chg*leg2.chg<0.0
-  - abs(leg2.z0-leg1.z0)<1
+  - ((pairinvmass(leg2.pt,leg1.pt,leg2.eta,leg1.eta,leg2.phi,leg1.phi)>7.0) & (leg1.deltaR(leg2)>0))
+  - ((pairinvmass(leg2.pt,leg1.pt,leg2.eta,leg1.eta,leg2.phi,leg1.phi)<18.0) & (leg1.deltaR(leg2)>0))
+  - ((leg1.chg*leg2.chg<0.0) & (leg1.deltaR(leg2)>0))
+  - ((abs(leg2.z0-leg1.z0)<1) & (leg1.deltaR(leg2)>0))
   leg1:
     leg_mask:
     - leg1.pt>4.5
@@ -145,8 +147,9 @@ L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
     obj: gmtTkMuon
 L1_DoubleTkMu_PfHTT:
   cross_masks:
-  - abs(leg2.z0-leg1.et)<1
-  - abs(leg3.z0-leg1.et)<1
+  - (abs(leg2.z0-leg1.et)<1 & (leg3.deltaR(leg2)>0))
+  - (abs(leg3.z0-leg1.et)<1 & (leg3.deltaR(leg2)>0))
+  - (leg3.deltaR(leg2)>0)
   leg1:
     leg_mask:
     - leg1.et>-99999.0

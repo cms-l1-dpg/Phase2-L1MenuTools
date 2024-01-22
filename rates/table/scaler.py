@@ -1,5 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
-
 import os, yaml
 from glob import glob
 from menu_config import MenuConfig

@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import numpy as np
 
 from glob import glob
