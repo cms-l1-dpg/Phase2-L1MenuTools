@@ -43,7 +43,7 @@ EG:
     default:
       cuts:
         range_0:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 3.0"
         range_1:
           - "{passeseleid} == 1"
         range_2:

@@ -246,7 +246,6 @@ class EfficiencyPlotter(Plotter):
                 ls="--",
                 color="k",
             )
-            label = self.cfg["reference_object"]["label"]
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
