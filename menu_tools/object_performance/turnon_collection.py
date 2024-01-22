@@ -30,7 +30,7 @@ class ArrayLoader:
         else:
             return key
 
-    def _load_array_from_parquet(self, obj: str, sample: str):
+    def _load_array_from_parquet(self, obj: str):
         """
         Loads the specified parquet file
         into an ak array. The keys are
@@ -40,7 +40,7 @@ class ArrayLoader:
         fname = (
             f"cache/{self.cfg_plot.version}/"
             f"{self.cfg_plot.version}_"
-            f"{sample}_"
+            f"{self.cfg_plot.sample}_"
             f"{obj}.parquet"
         )
         array = ak.from_parquet(fname)
@@ -55,9 +55,7 @@ class ArrayLoader:
         """
         Load reference object.
         """
-        ref_array = self._load_array_from_parquet(
-            self.cfg_plot.reference_object, self.cfg_plot.reference_object_sample
-        )
+        ref_array = self._load_array_from_parquet(self.cfg_plot.reference_object)
         ref_array = ak.with_name(ref_array, "Momentum4D")
         self.turnon_collection.ak_arrays["ref"] = ref_array
 
@@ -68,7 +66,7 @@ class ArrayLoader:
         test_objects = self.cfg_plot.test_objects
         for test_obj, obj_cfg in test_objects.items():
             obj = Object(obj_cfg["base_obj"], obj_cfg["id"], self.cfg_plot.version)
-            test_array = self._load_array_from_parquet(obj.nano_obj_name, obj.sample)
+            test_array = self._load_array_from_parquet(obj.nano_obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
             self.turnon_collection.ak_arrays[obj.name] = test_array
 
@@ -274,13 +272,17 @@ class TurnOnCollection:
                     sel = eval(cut) + ~eta_sel
                     self.ak_arrays[test_obj.name] = self.ak_arrays[test_obj.name][sel]
 
-    def _skim_to_hists(self):
+    def _skim_to_hists(self) -> None:
+        """
+        TODO!
+        """
         ref_field = self.cfg_plot.reference_field
         if trafo := self.cfg_plot.reference_trafo:
             ref_field = trafo
 
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[test_obj.name][x_arg] > self.threshold
+            # print(sel)
             sel = [False if not ak.any(x) else True for x in sel]  # TODO: FIX THIS !!!!
             self.ak_arrays["ref"][ref_field]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])

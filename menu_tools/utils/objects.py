@@ -98,10 +98,6 @@ class Object:
         except KeyError:
             return None
 
-    @property
-    def sample(self) -> str:
-        return self._object_params["sample"]
-
 
 if __name__ == "__main__":
     x = Object("tkElectron", "Iso", "V29")
@@ -111,4 +107,3 @@ if __name__ == "__main__":
     print(x.plot_label)
     print(x.eta_ranges)
     print(x.cuts)
-    print(x.sample)

@@ -6,6 +6,10 @@ class PlotConfig:
         self._cfg = cfg
 
     @property
+    def sample(self):
+        return self._cfg["sample"]
+
+    @property
     def version(self) -> str:
         return self._cfg["version"]
 
@@ -19,10 +23,6 @@ class PlotConfig:
     @property
     def reference_object(self):
         return self._cfg["reference_object"]["object"]
-
-    @property
-    def reference_object_sample(self):
-        return self._cfg["reference_object"]["sample"]
 
     @property
     def reference_event_cuts(self):
