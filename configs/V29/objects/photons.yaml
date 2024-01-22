@@ -3,22 +3,28 @@ tkPhoton:
   eta_ranges:
     range0: [0, 5]
     range1: [0, 1.479]
-    range2: [1.479, 5]
+    range2: [1.479, 2.4]
   ids:
     NoIso:
       label: "tkPhoton"
       cuts:
         range0:
-          - "abs({eta}) < 3.0" # TODO: implement QUAL 125x tkPhoID here in default!!
+          - "abs({eta}) < 3.0"
+        range1:
+          - "{passeseleid} == 1"
+        range2:
+          - "{passesphoid} == 1"
     Iso:
       label: "tkIsoPhoton"
       cuts:
         range0:
-          - "abs({eta}) < 3.0" # TODO: implement QUAL 125x tkPhoID here in default!!
+          - "abs({eta}) < 3.0"
         range1:
           - "abs({trkiso}) < 0.2"
+          - "{passeseleid} == 1"
         range2:
           - "abs({trkiso}) < 0.2"
+          - "{passesphoid} == 1"
     barrel:
       label: "TkPhoton"
       cuts:

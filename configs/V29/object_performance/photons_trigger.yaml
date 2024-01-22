@@ -30,6 +30,7 @@ PhotonsTrigger_Barrel:
 PhotonsTrigger_Endcap:
   sample: Hgg
   version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
     x_arg: "Pt"

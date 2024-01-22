@@ -1,57 +1,57 @@
 part_e:
   label: "Gen Electron"
   eta_ranges:
-    range_0: [0, 5]
+    range0: [0, 5]
   ids:
     gen_electron_default:
       cuts:
-        range_0:
+        range0:
           - "{dr_0.3} < 0.15"
 
 tkElectron:
   match_dR: 0.15
   eta_ranges:
-    range_0: [0, 5]
-    range_1: [0, 1.479]
-    range_2: [1.479, 5]
+    range0: [0, 5]
+    range1: [0, 1.479]
+    range2: [1.479, 5]
   ids:
     NoIso:
       label: "TkElectron"
       cuts:
-        range_0:
+        range0:
           - "abs({eta}) < 2.4"
           - "{passeseleid} == 1"
     Iso:
       label: "TkIsoElectron"
       cuts:
-        range_0:
+        range0:
           - "abs({eta}) < 2.4"
           - "{passeseleid} == 1"
-        range_1:
+        range1:
           - "abs({trkiso}) < 0.13"
-        range_2:
+        range2:
           - "abs({trkiso}) < 0.28"
 
 EG:
   match_dR: 0.2
   eta_ranges:
-    range_0: [0, 5]
-    range_1: [0, 1.479]
-    range_2: [1.479, 2.4]
+    range0: [0, 5]
+    range1: [0, 1.479]
+    range2: [1.479, 2.4]
   label: "EG"
   ids:
     default:
       cuts:
-        range_0:
+        range0:
           - "abs({eta}) < 3.0"
-        range_1:
+        range1:
           - "{passeseleid} == 1"
-        range_2:
+        range2:
           - "{passessaid} == 1"
     eleid:
       cuts:
-        range_0:
+        range0:
           - "abs({eta}) < 3.0"
           - "{passeseleid} == 1"
-        range_2:
+        range2:
           - "{passessaid} == 1"

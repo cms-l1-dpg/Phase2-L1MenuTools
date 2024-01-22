@@ -16,7 +16,7 @@ PhotonsMatching_Eta_Pt10to25:
   test_objects:
     EG:default: "Eta"
     tkPhoton:NoIso: "Eta"
-    tkIsoPhoton:Iso: "Eta"
+    tkPhoton:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   binning:
