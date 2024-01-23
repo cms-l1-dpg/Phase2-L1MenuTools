@@ -21,6 +21,15 @@ tkElectron:
         range0:
           - "abs({eta}) < 2.4"
           - "{passeseleid} == 1"
+    NoIsoForIso:
+      # This id is exclusively used for the
+      # isoloation wp derivation
+      label: "TkElectron id in barrel"
+      cuts:
+        range0:
+          - "abs({eta}) < 2.4"
+        range1:
+          - "{passeseleid} == 1"
     Iso:
       label: "TkIsoElectron"
       cuts:

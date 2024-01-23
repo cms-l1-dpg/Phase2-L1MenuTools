@@ -38,7 +38,7 @@ ElectronsIsolation_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    tkElectron:Iso: "trkiso"
+    tkElectron:NoIsoForIso: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:
