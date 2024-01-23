@@ -1,4 +1,4 @@
-from menu_tools.object_performance.utils import utils
+from menu_tools.utils import utils
 
 
 def test_get_pdg_id():

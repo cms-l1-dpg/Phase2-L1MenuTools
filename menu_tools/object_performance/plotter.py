@@ -1,13 +1,14 @@
 import argparse
-from typing import Any
+import json
 import os
+import yaml
+import sys
+from typing import Any
 
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
 from progress.bar import IncrementalBar
-import yaml
-import json
 
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.object_performance.plot_config import PlotConfig
