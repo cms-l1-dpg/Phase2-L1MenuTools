@@ -3,6 +3,8 @@ import re
 from typing import Optional
 import yaml
 
+import awkward as ak
+
 
 class Object:
     """This class represents a physics object.
@@ -27,7 +29,10 @@ class Object:
         self.nano_obj_name = nano_obj_name
         self.obj_id_name = obj_id_name
         self.version = version
-        self.name = f"{nano_obj_name}_{obj_id_name}"
+        self._nano_obj  # fail early if no config can be found
+
+    def __str__(self) -> str:
+        return f"{self.nano_obj_name}_{self.obj_id_name}"
 
     @property
     def _nano_obj(self) -> dict[str, dict]:
@@ -37,6 +42,7 @@ class Object:
 
         Returns:
             nano_obj_configs: dictionary containing the object parameters and ids
+            or None if no configuration is found.
         """
         nano_obj_configs: dict[str, dict] = {}
         config_path = f"configs/{self.version}/objects/*.y*ml"
@@ -47,7 +53,12 @@ class Object:
                 _conf_dict = yaml.safe_load(f)
             nano_obj_configs = nano_obj_configs | _conf_dict
 
-        return nano_obj_configs[self.nano_obj_name]
+        try:
+            return nano_obj_configs[self.nano_obj_name]
+        except KeyError:
+            raise FileNotFoundError(
+                f"No config file found for {self.nano_obj_name}:{self.obj_id_name}!"
+            )
 
     def _get_object_default_params(self) -> dict:
         """Get default paramters of the object.
@@ -101,14 +112,44 @@ class Object:
                 )
             return self._object_params["cuts"]
         except KeyError:
-            print(f"No cuts will be applied for {self.name}!")
+            print(f"No cuts will be applied for {self}!")
             return None
+
+
+def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> ak.Array:
+    """Compute selection mask for object cuts on array
+
+    obj: Object that specifies the cuts to be applied
+    ak_array: array on which the selection is evaluated
+
+    Returns:
+        sel: boolean selection mask for entries passing all cuts form obj
+    """
+    # Initialize mask with True everywhere
+    sel = abs(ak_array["phi"]) > 0
+
+    # If no cut are specified in object return true everywhere
+    if not obj.cuts:
+        return sel
+
+    for range_i, range_cuts in obj.cuts.items():
+        # Initialize temporary mask (for rangei) with True everywhere
+        _sel = abs(ak_array["phi"]) > 0
+        for cut in range_cuts:
+            cut = re.sub(r"{([^&|]*)}", r"ak_array['\1']", cut)
+            eta_sel = (abs(ak_array["eta"]) > obj.eta_ranges[range_i][0]) & (
+                abs(ak_array["eta"]) < obj.eta_ranges[range_i][1]
+            )
+            _sel = _sel & (eval(cut) + ~eta_sel)
+        # apply OR logic
+        sel = sel & _sel
+    return sel
 
 
 if __name__ == "__main__":
     x = Object("tkElectron", "Iso", "V29")
     x = Object("caloJet", "default", "V29")
-    print(x.name)
+    print(x)
     print(x.match_dR)
     print(x.plot_label)
     print(x.eta_ranges)

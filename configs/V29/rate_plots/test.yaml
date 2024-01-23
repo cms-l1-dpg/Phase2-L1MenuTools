@@ -1,0 +1,11 @@
+TestRatePlot:
+  sample: MinBias
+  versions: V29
+  test_objects:
+    - phase1PuppiJet:default
+    # - tkElectron:NoIso
+    # - puppiMET:default  -- TODO: fix threshold applied on pt which does not exist here!
+  binning:
+    min: 0
+    max: 100
+    step: 10

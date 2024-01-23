@@ -68,7 +68,7 @@ class ArrayLoader:
             obj = Object(obj_cfg["base_obj"], obj_cfg["id"], self.cfg_plot.version)
             test_array = self._load_array_from_parquet(obj.nano_obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
-            self.turnon_collection.ak_arrays[obj.name] = test_array
+            self.turnon_collection.ak_arrays[str(obj)] = test_array
 
     def load_arrays(self) -> None:
         """
@@ -131,7 +131,7 @@ class TurnOnCollection:
         """
         for test_obj, x_arg in self.test_objects:
             ref_test = ak.cartesian(
-                {"ref": self.ak_arrays["ref"], "test": self.ak_arrays[test_obj.name]},
+                {"ref": self.ak_arrays["ref"], "test": self.ak_arrays[str(test_obj)]},
                 nested=True,
             )
             js, gs = ak.unzip(ref_test)
@@ -140,10 +140,10 @@ class TurnOnCollection:
             pass_dR = dR < test_obj.match_dR
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
             if "iso" not in x_arg:
-                self.numerators["ref"][test_obj.name] = ref_test["ref"][x_arg][pass_dR][
+                self.numerators["ref"][str(test_obj)] = ref_test["ref"][x_arg][pass_dR][
                     pt_max
                 ][:, :, 0]
-            self.numerators["test"][test_obj.name] = ref_test["test"][x_arg][pass_dR][
+            self.numerators["test"][str(test_obj)] = ref_test["test"][x_arg][pass_dR][
                 pt_max
             ][:, :, 0]
 
@@ -186,8 +186,8 @@ class TurnOnCollection:
         """
         for test_obj, x_arg in self.test_objects:
             try:
-                self.ak_arrays[test_obj.name][x_arg] = ak.max(
-                    self.ak_arrays[test_obj.name][x_arg], axis=1
+                self.ak_arrays[str(test_obj)][x_arg] = ak.max(
+                    self.ak_arrays[str(test_obj)][x_arg], axis=1
                 )
             except ValueError:
                 pass
@@ -260,21 +260,24 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
-            for range_i, range_cuts in test_obj.cuts.items():
+            for (
+                range_i,
+                range_cuts,
+            ) in test_obj.cuts.items():  # TODO: use the version from utils
                 for cut in range_cuts:
                     cut = re.sub(
-                        r"{([^&|]*)}", r"self.ak_arrays[test_obj.name]['\1']", cut
+                        r"{([^&|]*)}", r"self.ak_arrays[str(test_obj)]['\1']", cut
                     )
                     eta_sel = (
-                        abs(self.ak_arrays[test_obj.name]["eta"])
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
                         > test_obj.eta_ranges[range_i][0]
                     ) & (
-                        abs(self.ak_arrays[test_obj.name]["eta"])
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
                         < test_obj.eta_ranges[range_i][1]
                     )
 
                     sel = eval(cut) + ~eta_sel
-                    self.ak_arrays[test_obj.name] = self.ak_arrays[test_obj.name][sel]
+                    self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
 
     def _skim_to_hists(self) -> None:
         """
@@ -285,11 +288,11 @@ class TurnOnCollection:
             ref_field = trafo
 
         for test_obj, x_arg in self.test_objects:
-            sel = self.ak_arrays[test_obj.name][x_arg] > self.threshold
+            sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
-            self.hists[test_obj.name] = np.histogram(ak_array, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
-            self.hists["ref"][test_obj.name] = np.histogram(
+            self.hists["ref"][str(test_obj)] = np.histogram(
                 self._flatten_array(self.ak_arrays["ref"][ref_field]), bins=self.bins
             )
 
@@ -305,29 +308,29 @@ class TurnOnCollection:
         ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
 
         for test_obj, _ in self.test_objects:
-            sel_threshold = self.numerators["test"][test_obj.name] >= self.threshold
-            numerator = self.numerators["ref"][test_obj.name][sel_threshold]
+            sel_threshold = self.numerators["test"][str(test_obj)] >= self.threshold
+            numerator = self.numerators["ref"][str(test_obj)][sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            self.hists[test_obj.name] = np.histogram(numerator, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
             # Create Reference Numpy Histogram
             if self.threshold >= 0:
-                ref_obj = self.numerators["ref"][test_obj.name]
+                ref_obj = self.numerators["ref"][str(test_obj)]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists["ref"][test_obj.name] = np.histogram(ref_flat_np, bins=self.bins)
+            self.hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
 
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, _ in self.test_objects:
-            numerator = self.numerators["test"][test_obj.name]
+            numerator = self.numerators["test"][str(test_obj)]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            self.hists[test_obj.name] = np.histogram(numerator, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
     def xerr(self, obj_key: str):
         ref_vals = self.hists["ref"][obj_key][0]
