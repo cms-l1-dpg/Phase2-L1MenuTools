@@ -2,7 +2,6 @@ import argparse
 import json
 import os
 import yaml
-import sys
 from typing import Any
 
 import matplotlib.pyplot as plt

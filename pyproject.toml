@@ -57,6 +57,9 @@ testpaths = [
 ]
 
 [tool.mypy]
+exclude = [
+    "**/tests"
+]
 files = [
     "menu_tools"
 ]
