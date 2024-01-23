@@ -173,7 +173,7 @@ class EfficiencyPlotter(Plotter):
         self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
 
         # Save config
-        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
+        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.yaml"), "w") as f:
             yaml.dump(
                 {self.plot_name: self.cfg.config_dict}, f, default_flow_style=False
             )
@@ -213,7 +213,7 @@ class EfficiencyPlotter(Plotter):
         self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
 
         # Save config
-        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.json"), "w") as f:
+        with open(os.path.join(self._outdir_turnons, f"{plot_fname}.yaml"), "w") as f:
             yaml.dump(
                 {self.plot_name: self.cfg.config_dict}, f, default_flow_style=False
             )
