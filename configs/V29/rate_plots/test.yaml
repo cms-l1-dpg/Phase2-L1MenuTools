@@ -1,0 +1,22 @@
+ElectronsTriggerBarrel:
+  sample: DYLL_M50
+  versions: V30
+  test_objects:
+    EG:default: 
+    tkElectron:NoIso:
+  binning:
+    min: 0
+    max: 100
+    step: 10
+
+ElectronsTriggerBarrelV29vsV30:
+  sample: DYLL_M50
+  versions:
+    - V29
+    - V30
+  objects:
+    EG:default: 
+  binning:
+    min: 0 
+    max: 100
+    step: 10
