@@ -1,4 +1,3 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 import argparse
 import os
 import warnings
@@ -9,7 +8,10 @@ import mplhep as hep
 import numpy as np
 import yaml
 
+from menu_tools.utils import constants
+from menu_tools.utils import objects
 from menu_tools.utils import scalings
+from menu_tools.utils.objects import Object
 from menu_tools.rate_plots.config import RatePlotConfig
 
 plt.style.use(hep.style.CMS)
@@ -54,15 +56,13 @@ class RatePlotter:
         fig, ax = plt.subplots(figsize=self._figsize)
         hep.cms.label(ax=ax, llabel=self._llabel, com=self._com)
 
-        for obj_key, rate_values in self.data.items():
-            rate_values = rate_values[
-                version
-            ]  # TODO: This is not ideal. Think of a more elegant way to pass the data.
+        for obj_specifier, obj_instances in self.cfg.test_object_instances.items():
+            rate_values = self.data[obj_specifier][version]
             ax.plot(
                 list(rate_values.keys()),
                 list(rate_values.values()),
                 marker="o",
-                label=f"{obj_key} @ {version}",
+                label=f"{obj_instances[version].plot_label} @ {version}",
             )
 
         self._style_plot(fig, ax)
@@ -70,7 +70,6 @@ class RatePlotter:
         # Save plot
         fname = os.path.join(
             self._outdir,
-            version,
             f"{version}_{self._online_offline}_{self.cfg.plot_name}",
         )
         plt.savefig(fname + ".png")
@@ -141,14 +140,12 @@ class RatePlotter:
 class RateComputer:
     def __init__(
         self,
-        obj: str,
-        obj_cuts: list,
+        obj: Object,
         sample: str,
         version: str,
         apply_offline_conversion: bool,
     ):
         self.object = obj
-        self.cuts = obj_cuts
         self.sample = sample
         self.version = version
         self.apply_offline_conversion = apply_offline_conversion
@@ -156,21 +153,43 @@ class RateComputer:
             self.scaling_params = self._load_scalings()
         self.arrays = self._load_cached_arrays()
 
-    def _load_scalings(self):
+    def _load_scalings(self) -> dict:
         try:
-            scaling_params = scalings.load_scaling_params(self.object, self.version)
+            scaling_params = scalings.load_scaling_params(self.object)
         except FileNotFoundError:
+            fpath = f"outputs/scalings/{self.version}/{self.object.nano_obj_name}.yaml!"
             warnings.warn_explicit(
                 (
-                    f"No file was found at "
-                    f"`outputs/scalings/{self.version}/{self.object}.yaml`!"
+                    f"No file was found at `{fpath}`"
                 ),
                 UserWarning,
                 filename="plotter.py",
-                lineno=159,
+                lineno=158,
+            )
+            raise UserWarning
+        except KeyError:
+            warnings.warn_explicit(
+                (
+                    f"Scalings for {self.object.obj_id_name} were found in `{fpath}`"
+                ),
+                UserWarning,
+                filename="plotter.py",
+                lineno=171,
             )
             raise UserWarning
         return scaling_params
+
+    def _transform_key(self, raw_key: str) -> str:
+        """Maps <obj_name><obj_field> to <obj_field>.
+
+        Returns:
+            key: string of with the l1 object name prefix removed, qual
+            transformed to quality
+        """
+        key = raw_key.removeprefix(self.object.nano_obj_name).lower()
+        if "qual" in key:
+            return "quality"
+        return key
 
     def _load_cached_arrays(self):
         """
@@ -178,14 +197,14 @@ class RateComputer:
         from the cached parquet file.
         """
         fpath = os.path.join(
-            "cache", self.version, f"{self.version}_{self.sample}_{self.object}.parquet"
+            "cache",
+            self.version,
+            f"{self.version}_{self.sample}_{self.object.nano_obj_name}.parquet",
         )
         arr = ak.from_parquet(fpath)
 
         # Remove object name prefix from array fields
-        arr = ak.zip(
-            {var.replace(self.object, "").lower(): arr[var] for var in arr.fields}
-        )
+        arr = ak.zip({self._transform_key(var): arr[var] for var in arr.fields})
 
         # Apply scalings if so configured
         if self.apply_offline_conversion:
@@ -193,18 +212,18 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, thr: float) -> float:
+    def compute_rate(self, threshold: float) -> float:
+        """Computes rate at threhold after application of all object cuts.
+
+        threshold: pt threshold for which to compute rate
+
+        Returns:
+            rate: rate computed after all object cuts are applied
         """
-        Computes rate at `thr` after application of all cuts specified in the
-        object definition.
-        """
-        mask = self.arrays.pt > 0
-        # TODO: Create Object object from utils and iterate over cuts from
-        # there. Load object definitons as a function of version.
-        for cut in self.cuts:
-            mask = mask & eval(cut.replace("{", "self.arrays.").replace("}", ""))
-        mask = mask & (self.arrays.pt >= thr)
-        return ak.sum(ak.any(mask, axis=1)) / len(self.arrays)
+        mask = objects.compute_selection_mask_for_object_cuts(self.object, self.arrays)
+        mask = mask & (self.arrays.pt >= threshold)
+        rate = ak.sum(ak.any(mask, axis=1)) / len(mask) * constants.RATE_NORM_FACTOR
+        return rate
 
 
 class RatePlotCentral:
@@ -229,8 +248,8 @@ class RatePlotCentral:
     def _compute_rates(
         self,
         plot_config: RatePlotConfig,
-        obj_name: str,
-        obj_properties: dict,
+        obj_specifier: str,
+        obj_instances: dict[str, Object],
         apply_offline_conversion: bool,
     ) -> dict:
         """
@@ -245,8 +264,7 @@ class RatePlotCentral:
         for version in plot_config.versions:
             rate_data[version] = {}
             rate_computer = RateComputer(
-                obj_name,
-                obj_properties["cuts"],
+                obj_instances[version],
                 plot_config.sample,
                 version,
                 apply_offline_conversion,
@@ -258,7 +276,7 @@ class RatePlotCentral:
 
         return rate_data
 
-    def run(self, apply_offline_conversion: bool = False):
+    def run(self, apply_offline_conversion: bool = False) -> None:
         """
         This function iterates over all plots defined
         in the configuration file, computes the rates
@@ -271,13 +289,17 @@ class RatePlotCentral:
             plot_config = RatePlotConfig(plot_name, cfg_plot)
             rate_plot_data = {}
 
-            # Iterate over objects in plot
-            for obj_name, obj_properties in plot_config.objects.items():
-                # TODO: Only iterate over object names and load object
-                # properties from somewhere else, ideally a central place.
+            # Iterate over test objects in plot
+            for (
+                obj_specifier,
+                obj_instances,
+            ) in plot_config.test_object_instances.items():
                 try:
-                    rate_plot_data[obj_name] = self._compute_rates(
-                        plot_config, obj_name, obj_properties, apply_offline_conversion
+                    rate_plot_data[obj_specifier] = self._compute_rates(
+                        plot_config,
+                        obj_specifier,
+                        obj_instances,
+                        apply_offline_conversion,
                     )
                 except UserWarning:
                     # Return without creating a plot if a warning was raised.

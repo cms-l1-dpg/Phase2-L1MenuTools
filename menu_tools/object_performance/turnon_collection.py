@@ -68,7 +68,7 @@ class ArrayLoader:
             obj = Object(obj_cfg["base_obj"], obj_cfg["id"], self.cfg_plot.version)
             test_array = self._load_array_from_parquet(obj.nano_obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
-            self.turnon_collection.ak_arrays[obj.name] = test_array
+            self.turnon_collection.ak_arrays[str(obj)] = test_array
 
     def load_arrays(self) -> None:
         """
@@ -260,21 +260,24 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
-            for range_i, range_cuts in test_obj.cuts.items():
+            for (
+                range_i,
+                range_cuts,
+            ) in test_obj.cuts.items():  # TODO: use the version from utils
                 for cut in range_cuts:
                     cut = re.sub(
-                        r"{([^&|]*)}", r"self.ak_arrays[test_obj.name]['\1']", cut
+                        r"{([^&|]*)}", r"self.ak_arrays[str(test_obj)]['\1']", cut
                     )
                     eta_sel = (
-                        abs(self.ak_arrays[test_obj.name]["eta"])
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
                         > test_obj.eta_ranges[range_i][0]
                     ) & (
-                        abs(self.ak_arrays[test_obj.name]["eta"])
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
                         < test_obj.eta_ranges[range_i][1]
                     )
 
                     sel = eval(cut) + ~eta_sel
-                    self.ak_arrays[test_obj.name] = self.ak_arrays[test_obj.name][sel]
+                    self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
 
     def _skim_to_hists(self) -> None:
         """
@@ -285,11 +288,11 @@ class TurnOnCollection:
             ref_field = trafo
 
         for test_obj, x_arg in self.test_objects:
-            sel = self.ak_arrays[test_obj.name][x_arg] > self.threshold
+            sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
-            self.hists[test_obj.name] = np.histogram(ak_array, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
-            self.hists["ref"][test_obj.name] = np.histogram(
+            self.hists["ref"][str(test_obj)] = np.histogram(
                 self._flatten_array(self.ak_arrays["ref"][ref_field]), bins=self.bins
             )
 
