@@ -20,7 +20,7 @@ tkElectron:
       cuts:
         range0:
           - "abs({eta}) < 2.4"
-          - "{passeseleid} == 1"
+          - "({passeseleid} == 1) | ({pt} < 25)"
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
@@ -35,9 +35,9 @@ tkElectron:
       cuts:
         range0:
           - "abs({eta}) < 2.4"
-          - "{passeseleid} == 1"
         range1:
           - "abs({trkiso}) < 0.13"
+          - "{passeseleid} == 1"
         range2:
           - "abs({trkiso}) < 0.28"
 
@@ -46,7 +46,7 @@ EG:
   eta_ranges:
     range0: [0, 5]
     range1: [0, 1.479]
-    range2: [1.479, 2.4]
+    range2: [1.479, 3.0]
   label: "EG"
   ids:
     default:
