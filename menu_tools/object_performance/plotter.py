@@ -513,16 +513,23 @@ class ScalingCentral:
                 self._LEGACY_write_scalings_to_file(plot_name, version, params)
 
 
-if __name__ == "__main__":
+def run():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots",
+        nargs="+",
+        type=str,
         help="Path of YAML configuration file specifying the desired plots.",
     )
     args = parser.parse_args()
 
-    plotter = EfficiencyCentral(args.cfg_plots)
-    plotter.run()
+    for path_cfg_plot in args.cfg_plots:
+        plotter = EfficiencyCentral(path_cfg_plot)
+        plotter.run()
 
-    scalings = ScalingCentral(args.cfg_plots)
-    scalings.run()
+        scalings = ScalingCentral(path_cfg_plot)
+        scalings.run()
+
+
+if __name__ == "__main__":
+    run()
