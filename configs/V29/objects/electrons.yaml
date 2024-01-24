@@ -29,7 +29,7 @@ tkElectron:
         range0:
           - "abs({eta}) < 2.4"
         range1:
-          - "{passeseleid} == 1"
+          - "({passeseleid} == 1) | ({pt} < 25)"
     Iso:
       label: "TkIsoElectron"
       cuts:
@@ -37,7 +37,7 @@ tkElectron:
           - "abs({eta}) < 2.4"
         range1:
           - "abs({trkiso}) < 0.13"
-          - "{passeseleid} == 1"
+          - "({passeseleid} == 1) | ({pt} < 25)"
         range2:
           - "abs({trkiso}) < 0.28"
 
