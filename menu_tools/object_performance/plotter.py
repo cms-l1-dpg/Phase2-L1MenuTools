@@ -10,7 +10,7 @@ import numpy as np
 from progress.bar import IncrementalBar
 
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
-from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.utils import utils, objects
 
@@ -35,7 +35,7 @@ class Plotter:
 class EfficiencyPlotter(Plotter):
     def __init__(self, name, cfg, turnon_collection):
         self.plot_name = name
-        self.cfg = PlotConfig(cfg, name)
+        self.cfg = PerformancePlotConfig(cfg, name)
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
         self.threshold = self.turnon_collection.threshold

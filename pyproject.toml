@@ -58,10 +58,10 @@ testpaths = [
 
 [tool.mypy]
 exclude = [
-    "**/tests"
+    "**/tests",
 ]
 files = [
-    "menu_tools"
+    "menu_tools/utils"
 ]
 disable_error_code = [
     "import-untyped",

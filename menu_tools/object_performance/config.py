@@ -1,25 +1,11 @@
 from typing import Any, Optional
 
+from menu_tools.utils.config import BasePlotConfig
 
-class PlotConfig:
+
+class PerformancePlotConfig(BasePlotConfig):
     def __init__(self, cfg: dict[str, Any], name: Optional[str] = None) -> None:
-        self._cfg = cfg
-        self.plot_name = name
-
-    @property
-    def config_dict(self) -> dict[str, Any]:
-        return self._cfg
-
-    @property
-    def sample(self):
-        return self._cfg["sample"]
-
-    @property
-    def version(self) -> str:
-        try:
-            return self._cfg["version"]
-        except KeyError:
-            raise KeyError(f"No version configured for {self.plot_name}!")
+        super().__init__(cfg, name)
 
     @property
     def iso_vs_eff_plot(self):
@@ -84,18 +70,6 @@ class PlotConfig:
     def reference_field(self):
         field = self._cfg["reference_object"]["x_arg"]
         return field.lower()
-
-    @property
-    def bin_width(self) -> float:
-        return float(self._cfg["binning"]["step"])
-
-    @property
-    def bin_min(self) -> float:
-        return float(self._cfg["binning"]["min"])
-
-    @property
-    def bin_max(self) -> float:
-        return float(self._cfg["binning"]["max"])
 
     @property
     def scaling_pct(self):

@@ -5,7 +5,7 @@ import awkward as ak
 import numpy as np
 import vector
 
-from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object
 
@@ -14,7 +14,7 @@ vector.register_awkward()
 
 
 class ArrayLoader:
-    def __init__(self, turnon_collection, cfg_plot: PlotConfig):
+    def __init__(self, turnon_collection, cfg_plot: PerformancePlotConfig):
         self.turnon_collection = turnon_collection
         self.cfg_plot = cfg_plot
 
@@ -82,7 +82,7 @@ class TurnOnCollection:
     def __init__(
         self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None
     ):
-        self.cfg_plot = PlotConfig(cfg_plot, plot_name)
+        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name)
         self.version = self.cfg_plot.version
         self.threshold = threshold
         self.ak_arrays: dict[str, Any] = {}

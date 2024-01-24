@@ -159,9 +159,7 @@ class RateComputer:
         except FileNotFoundError:
             fpath = f"outputs/scalings/{self.version}/{self.object.nano_obj_name}.yaml!"
             warnings.warn_explicit(
-                (
-                    f"No file was found at `{fpath}`"
-                ),
+                (f"No file was found at `{fpath}`"),
                 UserWarning,
                 filename="plotter.py",
                 lineno=158,
@@ -169,9 +167,7 @@ class RateComputer:
             raise UserWarning
         except KeyError:
             warnings.warn_explicit(
-                (
-                    f"Scalings for {self.object.obj_id_name} were found in `{fpath}`"
-                ),
+                (f"Scalings for {self.object.obj_id_name} were found in `{fpath}`"),
                 UserWarning,
                 filename="plotter.py",
                 lineno=171,
@@ -241,8 +237,8 @@ class RatePlotCentral:
         Set bins according to configuration.
         """
         bin_width = plot_config.bin_width
-        xmax = plot_config.xmax + 1e-5
-        xmin = plot_config.xmin
+        xmax = plot_config.bin_max + 1e-5
+        xmin = plot_config.bin_min
         return np.arange(xmin, xmax, bin_width)
 
     def _compute_rates(
@@ -286,7 +282,7 @@ class RatePlotCentral:
         # Iterate over plots
         for plot_name, cfg_plot in self.cfg_plots.items():
             print("Plotting ", plot_name)
-            plot_config = RatePlotConfig(plot_name, cfg_plot)
+            plot_config = RatePlotConfig(cfg_plot, plot_name)
             rate_plot_data = {}
 
             # Iterate over test objects in plot

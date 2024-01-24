@@ -1,8 +1,7 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 from scipy.optimize import curve_fit
 import numpy as np
 
-from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import utils
 
 
@@ -14,7 +13,9 @@ class ScalingCollection:
     objects.
     """
 
-    def __init__(self, cfg: PlotConfig, method: str, plateau_pct: float = 0.95):
+    def __init__(
+        self, cfg: PerformancePlotConfig, method: str, plateau_pct: float = 0.95
+    ):
         self.cfg = cfg
         self.method = method
         self.plateau_pct = plateau_pct
@@ -249,7 +250,3 @@ class ScalingCollection:
             popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
             params[obj] = popt
         return params
-
-
-if __name__ == "__main__":
-    pass
