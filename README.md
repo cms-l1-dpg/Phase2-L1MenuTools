@@ -21,7 +21,7 @@
   dependencies installed via `pip install .`:
 
   ```bash
-  python3.11 -m venv <name_of_venv>
+  python3.11 -m venv pyenv
   source <name_of_venv>/bin/activate
   pip install .
   ```
