@@ -1,3 +1,5 @@
+import os
+import warnings
 from typing import Optional
 
 import awkward as ak
@@ -7,13 +9,31 @@ from menu_tools.utils.objects import Object
 
 
 def load_scaling_params(obj: Object) -> dict:
-    fpath = f"outputs/scalings/{obj.version}/{obj.nano_obj_name}.yaml"
-    with open(fpath, "r") as f:
-        return yaml.safe_load(f)[obj.obj_id_name]
+    """Retrieves scalings for object (incl. id) from `outputs`
+
+    Returns:
+        scaling_params: parameters computed in object_performance
+        for the online-offline scaling
+    """
+    fpath = os.path.join(
+        "outputs", "object_performance", obj.version, "scalings", f"{str(obj)}.yaml"
+    )
+    try:
+        with open(fpath, "r") as f:
+            scaling_params = yaml.safe_load(f)
+    except FileNotFoundError:
+        warnings.warn_explicit(
+            (f"No file was found at `{fpath}`"),
+            UserWarning,
+            filename="utils.py",
+            lineno=18,
+        )
+        raise UserWarning
+    return scaling_params
 
 
 def compute_offline_pt(
-    arr: ak.Array, obj_scaling_params: dict, pt_var: Optional[str] = None
+    arr: ak.Array, obj_scaling_params: dict[str, float], pt_var: Optional[str] = None
 ) -> ak.Array:
     # initialise array of zeros identical to the original pt
     if pt_var is not None:
@@ -29,18 +49,11 @@ def compute_offline_pt(
             "No branch to which to apply the scalings."
             " One of `et`, `pt` or `` must exist to compute offline pt/et."
         )
-    new_pt = ak.zeros_like(pt_orig)
 
-    # loop through eta regions with its scaling parameters
-    for region, values in obj_scaling_params.items():
-        # create eta mask for this eta region
-        eta_mask = (abs(arr.eta) >= values["eta_min"]) & (
-            abs(arr.eta) < values["eta_max"]
-        )
-        # scale pt for non-masked elements of this eta region
-        new_pt = new_pt + eta_mask * (pt_orig * values["slope"] + values["offset"])
+    # scale pt for non-masked elements of this eta region
+    offline_pt = pt_orig * obj_scaling_params["slope"] + obj_scaling_params["offset"]
 
-    return new_pt
+    return offline_pt
 
 
 def add_offline_pt(

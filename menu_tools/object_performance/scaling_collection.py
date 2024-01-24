@@ -219,13 +219,8 @@ class ScalingCollection:
         else:
             raise ValueError(f"`{method}` is not a valid scaling method!")
 
-    def _fit_linear_functions(
-        self, scalings: dict[str, dict[str, float]]
-    ) -> dict[str, np.array]:
-        params = {}
-        for obj, scaling_values in scalings.items():
-            xdata = [th for th, val in scaling_values.items() if val]
-            ydata = [scaling_values[x] for x in xdata]
-            popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
-            params[obj] = popt
-        return params
+    def fit_linear_function(self, scaling_values: dict[float, float]) -> np.array:
+        xdata = [th for th, val in scaling_values.items() if val]
+        ydata = [scaling_values[x] for x in xdata]
+        popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
+        return popt

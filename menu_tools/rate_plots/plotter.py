@@ -1,6 +1,5 @@
 import argparse
 import os
-import warnings
 
 import awkward as ak
 import matplotlib.pyplot as plt
@@ -150,30 +149,8 @@ class RateComputer:
         self.version = version
         self.apply_offline_conversion = apply_offline_conversion
         if self.apply_offline_conversion:
-            self.scaling_params = self._load_scalings()
+            self.scaling_params = scalings.load_scaling_params(obj)
         self.arrays = self._load_cached_arrays()
-
-    def _load_scalings(self) -> dict:
-        try:
-            scaling_params = scalings.load_scaling_params(self.object)
-        except FileNotFoundError:
-            fpath = f"outputs/scalings/{self.version}/{self.object.nano_obj_name}.yaml!"
-            warnings.warn_explicit(
-                (f"No file was found at `{fpath}`"),
-                UserWarning,
-                filename="plotter.py",
-                lineno=158,
-            )
-            raise UserWarning
-        except KeyError:
-            warnings.warn_explicit(
-                (f"Scalings for {self.object.obj_id_name} were found in `{fpath}`"),
-                UserWarning,
-                filename="plotter.py",
-                lineno=171,
-            )
-            raise UserWarning
-        return scaling_params
 
     def _transform_key(self, raw_key: str) -> str:
         """Maps <obj_name><obj_field> to <obj_field>.

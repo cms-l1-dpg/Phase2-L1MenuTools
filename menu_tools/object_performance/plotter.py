@@ -12,7 +12,8 @@ from progress.bar import IncrementalBar
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.object_performance.scaling_collection import ScalingCollection
-from menu_tools.utils import utils, objects
+from menu_tools.utils import utils
+from menu_tools.utils.objects import Object
 
 
 plt.style.use(hep.style.CMS)
@@ -79,7 +80,7 @@ class EfficiencyPlotter(Plotter):
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
-            obj = objects.Object(
+            obj = Object(
                 nano_obj_name=obj_key.split("_")[0],
                 obj_id_name=obj_key.split("_")[1],
                 version=self.version,
@@ -147,7 +148,7 @@ class EfficiencyPlotter(Plotter):
                 continue
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
-            obj = objects.Object(
+            obj = Object(
                 nano_obj_name=obj_key.split("_")[0],
                 obj_id_name=obj_key.split("_")[1],
                 version=self.version,
@@ -194,7 +195,7 @@ class EfficiencyPlotter(Plotter):
                 continue
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
 
-            obj = objects.Object(
+            obj = Object(
                 nano_obj_name=obj_key.split("_")[0],
                 obj_id_name=obj_key.split("_")[1],
                 version=self.version,
@@ -399,7 +400,6 @@ class ScalingPlotter(Plotter):
             "scalings",
             f"{self.plot_name}_{self.version}",
         )
-        print(plot_fname)
         plt.savefig(f"{plot_fname}.png")
         plt.savefig(f"{plot_fname}.pdf")
         self._save_json(f"{plot_fname}.json")
@@ -441,28 +441,17 @@ class ScalingCentral:
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _LEGACY_rate_config_function(self, name: str, a: float, b: float):
-        pm = "+" if b < 0 else ""
-        f_string = (
-            f"function :: {name}OfflineEtCut :: "
-            f"args:=(offline); lambda:=(offline{pm}{-b:.3f})/{a:.3f}"
+    def _write_scalings_to_file(self, obj: Object, params: np.array):
+        fpath = os.path.join(
+            "outputs",
+            "object_performance",
+            obj.version,
+            "scalings",
         )
-        return f_string
-
-    def _LEGACY_write_scalings_to_file(
-        self, plot_name: str, version: str, params: dict
-    ):
-        with open(
-            f"{self.outdir}/{version}/scalings/{plot_name}_scalings_{version}.txt", "w+"
-        ) as f:
-            f.write("")
-
-        with open(
-            f"{self.outdir}/{version}/scalings/{plot_name}_scalings_{version}.txt", "a"
-        ) as f:
-            for obj, obj_params in params.items():
-                a, b = obj_params
-                f.write(self._LEGACY_rate_config_function(obj, a, b) + "\n")
+        os.makedirs(fpath, exist_ok=True)
+        a, b = params
+        with open(os.path.join(fpath, f"{str(obj)}.yaml"), "w") as f:
+            yaml.dump({"offset": a, "slope": b}, f)
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
@@ -472,6 +461,7 @@ class ScalingCentral:
             print(f">>> Scalings {plot_name} <<<")
 
             scalings = {}
+            scaling_function_params = {}
 
             for test_obj in plot_config.test_object_instances:
                 scalings[str(test_obj)] = {}
@@ -491,21 +481,22 @@ class ScalingCentral:
                     ] = scaling_collection._compute_scalings(
                         turnon_collection, test_obj, scaling_pct, method
                     )
+                # Fit parameters of scaling function
+                params = scaling_collection.fit_linear_function(scalings[str(test_obj)])
+                scaling_function_params[str(test_obj)] = params
+                # Write scalings for test_obj to file for usage in rate part
+                self._write_scalings_to_file(test_obj, params)
                 bar.finish()
 
-            params = scaling_collection._fit_linear_functions(scalings)
             plotter = ScalingPlotter(
                 plot_name,
                 cfg_plot,
                 scalings,
                 scaling_pct,
                 turnon_collection.version,
-                params,
+                scaling_function_params,
             )
             plotter.plot()
-            self._LEGACY_write_scalings_to_file(
-                plot_name, turnon_collection.version, params
-            )
 
 
 def run():
