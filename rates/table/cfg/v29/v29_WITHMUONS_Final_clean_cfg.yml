@@ -15,7 +15,7 @@ L1_DoubleEGEle:
     obj: EG
 L1_DoublePFJet_MassMin:
   cross_masks:
-  - np.sqrt(2.0*leg2.et*leg1.et*(np.cosh(leg2.eta-leg1.eta)-np.cos(leg2.phi-leg1.phi)))>620.0
+  - (leg1+leg2).mass>620
   leg1:
     leg_mask:
     - leg1.offline_pt >= 160.0
@@ -129,8 +129,8 @@ L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
     obj: gmtTkMuon
 L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
   cross_masks:
-  - ((np.sqrt(2.0*leg2.et*leg1.et*(np.cosh(leg2.eta-leg1.eta)-np.cos(leg2.phi-leg1.phi)))>7.0) & (leg1.deltaR(leg2)>0))
-  - ((np.sqrt(2.0*leg2.et*leg1.et*(np.cosh(leg2.eta-leg1.eta)-np.cos(leg2.phi-leg1.phi)))<18.0) & (leg1.deltaR(leg2)>0))
+  - ((leg1+leg2).mass>7.0) & (leg1.deltaR(leg2)>0))
+  - ((leg1+leg2).mass<18.0) & (leg1.deltaR(leg2)>0))
   - ((leg1.chg*leg2.chg<0.0) & (leg1.deltaR(leg2)>0))
   - ((abs(leg2.z0-leg1.z0)<1) & (leg1.deltaR(leg2)>0))
   leg1:
@@ -637,7 +637,7 @@ L1_TripleTkMu:
     obj: gmtTkMuon
 L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9:
   cross_masks:
-  - np.sqrt(2.0*leg2.et*leg1.et*(np.cosh(leg2.eta-leg1.eta)-np.cos(leg2.phi-leg1.phi)))<9.0
+  - (leg1+leg2).mass<9.0
   - leg1.chg*leg2.chg<0.0
   - abs(leg2.z0-leg1.z0)<1
   - abs(leg3.z0-leg1.z0)<1
@@ -663,8 +663,8 @@ L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17:
   cross_masks:
   - abs(leg2.z0-leg1.z0)<1
   - leg1.chg*leg3.chg<0.0
-  - np.sqrt(2.0*leg3.et*leg1.et*(np.cosh(leg3.eta-leg1.eta)-np.cos(leg3.phi-leg1.phi)))>5.0
-  - np.sqrt(2.0*leg3.et*leg1.et*(np.cosh(leg3.eta-leg1.eta)-np.cos(leg3.phi-leg1.phi)))<17.0
+  - (leg1+leg3).mass>5.0
+  - (leg1+leg3).mass<17.0
   - abs(leg3.z0-leg1.z0)<1
   leg1:
     leg_mask:

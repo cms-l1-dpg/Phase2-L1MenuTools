@@ -116,7 +116,9 @@ class MenuTable:
                 arr["pt"] = arr[""]
             arr["offline_pt"] = arr.pt
 
-        if "eta" in arr.fields: arr = ak.with_name(arr, "Momentum3D")
+        if "eta" in arr.fields:
+            arr["mass"] = 0.0*ak.ones_like(arr["eta"])
+            arr = ak.with_name(arr, "Momentum4D")
         
         arr["idx"] = ak.local_index(arr)
         return arr
