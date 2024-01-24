@@ -327,7 +327,7 @@ class ScalingPlotter(Plotter):
         scalings: dict,
         scaling_pct: float,
         version: str,
-        params: dict,
+        params: dict[str, np.array],
     ):
         self.plot_name = plot_name
         self.cfg_plot = cfg_plot
@@ -342,17 +342,6 @@ class ScalingPlotter(Plotter):
         pm = "+" if b > 0 else "-"
         return f"y = {a} x {pm} {abs(b)}"
 
-    def _set_plot_ranges(self, ax):
-        xmax = 0
-        ymax = 0
-        for points in self.scalings.values():
-            x_points = np.array(list(points.keys()) + [xmax])
-            y_points = np.array(list(points.values()) + [ymax])
-            xmax = np.max(x_points)
-            ymax = np.max(y_points)
-        ax.set_xlim(0, xmax)
-        ax.set_ylim(0, ymax)
-
     def _save_json(self, fpath: str) -> None:
         plot: dict[str, Any] = {"watermark": f"{self.version}_{self.plot_name}"}
 
@@ -361,11 +350,7 @@ class ScalingPlotter(Plotter):
             x_points = list(points.keys())
             y_points = list(points.values())
 
-            label = (
-                self.cfg_plot["test_objects"][obj]["label"]
-                + ", "
-                + self._params_to_func_str(obj)
-            )
+            label = obj + ", " + self._params_to_func_str(obj)
 
             _object["xvals"] = x_points
             _object["yvals"] = y_points
@@ -385,11 +370,7 @@ class ScalingPlotter(Plotter):
             y_points = np.array(list(points.values()))
             pts = ax.plot(x_points, y_points, "o")
 
-            label = (
-                self.cfg_plot["test_objects"][obj]["label"]
-                + ", "
-                + self._params_to_func_str(obj)
-            )
+            label = obj + ", " + self._params_to_func_str(obj)  # TODO: Fix label!
             a, b = self.params[obj]
             x = np.linspace(0, 2500, 20)
             y = utils.scaling_func(x, a, b)
@@ -408,14 +389,19 @@ class ScalingPlotter(Plotter):
             fontsize=20,
             transform=ax.transAxes,
         )
-        self._set_plot_ranges(ax)
         fig.tight_layout()
+        ax.set_xlim(0, np.max(x_points))
+        ax.set_ylim(0, np.max(y_points))
 
-        plot_fname = (
-            f"{self.outdir}/{self.version}/scalings/{self.plot_name}_{self.version}"
+        plot_fname = os.path.join(
+            self.outdir_base,
+            self.version,
+            "scalings",
+            f"{self.plot_name}_{self.version}",
         )
-        for ext in [".png", ".pdf"]:
-            plt.savefig(f"{plot_fname}{ext}")
+        print(plot_fname)
+        plt.savefig(f"{plot_fname}.png")
+        plt.savefig(f"{plot_fname}.pdf")
         self._save_json(f"{plot_fname}.json")
 
         ## save config
@@ -480,14 +466,15 @@ class ScalingCentral:
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
-            if "scalings" not in cfg_plot:
+            plot_config = PerformancePlotConfig(cfg_plot, plot_name)
+            if not plot_config.compute_scalings:
                 continue
             print(f">>> Scalings {plot_name} <<<")
 
-            scalings = {x: {} for x in cfg_plot["test_objects"]}
+            scalings = {}
 
-            for test_obj in cfg_plot["test_objects"]:
-                scal = {test_obj: {}}
+            for test_obj in plot_config.test_object_instances:
+                scalings[str(test_obj)] = {}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
                 bar = IncrementalBar("Progress", max=len(thds))
                 for threshold in thds:
@@ -496,21 +483,29 @@ class ScalingCentral:
                     turnon_collection.create_hists()
                     scaling_pct = turnon_collection.cfg_plot.scaling_pct
                     method = turnon_collection.cfg_plot.scaling_method
-                    scaling_collect = ScalingCollection(cfg_plot, method, scaling_pct)
-                    version = turnon_collection.version
-                    scal = scaling_collect._compute_scalings(
-                        turnon_collection, test_obj, scal, scaling_pct, method
+                    scaling_collection = ScalingCollection(
+                        cfg_plot, method, scaling_pct
+                    )
+                    scalings[str(test_obj)][
+                        threshold
+                    ] = scaling_collection._compute_scalings(
+                        turnon_collection, test_obj, scaling_pct, method
                     )
                 bar.finish()
-                scalings[test_obj] = scal[test_obj]
 
-            params = scaling_collect._fit_linear_functions(scalings)
-            if params:
-                plotter = ScalingPlotter(
-                    plot_name, cfg_plot, scalings, scaling_pct, version, params
-                )
-                plotter.plot()
-                self._LEGACY_write_scalings_to_file(plot_name, version, params)
+            params = scaling_collection._fit_linear_functions(scalings)
+            plotter = ScalingPlotter(
+                plot_name,
+                cfg_plot,
+                scalings,
+                scaling_pct,
+                turnon_collection.version,
+                params,
+            )
+            plotter.plot()
+            self._LEGACY_write_scalings_to_file(
+                plot_name, turnon_collection.version, params
+            )
 
 
 def run():

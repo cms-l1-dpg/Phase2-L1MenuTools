@@ -332,15 +332,15 @@ class TurnOnCollection:
             # Create Test Object(s) Numpy Histogram
             self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
-    def xerr(self, obj_key: str):
-        ref_vals = self.hists["ref"][obj_key][0]
+    def xerr(self, obj: Object):
+        ref_vals = self.hists["ref"][str(obj)][0]
         bin_width = self.cfg_plot.bin_width
         return np.ones_like(ref_vals) * bin_width / 2
 
     @utils.ignore_warnings
-    def get_efficiency(self, obj_key: str):
-        ref_vals = self.hists["ref"][obj_key][0]
-        test_vals = self.hists[obj_key][0]
+    def get_efficiency(self, obj: Object):
+        ref_vals = self.hists["ref"][str(obj)][0]
+        test_vals = self.hists[str(obj)][0]
 
         eff = test_vals / ref_vals
         assert all(0 <= i <= 1 or str(i) == "nan" for i in eff)

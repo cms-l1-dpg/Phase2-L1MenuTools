@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from menu_tools.utils.config import BasePlotConfig
+from menu_tools.utils.objects import Object
 
 
 class PerformancePlotConfig(BasePlotConfig):
@@ -72,6 +73,10 @@ class PerformancePlotConfig(BasePlotConfig):
         return field.lower()
 
     @property
+    def compute_scalings(self) -> bool:
+        return "scalings" in self._cfg.keys()
+
+    @property
     def scaling_pct(self):
         return self._cfg["scalings"]["threshold"]
 
@@ -86,3 +91,12 @@ class PerformancePlotConfig(BasePlotConfig):
     @property
     def ylabel(self):
         return self._cfg["ylabel"]
+
+    @property
+    def test_object_instances(self) -> list:
+        test_objects = []
+        for obj in self._cfg["test_objects"]:
+            nano_obj_name = obj.split(":")[0]
+            obj_id_name = obj.split(":")[1]
+            test_objects.append(Object(nano_obj_name, obj_id_name, self.version))
+        return test_objects
