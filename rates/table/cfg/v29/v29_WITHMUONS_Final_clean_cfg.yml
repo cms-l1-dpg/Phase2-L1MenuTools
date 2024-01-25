@@ -129,8 +129,8 @@ L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
     obj: gmtTkMuon
 L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
   cross_masks:
-  - ((leg1+leg2).mass>7.0) & (leg1.deltaR(leg2)>0))
-  - ((leg1+leg2).mass<18.0) & (leg1.deltaR(leg2)>0))
+  - (((leg1+leg2).mass>7.0) & (leg1.deltaR(leg2)>0))
+  - (((leg1+leg2).mass<18.0) & (leg1.deltaR(leg2)>0))
   - ((leg1.chg*leg2.chg<0.0) & (leg1.deltaR(leg2)>0))
   - ((abs(leg2.z0-leg1.z0)<1) & (leg1.deltaR(leg2)>0))
   leg1:
