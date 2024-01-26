@@ -416,18 +416,21 @@ class ScalingPlotter(Plotter):
 class ScalingCentral:
     outdir = "outputs/object_performance/"
 
-    def __init__(self, cfg_plots_path):
+    def __init__(self, cfg_plots_path: str) -> None:
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
         with open("./configs/scaling_thresholds.yaml", "r") as f:
             self.scaling_thresholds = yaml.safe_load(f)
 
-    def _get_scaling_thresholds(self, cfg_plot, test_obj):
+    def _get_scaling_thresholds(self, cfg_plot, test_obj) -> list[int]:
         if test_obj in self.scaling_thresholds:
             return self.scaling_thresholds[test_obj]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
-        if any("Elec" in x or "Photon" in x for x in cfg_plot["test_objects"]):
+        if any(
+            any([y in x for x in cfg_plot["test_objects"]])
+            for y in ["Ele", "EG", "Photon"]
+        ):
             return self.scaling_thresholds["EG"]
         if any("MHT" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["MHT"]
@@ -441,7 +444,15 @@ class ScalingCentral:
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _write_scalings_to_file(self, obj: Object, params: np.array):
+    def _write_scalings_to_file(self, obj: Object, params: np.array) -> None:
+        """Dumps the scaling parameters to a file.
+
+        Writes the offset and slope params of the linear scaling function to
+        a yaml file for usage in the offline rate computation.
+
+        Retruns:
+            None
+        """
         fpath = os.path.join(
             "outputs",
             "object_performance",
@@ -451,7 +462,7 @@ class ScalingCentral:
         os.makedirs(fpath, exist_ok=True)
         a, b = params
         with open(os.path.join(fpath, f"{str(obj)}.yaml"), "w") as f:
-            yaml.dump({"offset": a, "slope": b}, f)
+            yaml.dump({"offset": float(a), "slope": float(b)}, f)
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
