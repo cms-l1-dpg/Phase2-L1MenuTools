@@ -1,10 +1,55 @@
-TestRatePlot:
+JetDefaultRates:
   sample: MinBias
-  versions: V29
+  version: V29
   test_objects:
     - phase1PuppiJet:default
-    # - tkElectron:NoIso
-    # - puppiMET:default  -- TODO: fix threshold applied on pt which does not exist here!
+    - seededConePuppiJet:default
+    # - trackerJet:default
+  binning:
+    min: 0
+    max: 100
+    step: 10
+
+ElectronDefaultRates:
+  sample: MinBias
+  version: V29
+  test_objects:
+    - EG:default
+    - tkElectron:NoIso
+    - tkElectron:Iso
+  binning:
+    min: 0
+    max: 100
+    step: 10
+
+MuonRatesBarrel:
+  sample: MinBias
+  version: V29
+  test_objects:
+    # - gmtMuon:barrel
+    - gmtTkMuon:barrel
+  binning:
+    min: 0
+    max: 100
+    step: 10
+
+MuonRatesOverlap:
+  sample: MinBias
+  version: V29
+  test_objects:
+    # - gmtMuon:overlap
+    - gmtTkMuon:overlap
+  binning:
+    min: 0
+    max: 100
+    step: 10
+
+MuonRatesEndcap:
+  sample: MinBias
+  version: V29
+  test_objects:
+    # - gmtMuon:endcap
+    - gmtTkMuon:endcap
   binning:
     min: 0
     max: 100
