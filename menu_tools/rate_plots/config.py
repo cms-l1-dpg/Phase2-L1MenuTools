@@ -17,11 +17,15 @@ class RatePlotConfig(BasePlotConfig):
 
     @property
     def versions(self) -> list[str]:
+        if "version" in self._cfg.keys():
+            version = self._cfg["version"]
+            if isinstance(version, str):
+                return [version]
         try:
             versions = self._cfg["versions"]
         except KeyError:
             raise ValueError(
-                "`versions` must be specified as either a single"
+                "`version(s)` must be specified as either a single"
                 "version (e.g. `V30`) or a list of exactly two versions"
                 "(e.g. [`V29`, `V30`])."
             )
