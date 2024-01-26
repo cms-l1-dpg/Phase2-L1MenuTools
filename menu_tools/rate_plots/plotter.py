@@ -258,7 +258,11 @@ class RatePlotCentral:
         """
         # Iterate over plots
         for plot_name, cfg_plot in self.cfg_plots.items():
-            print("Plotting ", plot_name)
+            print(
+                "Plotting ",
+                plot_name,
+                " Offline" if apply_offline_conversion else " Online"
+            )
             plot_config = RatePlotConfig(cfg_plot, plot_name)
             rate_plot_data = {}
 
