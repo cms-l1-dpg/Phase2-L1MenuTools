@@ -328,7 +328,7 @@ class ScalingPlotter(Plotter):
         scalings: dict,
         scaling_pct: float,
         version: str,
-        params: dict[str, np.array],
+        params: dict[str, np.ndarray],
     ):
         self.plot_name = plot_name
         self.cfg_plot = cfg_plot
@@ -444,7 +444,7 @@ class ScalingCentral:
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _write_scalings_to_file(self, obj: Object, params: np.array) -> None:
+    def _write_scalings_to_file(self, obj: Object, params: np.ndarray) -> None:
         """Dumps the scaling parameters to a file.
 
         Writes the offset and slope params of the linear scaling function to

@@ -12,7 +12,7 @@ class BasePlotConfig:
         self._name = name
 
     @property
-    def plot_name(self) -> str:
+    def plot_name(self) -> Optional[str]:
         return self._name
 
     @property

@@ -12,7 +12,6 @@ class RatePlotConfig(BasePlotConfig):
         Returns a boolean specifying if a plot comparing two versions
         is to be produced. If a list of two versions is given this is true.
         """
-
         return len(self.versions) == 2
 
     @property
@@ -36,6 +35,7 @@ class RatePlotConfig(BasePlotConfig):
                 len(versions) == 2
             ), "To compare versions, exactly two must be specified."
             return versions
+        raise RuntimeError("Somthing is wrong with the version config!")
 
     @property
     def test_objects(self) -> list:

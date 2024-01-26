@@ -55,13 +55,9 @@ pythonpath = [
 testpaths = [
     "tests",
 ]
-
 [tool.mypy]
-exclude = [
-    "**/tests",
-]
 files = [
-    "menu_tools/utils"
+    "menu_tools"
 ]
 disable_error_code = [
     "import-untyped",

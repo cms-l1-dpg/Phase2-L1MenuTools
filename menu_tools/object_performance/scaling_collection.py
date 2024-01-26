@@ -189,9 +189,7 @@ class ScalingCollection:
         )
         return percentage_point
 
-    def _compute_scalings_errf(
-        self, turnon_collection, test_obj, scalings, scaling_pct
-    ) -> float:
+    def _compute_scalings_errf(self, turnon_collection, test_obj, scaling_pct) -> float:
         bins = turnon_collection.bins
         bins = 0.5 * (bins[1:] + bins[:-1])
 
@@ -219,7 +217,7 @@ class ScalingCollection:
         else:
             raise ValueError(f"`{method}` is not a valid scaling method!")
 
-    def fit_linear_function(self, scaling_values: dict[float, float]) -> np.array:
+    def fit_linear_function(self, scaling_values: dict[float, float]) -> np.ndarray:
         xdata = [th for th, val in scaling_values.items() if val]
         ydata = [scaling_values[x] for x in xdata]
         popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
