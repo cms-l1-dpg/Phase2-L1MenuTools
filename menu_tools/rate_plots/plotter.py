@@ -261,7 +261,7 @@ class RatePlotCentral:
             print(
                 "Plotting ",
                 plot_name,
-                " Offline" if apply_offline_conversion else " Online"
+                " Offline" if apply_offline_conversion else " Online",
             )
             plot_config = RatePlotConfig(cfg_plot, plot_name)
             rate_plot_data = {}
