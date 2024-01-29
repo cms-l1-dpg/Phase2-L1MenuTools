@@ -63,9 +63,7 @@ class ArrayLoader:
         """
         Load test objects.
         """
-        test_objects = self.cfg_plot.test_objects
-        for test_obj, obj_cfg in test_objects.items():
-            obj = Object(obj_cfg["base_obj"], obj_cfg["id"], self.cfg_plot.version)
+        for obj in self.cfg_plot.test_object_instances:
             test_array = self._load_array_from_parquet(obj.nano_obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
             self.turnon_collection.ak_arrays[str(obj)] = test_array
@@ -99,10 +97,9 @@ class TurnOnCollection:
         obj_args = []
 
         test_objects = self.cfg_plot.test_objects
-        for test_obj, obj_cfg in test_objects.items():
-            obj = Object(obj_cfg["base_obj"], obj_cfg["id"], self.cfg_plot.version)
-            x_arg = obj_cfg["x_arg"].lower()
-            obj_args.append((obj, x_arg))
+        for obj_key, x_arg in test_objects.items():
+            obj = Object(obj_key, self.cfg_plot.version)
+            obj_args.append((obj, x_arg.lower()))
 
         return obj_args
 

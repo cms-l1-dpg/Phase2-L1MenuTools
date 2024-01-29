@@ -44,10 +44,8 @@ class RatePlotConfig(BasePlotConfig):
     @property
     def test_object_instances(self) -> dict[str, dict[str, Object]]:
         test_objects: dict[str, dict[str, Object]] = {}
-        for obj in self._cfg["test_objects"]:
-            nano_obj_name = obj.split(":")[0]
-            obj_id_name = obj.split(":")[1]
-            test_objects[obj] = {}
+        for obj_key in self._cfg["test_objects"]:
+            test_objects[obj_key] = {}
             for version in self.versions:
-                test_objects[obj][version] = Object(nano_obj_name, obj_id_name, version)
+                test_objects[obj_key][version] = Object(obj_key, version)
         return test_objects

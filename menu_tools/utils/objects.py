@@ -17,22 +17,50 @@ class Object:
         version: version of the menu
     """
 
-    def __init__(self, nano_obj_name: str, obj_id_name: str, version: str) -> None:
+    def __init__(
+        self,
+        object_key: str,
+        version: str,
+    ) -> None:
         """Initializes an Object loading the parameters from the
            corresponding config file.
 
         Args:
-            nano_obj_name: name of the physics object in the l1 ntuples
-            obj_id_name: name of the l1 object id as defined in `configs`
+            object_key: object/id specifier of the form l1_object:id[:eta_range]
             version: version of the menu
         """
-        self.nano_obj_name = nano_obj_name
-        self.obj_id_name = obj_id_name
+        self.object_key = object_key
         self.version = version
         self._nano_obj  # fail early if no config can be found
 
     def __str__(self) -> str:
-        return f"{self.nano_obj_name}_{self.obj_id_name}"
+        return f"{self.nano_obj_name}:{self.obj_id_name}:{self.eta_range}"
+
+    @property
+    def file_ext(self) -> str:
+        return str(self).replace(":", "_")
+
+    @property
+    def nano_obj_name(self) -> str:
+        return self.object_key.split(":")[0]
+
+    @property
+    def obj_id_name(self) -> str:
+        return self.object_key.split(":")[1]
+
+    @property
+    def eta_range(self) -> str:
+        """If an eta range other than "inclusive" is specified, a cut to that
+        range is added to `cuts`.
+
+        Returns:
+            eta_range_key: `barrel`/`endcap`/`overlap`/`forward`/`inclusive`
+        """
+        try:
+            eta_range_key = self.object_key.split(":")[2]
+        except IndexError:
+            eta_range_key = "inclusive"
+        return eta_range_key
 
     @property
     def _nano_obj(self) -> dict[str, dict]:
@@ -147,8 +175,8 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
 
 
 if __name__ == "__main__":
-    x = Object("tkElectron", "Iso", "V29")
-    x = Object("caloJet", "default", "V29")
+    x = Object("tkElectron:Iso", "V29")
+    x = Object("caloJet:default", "V29")
     print(x)
     print(x.match_dR)
     print(x.plot_label)

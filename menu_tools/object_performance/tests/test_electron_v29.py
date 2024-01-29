@@ -35,8 +35,10 @@ def test_isolation_barrel():
 
     for key, val in reference_data.items():
         if isinstance(val, dict):
+            if "tkEle" in key:
+                test_key = "tkElectron:NoIso:inclusive"
             efficiencies_test = np.array(
-                test_result[key]["efficiency"], dtype=np.float64
+                test_result[test_key]["efficiency"], dtype=np.float64
             )
             efficiencies_reference = np.array(val["efficiency"], dtype=np.float64)
             print(efficiencies_reference)

@@ -81,8 +81,7 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
             obj = Object(
-                nano_obj_name=obj_key.split("_")[0],
-                obj_id_name=obj_key.split("_")[1],
+                obj_key,
                 version=self.version,
             )
 
@@ -149,8 +148,7 @@ class EfficiencyPlotter(Plotter):
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
             obj = Object(
-                nano_obj_name=obj_key.split("_")[0],
-                obj_id_name=obj_key.split("_")[1],
+                obj_key,
                 version=self.version,
             )
 
@@ -196,8 +194,7 @@ class EfficiencyPlotter(Plotter):
             iso_vs_eff_hist = self._get_iso_vs_eff_hist(gen_hist_trig[0])
 
             obj = Object(
-                nano_obj_name=obj_key.split("_")[0],
-                obj_id_name=obj_key.split("_")[1],
+                obj_key,
                 version=self.version,
             )
 

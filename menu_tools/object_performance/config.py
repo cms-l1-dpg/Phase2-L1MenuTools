@@ -53,12 +53,15 @@ class PerformancePlotConfig(BasePlotConfig):
         if not all([":" in x for x in self._cfg["test_objects"]]):
             raise ValueError(f"Misconfigured obj:id key in {self.plot_name}!")
 
-        test_obj = {
-            x: {"base_obj": x.split(":")[0], "id": x.split(":")[1], "x_arg": x_arg}
-            for x, x_arg in self._cfg["test_objects"].items()
-        }
+        return self._cfg["test_objects"]
 
-        return test_obj
+        # DEPRECATED
+        # test_obj = {
+        #     x: {"base_obj": x.split(":")[0], "id": x.split(":")[1], "x_arg": x_arg}
+        #     for x, x_arg in self._cfg["test_objects"].items()
+        # }
+
+        # return test_obj
 
     @property
     def matching(self):
@@ -95,8 +98,6 @@ class PerformancePlotConfig(BasePlotConfig):
     @property
     def test_object_instances(self) -> list:
         test_objects = []
-        for obj in self._cfg["test_objects"]:
-            nano_obj_name = obj.split(":")[0]
-            obj_id_name = obj.split(":")[1]
-            test_objects.append(Object(nano_obj_name, obj_id_name, self.version))
+        for obj_key in self._cfg["test_objects"]:
+            test_objects.append(Object(obj_key, self.version))
         return test_objects
