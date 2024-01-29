@@ -1,24 +1,24 @@
 part_e:
   label: "Gen Electron"
   eta_ranges:
-    range0: [0, 5]
+    inclusive: [0, 5]
   ids:
     gen_electron_default:
       cuts:
-        range0:
+        inclusive:
           - "{dr_0.3} < 0.15"
 
 tkElectron:
   match_dR: 0.15
   eta_ranges:
-    range0: [0, 5]
-    range1: [0, 1.479]
-    range2: [1.479, 5]
+    inclusive: [0, 5]
+    barrel: [0, 1.479]
+    beyond_barrel: [1.479, 5]
   ids:
     NoIso:
       label: "TkElectron"
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 2.4"
           - "({passeseleid} == 1) | ({pt} < 25)"
     NoIsoForIso:
@@ -26,41 +26,41 @@ tkElectron:
       # isoloation wp derivation
       label: "TkElectron id in barrel"
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 2.4"
-        range1:
+        barrel:
           - "({passeseleid} == 1) | ({pt} < 25)"
     Iso:
       label: "TkIsoElectron"
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 2.4"
-        range1:
+        barrel:
           - "abs({trkiso}) < 0.13"
           - "({passeseleid} == 1) | ({pt} < 25)"
-        range2:
+        beyond_barrel:
           - "abs({trkiso}) < 0.28"
 
 EG:
   match_dR: 0.2
   eta_ranges:
-    range0: [0, 5]
-    range1: [0, 1.479]
-    range2: [1.479, 3.0]
+    inclusive: [0, 5]
+    barrel: [0, 1.479]
+    beyond_barrel: [1.479, 3.0]
   label: "EG"
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 3.0"
-        range1:
+        barrel:
           - "{passeseleid} == 1"
-        range2:
+        beyond_barrel:
           - "{passessaid} == 1"
     eleid:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 3.0"
           - "{passeseleid} == 1"
-        range2:
+        beyond_barrel:
           - "{passessaid} == 1"

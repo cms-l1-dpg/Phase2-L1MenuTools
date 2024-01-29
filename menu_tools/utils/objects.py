@@ -132,7 +132,10 @@ class Object:
 
     @property
     def eta_ranges(self) -> dict[str, tuple]:
-        return self._object_params["eta_ranges"]
+        _eta_ranges = self._object_params["eta_ranges"]
+        if "inclusive" not in _eta_ranges:
+            _eta_ranges["inclusive"] = [0, 7]
+        return _eta_ranges
 
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
@@ -140,16 +143,17 @@ class Object:
         if "cuts" in self._object_params.keys():
             _cuts = self._object_params["cuts"]
         if self.eta_range != "inclusive":
+            # if a region other than inclusive is specified an eta cut
             eta_min = self.eta_ranges[self.eta_range][0]
             eta_max = self.eta_ranges[self.eta_range][1]
             global_eta_cut = f"abs({{eta}}) > {eta_min} & abs({{eta}}) < {eta_max}"
-        try:
-            _cuts["inclusive"].append(global_eta_cut)
-        except KeyError:
-            _cuts["inclusive"] = [global_eta_cut]
+            try:
+                _cuts["inclusive"].append(global_eta_cut)
+            except KeyError:
+                _cuts["inclusive"] = [global_eta_cut]
         if not _cuts:
             print(f"No cuts will be applied for {self}!")
-            return None
+        return _cuts
 
 
 def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> ak.Array:

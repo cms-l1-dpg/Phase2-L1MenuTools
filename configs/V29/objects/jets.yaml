@@ -2,29 +2,29 @@ caloJet:
   match_dR: 0.3
   label: "Calo Jet"
   eta_ranges:
-    range0: [0, 7]
+    inclusive: [0, 7]
   cuts:
-    range0:
+    inclusive:
       - "abs({eta}) < 7"
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 7"
 
 seededConeExtendedPuppiJet:
   match_dR: 0.35
   label: "Seeded Cone Extended PuppiJet"
   eta_ranges:
-    range0: [0, 7]
+    inclusive: [0, 7]
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 5"
     bjetnn:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 2.4"
           - "{bjetnn} > 0.71"
 
@@ -32,31 +32,31 @@ phase1PuppiJet:
   match_dR: 0.3
   label: "Histogrammed PuppiJet"
   eta_ranges:
-    range0: [0, 7]
+    inclusive: [0, 7]
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 7"
 
 seededConePuppiJet:
   match_dR: 0.35
   label: "Seeded Cone PuppiJet"
   eta_ranges:
-    range0: [0, 7]
+    inclusive: [0, 7]
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 7"
 
 trackerJet:
   match_dR: 0.4
   label: "Tracker Jet"
   eta_ranges:
-    range0: [0, 7]
+    inclusive: [0, 7]
   ids:
     default:
       cuts:
-        range0:
+        inclusive:
           - "abs({eta}) < 7"
