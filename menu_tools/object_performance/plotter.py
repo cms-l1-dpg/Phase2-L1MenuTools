@@ -334,9 +334,9 @@ class ScalingPlotter(Plotter):
         self.version = version
         self.scaling_pct = scaling_pct
 
-    def _params_to_func_str(self, obj):
-        a = round(self.params[obj][0], 3)
-        b = round(self.params[obj][1], 3)
+    def _params_to_func_str(self, obj_key: str):
+        a = round(self.params[obj_key][0], 3)
+        b = round(self.params[obj_key][1], 3)
         pm = "+" if b > 0 else "-"
         return f"y = {a} x {pm} {abs(b)}"
 
@@ -363,13 +363,14 @@ class ScalingPlotter(Plotter):
         self._make_output_dirs(self.version)
 
         fig, ax = self._create_new_plot()
-        for obj, points in self.scalings.items():
+        for obj_key, points in self.scalings.items():
+            obj = Object(obj_key, self.version)
             x_points = np.array(list(points.keys()))
             y_points = np.array(list(points.values()))
             pts = ax.plot(x_points, y_points, "o")
 
-            label = obj + ", " + self._params_to_func_str(obj)  # TODO: Fix label!
-            a, b = self.params[obj]
+            label = obj.plot_label + ", " + self._params_to_func_str(obj_key)
+            a, b = self.params[obj_key]
             x = np.linspace(0, 2500, 20)
             y = utils.scaling_func(x, a, b)
             ax.plot(x, y, color=pts[0].get_color(), label=label)
