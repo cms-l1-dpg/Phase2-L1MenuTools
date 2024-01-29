@@ -459,7 +459,7 @@ class ScalingCentral:
         )
         os.makedirs(fpath, exist_ok=True)
         a, b = params
-        with open(os.path.join(fpath, f"{str(obj)}.yaml"), "w") as f:
+        with open(os.path.join(fpath, str(obj) + ".yaml"), "w") as f:
             yaml.dump({"offset": float(a), "slope": float(b)}, f)
 
     def run(self):

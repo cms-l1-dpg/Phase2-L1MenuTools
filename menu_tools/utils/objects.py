@@ -37,10 +37,6 @@ class Object:
         return f"{self.nano_obj_name}:{self.obj_id_name}:{self.eta_range}"
 
     @property
-    def file_ext(self) -> str:
-        return str(self).replace(":", "_")
-
-    @property
     def nano_obj_name(self) -> str:
         return self.object_key.split(":")[0]
 
