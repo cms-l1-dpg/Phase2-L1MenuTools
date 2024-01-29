@@ -60,6 +60,9 @@ class Object:
             eta_range_key = self.object_key.split(":")[2]
         except IndexError:
             eta_range_key = "inclusive"
+        assert (
+            eta_range_key in self.eta_ranges.keys()
+        ), "`eta` range specifier not found in object definition!"
         return eta_range_key
 
     @property
@@ -133,13 +136,18 @@ class Object:
 
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
+        _cuts = {}
+        if "cuts" in self._object_params.keys():
+            _cuts = self._object_params["cuts"]
+        if self.eta_range != "inclusive":
+            eta_min = self.eta_ranges[self.eta_range][0]
+            eta_max = self.eta_ranges[self.eta_range][1]
+            global_eta_cut = f"abs({{eta}}) > {eta_min} & abs({{eta}}) < {eta_max}"
         try:
-            if not all([re.match(r"^range\d", x) for x in self._object_params["cuts"]]):
-                raise ValueError(
-                    "Cuts for objects have to be specified eta ranges `range0/1/2` ..."
-                )
-            return self._object_params["cuts"]
+            _cuts["inclusive"].append(global_eta_cut)
         except KeyError:
+            _cuts["inclusive"] = [global_eta_cut]
+        if not _cuts:
             print(f"No cuts will be applied for {self}!")
             return None
 
