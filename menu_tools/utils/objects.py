@@ -127,7 +127,7 @@ class Object:
         return self._object_params["label"]
 
     @property
-    def eta_ranges(self) -> dict[str, tuple]:
+    def eta_ranges(self) -> dict[str, tuple[float, float]]:
         _eta_ranges = self._object_params["eta_ranges"]
         if "inclusive" not in _eta_ranges:
             _eta_ranges["inclusive"] = [0, 7]

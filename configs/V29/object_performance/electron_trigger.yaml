@@ -13,9 +13,9 @@ ElectronsTriggerBarrel:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:default: "Pt"
-    tkElectron:NoIso: "Pt"
-    tkElectron:Iso: "Pt"
+    EG:default:barrel: "Pt"
+    tkElectron:NoIso:barrel: "Pt"
+    tkElectron:Iso:barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -42,9 +42,9 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:default: "Pt"
-    tkElectron:NoIso: "Pt"
-    tkElectron:Iso: "Pt"
+    EG:default:beyond_barrel: "Pt"
+    tkElectron:NoIso:beyond_barrel: "Pt"
+    tkElectron:Iso:beyond_barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

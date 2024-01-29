@@ -148,8 +148,6 @@ class RateComputer:
         self.sample = sample
         self.version = version
         self.apply_offline_conversion = apply_offline_conversion
-        if self.apply_offline_conversion:
-            self.scaling_params = scalings.load_scaling_params(obj)
         self.arrays = self._load_cached_arrays()
 
     def _transform_key(self, raw_key: str) -> str:
@@ -181,7 +179,8 @@ class RateComputer:
 
         # Apply scalings if so configured
         if self.apply_offline_conversion:
-            arr["pt"] = scalings.compute_offline_pt(arr, self.scaling_params, "pt")
+            arr = scalings.add_offline_pt(arr, self.object)
+        arr["pt"] = scalings.get_pt_branch[arr]
 
         return arr
 
@@ -194,7 +193,10 @@ class RateComputer:
             rate: rate computed after all object cuts are applied
         """
         mask = objects.compute_selection_mask_for_object_cuts(self.object, self.arrays)
-        mask = mask & (self.arrays.pt >= threshold)
+        if self.apply_offline_conversion:
+            mask = mask & (self.arrays.offline_pt >= threshold)
+        else:
+            mask = mask & (self.arrays.pt >= threshold)
         rate = ak.sum(ak.any(mask, axis=1)) / len(mask) * constants.RATE_NORM_FACTOR
         return rate
 

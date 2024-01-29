@@ -1,6 +1,5 @@
 import os
 import warnings
-from typing import Optional
 
 import awkward as ak
 import yaml
@@ -8,15 +7,19 @@ import yaml
 from menu_tools.utils.objects import Object
 
 
-def load_scaling_params(obj: Object) -> dict:
-    """Retrieves scalings for object (incl. id) from `outputs`
+def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
+    """Retrieves scalings for object+id from `outputs`
+
+    obj: Object for which to retrive scaling parameters
+    eta_range: specifier of the range for which scalings are to be retrieved
 
     Returns:
         scaling_params: parameters computed in object_performance
         for the online-offline scaling
     """
+    fname = str(obj).replace("inclusive", eta_range)
     fpath = os.path.join(
-        "outputs", "object_performance", obj.version, "scalings", f"{str(obj)}.yaml"
+        "outputs", "object_performance", obj.version, "scalings", fname + ".yaml"
     )
     try:
         with open(fpath, "r") as f:
@@ -29,43 +32,42 @@ def load_scaling_params(obj: Object) -> dict:
             lineno=18,
         )
         raise UserWarning
-    return scaling_params
+    return scaling_params["slope"], scaling_params["offset"]
 
 
-def compute_offline_pt(
-    arr: ak.Array, obj_scaling_params: dict[str, float], pt_var: Optional[str] = None
-) -> ak.Array:
-    # initialise array of zeros identical to the original pt
-    if pt_var is not None:
-        pt_orig = arr[pt_var]
-    elif "et" in arr.fields:
+def get_pt_branch(arr: ak.Array) -> ak.Array:
+    if "et" in arr.fields:
         pt_orig = arr.et
     elif "pt" in arr.fields:
         pt_orig = arr.pt
     elif "" in arr.fields:
         pt_orig = arr[""][:, 0]
     else:
-        raise ValueError(
-            "No branch to which to apply the scalings."
-            " One of `et`, `pt` or `` must exist to compute offline pt/et."
-        )
-
-    # scale pt for non-masked elements of this eta region
-    offline_pt = pt_orig * obj_scaling_params["slope"] + obj_scaling_params["offset"]
-
-    return offline_pt
+        raise RuntimeError("Unknown pt branch!")
+    return pt_orig
 
 
-def add_offline_pt(
-    arr: ak.Array, obj_scaling_params: dict, pt_var: Optional[str] = None
-) -> ak.Array:
+def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
     """
-    Use the scalings to convert online pT to offline pT.
-    The `pt_var` argument can be used to specify which observables
-    should be used as "pT" for a given object.
-    If `pt_var` is not specified, `pt` or `et` are used.
-    For each object, a dedicated scaling in the barrel/endcap regions
-    is applied to the online pT.
+    Add offline pt to filed called `offline_pt` and return array
     """
-    new_pt = compute_offline_pt(arr, obj_scaling_params, pt_var)
+    pt_orig = get_pt_branch(arr)
+    new_pt = ak.zeros_like(pt_orig)
+
+    if len(obj.eta_ranges) == 1:
+        # if only a single eta range is configured, the scalings are applied
+        # inclusively on that region
+        slope, offset = load_scaling_params(obj, "inclusive")
+        new_pt = new_pt + (pt_orig * slope + offset)
+    else:
+        # if multiple eta ranges are found, the "inclusive" range is skipped
+        # and all other ranges are applied
+        for eta_range, eta_min_max in obj.eta_ranges.items():
+            if eta_range == "inclusive":
+                continue
+            slope, offset = load_scaling_params(obj, eta_range)
+            eta_mask = (abs(arr.eta) >= eta_min_max[0]) & (
+                abs(arr.eta) < eta_min_max[1]
+            )
+            new_pt = new_pt + eta_mask * (pt_orig * slope + offset)
     return ak.with_field(arr, new_pt, "offline_pt")
