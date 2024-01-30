@@ -180,7 +180,7 @@ class RateComputer:
         # Apply scalings if so configured
         if self.apply_offline_conversion:
             arr = scalings.add_offline_pt(arr, self.object)
-        arr["pt"] = scalings.get_pt_branch[arr]
+        arr["pt"] = scalings.get_pt_branch(arr)
 
         return arr
 
@@ -298,5 +298,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     plotter = RatePlotCentral(args.cfg_plots)
-    plotter.run()
     plotter.run(apply_offline_conversion=True)
+    plotter.run()
