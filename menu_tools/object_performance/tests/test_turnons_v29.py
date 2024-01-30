@@ -6,15 +6,24 @@ from unittest.mock import patch
 import sys
 
 import numpy as np
+import pytest
 
 from menu_tools.object_performance import plotter
 
 
-def test_isolation_barrel():
+testdata = [
+    "HT_50perc_350_V29",
+    "HT_90perc_350_V29",
+    "ElectronsIsolation_Barrel_-999_V29"
+]
+
+
+@pytest.mark.parametrize("test_name", testdata)
+def test_matching_plots_reproduced(test_name):
     # Prepare patching of the command line arguments for argparse
     testargs = [
         "foo",
-        "menu_tools/object_performance/tests/reference_data/ElectronsIsolation_Barrel_-999_V29.yaml",
+        f"menu_tools/object_performance/tests/reference_data/{test_name}.yaml",
     ]
 
     # Run Plotting
@@ -23,22 +32,20 @@ def test_isolation_barrel():
 
     # Load result and assert correct outcome
     with open(
-        "outputs/object_performance/V29/turnons/ElectronsIsolation_Barrel_-999_V29.json",
+        f"outputs/object_performance/V29/turnons/{test_name}.json",
         "r",
     ) as f:
         test_result = json.load(f)
     with open(
-        "menu_tools/object_performance/tests/reference_data/ElectronsIsolation_Barrel_-999_V29.json",
+        f"menu_tools/object_performance/tests/reference_data/{test_name}.json",
         "r",
     ) as f:
         reference_data = json.load(f)
 
     for key, val in reference_data.items():
         if isinstance(val, dict):
-            if "tkEle" in key:
-                test_key = "tkElectron:NoIso:inclusive"
             efficiencies_test = np.array(
-                test_result[test_key]["efficiency"], dtype=np.float64
+                test_result[key]["efficiency"], dtype=np.float64
             )
             efficiencies_reference = np.array(val["efficiency"], dtype=np.float64)
             print(efficiencies_reference)

@@ -1,0 +1,27 @@
+HT_90perc:
+  binning:
+    max: 750
+    min: 0
+    step: 20
+  version: V29
+  reference_object:
+    cuts:
+      object:
+      - abs({eta}) < 2.4
+      - '{pt} > 30'
+    label: Gen HT
+    object: jet
+    x_arg: Pt
+    trafo: HT
+  sample: TT
+  scalings:
+    method: naive
+    threshold: 0.9
+  test_objects:
+    phase1PuppiHT:default: ""
+    seededConePuppiHT:default: ""
+    trackerHT:default: ""
+  thresholds:
+  - 350
+  xlabel: Gen. HT (GeV)
+  ylabel: Trigger Efficiency (<threshold> GeV)
