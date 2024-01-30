@@ -13,9 +13,9 @@ PhotonsTrigger_Barrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:default: "Pt"
-    tkPhoton:NoIso: "Pt"
-    tkPhoton:Iso: "Pt"
+    EG:default:barrel: "Pt"
+    tkPhoton:NoIso:barrel: "Pt"
+    tkPhoton:Iso:barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -42,9 +42,9 @@ PhotonsTrigger_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:eleid: "Pt"
-    tkPhoton:NoIso: "Pt"
-    tkPhoton:Iso: "Pt"
+    EG:eleid:endcap: "Pt"
+    tkPhoton:NoIso:endcap: "Pt"
+    tkPhoton:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

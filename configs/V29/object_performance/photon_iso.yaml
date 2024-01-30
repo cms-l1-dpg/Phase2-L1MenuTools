@@ -14,7 +14,7 @@ PhotonIsolation_Barrel:
       object:
         - "abs({eta}) < 1.479"
   test_objects:
-    tkPhoton:barrel: "trkiso"
+    tkPhoton:NoIso:barrel: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Barrel)"
   binning:
@@ -39,7 +39,7 @@ PhotonIsolation_Endcap:
       object:
         - "abs({eta}) > 1.479"
   test_objects:
-    tkPhoton:endcap: "trkiso"
+    tkPhoton:NoIso:endcap: "trkiso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:

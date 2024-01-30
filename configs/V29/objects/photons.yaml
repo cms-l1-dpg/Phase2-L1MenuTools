@@ -25,17 +25,3 @@ tkPhoton:
         endcap:
           - "abs({trkiso}) < 0.2"
           - "{passesphoid} == 1"
-    barrel:
-      label: "TkPhoton"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 1.479"
-          - "{passeseleid} == 1"
-    endcap:
-      label: "TkIsoPhoton"
-      cuts:
-        inclusive:
-          - "abs({eta}) > 1.479"
-          - "abs({eta}) < 2.4"
-          - "{passesphoid} == 1"
-

@@ -3,48 +3,25 @@ gmtMuon:
   match_dR: 0.3
   eta_ranges:
     inclusive: [0, 5]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
   ids:
     default: {}
-    barrel:
-      cuts:
-        inclusive:
-          - "abs({eta}) < 0.83"
-    overlap:
-      cuts:
-        inclusive:
-          - "abs({eta}) > 0.83"
-          - "abs({eta}) < 1.24"
-    endcap:
-      cuts:
-        inclusive:
-          - "abs({eta}) > 1.24"
-          - "abs({eta}) < 2.4"
-
 
 gmtTkMuon:
   label: "GMT TkMuon"
   match_dR: 0.1
   eta_ranges:
     inclusive: [0, 5]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
   cuts:
     inclusive:
       - "{quality} > 0"
   ids:
-    default: {}
-    barrel:
+    default:
       cuts:
         inclusive:
-          - "abs({eta}) < 0.83"
-          - "{quality} > 0"
-    overlap:
-      cuts:
-        inclusive:
-          - "abs({eta}) > 0.83"
-          - "abs({eta}) < 1.24"
-          - "{quality} > 0"
-    endcap:
-      cuts:
-        inclusive:
-          - "abs({eta}) > 1.24"
-          - "abs({eta}) < 2.4"
           - "{quality} > 0"

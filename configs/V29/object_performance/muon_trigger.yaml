@@ -12,8 +12,8 @@ MuonsTrigger_Barrel:
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    gmtMuon:barrel: "Pt"
-    gmtTkMuon:barrel: "Pt"
+    gmtMuon:default:barrel: "Pt"
+    gmtTkMuon:default:barrel: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
   thresholds: [20, 25]
@@ -40,8 +40,8 @@ MuonsTrigger_Overlap:
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   test_objects:
-    gmtMuon:overlap: "Pt"
-    gmtTkMuon:overlap: "Pt"
+    gmtMuon:default:overlap: "Pt"
+    gmtTkMuon:default:overlap: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (overlap, L1 $p_T > 20$ GeV)"
   thresholds: [20, 25]
@@ -67,8 +67,8 @@ MuonsTrigger_Endcap:
       object:
         - "abs({eta}) > 1.24"
   test_objects:
-    gmtMuon:endcap: "Pt"
-    gmtTkMuon:endcap: "Pt"
+    gmtMuon:default:endcap: "Pt"
+    gmtTkMuon:default:endcap: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > 20$ GeV)"
   thresholds: [20, 25]
