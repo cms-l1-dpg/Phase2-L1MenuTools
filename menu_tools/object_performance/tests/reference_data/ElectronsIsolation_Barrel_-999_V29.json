@@ -2,7 +2,7 @@
     "xlabel": "Isolation",
     "ylabel": "Efficiency (Barrel)",
     "watermark": "V29_ElectronsIsolation_Barrel_-999",
-    "tkElectron_NoIso": {
+    "tkElectron:NoIso:inclusive": {
         "label": "TkElectron",
         "efficiency": [
             0.9405951546885947,

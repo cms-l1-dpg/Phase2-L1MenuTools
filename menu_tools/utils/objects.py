@@ -128,7 +128,9 @@ class Object:
 
     @property
     def eta_ranges(self) -> dict[str, tuple[float, float]]:
-        _eta_ranges = self._object_params["eta_ranges"]
+        _eta_ranges = {}
+        if "eta_ranges" in self._object_params.keys():
+            _eta_ranges = self._object_params["eta_ranges"]
         if "inclusive" not in _eta_ranges:
             _eta_ranges["inclusive"] = [0, 7]
         return _eta_ranges
@@ -142,7 +144,9 @@ class Object:
             # if a region other than inclusive is specified an eta cut
             eta_min = self.eta_ranges[self.eta_range][0]
             eta_max = self.eta_ranges[self.eta_range][1]
-            global_eta_cut = f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
             try:
                 _cuts["inclusive"].append(global_eta_cut)
             except KeyError:
