@@ -144,7 +144,9 @@ class Object:
             # if a region other than inclusive is specified an eta cut
             eta_min = self.eta_ranges[self.eta_range][0]
             eta_max = self.eta_ranges[self.eta_range][1]
-            global_eta_cut = f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
             try:
                 _cuts["inclusive"].append(global_eta_cut)
             except KeyError:

@@ -14,7 +14,7 @@ from menu_tools.object_performance import plotter
 testdata = [
     "HT_50perc_350_V29",
     "HT_90perc_350_V29",
-    "ElectronsIsolation_Barrel_-999_V29"
+    "ElectronsIsolation_Barrel_-999_V29",
 ]
 
 
