@@ -42,9 +42,9 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:default:beyond_barrel: "Pt"
-    tkElectron:NoIso:beyond_barrel: "Pt"
-    tkElectron:Iso:beyond_barrel: "Pt"
+    EG:default:endcap: "Pt"
+    tkElectron:NoIso:endcap: "Pt"
+    tkElectron:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

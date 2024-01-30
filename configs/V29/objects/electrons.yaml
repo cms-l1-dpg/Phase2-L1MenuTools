@@ -13,7 +13,7 @@ tkElectron:
   eta_ranges:
     inclusive: [0, 5]
     barrel: [0, 1.479]
-    beyond_barrel: [1.479, 5]
+    endcap: [1.479, 5]
   ids:
     NoIso:
       label: "TkElectron"
@@ -38,7 +38,7 @@ tkElectron:
         barrel:
           - "abs({trkiso}) < 0.13"
           - "({passeseleid} == 1) | ({pt} < 25)"
-        beyond_barrel:
+        endcap:
           - "abs({trkiso}) < 0.28"
 
 EG:
@@ -46,7 +46,7 @@ EG:
   eta_ranges:
     inclusive: [0, 5]
     barrel: [0, 1.479]
-    beyond_barrel: [1.479, 3.0]
+    endcap: [1.479, 3.0]
   label: "EG"
   ids:
     default:
@@ -55,12 +55,12 @@ EG:
           - "abs({eta}) < 3.0"
         barrel:
           - "{passeseleid} == 1"
-        beyond_barrel:
+        endcap:
           - "{passessaid} == 1"
     eleid:
       cuts:
         inclusive:
           - "abs({eta}) < 3.0"
           - "{passeseleid} == 1"
-        beyond_barrel:
+        endcap:
           - "{passessaid} == 1"
