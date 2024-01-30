@@ -53,7 +53,7 @@ TauRates:
   version: V29
   test_objects:
     - nnTau:default
-    - caloTau:default
+    # - caloTau:default
   binning:
     min: 10
     max: 155

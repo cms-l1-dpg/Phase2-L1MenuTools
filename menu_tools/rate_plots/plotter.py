@@ -56,6 +56,8 @@ class RatePlotter:
         hep.cms.label(ax=ax, llabel=self._llabel, com=self._com)
 
         for obj_specifier, obj_instances in self.cfg.test_object_instances.items():
+            if obj_specifier not in self.data.keys():
+                continue
             rate_values = self.data[obj_specifier][version]
             ax.plot(
                 list(rate_values.keys()),
@@ -280,10 +282,14 @@ class RatePlotCentral:
                         obj_instances,
                         apply_offline_conversion,
                     )
+                    scalings_found = True
                 except UserWarning:
                     # Continue without creating a plot if a warning was raised.
                     # This applies to no scalings being found for an object.
+                    scalings_found = False
                     continue
+            if not scalings_found:
+                continue
 
             # Plot Rate vs. Threshold after all data has been aggregated
             plotter = RatePlotter(plot_config, rate_plot_data, apply_offline_conversion)
