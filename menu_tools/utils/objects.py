@@ -56,9 +56,11 @@ class Object:
             eta_range_key = self.object_key.split(":")[2]
         except IndexError:
             eta_range_key = "inclusive"
-        assert (
-            eta_range_key in self.eta_ranges.keys()
-        ), "`eta` range specifier not found in object definition!"
+        if eta_range_key not in self.eta_ranges.keys():
+            raise ValueError(
+                f"`eta` range specifier `{eta_range_key}` not "
+                f"found in object definition of {self.nano_obj_name}!"
+            )
         return eta_range_key
 
     @property
