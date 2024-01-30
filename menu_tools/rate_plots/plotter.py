@@ -281,9 +281,9 @@ class RatePlotCentral:
                         apply_offline_conversion,
                     )
                 except UserWarning:
-                    # Return without creating a plot if a warning was raised.
+                    # Continue without creating a plot if a warning was raised.
                     # This applies to no scalings being found for an object.
-                    return None
+                    continue
 
             # Plot Rate vs. Threshold after all data has been aggregated
             plotter = RatePlotter(plot_config, rate_plot_data, apply_offline_conversion)

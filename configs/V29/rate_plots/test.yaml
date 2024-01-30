@@ -6,9 +6,9 @@ JetDefaultRates:
     - seededConePuppiJet:default
     # - trackerJet:default
   binning:
-    min: 0
-    max: 100
-    step: 10
+    min: 40
+    max: 420
+    step: 20
 
 ElectronDefaultRates:
   sample: MinBias
@@ -17,39 +17,54 @@ ElectronDefaultRates:
     - EG:default
     - tkElectron:NoIso
     - tkElectron:Iso
+    - tkPhoton:Iso
   binning:
-    min: 0
-    max: 100
-    step: 10
+    min: 10
+    max: 97
+    step: 30
 
-MuonRatesBarrel:
+EGRates:
   sample: MinBias
   version: V29
   test_objects:
-    # - gmtMuon:barrel
-    - gmtTkMuon:barrel
+    - EG:default
+    - tkElectron:NoIso
+    - tkElectron:Iso
+    - tkPhoton:Iso
   binning:
-    min: 0
-    max: 100
-    step: 10
+    min: 10
+    max: 97
+    step: 30
 
-MuonRatesOverlap:
+MuonRates:
   sample: MinBias
   version: V29
   test_objects:
-    # - gmtMuon:overlap
-    - gmtTkMuon:overlap
+    # - gmtMuon:default
+    # - gmtMuon:oldRateID
+    - gmtTkMuon:default
   binning:
     min: 0
-    max: 100
-    step: 10
+    max: 75
+    step: 3
 
-MuonRatesEndcap:
+TauRates:
   sample: MinBias
   version: V29
   test_objects:
-    # - gmtMuon:endcap
-    - gmtTkMuon:endcap
+    - nnTau:default
+    - caloTau:default
+  binning:
+    min: 10
+    max: 155
+    step: 5
+
+MuonRates:
+  sample: MinBias
+  version: V29
+  test_objects:
+    # - gmtMuon:default
+    - gmtTkMuon:default
   binning:
     min: 0
     max: 100
