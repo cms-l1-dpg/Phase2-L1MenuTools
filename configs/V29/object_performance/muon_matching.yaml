@@ -12,8 +12,8 @@ MuonsMatchingBarrel:
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    gmtMuon:barrel: "Pt"
-    gmtTkMuon:barrel: "Pt"
+    gmtMuon:default:barrel: "Pt"
+    gmtTkMuon:default:barrel: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   binning:
@@ -36,8 +36,8 @@ MuonsMatchingOverlap:
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   test_objects:
-    gmtMuon:overlap: "Pt"
-    gmtTkMuon:overlap: "Pt"
+    gmtMuon:default:overlap: "Pt"
+    gmtTkMuon:default:overlap: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
   binning:
@@ -60,8 +60,8 @@ MuonsMatchingEndcap:
         - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
   test_objects:
-    gmtMuon:endcap: "Pt"
-    gmtTkMuon:endcap: "Pt"
+    gmtMuon:default:endcap: "Pt"
+    gmtTkMuon:default:endcap: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   binning:
