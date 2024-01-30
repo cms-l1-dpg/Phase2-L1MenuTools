@@ -33,6 +33,9 @@ phase1PuppiJet:
   label: "Histogrammed PuppiJet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
   ids:
     default:
       cuts:
@@ -44,6 +47,9 @@ seededConePuppiJet:
   label: "Seeded Cone PuppiJet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
   ids:
     default:
       cuts:
@@ -55,6 +61,8 @@ trackerJet:
   label: "Tracker Jet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
   ids:
     default:
       cuts:
