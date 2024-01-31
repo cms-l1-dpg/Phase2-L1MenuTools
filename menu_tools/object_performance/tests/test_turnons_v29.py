@@ -28,7 +28,7 @@ def test_matching_plots_reproduced(test_name):
 
     # Run Plotting
     with patch.object(sys, "argv", testargs):
-        plotter.run()
+        plotter.main()
 
     # Load result and assert correct outcome
     with open(

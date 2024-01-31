@@ -43,6 +43,14 @@ flake8 = "^7.0.0"
 [tool.poetry.group.test.dependencies]
 pytest = "7.4.3"
 
+[tool.poetry.scripts]
+object_performance = "menu_tools.object_performance.plotter:main"
+rate_plots = "menu_tools.rate_plots.plotter:main"
+
+[options.entry_points."console_scripts"]
+object_performance = "menu_tools.object_performance.plotter:main"
+rate_plots = "menu_tools.rate_plots.plotter:main"
+
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",

@@ -508,7 +508,7 @@ class ScalingCentral:
             plotter.plot()
 
 
-def run():
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots",
@@ -527,4 +527,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    main()

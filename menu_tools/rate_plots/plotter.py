@@ -296,7 +296,7 @@ class RatePlotCentral:
             plotter.plot()
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots", help="Path of YAML file specifying the desired plots."
@@ -306,3 +306,7 @@ if __name__ == "__main__":
     plotter = RatePlotCentral(args.cfg_plots)
     plotter.run(apply_offline_conversion=True)
     plotter.run()
+
+
+if __name__ == "__main__":
+    main()
