@@ -460,7 +460,7 @@ class ScalingCentral:
         os.makedirs(fpath, exist_ok=True)
         a, b = params
         with open(os.path.join(fpath, str(obj) + ".yaml"), "w") as f:
-            yaml.dump({"offset": float(a), "slope": float(b)}, f)
+            yaml.dump({"slope": float(a), "offset": float(b)}, f)
 
     def run(self):
         for plot_name, cfg_plot in self.cfg_plots.items():
