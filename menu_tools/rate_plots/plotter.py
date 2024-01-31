@@ -1,5 +1,6 @@
 import argparse
 import os
+import json
 
 import awkward as ak
 import matplotlib.pyplot as plt
@@ -55,15 +56,30 @@ class RatePlotter:
         fig, ax = plt.subplots(figsize=self._figsize)
         hep.cms.label(ax=ax, llabel=self._llabel, com=self._com)
 
+        plot_dict = {}
+
         for obj_specifier, obj_instances in self.cfg.test_object_instances.items():
             if obj_specifier not in self.data.keys():
                 continue
             rate_values = self.data[obj_specifier][version]
+
+            xvals = list(rate_values.keys())
+            yvals = list(rate_values.values())
+            label = f"{obj_instances[version].plot_label} @ {version}"
+
+            plot_dict[obj_specifier] = {
+                "x_values": xvals,
+                "y_values": yvals,
+                "object": obj_instances[version].plot_label,
+                "label": label,
+                "version": version,
+            }
+
             ax.plot(
-                list(rate_values.keys()),
-                list(rate_values.values()),
+                xvals,
+                yvals,
                 marker="o",
-                label=f"{obj_instances[version].plot_label} @ {version}",
+                label=label,
             )
 
         self._style_plot(fig, ax)
@@ -75,6 +91,9 @@ class RatePlotter:
         )
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
+
+        with open(fname+".json", "w") as outfile:
+            outfile.write(json.dumps(plot_dict, indent=4))
 
         # TODO: Add styling
         plt.close()
