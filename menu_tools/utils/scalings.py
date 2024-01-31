@@ -28,19 +28,22 @@ def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
         warnings.warn_explicit(
             (f"No file was found at `{fpath}`"),
             UserWarning,
-            filename="utils.py",
-            lineno=18,
+            filename="utils/scalings.py",
+            lineno=26,
         )
         raise UserWarning
     return scaling_params["slope"], scaling_params["offset"]
 
 
 def get_pt_branch(arr: ak.Array) -> ak.Array:
-    if "et" in arr.fields:
-        pt_orig = arr.et
-    elif "pt" in arr.fields:
+    if "pt" in arr.fields:
+        print("pt branch selected for offline")
         pt_orig = arr.pt
+    elif "et" in arr.fields:
+        print("et branch selected for offline")
+        pt_orig = arr.et
     elif "" in arr.fields:
+        print("'' branch selected for offline")
         pt_orig = arr[""][:, 0]
     else:
         raise RuntimeError("Unknown pt branch!")
@@ -54,7 +57,7 @@ def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
     pt_orig = get_pt_branch(arr)
     new_pt = ak.zeros_like(pt_orig)
 
-    if len(obj.eta_ranges) == 1:
+    if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
         slope, offset = load_scaling_params(obj, "inclusive")
