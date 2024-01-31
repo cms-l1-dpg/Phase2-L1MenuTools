@@ -1,3 +1,15 @@
+HTRates:
+  sample: MinBias
+  version: V29
+  test_objects:
+    - phase1PuppiHT:default
+    # - seededConePuppiHT:default
+    # - trackerJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
 JetDefaultRates:
   sample: MinBias
   version: V29

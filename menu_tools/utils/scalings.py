@@ -37,13 +37,10 @@ def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
 
 def get_pt_branch(arr: ak.Array) -> ak.Array:
     if "pt" in arr.fields:
-        print("pt branch selected for offline")
         pt_orig = arr.pt
     elif "et" in arr.fields:
-        print("et branch selected for offline")
         pt_orig = arr.et
     elif "" in arr.fields:
-        print("'' branch selected for offline")
         pt_orig = arr[""][:, 0]
     else:
         raise RuntimeError("Unknown pt branch!")
