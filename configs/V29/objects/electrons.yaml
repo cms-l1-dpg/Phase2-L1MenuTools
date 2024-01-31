@@ -1,7 +1,7 @@
 part_e:
   label: "Gen Electron"
   eta_ranges:
-    inclusive: [0, 5]
+    inclusive: [0, 7]
   ids:
     gen_electron_default:
       cuts:
@@ -11,7 +11,7 @@ part_e:
 tkElectron:
   match_dR: 0.15
   eta_ranges:
-    inclusive: [0, 5]
+    inclusive: [0, 7]
     barrel: [0, 1.479]
     endcap: [1.479, 5]
   ids:
@@ -27,7 +27,7 @@ tkElectron:
       label: "TkElectron id in barrel"
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.7"
         barrel:
           - "({passeseleid} == 1) | ({pt} < 25)"
     Iso:
@@ -44,7 +44,7 @@ tkElectron:
 EG:
   match_dR: 0.2
   eta_ranges:
-    inclusive: [0, 5]
+    inclusive: [0, 7]
     barrel: [0, 1.479]
     endcap: [1.479, 3.0]
   label: "EG"

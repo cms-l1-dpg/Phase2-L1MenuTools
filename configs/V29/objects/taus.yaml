@@ -2,21 +2,27 @@ nnTau:
   label: "NN Tau"
   match_dR: 0.1
   eta_ranges:
-    inclusive: [0, 2.4]
+    inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
   cuts:
     inclusive:
       - "{passloosenn}==1"
   ids:
-    default: {}
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
 
 caloTau:
   label: "Calo Tau"
   match_dR: 0.3
   eta_ranges:
-    inclusive: [0, 2.4]
+    inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
   ids:
-    default: {}
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
