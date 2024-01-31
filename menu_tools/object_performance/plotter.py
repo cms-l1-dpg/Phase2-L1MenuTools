@@ -7,7 +7,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
-from progress.bar import IncrementalBar
+from tqdm import tqdm
 
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.object_performance.config import PerformancePlotConfig
@@ -475,9 +475,7 @@ class ScalingCentral:
             for test_obj in plot_config.test_object_instances:
                 scalings[str(test_obj)] = {}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
-                bar = IncrementalBar("Progress", max=len(thds))
-                for threshold in thds:
-                    bar.next()
+                for threshold in tqdm(thds):
                     turnon_collection = TurnOnCollection(cfg_plot, threshold)
                     turnon_collection.create_hists()
                     scaling_pct = turnon_collection.cfg_plot.scaling_pct
@@ -495,7 +493,6 @@ class ScalingCentral:
                 scaling_function_params[str(test_obj)] = params
                 # Write scalings for test_obj to file for usage in rate part
                 self._write_scalings_to_file(test_obj, params)
-                bar.finish()
 
             plotter = ScalingPlotter(
                 plot_name,

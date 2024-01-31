@@ -153,8 +153,6 @@ class Object:
                 _cuts["inclusive"].append(global_eta_cut)
             except KeyError:
                 _cuts["inclusive"] = [global_eta_cut]
-        if not _cuts:
-            print(f"No cuts will be applied for {self}!")
         return _cuts
 
 
