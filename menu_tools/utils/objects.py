@@ -168,7 +168,7 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
         sel: boolean selection mask for entries passing all cuts form obj
     """
     # Initialize mask with True everywhere
-    sel = abs(ak_array["phi"]) > 0
+    sel = abs(ak_array["phi"]) >= 0
 
     # If no cut are specified in object return true everywhere
     if not obj.cuts:
@@ -176,7 +176,7 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
 
     for range_i, range_cuts in obj.cuts.items():
         # Initialize temporary mask (for rangei) with True everywhere
-        _sel = abs(ak_array["phi"]) > 0
+        _sel = abs(ak_array["phi"]) >= 0
         for cut in range_cuts:
             cut = re.sub(r"{([^&|]*)}", r"ak_array['\1']", cut)
             eta_sel = (abs(ak_array["eta"]) > obj.eta_ranges[range_i][0]) & (
