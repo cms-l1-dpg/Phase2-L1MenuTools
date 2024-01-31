@@ -47,10 +47,6 @@ pytest = "7.4.3"
 object_performance = "menu_tools.object_performance.plotter:main"
 rate_plots = "menu_tools.rate_plots.plotter:main"
 
-[options.entry_points."console_scripts"]
-object_performance = "menu_tools.object_performance.plotter:main"
-rate_plots = "menu_tools.rate_plots.plotter:main"
-
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
