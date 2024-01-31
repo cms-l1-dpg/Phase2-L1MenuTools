@@ -17,11 +17,8 @@ gmtTkMuon:
     barrel: [0, 0.83]
     overlap: [0.83, 1.24]
     endcap: [1.24, 2.4]
-  cuts:
-    inclusive:
-      - "{quality} > 0"
   ids:
     default:
       cuts:
         inclusive:
-          - "{quality} > 0"
+          - "({quality} > 0) | ({pt} < 8)" # quality criterion only to be appied for p_T > 8 GeV
