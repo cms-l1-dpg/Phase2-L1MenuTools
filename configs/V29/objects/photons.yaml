@@ -9,7 +9,7 @@ tkPhoton:
       label: "tkPhoton"
       cuts:
         inclusive:
-          - "abs({eta}) < 3.0"
+          - "abs({eta}) < 2.4"
         barrel:
           - "{passeseleid} == 1"
         endcap:
@@ -18,7 +18,7 @@ tkPhoton:
       label: "tkIsoPhoton"
       cuts:
         inclusive:
-          - "abs({eta}) < 3.0"
+          - "abs({eta}) < 2.4"
         barrel:
           - "abs({trkiso}) < 0.2"
           - "{passeseleid} == 1"
