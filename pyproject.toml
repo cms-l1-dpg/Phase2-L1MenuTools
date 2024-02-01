@@ -44,6 +44,7 @@ flake8 = "^7.0.0"
 pytest = "7.4.3"
 
 [tool.poetry.scripts]
+cache_objects = "menu_tools.caching.cache_objects:main"
 object_performance = "menu_tools.object_performance.plotter:main"
 rate_plots = "menu_tools.rate_plots.plotter:main"
 

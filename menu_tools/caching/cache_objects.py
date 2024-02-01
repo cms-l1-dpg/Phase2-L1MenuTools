@@ -323,7 +323,7 @@ class ObjectCacher:
         self._save_array_to_parquet()
 
 
-if __name__ == "__main__":
+def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg",
@@ -336,6 +336,11 @@ if __name__ == "__main__":
         help="Only do print-out of objects and branches to be loaded.",
     )
     args = parser.parse_args()
+    return args
+
+
+def main():
+    args = parse_args()
 
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
@@ -358,3 +363,7 @@ if __name__ == "__main__":
                         dryrun=args.dry_run,
                     )
                     loader.load()
+
+
+if __name__ == "__main__":
+    main()
