@@ -38,7 +38,7 @@ PhotonsMatching_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:eleid: "Pt"
+    EG:default: "Pt"
     tkPhoton:NoIso: "Pt"
     tkPhoton:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"

@@ -42,7 +42,7 @@ PhotonsTrigger_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:eleid:endcap: "Pt"
+    EG:default:endcap: "Pt"
     tkPhoton:NoIso:endcap: "Pt"
     tkPhoton:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
