@@ -13,8 +13,7 @@
   Detailed instructions on how to run each step of the workflow are
   provided in each folder.
 
-## Setup of Python environment
-  **Note:** The code should run without any setup on `lxplus`.
+## Setup
 
   A standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
@@ -26,8 +25,12 @@
   pip install .
   ```
 
-  You can then execute the tools (e.g. for object performance) via
+  **ATTENTION:** Whenever you pull changes you need to `pip install . --upgrade`
+
+  You can then execute the tools via
 
   ```python
-  python -m menu_tools.object_performance.plotter <path_to_config>
+  cach_objects <path_to_config>
+  object_performance <path_to_config>
+  rate_plots <path_to_config>
   ```
