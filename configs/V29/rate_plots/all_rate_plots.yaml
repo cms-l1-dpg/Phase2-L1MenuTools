@@ -3,7 +3,7 @@ HTRates:
   version: V29
   test_objects:
     - phase1PuppiHT:default
-    # - seededConePuppiHT:default
+    - seededConePuppiHT:default
     # - trackerJet:default
   binning:
     min: 40
