@@ -68,7 +68,6 @@ V29:
         phase1PuppiHT: "all"
         seededConePuppiJet: [Pt, Et, Eta, Phi]
         seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
-        seededConeExtendedPuppiHT: "all"
         seededConePuppiHT: "all"
         seededConePuppiMHT: "all"
         tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, HGC, PassesEleID, PassesPhoID]
