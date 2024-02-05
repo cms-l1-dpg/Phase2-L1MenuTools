@@ -1,5 +1,8 @@
 import argparse
 import os
+import json
+
+import time
 
 import awkward as ak
 import matplotlib.pyplot as plt
@@ -55,15 +58,30 @@ class RatePlotter:
         fig, ax = plt.subplots(figsize=self._figsize)
         hep.cms.label(ax=ax, llabel=self._llabel, com=self._com)
 
+        plot_dict = {}
+
         for obj_specifier, obj_instances in self.cfg.test_object_instances.items():
             if obj_specifier not in self.data.keys():
                 continue
             rate_values = self.data[obj_specifier][version]
+
+            xvals = list(rate_values.keys())
+            yvals = list(rate_values.values())
+            label = f"{obj_instances[version].plot_label} @ {version}"
+
+            plot_dict[obj_specifier] = {
+                "x_values": xvals,
+                "y_values": yvals,
+                "object": obj_instances[version].plot_label,
+                "label": label,
+                "version": version,
+            }
+
             ax.plot(
-                list(rate_values.keys()),
-                list(rate_values.values()),
+                xvals,
+                yvals,
                 marker="o",
-                label=f"{obj_instances[version].plot_label} @ {version}",
+                label=label,
             )
 
         self._style_plot(fig, ax)
@@ -75,6 +93,9 @@ class RatePlotter:
         )
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
+
+        with open(fname+".json", "w") as outfile:
+            outfile.write(json.dumps(plot_dict, indent=4))
 
         # TODO: Add styling
         plt.close()
@@ -186,7 +207,7 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, threshold: float) -> float:
+    def compute_rate(self, thresholds) -> dict:
         """Computes rate at threhold after application of all object cuts.
 
         threshold: pt threshold for which to compute rate
@@ -194,13 +215,15 @@ class RateComputer:
         Returns:
             rate: rate computed after all object cuts are applied
         """
-        mask = objects.compute_selection_mask_for_object_cuts(self.object, self.arrays)
-        if self.apply_offline_conversion:
-            mask = mask & (self.arrays.offline_pt >= threshold)
-        else:
-            mask = mask & (self.arrays.pt >= threshold)
-        rate = ak.sum(ak.any(mask, axis=1)) / len(mask) * constants.RATE_NORM_FACTOR
-        return rate
+        obj_mask = objects.compute_selection_mask_for_object_cuts(self.object, self.arrays)
+
+        pt_field = "offline_pt" if self.apply_offline_conversion else "pt"
+        max_pt_obj = ak.max(self.arrays[obj_mask][pt_field], axis = 1)
+
+        cumsum = np.cumsum(np.histogram(max_pt_obj, bins = [-1] + list(thresholds) + [1e5])[0])
+        rate = (cumsum[-1] - cumsum)/len(obj_mask) * constants.RATE_NORM_FACTOR
+        
+        return dict(zip(thresholds, rate))
 
 
 class RatePlotCentral:
@@ -247,9 +270,7 @@ class RatePlotCentral:
                 apply_offline_conversion,
             )
 
-            # Iterate over thresholds
-            for thr in self.get_bins(plot_config):
-                rate_data[version][thr] = rate_computer.compute_rate(thr)
+            rate_data[version] = rate_computer.compute_rate(thresholds = self.get_bins(plot_config))
 
         return rate_data
 

@@ -21,4 +21,4 @@ gmtTkMuon:
     default:
       cuts:
         inclusive:
-          - "({quality} > 0) | ({pt} < 8)" # quality criterion only to be appied for p_T > 8 GeV
+          - "({quality} > 0) | ({pt} > 8)" # quality criterion only to be appied for p_T < 8 GeV
