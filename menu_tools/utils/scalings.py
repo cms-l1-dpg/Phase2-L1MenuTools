@@ -41,7 +41,7 @@ def get_pt_branch(arr: ak.Array) -> ak.Array:
     elif "et" in arr.fields:
         pt_orig = arr.et
     elif "" in arr.fields:
-        pt_orig = arr[""][:, 0]
+        pt_orig = arr[""]
     else:
         raise RuntimeError("Unknown pt branch!")
     return pt_orig

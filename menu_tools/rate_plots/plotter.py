@@ -218,7 +218,9 @@ class RateComputer:
         )
 
         pt_field = "offline_pt" if self.apply_offline_conversion else "pt"
-        max_pt_obj = ak.max(self.arrays[obj_mask][pt_field], axis=1)
+
+        if (max_pt_obj := self.arrays[obj_mask][pt_field]).ndim > 1:
+            max_pt_obj = ak.max(max_pt_obj, axis=1)
 
         cumsum = np.cumsum(
             np.histogram(max_pt_obj, bins=[-1] + list(thresholds) + [1e5])[0]
