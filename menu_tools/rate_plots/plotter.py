@@ -2,8 +2,6 @@ import argparse
 import os
 import json
 
-import time
-
 import awkward as ak
 import matplotlib.pyplot as plt
 import mplhep as hep
@@ -94,7 +92,7 @@ class RatePlotter:
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
 
-        with open(fname+".json", "w") as outfile:
+        with open(fname + ".json", "w") as outfile:
             outfile.write(json.dumps(plot_dict, indent=4))
 
         # TODO: Add styling
@@ -207,7 +205,7 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, thresholds: np.Array) -> dict:
+    def compute_rate(self, thresholds: np.ndarray) -> dict:
         """Computes rate at threholds after application of all object cuts.
 
         threshold: pt threshold for which to compute rate
@@ -215,14 +213,18 @@ class RateComputer:
         Returns:
             rate: rate computed after all object cuts are applied
         """
-        obj_mask = objects.compute_selection_mask_for_object_cuts(self.object, self.arrays)
+        obj_mask = objects.compute_selection_mask_for_object_cuts(
+            self.object, self.arrays
+        )
 
         pt_field = "offline_pt" if self.apply_offline_conversion else "pt"
-        max_pt_obj = ak.max(self.arrays[obj_mask][pt_field], axis = 1)
+        max_pt_obj = ak.max(self.arrays[obj_mask][pt_field], axis=1)
 
-        cumsum = np.cumsum(np.histogram(max_pt_obj, bins = [-1] + list(thresholds) + [1e5])[0])
-        rate = (cumsum[-1] - cumsum)/len(obj_mask) * constants.RATE_NORM_FACTOR
-        
+        cumsum = np.cumsum(
+            np.histogram(max_pt_obj, bins=[-1] + list(thresholds) + [1e5])[0]
+        )
+        rate = (cumsum[-1] - cumsum) / len(obj_mask) * constants.RATE_NORM_FACTOR
+
         return dict(zip(thresholds, rate))
 
 
