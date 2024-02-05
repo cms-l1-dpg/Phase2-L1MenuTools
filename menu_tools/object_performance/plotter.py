@@ -472,10 +472,13 @@ class ScalingCentral:
             scalings = {}
             scaling_function_params = {}
 
+            pbar = tqdm(total=len(plot_config.test_object_instances), desc="Objects")
             for test_obj in plot_config.test_object_instances:
+                pbar.write(str(test_obj))
+                pbar.update(1)
                 scalings[str(test_obj)] = {}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
-                for threshold in tqdm(thds):
+                for threshold in tqdm(thds, leave=False, desc="Thresholds"):
                     turnon_collection = TurnOnCollection(cfg_plot, threshold)
                     turnon_collection.create_hists()
                     scaling_pct = turnon_collection.cfg_plot.scaling_pct
