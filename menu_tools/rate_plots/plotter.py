@@ -207,8 +207,8 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, thresholds) -> dict:
-        """Computes rate at threhold after application of all object cuts.
+    def compute_rate(self, thresholds: np.Array) -> dict:
+        """Computes rate at threholds after application of all object cuts.
 
         threshold: pt threshold for which to compute rate
 
@@ -270,7 +270,7 @@ class RatePlotCentral:
                 apply_offline_conversion,
             )
 
-            rate_data[version] = rate_computer.compute_rate(thresholds = self.get_bins(plot_config))
+            rate_data[version] = rate_computer.compute_rate(self.get_bins(plot_config))
 
         return rate_data
 
