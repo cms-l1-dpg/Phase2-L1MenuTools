@@ -2,4 +2,4 @@
 ignore = W391, W503
 max-line-length = 88
 extend-ignore = E203, E704, E266
-exclude = menu_tools/object_performance/quality_obj.py
+exclude = menu_tools/object_performance/quality_obj.py,menu_tools/**/test_*.py

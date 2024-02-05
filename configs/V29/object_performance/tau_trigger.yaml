@@ -1,9 +1,10 @@
 TauTriggerBarrel_90perc:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -12,19 +13,8 @@ TauTriggerBarrel_90perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default:barrel: "Pt"
+    caloTau:default:barrel: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -38,10 +28,11 @@ TauTriggerBarrel_90perc:
 
 TauTriggerEndcap_90perc:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -50,19 +41,8 @@ TauTriggerEndcap_90perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default:endcap: "Pt"
+    caloTau:default:endcap: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -76,10 +56,11 @@ TauTriggerEndcap_90perc:
 
 TauTriggerBarrel_50perc:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -88,19 +69,8 @@ TauTriggerBarrel_50perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default:barrel: "Pt"
+    caloTau:default:barrel: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -114,10 +84,11 @@ TauTriggerBarrel_50perc:
 
 TauTriggerEndcap_50perc:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -126,19 +97,8 @@ TauTriggerEndcap_50perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default:endcap: "Pt"
+    caloTau:default:endcap: "Pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]

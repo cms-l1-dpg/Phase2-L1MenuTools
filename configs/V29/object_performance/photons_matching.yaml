@@ -1,9 +1,10 @@
 PhotonsMatching_Barrel:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -12,31 +13,9 @@ PhotonsMatching_Barrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
+    EG:default: "Pt"
+    tkPhoton:NoIso: "Pt"
+    tkPhoton:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -46,10 +25,11 @@ PhotonsMatching_Barrel:
 
 PhotonsMatching_Endcap:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -58,32 +38,9 @@ PhotonsMatching_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-        - "{passeseleid} == 1"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
+    EG:default: "Pt"
+    tkPhoton:NoIso: "Pt"
+    tkPhoton:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

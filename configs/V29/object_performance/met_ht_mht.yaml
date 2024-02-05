@@ -1,9 +1,9 @@
 HT_90perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen HT"
     trafo: "HT"
     cuts:
@@ -11,15 +11,9 @@ HT_90perc:
          - "abs({eta}) < 2.4"
          - "{pt} > 30"
   test_objects:
-    trackerHT:
-      suffix: ""
-      label: "Tracker HT"
-    phase1PuppiHT:
-      suffix: ""
-      label: "Histogrammed Puppi HT"
-    seededConePuppiHT:
-      suffix: ""
-      label: "SeededCone HT"
+    trackerHT:default: ""
+    phase1PuppiHT:default: ""
+    seededConePuppiHT:default: ""
   thresholds: [350]
   scalings:
     method: "naive"
@@ -33,10 +27,10 @@ HT_90perc:
 
 HT_50perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen HT"
     trafo: "HT"
     cuts:
@@ -44,15 +38,9 @@ HT_50perc:
          - "abs({eta}) < 2.4"
          - "{pt} > 30"
   test_objects:
-    trackerHT:
-      suffix: ""
-      label: "Tracker HT"
-    phase1PuppiHT:
-      suffix: ""
-      label: "Histogrammed Puppi HT"
-    seededConePuppiHT:
-      suffix: ""
-      label: "SeededCone HT"
+    trackerHT:default: ""
+    phase1PuppiHT:default: ""
+    seededConePuppiHT:default: ""
   thresholds: [350]
   scalings:
     method: "naive"
@@ -66,10 +54,10 @@ HT_50perc:
 
 MHT_50perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen MHT"
     cuts:
       object:
@@ -77,15 +65,9 @@ MHT_50perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    trackerMHT:
-      suffix: ""
-      label: "Tracker MHT"
-    phase1PuppiMHT:
-      suffix: "et"
-      label: "Phase1 Puppi MHT"
-    seededConePuppiMHT:
-      suffix: "et"
-      label: "SeededCone MHT"
+    trackerMHT:default: ""
+    phase1PuppiMHT:default: "et"
+    seededConePuppiMHT:default: "et"
   thresholds: [70, 150]
   scalings:
     method: "naive"
@@ -99,10 +81,10 @@ MHT_50perc:
 
 MHT_90perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "jet"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen MHT"
     cuts:
       object:
@@ -110,15 +92,9 @@ MHT_90perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    trackerMHT:
-      suffix: ""
-      label: "Tracker MHT"
-    phase1PuppiMHT:
-      suffix: "et"
-      label: "Phase1 Puppi MHT"
-    seededConePuppiMHT:
-      suffix: "et"
-      label: "SeededCone MHT"
+    trackerMHT:default: ""
+    phase1PuppiMHT:default: "et"
+    seededConePuppiMHT:default: "et"
   thresholds: [70, 150]
   scalings:
     method: "naive"
@@ -132,18 +108,14 @@ MHT_90perc:
 
 MET_90perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "genMetTrue"
-    suffix: ""
+    x_arg: ""
     label: "Gen MET"
   test_objects:
-    trackerMET:
-      suffix: ""
-      label: "Tracker MET"
-    puppiMET:
-      suffix: "et"
-      label: "Puppi MET"
+    trackerMET:default: ""
+    puppiMET:default: "et"
   thresholds: [150]
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
@@ -157,18 +129,14 @@ MET_90perc:
 
 MET_50perc:
   sample: TT
-  default_version: V29
+  version: V29
   reference_object:
     object: "genMetTrue"
-    suffix: ""
+    x_arg: ""
     label: "Gen MET"
   test_objects:
-    trackerMET:
-      suffix: ""
-      label: "Tracker MET"
-    puppiMET:
-      suffix: "et"
-      label: "Puppi MET"
+    trackerMET:default: ""
+    puppiMET:default: "et"
   thresholds: [150]
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"

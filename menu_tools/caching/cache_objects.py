@@ -3,7 +3,7 @@ import glob
 import os
 
 import awkward as ak
-from progress.bar import IncrementalBar
+from tqdm import tqdm
 import uproot
 import vector
 import yaml
@@ -257,13 +257,11 @@ class ObjectCacher:
     @utils.timer("Loading objects files")
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
-        bar = IncrementalBar("Progress", max=len(fnames))
 
         branches = [self._object + x for x in self._branches]
         all_arrays = {x.removeprefix("part"): [] for x in branches}
 
-        for fname in fnames:
-            bar.next()
+        for fname in tqdm(fnames):
             new_array = {x.removeprefix("part"): [] for x in branches}
 
             # Read files in chunks to avoid issues with large size files
@@ -281,8 +279,6 @@ class ObjectCacher:
 
             # Concatenate array from "fname file" to all_arrays
             all_arrays = self._ak_array_in_chunk(all_arrays, new_array, branches)
-
-        bar.finish()
 
         if self._object.startswith("part"):
             all_arrays = {**all_arrays, **self._ref_part_iso}
@@ -327,7 +323,7 @@ class ObjectCacher:
         self._save_array_to_parquet()
 
 
-if __name__ == "__main__":
+def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg",
@@ -340,6 +336,11 @@ if __name__ == "__main__":
         help="Only do print-out of objects and branches to be loaded.",
     )
     args = parser.parse_args()
+    return args
+
+
+def main():
+    args = parse_args()
 
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
@@ -362,3 +363,7 @@ if __name__ == "__main__":
                         dryrun=args.dry_run,
                     )
                     loader.load()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,20 +1,22 @@
+from typing import Any, Optional
 import re
 
 import awkward as ak
 import numpy as np
 import vector
 
-from menu_tools.object_performance.plot_config import PlotConfig
-from menu_tools.object_performance.quality_obj import Quality, L1IsoCut
+from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import utils
+from menu_tools.utils.objects import Object
 
 
 vector.register_awkward()
 
 
 class ArrayLoader:
-    def __init__(self, turnon_collection):
+    def __init__(self, turnon_collection, cfg_plot: PerformancePlotConfig):
         self.turnon_collection = turnon_collection
+        self.cfg_plot = cfg_plot
 
     def _transform_key(self, raw_key: str, obj: str):
         """
@@ -28,18 +30,6 @@ class ArrayLoader:
         else:
             return key
 
-    def _map_region(self, test_array, obj: str):
-        """
-        This method serves to map a 'region' branch
-        to the correct eta region in the detector.
-        Needed from V25 after the barrel and endcap
-        collections have been merged.
-        """
-        if "hgc" in test_array.fields:
-            test_array["region"] = ak.where(abs(test_array["eta"]) > 1.479, 1, 0)
-
-        return test_array
-
     def _load_array_from_parquet(self, obj: str):
         """
         Loads the specified parquet file
@@ -48,42 +38,37 @@ class ArrayLoader:
         in self._transform_key().
         """
         fname = (
-            f"cache/{self.turnon_collection.cfg_plot.version_ref_object}/"
-            f"{self.turnon_collection.cfg_plot.version_ref_object}_"
-            f"{self.turnon_collection.cfg_plot.sample}_"
+            f"cache/{self.cfg_plot.version}/"
+            f"{self.cfg_plot.version}_"
+            f"{self.cfg_plot.sample}_"
             f"{obj}.parquet"
         )
         array = ak.from_parquet(fname)
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
-        if self.turnon_collection.cfg_plot.reference_trafo:
+        if self.cfg_plot.reference_trafo:
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
         return array
 
-    def _load_ref_branches(self):
+    def _load_ref_branches(self) -> None:
         """
         Load reference object.
         """
-        ref_array = self._load_array_from_parquet(
-            self.turnon_collection.cfg_plot.reference_object
-        )
+        ref_array = self._load_array_from_parquet(self.cfg_plot.reference_object)
         ref_array = ak.with_name(ref_array, "Momentum4D")
         self.turnon_collection.ak_arrays["ref"] = ref_array
 
-    def _load_test_branches(self):
+    def _load_test_branches(self) -> None:
         """
         Load test objects.
         """
-        test_objects = self.turnon_collection.cfg_plot.test_objects
-        for test_obj, obj_cfg in test_objects.items():
-            obj_name = self.turnon_collection.cfg_plot.get_base_obj(test_obj)
-            test_array = self._load_array_from_parquet(obj_name)
+        for obj in self.cfg_plot.test_object_instances:
+            test_array = self._load_array_from_parquet(obj.nano_obj_name)
             test_array = ak.with_name(test_array, "Momentum4D")
-            test_array = self._map_region(test_array, test_obj)
-            self.turnon_collection.ak_arrays[test_obj] = test_array
+            self.turnon_collection.ak_arrays[str(obj)] = test_array
 
-    def load_arrays(self):
+    def load_arrays(self) -> None:
         """
         Load ak arrays from cache (parquet) files.
         """
@@ -92,16 +77,34 @@ class ArrayLoader:
 
 
 class TurnOnCollection:
-    def __init__(self, cfg_plot, threshold):
-        self.cfg_plot = PlotConfig(cfg_plot)
-        self.version = self.cfg_plot.version_ref_object
+    def __init__(
+        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None
+    ):
+        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name)
+        self.version = self.cfg_plot.version
         self.threshold = threshold
-        self.ak_arrays = {}
-        self.numerators = {"ref": {}, "test": {}}
-        self.hists = {"ref": {}}
+        self.ak_arrays: dict[str, Any] = {}
+        self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
+        self.hists: dict[str, Any] = {"ref": {}}
 
     @property
-    def bins(self):
+    def test_objects(self) -> list[tuple[Object, str]]:
+        """Instantiates all test objects.
+
+        Returns:
+            obj_args: list containig tuples of test objects and their x_args.
+        """
+        obj_args = []
+
+        test_objects = self.cfg_plot.test_objects
+        for obj_key, x_arg in test_objects.items():
+            obj = Object(obj_key, self.cfg_plot.version)
+            obj_args.append((obj, x_arg.lower()))
+
+        return obj_args
+
+    @property
+    def bins(self) -> np.ndarray:
         """
         Set bins according to configuration.
         """
@@ -110,11 +113,11 @@ class TurnOnCollection:
         xmin = self.cfg_plot.bin_min
         return np.arange(xmin, xmax, bin_width)
 
-    def _load_arrays(self):
+    def _load_arrays(self) -> None:
         """
         Load ak arrays from cache (parquet) files.
         """
-        loader = ArrayLoader(self)
+        loader = ArrayLoader(self, self.cfg_plot)
         loader.load_arrays()
 
     def _match_test_to_ref(self):
@@ -123,28 +126,23 @@ class TurnOnCollection:
         to reference objects.
         Selects highest pT deltaR-matched reco lepton.
         """
-        for test_obj, obj_cfg in self.cfg_plot.test_objects.items():
-            suffix = obj_cfg["suffix"].lower()
+        for test_obj, x_arg in self.test_objects:
             ref_test = ak.cartesian(
-                {"ref": self.ak_arrays["ref"], "test": self.ak_arrays[test_obj]},
+                {"ref": self.ak_arrays["ref"], "test": self.ak_arrays[str(test_obj)]},
                 nested=True,
             )
             js, gs = ak.unzip(ref_test)
             dR = gs.deltaR(js)
 
-            pass_dR = dR < self.cfg_plot.get_match_dR(test_obj)
+            pass_dR = dR < test_obj.match_dR
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
-            if "iso" not in suffix:
-                self.numerators["ref"][test_obj] = ref_test["ref"][suffix][pass_dR][
+            if "iso" not in x_arg:
+                self.numerators["ref"][str(test_obj)] = ref_test["ref"][x_arg][pass_dR][
                     pt_max
-                ][
-                    :, :, 0
-                ]  # noqa
-            self.numerators["test"][test_obj] = ref_test["test"][suffix][pass_dR][
+                ][:, :, 0]
+            self.numerators["test"][str(test_obj)] = ref_test["test"][x_arg][pass_dR][
                 pt_max
-            ][
-                :, :, 0
-            ]  # noqa
+            ][:, :, 0]
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """
@@ -183,11 +181,10 @@ class TurnOnCollection:
         for some of which one number per event is stored in the branches
         and for some of which one number per jet is stored.
         """
-        for test_obj, cfg in self.cfg_plot.test_objects.items():
-            field = cfg["suffix"].lower()
+        for test_obj, x_arg in self.test_objects:
             try:
-                self.ak_arrays[test_obj][field] = ak.max(
-                    self.ak_arrays[test_obj][field], axis=1
+                self.ak_arrays[str(test_obj)][x_arg] = ak.max(
+                    self.ak_arrays[str(test_obj)][x_arg], axis=1
                 )
             except ValueError:
                 pass
@@ -211,43 +208,6 @@ class TurnOnCollection:
         if trafo:
             self._reduce_to_per_event()
 
-    def _apply_quality_cuts(self):
-        """
-        Function to implement quality criteria.
-        Events not fulfilling L1 hardware quality
-        criteria are filtered out.
-        """
-        for test_obj in self.cfg_plot.test_objects:
-            if not (quality_id := self.cfg_plot.get_quality_id(test_obj)):
-                return
-
-            ## force quality bit to be int!
-            self.ak_arrays[test_obj]["quality"] = ak.values_astype(
-                self.ak_arrays[test_obj]["quality"], np.int32
-            )
-
-            quality = Quality(self.ak_arrays, test_obj)
-            sel = ~getattr(quality, quality_id)
-            self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
-
-    def _apply_L1_isolation_cuts(self):
-        """
-        Function to implement isolation criteria.
-        Events not fulfilling L1 Iso EE/BB quality
-        criteria are filtered out.
-        """
-        for test_obj in self.cfg_plot.test_objects:
-            iso_BB = self.cfg_plot.get_iso_BB(test_obj)
-            iso_EE = self.cfg_plot.get_iso_EE(test_obj)
-            l1_iso = self.cfg_plot.get_l1_iso(test_obj)
-
-            if (iso_BB == -1) & (iso_EE == -1):
-                continue
-
-            isolation = L1IsoCut(self.ak_arrays, test_obj, iso_BB, iso_EE, l1_iso)
-            sel = ~getattr(isolation, "ISO_EEBB")
-            self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
-
     def _select_highest_pt_ref_object(self):
         """
         The raw cached arrays of the reference still contain
@@ -263,56 +223,73 @@ class TurnOnCollection:
             cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
             sel = eval(cut)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        if not isinstance(
+            self.ak_arrays["ref"], vector.backends.awkward.MomentumArray4D
+        ):
+            self.ak_arrays["ref"] = ak.with_name(self.ak_arrays["ref"], "Momentum4D")
 
-    def _apply_reference_cuts(self):
-        """
-        Applies configured cuts on reference objects. Should be
-        applied before any matching and before the selection of
-        the highest pT object.
-        """
-        if self.cfg_plot.reference_trafo:
-            ref_object_cuts = self.cfg_plot.reference_object_cuts
-            ref_event_cuts = self.cfg_plot.reference_event_cuts
+    def _apply_reference_cuts(self) -> None:
+        """Applies configured cuts on reference objects.
 
-            self._apply_list_of_reference_cuts(ref_object_cuts)
-            return
+        Should be applied before any matching and before the
+        selection of the highest pT object.
+        """
         if "met" in self.cfg_plot.reference_object.lower():
             # TODO: Maybe we want to modify it and allow possible cuts on MET
             return
 
         ref_object_cuts = self.cfg_plot.reference_object_cuts
-        ref_event_cuts = self.cfg_plot.reference_event_cuts
-
         self._apply_list_of_reference_cuts(ref_object_cuts)
+
+        if self.cfg_plot.reference_trafo:
+            # In this case each event is reduced to a single value already
+            return None
+
         self._select_highest_pt_ref_object()
+        ref_event_cuts = self.cfg_plot.reference_event_cuts
         self._apply_list_of_reference_cuts(ref_event_cuts)
 
     def _apply_test_obj_cuts(self):
-        """
-        Applies configured cuts on all configured
-        test objects.
+        """Applies configured cuts on all configured test objects.
+
         Should be applied before any matching.
         """
-        for test_obj in self.cfg_plot.test_objects:
-            if not (cuts := self.cfg_plot.get_object_cuts(test_obj)):
+        for test_obj, _ in self.test_objects:
+            if not test_obj.cuts:
                 continue
-            for cut in cuts:
-                cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays[test_obj]['\1']", cut)
-                sel = eval(cut)
-                self.ak_arrays[test_obj] = self.ak_arrays[test_obj][sel]
+            for (
+                range_i,
+                range_cuts,
+            ) in test_obj.cuts.items():  # TODO: use the version from utils
+                for cut in range_cuts:
+                    cut = re.sub(
+                        r"{([^&|]*)}", r"self.ak_arrays[str(test_obj)]['\1']", cut
+                    )
+                    eta_sel = (
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
+                        > test_obj.eta_ranges[range_i][0]
+                    ) & (
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
+                        < test_obj.eta_ranges[range_i][1]
+                    )
 
-    def _skim_to_hists(self):
+                    sel = eval(cut) + ~eta_sel
+                    self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
+
+    def _skim_to_hists(self) -> None:
+        """
+        TODO!
+        """
         ref_field = self.cfg_plot.reference_field
         if trafo := self.cfg_plot.reference_trafo:
             ref_field = trafo
 
-        for test_obj, cfg in self.cfg_plot.test_objects.items():
-            field = cfg["suffix"].lower()
-            sel = self.ak_arrays[test_obj][field] > self.threshold
-            ak_array = self._flatten_array(self.ak_arrays["ref"][sel][ref_field])
-            self.hists[test_obj] = np.histogram(ak_array, bins=self.bins)
+        for test_obj, x_arg in self.test_objects:
+            sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
+            ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
+            self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
-            self.hists["ref"][test_obj] = np.histogram(
+            self.hists["ref"][str(test_obj)] = np.histogram(
                 self._flatten_array(self.ak_arrays["ref"][ref_field]), bins=self.bins
             )
 
@@ -327,40 +304,40 @@ class TurnOnCollection:
 
         ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
 
-        for test_obj, cfg in self.cfg_plot.test_objects.items():
-            sel_threshold = self.numerators["test"][test_obj] >= self.threshold
-            numerator = self.numerators["ref"][test_obj][sel_threshold]
+        for test_obj, _ in self.test_objects:
+            sel_threshold = self.numerators["test"][str(test_obj)] >= self.threshold
+            numerator = self.numerators["ref"][str(test_obj)][sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
             # Create Reference Numpy Histogram
             if self.threshold >= 0:
-                ref_obj = self.numerators["ref"][test_obj]
+                ref_obj = self.numerators["ref"][str(test_obj)]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists["ref"][test_obj] = np.histogram(ref_flat_np, bins=self.bins)
+            self.hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
 
     def _skim_to_hists_dR_matched_Iso(self):
-        for test_obj, cfg in self.cfg_plot.test_objects.items():
-            numerator = self.numerators["test"][test_obj]
+        for test_obj, _ in self.test_objects:
+            numerator = self.numerators["test"][str(test_obj)]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            self.hists[test_obj] = np.histogram(numerator, bins=self.bins)
+            self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
-    def xerr(self, obj_key: str):
-        ref_vals = self.hists["ref"][obj_key][0]
+    def xerr(self, obj: Object):
+        ref_vals = self.hists["ref"][str(obj)][0]
         bin_width = self.cfg_plot.bin_width
         return np.ones_like(ref_vals) * bin_width / 2
 
     @utils.ignore_warnings
-    def get_efficiency(self, obj_key: str):
-        ref_vals = self.hists["ref"][obj_key][0]
-        test_vals = self.hists[obj_key][0]
+    def get_efficiency(self, obj: Object):
+        ref_vals = self.hists["ref"][str(obj)][0]
+        test_vals = self.hists[str(obj)][0]
 
         eff = test_vals / ref_vals
         assert all(0 <= i <= 1 or str(i) == "nan" for i in eff)
@@ -374,14 +351,12 @@ class TurnOnCollection:
         self._apply_reference_cuts()
         self._apply_reference_trafo()
         # Apply cuts on test objects
-        self._apply_quality_cuts()
-        self._apply_L1_isolation_cuts()
         self._apply_test_obj_cuts()
 
     def create_hists(self):
         self._load_arrays()
         self._apply_cuts()
-        if not self.cfg_plot.matching_configured:
+        if not self.cfg_plot.matching:
             self._skim_to_hists()
         else:
             self._match_test_to_ref()

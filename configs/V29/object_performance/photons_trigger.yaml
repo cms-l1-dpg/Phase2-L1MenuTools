@@ -1,9 +1,10 @@
 PhotonsTrigger_Barrel:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -12,31 +13,9 @@ PhotonsTrigger_Barrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
+    EG:default:barrel: "Pt"
+    tkPhoton:NoIso:barrel: "Pt"
+    tkPhoton:Iso:barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -50,10 +29,11 @@ PhotonsTrigger_Barrel:
 
 PhotonsTrigger_Endcap:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Photons"
     cuts:
       event:
@@ -62,32 +42,9 @@ PhotonsTrigger_Endcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-        - "{passeseleid} == 1"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Pt"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
+    EG:default:endcap: "Pt"
+    tkPhoton:NoIso:endcap: "Pt"
+    tkPhoton:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
