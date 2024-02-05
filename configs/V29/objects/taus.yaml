@@ -13,6 +13,7 @@ nnTau:
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
+          - "{passloosenn}==1"
 
 caloTau:
   label: "Calo Tau"
