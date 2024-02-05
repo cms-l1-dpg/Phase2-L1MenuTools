@@ -11,3 +11,5 @@ rates/table/lib/*
 rates/table/rates_tables/*
 **/tmp/*
 outputs
+menu_tools.egg-info
+dist
