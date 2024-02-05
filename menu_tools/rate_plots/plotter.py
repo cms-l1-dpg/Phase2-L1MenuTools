@@ -156,6 +156,12 @@ class RatePlotter:
         else:
             self._plot_single_version_rate_curves()
 
+        # Dump plot conifg
+        with open(os.path.join(self._outdir, f"{self.cfg.plot_name}.yaml"), "w") as f:
+            yaml.dump(
+                {self.cfg.plot_name: self.cfg.config_dict}, f, default_flow_style=False
+            )
+
 
 class RateComputer:
     def __init__(
