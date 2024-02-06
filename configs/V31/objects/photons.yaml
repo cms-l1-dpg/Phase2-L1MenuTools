@@ -1,0 +1,27 @@
+tkPhoton:
+  match_dR: 0.15
+  eta_ranges:
+    inclusive: [0, 5]
+    barrel: [0, 1.479]
+    endcap: [1.479, 2.4]
+  ids:
+    NoIso:
+      label: "tkPhoton"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+        barrel:
+          - "{passeseleid} == 1"
+        endcap:
+          - "{passesphoid} == 1"
+    Iso:
+      label: "tkIsoPhoton"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+        barrel:
+          - "abs({trkiso}) < 0.2"
+          - "{passeseleid} == 1"
+        endcap:
+          - "abs({trkiso}) < 0.2"
+          - "{passesphoid} == 1"
