@@ -22,7 +22,7 @@ JetDefaultRates:
     max: 420
     step: 20
 
-EGRates:
+ElectronDefaultRates:
   sample: MinBias
   version: V29
   test_objects:
@@ -39,7 +39,7 @@ MuonRates:
   sample: MinBias
   version: V29
   test_objects:
-    # - gmtMuon:default
+    - gmtMuon:default
     # - gmtMuon:oldRateID
     - gmtTkMuon:default
   binning:
@@ -52,19 +52,8 @@ TauRates:
   version: V29
   test_objects:
     - nnTau:default
-    # - caloTau:default
+    - caloTau:default
   binning:
     min: 10
     max: 155
     step: 5
-
-MuonRates:
-  sample: MinBias
-  version: V29
-  test_objects:
-    # - gmtMuon:default
-    - gmtTkMuon:default
-  binning:
-    min: 0
-    max: 100
-    step: 10
