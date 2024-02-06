@@ -1,0 +1,18 @@
+Muons_Turnons_V29:
+  files:
+    MuonsTrigger_gmtkMu_Inclusive_5_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>5)"
+    MuonsTrigger_gmtkMu_Inclusive_15_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>15)"
+    MuonsTrigger_gmtkMu_Inclusive_25_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>25)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency"
+  watermark: "V29_gmtTkMuon_Comp"
+  save_dir: "outputs/V29/turnons"
