@@ -24,7 +24,13 @@ class ArrayLoader:
         NTuple branch names for quality and region
         to "quality"/"region".
         """
-        key = raw_key.removeprefix(obj).lower()
+        ## nano
+        if ("_" in raw_key) and ("dr_0" not in raw_key):
+            key = raw_key.removeprefix(obj).split("_")[-1]
+        ## menu ntuples
+        else:
+            key = raw_key.removeprefix(obj).lower()
+
         if "qual" in key:
             return "quality"
         else:
