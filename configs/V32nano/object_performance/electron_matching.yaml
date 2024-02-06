@@ -1,0 +1,51 @@
+ElectronsMatchingBarrel:
+  sample: DYLL_M50
+  version: V32nano
+  match_test_to_ref: True
+  reference_object:
+    object: "prunedGenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # EG:default: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+ElectronsMatchingEndcap:
+  sample: DYLL_M50
+  version: V32nano
+  match_test_to_ref: True
+  reference_object:
+    object: "prunedGenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # EG:default: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
