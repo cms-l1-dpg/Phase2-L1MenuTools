@@ -1,9 +1,9 @@
 JetMatchingBarrel:
   sample: TT
-  version: V32
+  version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -12,10 +12,10 @@ JetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
-    # trackerJet:default: "Pt"
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -25,10 +25,10 @@ JetMatchingBarrel:
 
 JetMatchingEndcap:
   sample: TT
-  version: V32
+  version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -37,10 +37,10 @@ JetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
-    # trackerJet:default: "Pt"
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -49,11 +49,11 @@ JetMatchingEndcap:
     step: 10
 
 JetMatchingForward:
-  version: V32
+  version: V32nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -62,9 +62,9 @@ JetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:

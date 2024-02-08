@@ -3,8 +3,8 @@ JetTurnonBarrel:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "jet"
-    x_arg: "Pt"
+    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    x_arg: "pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -14,7 +14,8 @@ JetTurnonBarrel:
   test_objects:
     phase1PuppiJet:default:barrel: "Pt"
     seededConePuppiJet:default:barrel: "Pt"
-    trackerJet:default:barrel: "Pt"
+    caloJet:default:barrel: "Pt"
+    # trackerJet:default:barrel: "Pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
@@ -31,8 +32,8 @@ JetTurnonEndcap:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "jet"
-    x_arg: "Pt"
+    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    x_arg: "pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -42,8 +43,9 @@ JetTurnonEndcap:
   test_objects:
     phase1PuppiJet:default:endcap: "Pt"
     seededConePuppiJet:default:endcap: "Pt"
-    trackerJet:default:endcap: "Pt"
-  thresholds: [50]
+    caloJet:default:barrel: "Pt"
+    # trackerJet:default:endcap: "Pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -59,8 +61,8 @@ JetTurnonForward:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "jet"
-    x_arg: "Pt"
+    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    x_arg: "pt"
     label: "Gen Jets"
     cuts:
       event:
@@ -70,6 +72,7 @@ JetTurnonForward:
   test_objects:
     phase1PuppiJet:default:forward: "Pt"
     seededConePuppiJet:default:forward: "Pt"
+    caloJet:default:barrel: "Pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"

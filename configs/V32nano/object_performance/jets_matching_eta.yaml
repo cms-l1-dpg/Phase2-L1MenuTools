@@ -1,9 +1,9 @@
 JetMatching_Eta_Pt40To100:
   sample: TT
-  version: V32
+  version: V32nano
   match_test_to_ref: True
   reference_object: 
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
     cuts:
@@ -13,11 +13,10 @@ JetMatching_Eta_Pt40To100:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet:default: "Eta"
-    seededConePuppiJet:default: "Eta"
-    caloJet:default: "Eta"
-    caloJet:PtGr30: "Eta"
-    # trackerJet:default: "Eta"
+    L1puppiJetHisto:default: "eta"
+    L1puppiJetSC4:default: "eta"
+    L1caloJet:default: "eta"
+    # trackerJet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (40-100 GeV)"
   binning:
@@ -27,10 +26,10 @@ JetMatching_Eta_Pt40To100:
 
 JetMatching_Eta_Pt100ToInf:
   sample: TT
-  version: V32
+  version: V32nano
   match_test_to_ref: True
   reference_object: 
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
     cuts:
@@ -39,10 +38,10 @@ JetMatching_Eta_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet:default: "Eta"
-    seededConePuppiJet:default: "Eta"
-    caloJet:default: "Eta"
-    # trackerJet:default: "Eta"
+    L1puppiJetHisto:default: "eta"
+    L1puppiJetSC4:default: "eta"
+    L1caloJet:default: "eta"
+    # trackerJet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:
@@ -52,10 +51,10 @@ JetMatching_Eta_Pt100ToInf:
 
 JetMatching_Eta_Pt100ToInf_extEta:
   sample: TT
-  version: V32
+  version: V32nano
   match_test_to_ref: True
   reference_object: 
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
     cuts:
@@ -64,7 +63,7 @@ JetMatching_Eta_Pt100ToInf_extEta:
       object:
         - "abs({eta}) < 7"
   test_objects:
-    caloJet:default: "Eta"
+    L1caloJet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:

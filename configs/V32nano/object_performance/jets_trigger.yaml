@@ -1,9 +1,9 @@
-JetMatchingBarrel:
+JetTurnonBarrel:
+  version: V32nano
   sample: TT
-  version: V32
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -12,10 +12,14 @@ JetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
-    # trackerJet:default: "Pt"
+    L1puppiJetHisto:default:barrel: "pt"
+    L1puppiJetSC4:default:barrel: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default:barrel: "pt"
+  thresholds: [50, 100]
+  scalings:
+    method: "naive"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -23,12 +27,12 @@ JetMatchingBarrel:
     max: 500
     step: 10
 
-JetMatchingEndcap:
+JetTurnonEndcap:
+  version: V32nano
   sample: TT
-  version: V32
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -37,10 +41,14 @@ JetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
-    # trackerJet:default: "Pt"
+    L1puppiJetHisto:default:endcap: "pt"
+    L1puppiJetSC4:default:endcap: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default:endcap: "pt"
+  thresholds: [50, 100]
+  scalings:
+    method: "naive"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -48,12 +56,12 @@ JetMatchingEndcap:
     max: 500
     step: 10
 
-JetMatchingForward:
-  version: V32
+JetTurnonForward:
+  version: V32nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -62,9 +70,13 @@ JetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet:default: "Pt"
-    seededConePuppiJet:default: "Pt"
-    caloJet:default: "Pt"
+    L1puppiJetHisto:default:forward: "pt"
+    L1puppiJetSC4:default:forward: "pt"
+    L1caloJet:default: "pt"
+  thresholds: [50, 100]
+  scalings:
+    method: "naive"
+    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:

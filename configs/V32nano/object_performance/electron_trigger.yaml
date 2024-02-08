@@ -4,7 +4,7 @@ ElectronsTriggerBarrel:
   match_test_to_ref: True
   reference_object:
     object: "part_e"
-    x_arg: "Pt"
+    x_arg: "pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -13,9 +13,9 @@ ElectronsTriggerBarrel:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:default:barrel: "Pt"
-    tkElectron:NoIso:barrel: "Pt"
-    tkElectron:Iso:barrel: "Pt"
+    EG:default:barrel: "pt"
+    tkElectron:NoIso:barrel: "pt"
+    tkElectron:Iso:barrel: "pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -33,7 +33,7 @@ ElectronsTriggerEndcap:
   match_test_to_ref: True
   reference_object:
     object: "part_e"
-    x_arg: "Pt"
+    x_arg: "pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -42,9 +42,9 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:default:endcap: "Pt"
-    tkElectron:NoIso:endcap: "Pt"
-    tkElectron:Iso:endcap: "Pt"
+    EG:default:endcap: "pt"
+    tkElectron:NoIso:endcap: "pt"
+    tkElectron:Iso:endcap: "pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

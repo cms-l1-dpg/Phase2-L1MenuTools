@@ -36,6 +36,7 @@ JetMatchingBarrel:
   test_objects:
     phase1PuppiJet:default: "Pt"
     seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
     trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
@@ -60,6 +61,7 @@ JetMatchingEndcap:
   test_objects:
     phase1PuppiJet:default: "Pt"
     seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
     trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
@@ -84,6 +86,7 @@ JetMatchingForward:
   test_objects:
     phase1PuppiJet:default: "Pt"
     seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
