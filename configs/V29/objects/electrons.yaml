@@ -46,6 +46,16 @@ tkElectron:
         inclusive:
           - "abs({eta}) < 2.4"
           - "({passeseleid} == 1)  | ({pt} < 25)"
+    IsoNoIDinEE:
+      label: "TkIsoElectron"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+        barrel:
+          - "abs({trkiso}) < 0.13"
+          - "({passeseleid} == 1) | ({pt} < 25)"
+        endcap:
+          - "abs({trkiso}) < 0.28"
 
 EG:
   match_dR: 0.2

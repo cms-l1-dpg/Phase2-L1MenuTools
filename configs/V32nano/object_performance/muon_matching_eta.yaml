@@ -1,4 +1,4 @@
-MuonsMatching_Eta_Pt2to5:
+MuonsMatching_Eta_pt2to5:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True
@@ -24,7 +24,7 @@ MuonsMatching_Eta_Pt2to5:
     max: 3
     step: 0.2
 
-MuonsMatching_Eta_Pt15toInf:
+MuonsMatching_Eta_pt15toInf:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True

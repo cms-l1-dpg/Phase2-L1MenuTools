@@ -1,4 +1,4 @@
-ElectronsMatching_Eta_Pt10to25:
+ElectronsMatching_Eta_pt10to25:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True
@@ -25,7 +25,7 @@ ElectronsMatching_Eta_Pt10to25:
     max: 3
     step: 0.2
 
-ElectronsMatching_Eta_Pt25toInf:
+ElectronsMatching_Eta_pt25toInf:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True
