@@ -1,6 +1,8 @@
-import os, yaml
+import os
+import yaml
 from glob import glob
-from menu_config import MenuConfig
+
+from menu_tools.rate_table.menu_config import MenuConfig
 
 
 class Scaler:
@@ -22,21 +24,21 @@ class Scaler:
 
     @property
     def init_log(self):
-        print(
-            f"::: The scalings file used is: {self.scalings_outdir}/{self.scalings_file} :::"
-        )
-        if (not os.path.isfile(f"{self.scalings_outdir}/{self.scalings_file}")) and (
-            not self.do_scalings
-        ):
+        fpath = os.path.join(self.scalings_outdir, self.scalings_file)
+        print(f"::: The scalings file used is: {fpath} :::")
+        if (not os.path.isfile(fpath)) and (not self.do_scalings):
             print(
-                f"::: WARNING!! You are trying to use {self.scalings_outdir}/{self.scalings_file}, but the file does not exist! :::"
+                f"::: WARNING!! You are trying to use {fpath},"
+                " but the file does not exist! :::"
             )
             print(
-                "::: WARNING!! Set do_scalings to True in config or specify a different location for the scalings file! :::"
+                "::: WARNING!! Set do_scalings to True in config"
+                " or specify a different location for the scalings file! :::"
             )
         if self.do_scalings:
             print(
-                f"::: Will collect scalings from scratch and recreate {self.scalings_file} :::"
+                "::: Will collect scalings from scratch"
+                f" and recreate {self.scalings_file} :::"
             )
             print(f"::: Will load scalings from {self.scalings_path} :::")
             print(f"::: Will dump scalings into {self.scalings_outdir} :::")

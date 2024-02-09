@@ -1,9 +1,9 @@
 import argparse
 import yaml
 
-from scaler import Scaler
-from menu_table import MenuTable
-from menu_config import MenuConfig
+from menu_tools.rate_table.scaler import Scaler
+from menu_tools.rate_table.menu_table import MenuTable
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

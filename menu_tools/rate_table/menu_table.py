@@ -1,15 +1,13 @@
-import numpy as np
+import yaml
+import os
 
-from glob import glob
-
-import yaml, re, os, math
-
-from utils import *
-from menu_config import MenuConfig
-
-import uproot
 import awkward as ak
+import numpy as np
+import uproot
 import vector
+
+from menu_tools.rate_table.menu_config import MenuConfig
+
 
 vector.register_awkward()
 
@@ -160,14 +158,15 @@ class MenuTable:
 
     def get_obj_arr(self, obj):
         """
-        Function that loads the minbias sample and gets the relevant object from the TTree.
-        The TBranches are loaded in an awkward array, `format_values` is used to parse the
-        `pt`, `et`, and ID branches.
-        The `scale_pt` function is used to convert the online pT into offline using the scalings.
+        Function that loads the minbias sample and gets the relevant object from the
+        TTree.
+        The TBranches are loaded in an awkward array, `format_values` is used to parse
+        the `pt`, `et`, and ID branches.
+        The `scale_pt` function is used to convert the online pT into offline using the
+        scalings.
         """
         # TODO: Implement reading from parquet
         # vers = self.version
-        # fname = f"/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/cache/{vers}/{vers}_MinBias_{obj}.parquet"
         # arr = ak.from_parquet(fname)
 
         load_obj = obj
@@ -274,7 +273,8 @@ class MenuTable:
     def get_eval_string(self, leg_arrs):
         """
         Function that selects only relevant entries in the arrays and returns the
-        awkward array corresponding to events which satisfy the cuts on the trigger legs.
+        awkward array corresponding to events which satisfy the cuts on the trigger
+        legs.
         """
         eval_str = []
         for leg, leg_arr in leg_arrs.items():
@@ -292,7 +292,9 @@ class MenuTable:
         Returns the legs, cross_masks, and cross-triggers (if present).
         """
         seed_legs = {
-            l: self.trig_seeds[seed][l] for l in self.trig_seeds[seed] if "leg" in l
+            leg: self.trig_seeds[seed][leg]
+            for leg in self.trig_seeds[seed]
+            if "leg" in leg
         }
         cross_masks_str = self.trig_seeds[seed]["cross_masks"]
         if len(cross_masks_str) > 0:
@@ -310,7 +312,8 @@ class MenuTable:
         """
         Main function that computes the nr of events passing each trigger.
         After loading the minbias sample and the menu definition,
-        each leg is selected and the masks are applied (together with cross-masks/seeds).
+        each leg is selected and the masks are applied
+        (together with cross-masks/seeds).
         The function returns the total mask that defines the trigger.
         """
         seed_legs, cross_masks_str, cross_seeds = self.seeds_from_cfg(seed)

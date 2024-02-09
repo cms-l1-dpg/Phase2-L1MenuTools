@@ -15,7 +15,6 @@ def deltar(eta1, eta2, phi1, phi2):
             2,
         )
     )
-    # return np.sqrt(np.power(abs(eta1-eta2),2) + np.power(abs(phi1-phi2) * abs(phi1-phi2)<=np.pi else 2*np.pi-abs(phi1-phi2),2))
 
 
 def notmatched(eta1, eta2, phi1, phi2):
