@@ -1,6 +1,6 @@
 HHTausMatchingBarrel:
   sample: HHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
@@ -24,7 +24,7 @@ HHTausMatchingBarrel:
 
 HHTausMatchingEndcap:
   sample: HHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
