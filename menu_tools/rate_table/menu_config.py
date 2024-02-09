@@ -1,5 +1,4 @@
 class MenuConfig:
-
     def __init__(self, cfg: dict):
         self._cfg = cfg
 

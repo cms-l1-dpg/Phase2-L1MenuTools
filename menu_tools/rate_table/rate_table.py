@@ -6,16 +6,11 @@ from menu_table import MenuTable
 from menu_config import MenuConfig
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "cfg",
-        default="cfg/v29/v29_cfg.yml",
-        help=""
-    )
+    parser.add_argument("cfg", default="cfg/v29/v29_cfg.yml", help="")
     args = parser.parse_args()
 
-    with open(args.cfg, 'r') as f:
+    with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
 
     for menu_title, menu_cfg in cfg.items():
