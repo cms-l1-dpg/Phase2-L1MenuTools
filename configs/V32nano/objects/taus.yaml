@@ -1,0 +1,26 @@
+L1nnTau:
+  label: "NN Tau"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{passLooseNN}==1"
+
+L1caloTau:
+  label: "Calo Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
