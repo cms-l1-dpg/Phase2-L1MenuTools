@@ -1,6 +1,6 @@
 TauTriggerBarrel_90perc:
   sample: VBFHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
@@ -28,7 +28,7 @@ TauTriggerBarrel_90perc:
 
 TauTriggerEndcap_90perc:
   sample: VBFHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
@@ -56,7 +56,7 @@ TauTriggerEndcap_90perc:
 
 TauTriggerBarrel_50perc:
   sample: VBFHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
@@ -84,7 +84,7 @@ TauTriggerBarrel_50perc:
 
 TauTriggerEndcap_50perc:
   sample: VBFHToTauTau
-  version: V29
+  version: V31
   match_test_to_ref: True
   reference_object:
     object: "part_tau"
