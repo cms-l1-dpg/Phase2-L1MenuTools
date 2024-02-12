@@ -20,12 +20,12 @@ plt.style.use(hep.style.CMS)
 
 
 class Plotter:
-    outdir_base = "outputs/object_performance/"
-
     def _make_output_dirs(self, version: str) -> None:
-        os.makedirs(f"{self.outdir_base}/{version}/turnons", exist_ok=True)
-        os.makedirs(f"{self.outdir_base}/{version}/distributions", exist_ok=True)
-        os.makedirs(f"{self.outdir_base}/{version}/scalings", exist_ok=True)
+        os.makedirs(f"outputs/{version}/object_performance/turnons", exist_ok=True)
+        os.makedirs(
+            f"outputs/{version}/object_performance/distributions", exist_ok=True
+        )
+        os.makedirs(f"outputs/{version}/object_performance/scalings", exist_ok=True)
 
     def _create_new_plot(self) -> tuple[plt.Figure, plt.Axes]:
         fig, ax = plt.subplots(figsize=(10, 10))
@@ -44,11 +44,13 @@ class EfficiencyPlotter(Plotter):
 
     @property
     def _outdir_turnons(self) -> str:
-        return os.path.join(self.outdir_base, self.version, "turnons")
+        return os.path.join("outputs", self.version, "object_performance", "turnons")
 
     @property
     def _outdir_distributions(self) -> str:
-        return os.path.join(self.outdir_base, self.version, "distributions")
+        return os.path.join(
+            "outputs", self.version, "object_performance", "distributions"
+        )
 
     def _style_plot(self, fig, ax, legend_loc="lower right"):
         ax.axvline(self.threshold, ls=":", c="k")
@@ -393,8 +395,9 @@ class ScalingPlotter(Plotter):
         ax.set_ylim(0, np.max(y_points))
 
         plot_fname = os.path.join(
-            self.outdir_base,
+            "outputs",
             self.version,
+            "object_performance",
             "scalings",
             f"{self.plot_name}_{self.version}",
         )
@@ -412,8 +415,6 @@ class ScalingPlotter(Plotter):
 
 
 class ScalingCentral:
-    outdir = "outputs/object_performance/"
-
     def __init__(self, cfg_plots_path: str) -> None:
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
@@ -453,8 +454,8 @@ class ScalingCentral:
         """
         fpath = os.path.join(
             "outputs",
-            "object_performance",
             obj.version,
+            "object_performance",
             "scalings",
         )
         os.makedirs(fpath, exist_ok=True)
