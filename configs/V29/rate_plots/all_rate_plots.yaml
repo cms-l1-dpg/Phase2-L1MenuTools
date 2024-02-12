@@ -4,11 +4,22 @@ HTRates:
   test_objects:
     - phase1PuppiHT:default
     - seededConePuppiHT:default
-    # - trackerJet:default
+    - trackerHT:default
   binning:
-    min: 40
-    max: 420
-    step: 20
+    min: 50
+    max: 975
+    step: 25
+
+MuonRates:
+  sample: MinBias
+  version: V29
+  test_objects:
+    - gmtMuon:default
+    - gmtTkMuon:default
+  binning:
+    min: 0
+    max: 75
+    step: 3
 
 JetDefaultRates:
   sample: MinBias
@@ -16,7 +27,7 @@ JetDefaultRates:
   test_objects:
     - phase1PuppiJet:default
     - seededConePuppiJet:default
-    # - trackerJet:default
+    - trackerJet:default
   binning:
     min: 40
     max: 420
@@ -35,36 +46,13 @@ EGRates:
     max: 97
     step: 3
 
-MuonRates:
-  sample: MinBias
-  version: V29
-  test_objects:
-    # - gmtMuon:default
-    # - gmtMuon:oldRateID
-    - gmtTkMuon:default
-  binning:
-    min: 0
-    max: 75
-    step: 3
-
 TauRates:
   sample: MinBias
   version: V29
   test_objects:
     - nnTau:default
-    # - caloTau:default
+    - caloTau:default
   binning:
     min: 10
     max: 155
     step: 5
-
-MuonRates:
-  sample: MinBias
-  version: V29
-  test_objects:
-    # - gmtMuon:default
-    - gmtTkMuon:default
-  binning:
-    min: 0
-    max: 100
-    step: 10
