@@ -1,0 +1,12 @@
+EGRates:
+  sample: MinBias
+  version: V29
+  test_objects:
+    - EG:default
+    - tkElectron:NoIso
+    - tkElectron:Iso
+    - tkPhoton:Iso
+  binning:
+    min: 10
+    max: 97
+    step: 3
