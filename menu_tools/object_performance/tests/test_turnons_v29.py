@@ -32,7 +32,7 @@ def test_matching_plots_reproduced(test_name):
 
     # Load result and assert correct outcome
     with open(
-        f"outputs/object_performance/V29/turnons/{test_name}.json",
+        f"outputs/V29/object_performance/turnons/{test_name}.json",
         "r",
     ) as f:
         test_result = json.load(f)
