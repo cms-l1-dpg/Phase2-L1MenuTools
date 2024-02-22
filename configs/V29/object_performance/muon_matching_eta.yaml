@@ -39,6 +39,7 @@ MuonsMatching_Eta_Pt15toInf:
         - "abs({eta}) < 2.4"
   test_objects:
     gmtMuon:default: "Eta"
+    gmtMuon:oldRateID: "Eta"
     gmtTkMuon:default: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
