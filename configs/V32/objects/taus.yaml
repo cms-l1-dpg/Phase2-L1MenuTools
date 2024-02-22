@@ -27,3 +27,9 @@ caloTau:
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
+    PtGe20:
+      label: "Calo Tau, pt > 20"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 20"
