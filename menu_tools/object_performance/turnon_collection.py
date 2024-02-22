@@ -105,7 +105,10 @@ class TurnOnCollection:
         test_objects = self.cfg_plot.test_objects
         for obj_key, x_arg in test_objects.items():
             obj = Object(obj_key, self.cfg_plot.version)
-            obj_args.append((obj, x_arg.lower()))
+            if "L1" in obj:
+                obj_args.append((obj, x_arg))
+            else:
+                obj_args.append((obj, x_arg.lower()))
 
         return obj_args
 
@@ -142,7 +145,7 @@ class TurnOnCollection:
 
             pass_dR = dR < test_obj.match_dR
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
-            if "iso" not in x_arg:
+            if "iso" not in x_arg.lower():
                 self.numerators["ref"][str(test_obj)] = ref_test["ref"][x_arg][pass_dR][
                     pt_max
                 ][:, :, 0]
