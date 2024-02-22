@@ -15,6 +15,7 @@ TausMatchingBarrel:
   test_objects:
     nnTau:default: "Pt"
     caloTau:default: "Pt"
+    caloTau:PtGe20: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -39,6 +40,7 @@ TausMatchingEndcap:
   test_objects:
     nnTau:default: "Pt"
     caloTau:default: "Pt"
+    caloTau:PtGe20: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

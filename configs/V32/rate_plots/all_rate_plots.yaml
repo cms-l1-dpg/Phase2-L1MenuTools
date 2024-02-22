@@ -1,6 +1,6 @@
 HTRates:
   sample: MinBias
-  version: V29
+  version: V32
   test_objects:
     - phase1PuppiHT:default
     - seededConePuppiHT:default
@@ -12,7 +12,7 @@ HTRates:
 
 JetDefaultRates:
   sample: MinBias
-  version: V29
+  version: V32
   test_objects:
     - phase1PuppiJet:default
     - seededConePuppiJet:default
@@ -24,7 +24,7 @@ JetDefaultRates:
 
 ElectronDefaultRates:
   sample: MinBias
-  version: V29
+  version: V32
   test_objects:
     - EG:default
     - tkElectron:NoIso
@@ -37,7 +37,7 @@ ElectronDefaultRates:
 
 MuonRates:
   sample: MinBias
-  version: V29
+  version: V32
   test_objects:
     - gmtMuon:default
     # - gmtMuon:oldRateID
@@ -49,7 +49,7 @@ MuonRates:
 
 TauRates:
   sample: MinBias
-  version: V29
+  version: V32
   test_objects:
     - nnTau:default
     - caloTau:default
