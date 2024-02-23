@@ -3,18 +3,20 @@ TauTriggerBarrel_90perc:
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "part_tau"
+    object: "GenVisTau"
     x_arg: "pt"
     label: "Gen Taus"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        # - "{dr_0.3} < 0.15"
         - "abs({eta}) < 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:default:barrel: "pt"
-    caloTau:default:barrel: "pt"
+    L1nnTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -31,18 +33,20 @@ TauTriggerEndcap_90perc:
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "part_tau"
+    object: "GenVisTau"
     x_arg: "pt"
     label: "Gen Taus"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        # - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:default:endcap: "pt"
-    caloTau:default:endcap: "pt"
+    L1nnTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -59,18 +63,20 @@ TauTriggerBarrel_50perc:
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "part_tau"
+    object: "GenVisTau"
     x_arg: "pt"
     label: "Gen Taus"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        # - "{dr_0.3} < 0.15"
         - "abs({eta}) < 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:default:barrel: "pt"
-    caloTau:default:barrel: "pt"
+    L1nnTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
@@ -87,18 +93,20 @@ TauTriggerEndcap_50perc:
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "part_tau"
+    object: "GenVisTau"
     x_arg: "pt"
     label: "Gen Taus"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        # - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:default:endcap: "pt"
-    caloTau:default:endcap: "pt"
+    L1nnTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   thresholds: [20, 30]
