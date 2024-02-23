@@ -89,6 +89,7 @@ class RatePlotter:
             self._outdir,
             f"{version}_{self._online_offline}_{self.cfg.plot_name}",
         )
+        print ('Saving to ',fname)
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
 
@@ -184,7 +185,13 @@ class RateComputer:
             key: string of with the l1 object name prefix removed, qual
             transformed to quality
         """
-        key = raw_key.removeprefix(self.object.nano_obj_name).lower()
+        ## nano
+        if ("_" in raw_key):
+            key = raw_key.removeprefix(self.object.nano_obj_name).split("_")[-1]
+        ## menu ntuples
+        else:
+            key = raw_key.removeprefix(self.object.nano_obj_name).lower()
+
         if "qual" in key:
             return "quality"
         return key
