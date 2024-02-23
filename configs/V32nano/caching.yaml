@@ -17,10 +17,12 @@ V32nano:
       trees_branches:
         Events:
           # gen
-          GenJet: "all" 
+          GenJet: [pt, eta, phi] 
+          GenJetAK8: [pt, eta, phi]
           GenMET: "all"
           # sums
           L1puppiMET: [pt, phi]
+          L1puppiMLMET: "all"
           L1puppiJetSC4sums: [pt, phi]
           L1puppiHistoJetSums: [pt, phi]
           # jets
@@ -35,4 +37,20 @@ V32nano:
       Events:
         GenVisTau: "all" 
         L1nnTau: "all" 
+        L1hpsTau: "all" 
         L1caloTau: "all" 
+        L1nnCaloTau: "all"
+  MinBias:
+    ntuple_path: 
+    trees_branches:
+      Events:
+        L1puppiMET: "all" 
+        L1puppiMLMET: "all" 
+        L1nnTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
