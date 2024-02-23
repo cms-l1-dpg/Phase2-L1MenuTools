@@ -1,0 +1,9 @@
+L1puppiMET:
+  label: "Puppi MET"
+  ids:
+    default: {}
+
+L1puppiMLMET:
+  label: "Puppi ML MET"
+  ids:
+    default: {}
