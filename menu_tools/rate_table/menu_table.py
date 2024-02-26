@@ -24,31 +24,6 @@ class MenuTable:
     def __init__(self, cfg: dict):
         self.cfg = MenuConfig(cfg)
 
-    def load_minbias(self, obj):
-        """
-        Function to load the minbias sample to be used for the rates computation.
-        The name of the file is specified in the config used for the MenuTable init.
-        """
-        with uproot.open(self.cfg.sample) as f:
-            arr = f["l1PhaseIITree/L1PhaseIITree"].arrays(
-                filter_name=f"{obj}*", how="zip"
-            )
-        return arr
-
-    @property
-    def scalings(self, scalings):
-        """
-        Scalings for all the L1 objects.
-        Scalings are collected by the Scaler() class and
-        saved to a yaml file.
-        The inputs used are the files created in `objectPerformance`
-        and saved in `objectPerformance/output/VX/scalings/*.txt`
-        """
-        scalings = os.path.join(self.cfg.scalings_outdir, self.cfg.scalings_file)
-        with open(f"{scalings}", "r") as infile:
-            scalings_eta = yaml.safe_load(infile.read())
-        return scalings_eta
-
     @property
     def trig_seeds(self):
         """
@@ -151,36 +126,21 @@ class MenuTable:
 
         return arr
 
-    def get_obj_arr(self, obj):
-        """
-        Function that loads the minbias sample and gets the relevant object from the
-        TTree.
-        The TBranches are loaded in an awkward array, `format_values` is used to parse
-        the `pt`, `et`, and ID branches.
-        The `scale_pt` function is used to convert the online pT into offline using the
-        scalings.
-        """
+    def get_obj_arr(self, obj) -> ak.Array:
         # TODO: Implement reading from parquet
         # vers = self.cfg.version
         # arr = ak.from_parquet(fname)
-
-        load_obj = obj
-
-        if obj == "tkIsoElectron":
-            load_obj = "tkElectron"
-
-        arr = self.load_minbias(load_obj)
         if "jagged0" in arr.fields:
             arr = arr["jagged0"]
 
-        arr = ak.zip({f.replace(load_obj, "").lower(): arr[f] for f in arr.fields})
+        arr = ak.zip({f.replace(obj, "").lower(): arr[f] for f in arr.fields})
         arr = self.format_values(arr)
 
         arr = self.scale_pt(obj, arr)
 
         return arr
 
-    def get_legs(self, seed_legs):
+    def get_legs(self, seed_legs) -> dict:
         """
         Function that parses the config file (menu definition)
         to get the cuts to be used for the definition of each trigger leg
