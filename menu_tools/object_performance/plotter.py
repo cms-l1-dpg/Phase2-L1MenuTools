@@ -1,8 +1,9 @@
 import argparse
 import json
 import os
-import yaml
 from typing import Any
+import warnings
+import yaml
 
 import matplotlib.pyplot as plt
 import mplhep as hep
@@ -443,7 +444,9 @@ class ScalingCentral:
             return self.scaling_thresholds["Jet"]
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
-    def _write_scalings_to_file(self, obj: Object, params: np.ndarray) -> None:
+    def _write_scalings_to_file(
+        self, obj: Object, params: np.ndarray, plot_name: str
+    ) -> None:
         """Dumps the scaling parameters to a file.
 
         Writes the offset and slope params of the linear scaling function to
@@ -460,7 +463,18 @@ class ScalingCentral:
         )
         os.makedirs(fpath, exist_ok=True)
         a, b = params
-        with open(os.path.join(fpath, str(obj) + ".yaml"), "w") as f:
+
+        out_path = os.path.join(fpath, str(obj) + ".yaml")
+        if os.path.exists(out_path):
+            warnings.warn(
+                (
+                    f"A file already exists at the scaling destination `{out_path}`."
+                    f"Will dump the scalings with `{plot_name}` prefix."
+                ),
+                UserWarning,
+            )
+            out_path = out_path.replace(str(obj), plot_name + "_" + str(obj))
+        with open(out_path, "w") as f:
             yaml.dump({"slope": float(a), "offset": float(b)}, f)
 
     def run(self):
@@ -496,7 +510,7 @@ class ScalingCentral:
                 params = scaling_collection.fit_linear_function(scalings[str(test_obj)])
                 scaling_function_params[str(test_obj)] = params
                 # Write scalings for test_obj to file for usage in rate part
-                self._write_scalings_to_file(test_obj, params)
+                self._write_scalings_to_file(test_obj, params, plot_name)
 
             plotter = ScalingPlotter(
                 plot_name,

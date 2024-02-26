@@ -2,6 +2,7 @@
 *.pyc
 pyenv/*
 **/*.png
+**/*.pdf
 **/.DS_Store
 **/*.parquet
 **/*.root
