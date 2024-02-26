@@ -155,7 +155,7 @@ class EfficiencyPlotter(Plotter):
             )
 
             err_kwargs = {
-                "xerr": self.turnon_collection.xerr(obj_key),
+                # "xerr": self.turnon_collection.xerr(obj_key),
                 "capsize": 3,
                 "marker": "o",
                 "markersize": 8,
