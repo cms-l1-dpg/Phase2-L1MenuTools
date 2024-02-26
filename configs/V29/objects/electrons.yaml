@@ -20,6 +20,7 @@ tkElectron:
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
+          - "({passeseleid} == 1)"
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
@@ -27,6 +28,8 @@ tkElectron:
       cuts:
         inclusive:
           - "abs({eta}) < 2.7"
+        barrel:
+          - "({passeseleid} == 1)"
     Iso:
       label: "TkIsoElectron"
       cuts:
@@ -34,8 +37,15 @@ tkElectron:
           - "abs({eta}) < 2.4"
         barrel:
           - "abs({trkiso}) < 0.13"
+          - "({passeseleid} == 1)"
         endcap:
           - "abs({trkiso}) < 0.28"
+    NoIsoLowPt:
+      label: "TkElectron, no ID for $p_T<25$"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "({passeseleid} == 1)  | ({pt} < 25)"
 
 EG:
   match_dR: 0.2

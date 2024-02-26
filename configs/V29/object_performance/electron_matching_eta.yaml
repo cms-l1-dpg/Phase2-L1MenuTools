@@ -16,6 +16,7 @@ ElectronsMatching_Eta_Pt10to25:
   test_objects:
     EG:default: "Eta"
     tkElectron:NoIso: "Eta"
+    tkElectron:NoIsoLowPt: "Eta"
     tkElectron:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
@@ -41,6 +42,7 @@ ElectronsMatching_Eta_Pt25toInf:
   test_objects:
     EG:default: "Eta"
     tkElectron:NoIso: "Eta"
+    tkElectron:NoIsoLowPt: "Eta"
     tkElectron:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
