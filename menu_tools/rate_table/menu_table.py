@@ -7,6 +7,7 @@ import uproot
 import vector
 
 from menu_tools.rate_table.menu_config import MenuConfig
+from menu_tools.utils.constants import RATE_NORM_FACTOR
 
 
 vector.register_awkward()
@@ -20,48 +21,42 @@ class MenuTable:
     All the relevant information is dumped to a csv table.
     """
 
-    def __init__(self, cfg):
+    def __init__(self, cfg: dict):
         self.cfg = MenuConfig(cfg)
-        self.version = self.cfg.version
-        self.fname = self.cfg.sample
-        self.table_outdir = self.cfg.table_outdir
-        self.table_fname = self.cfg.table_fname
-        self.cfg_fname = self.cfg.menu_cfg
-        self.scalings = self.get_scalings(
-            os.path.join(self.cfg.scalings_outdir, self.cfg.scalings_file)
-        )
-        self.trig_seeds = self.get_trig_seeds()
 
     def load_minbias(self, obj):
         """
         Function to load the minbias sample to be used for the rates computation.
         The name of the file is specified in the config used for the MenuTable init.
         """
-        with uproot.open(self.fname) as f:
+        with uproot.open(self.cfg.sample) as f:
             arr = f["l1PhaseIITree/L1PhaseIITree"].arrays(
                 filter_name=f"{obj}*", how="zip"
             )
         return arr
 
-    def get_scalings(self, scalings):
+    @property
+    def scalings(self, scalings):
         """
-        Get the list of scalings for all the L1 objects.
+        Scalings for all the L1 objects.
         Scalings are collected by the Scaler() class and
         saved to a yaml file.
         The inputs used are the files created in `objectPerformance`
         and saved in `objectPerformance/output/VX/scalings/*.txt`
         """
+        scalings = os.path.join(self.cfg.scalings_outdir, self.cfg.scalings_file)
         with open(f"{scalings}", "r") as infile:
             scalings_eta = yaml.safe_load(infile.read())
         return scalings_eta
 
-    def get_trig_seeds(self):
+    @property
+    def trig_seeds(self):
         """
-        Get the menu definition.
+        Menu definition.
         Load a yaml file containing the definition of the objects
         and the cuts of each leg for the different trigger paths.
         """
-        with open(self.cfg_fname, "r") as infile:
+        with open(self.cfg.menu_cfg, "r") as infile:
             test_trig_seeds = yaml.safe_load(infile.read())
 
         return test_trig_seeds
@@ -166,7 +161,7 @@ class MenuTable:
         scalings.
         """
         # TODO: Implement reading from parquet
-        # vers = self.version
+        # vers = self.cfg.version
         # arr = ak.from_parquet(fname)
 
         load_obj = obj
@@ -374,7 +369,14 @@ class MenuTable:
 
         return trig_masks
 
-    def make_table(self):
+    def print_table(self) -> None:
+        """
+        TODO: This function should take all the printing stuff out of
+        `make_table`
+        """
+        raise NotImplementedError
+
+    def make_table(self) -> list:
         """
         Function that prints to screen the rates table.
         Returns a list containing the csv-compatible table.
@@ -389,14 +391,14 @@ class MenuTable:
             total_mask = total_mask | mask
             npass = np.sum(mask)
             eff = npass / len(mask)
-            rate = eff * 2760 * 11246 / 1e3
+            rate = eff * RATE_NORM_FACTOR
             table.append(f"{seed},{npass},{eff},{rate}\n")
             print(seed.ljust(50), ":\t%8i\t%.5f\t%.1f" % (npass, eff, rate))
 
         ## total
         npass = np.sum(total_mask)
         eff = npass / len(total_mask)
-        rate = eff * 2760 * 11246 / 1e3
+        rate = eff * RATE_NORM_FACTOR
 
         tot_str = "Total:".ljust(50) + "\t%8i\t%.5f\t%.1f" % (npass, eff, rate)
         table.append(f"Total,{npass},{eff},{rate}\n")
@@ -413,9 +415,9 @@ class MenuTable:
         Function that dumps to file the masks produced by `prepare_masks`.
         """
         if hasattr(self, "trig_masks"):
-            os.makedirs(f"{self.table_outdir}", exist_ok=True)
+            os.makedirs(self.cfg.table_outdir, exist_ok=True)
             fname = (
-                f"{self.table_outdir}/{self.table_fname}_{self.version}_masks.parquet"
+                f"{self.cfg.table_outdir}/{self.cfg.table_fname}_{self.cfg.version}_masks.parquet"
             )
             print(f"Dumping masks to parquet in: {fname}")
 
@@ -427,8 +429,8 @@ class MenuTable:
         """
         Function that dumps to file the table produced by `make_table`.
         """
-        os.makedirs(f"{self.table_outdir}", exist_ok=True)
-        f = open(f"{self.table_outdir}/{self.table_fname}_{self.version}.csv", "w")
+        os.makedirs(f"{self.cfg.table_outdir}", exist_ok=True)
+        f = open(f"{self.cfg.table_outdir}/{self.cfg.table_fname}_{self.cfg.version}.csv", "w")
         for line in table:
             f.write(line)
         f.close()

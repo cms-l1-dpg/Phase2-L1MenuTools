@@ -1,25 +1,25 @@
 import argparse
 import yaml
 
-from menu_tools.rate_table.scaler import Scaler
 from menu_tools.rate_table.menu_table import MenuTable
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("cfg", default="cfg/v29/v29_cfg.yml", help="")
+    parser.add_argument(
+        "config_file",
+        help="Path to the menu config file, e.g. `configs/V29/rate_table/v29_cfg.yml`",
+    )
     args = parser.parse_args()
 
-    with open(args.cfg, "r") as f:
-        cfg = yaml.safe_load(f)
+    with open(args.config_file, "r") as f:
+        menu_config_dict = yaml.safe_load(f)
 
-    for menu_title, menu_cfg in cfg.items():
-        scaler = Scaler(menu_cfg)
-        scaler.collect_scalings
-        scaler.dump_scalings
+    menu_table = MenuTable(menu_config_dict)
+    table = menu_table.make_table()
+    menu_table.dump_table(table)
+    menu_table.dump_masks()
 
-        menu_config = MenuTable(menu_cfg)
-        table = menu_config.make_table()
-        menu_config.dump_table(table)
 
-        menu_config.dump_masks()
+if __name__ == "__main__":
+    main()

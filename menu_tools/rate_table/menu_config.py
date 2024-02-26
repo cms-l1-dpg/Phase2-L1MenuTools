@@ -3,24 +3,8 @@ class MenuConfig:
         self._cfg = cfg
 
     @property
-    def sample(self):
+    def sample(self) -> str:
         return self._cfg["sample"]
-
-    @property
-    def scalings_path(self):
-        return self._cfg["scalings"]["scalings_path"]
-
-    @property
-    def do_scalings(self):
-        return self._cfg["scalings"]["collect_scalings"]
-
-    @property
-    def scalings_file(self):
-        return self._cfg["scalings"]["scalings_file"]
-
-    @property
-    def scalings_outdir(self):
-        return self._cfg["scalings"]["scalings_outdir"]
 
     @property
     def menu_cfg(self):
