@@ -15,6 +15,7 @@ ElectronsMatchingBarrel:
   test_objects:
     EG:default: "Pt"
     tkElectron:NoIso: "Pt"
+    tkElectron:NoIsoLowPt: "Pt"
     tkElectron:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
@@ -40,6 +41,7 @@ ElectronsMatchingEndcap:
   test_objects:
     EG:default: "Pt"
     tkElectron:NoIso: "Pt"
+    tkElectron:NoIsoLowPt: "Pt"
     tkElectron:Iso: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"

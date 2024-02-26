@@ -54,6 +54,10 @@ TauTriggerEndcap_90perc:
     max: 150
     step: 6
 
+# ATTENTION: The scalings from this config are in conflict with the 90prec
+# configurations above and will be written to a file with the plot name as
+# prefix. To use these scalings in the rate plots/table, overwrite the standard
+# scalings yaml files in outputs!
 TauTriggerBarrel_50perc:
   sample: VBFHToTauTau
   version: V29
@@ -82,6 +86,10 @@ TauTriggerBarrel_50perc:
     max: 150
     step: 6
 
+# ATTENTION: The scalings from this config are in conflict with the 90prec
+# configurations above and will be written to a file with the plot name as
+# prefix. To use these scalings in the rate plots/table, overwrite the standard
+# scalings yaml files in outputs!
 TauTriggerEndcap_50perc:
   sample: VBFHToTauTau
   version: V29

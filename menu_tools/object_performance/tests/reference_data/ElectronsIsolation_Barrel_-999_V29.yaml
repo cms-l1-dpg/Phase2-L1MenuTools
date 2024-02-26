@@ -17,7 +17,7 @@ ElectronsIsolation_Barrel:
     x_arg: Pt
   sample: DYLL_M50
   test_objects:
-    tkElectron:NoIso: trkiso
+    tkElectron:NoIsoLowPt: trkiso
   version: V29
   xlabel: Isolation
   ylabel: Efficiency (Barrel)

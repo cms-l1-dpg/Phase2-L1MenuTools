@@ -15,6 +15,7 @@ ElectronsTriggerBarrel:
   test_objects:
     EG:default:barrel: "Pt"
     tkElectron:NoIso:barrel: "Pt"
+    tkElectron:NoIsoLowPt:barrel: "Pt"
     tkElectron:Iso:barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
@@ -44,6 +45,7 @@ ElectronsTriggerEndcap:
   test_objects:
     EG:default:endcap: "Pt"
     tkElectron:NoIso:endcap: "Pt"
+    tkElectron:NoIsoLowPt:endcap: "Pt"
     tkElectron:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
