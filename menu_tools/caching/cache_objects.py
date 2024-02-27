@@ -295,8 +295,6 @@ class ObjectCacher:
             if "sums" in self._object.lower():
                 self._final_ak_array[f"{self._object}_sumType"] = ak.local_index(self._final_ak_array)
                 self._branches += [f"{self._object}_sumType"]
-                print(self._final_ak_array.fields)
-
         else:
             self._final_ak_array = ak.Array(all_arrays)
 
