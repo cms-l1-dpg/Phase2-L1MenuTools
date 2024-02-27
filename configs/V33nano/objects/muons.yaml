@@ -9,7 +9,7 @@ GenPart:
           - "(({statusFlags}>>7)&1) == 1"
 
 
-L1StaMu:
+L1gmtMuon:
   label: "GMT Muon"
   match_dR: 0.3
   eta_ranges:
