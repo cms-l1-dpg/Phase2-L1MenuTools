@@ -25,7 +25,7 @@ V33nano:
     trees_branches:
       Events:
         # gen
-        GenJet: [pt, eta, phi]
+        GenJet: [pt, eta, phi, partonFlavour]
         GenMET: "all"
         # sums
         L1puppiMET: [pt, phi]
@@ -40,6 +40,7 @@ V33nano:
         L1caloJet: [pt, eta, phi]
         L1TrackMET: [pt]
         L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
   # VBFHToTauTau:
   #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_v32_reL1only/240206_115854/0000/l1nano_*.root
   #   trees_branches:
