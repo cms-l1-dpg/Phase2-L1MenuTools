@@ -183,7 +183,7 @@ class MenuTable:
             )
 
             # Substitute
-            leg_mask_str = re.sub(r"[a-zA-Z_]", r"\1leg_array.", leg["threshold_cut"])
+            leg_mask_str = re.sub(r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"])
             leg_array = raw_object_arrays[leg["obj"]]
             threshold_mask = eval(leg_mask_str)
 
@@ -260,7 +260,7 @@ class MenuTable:
                 eval_strings.append(f"(ak.num({leg}) > 0)")
             else:
                 eval_strings.append(f"(ak.is_none({leg}) == False)")
-        eval_str: str = " & ".join(eval_str)
+        eval_str: str = " & ".join(eval_strings)
 
         return eval_str
 
