@@ -51,7 +51,7 @@ class ArrayLoader:
         )
         array = ak.from_parquet(fname)
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
-        if self.cfg_plot.reference_trafo:
+        if self.cfg_plot.reference_trafo and not obj.startswith("L1"):
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
@@ -266,6 +266,9 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
+            ## add dummy eta
+            if "eta" not in self.ak_arrays[str(test_obj)].fields:
+                self.ak_arrays[str(test_obj)]["eta"] = 0
             for (
                 range_i,
                 range_cuts,
@@ -295,6 +298,8 @@ class TurnOnCollection:
 
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
+            if (self.ak_arrays["ref"].ndim == 1) and (sel.ndim == 2):
+                sel = sel[:,0]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
             self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
