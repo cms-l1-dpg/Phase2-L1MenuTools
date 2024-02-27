@@ -15,7 +15,7 @@ JetMatchingBarrel:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
     L1caloJet:default: "pt"
-    # trackerJet:default: "pt"
+    L1TrackJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -40,7 +40,7 @@ JetMatchingEndcap:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
     L1caloJet:default: "pt"
-    # trackerJet:default: "pt"
+    L1TrackJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:

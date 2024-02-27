@@ -15,7 +15,7 @@ JetTurnonBarrel:
     L1puppiJetHisto:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
     L1caloJet:default: "pt"
-    # trackerJet:default:barrel: "pt"
+    L1TrackJet:default:barrel: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
@@ -44,7 +44,7 @@ JetTurnonEndcap:
     L1puppiJetHisto:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
     L1caloJet:default: "pt"
-    # trackerJet:default:endcap: "pt"
+    L1TrackJet:default:endcap: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"

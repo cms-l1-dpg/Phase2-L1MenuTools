@@ -56,15 +56,15 @@ L1puppiJetSC4:
         inclusive:
           - "abs({eta}) < 7"
 
-# trackerJet:
-#   match_dR: 0.4
-#   label: "Tracker Jet"
-#   eta_ranges:
-#     inclusive: [0, 7]
-#     barrel: [0, 1.5]
-#     endcap: [1.5, 2.4]
-#   ids:
-#     default:
-#       cuts:
-#         inclusive:
-#           - "abs({eta}) < 7"
+L1TrackJet:
+  match_dR: 0.4
+  label: "Tracker Jet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"

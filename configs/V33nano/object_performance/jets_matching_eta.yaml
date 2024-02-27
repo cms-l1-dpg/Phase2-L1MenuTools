@@ -16,7 +16,7 @@ JetMatching_Eta_Pt40To100:
     L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
     L1caloJet:default: "eta"
-    # trackerJet:default: "eta"
+    L1TrackJet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (40-100 GeV)"
   binning:
@@ -41,7 +41,7 @@ JetMatching_Eta_Pt100ToInf:
     L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
     L1caloJet:default: "eta"
-    # trackerJet:default: "eta"
+    L1TrackJet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:
