@@ -1,0 +1,73 @@
+JetMatchingBarrel:
+  sample: TT
+  version: V33nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingEndcap:
+  sample: TT
+  version: V33nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    # trackerJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingForward:
+  version: V33nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
