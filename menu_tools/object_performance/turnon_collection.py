@@ -276,7 +276,7 @@ class TurnOnCollection:
                     )
                     eta_sel = (
                         abs(self.ak_arrays[str(test_obj)]["eta"])
-                        > test_obj.eta_ranges[range_i][0]
+                        >= test_obj.eta_ranges[range_i][0]
                     ) & (
                         abs(self.ak_arrays[str(test_obj)]["eta"])
                         < test_obj.eta_ranges[range_i][1]
