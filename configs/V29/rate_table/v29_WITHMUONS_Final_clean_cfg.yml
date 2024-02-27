@@ -411,7 +411,6 @@ L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9:
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 5
-      - abs(leg1.eta) < 2.4
     obj: gmtTkMuon:default
   leg2:
     threshold_cut: pt > 3

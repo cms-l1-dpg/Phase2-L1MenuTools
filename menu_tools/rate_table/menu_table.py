@@ -1,7 +1,8 @@
 from itertools import combinations
 import os
-from typing import Any, Union
+from typing import Optional, Union
 import re
+import warnings
 import yaml
 
 import awkward as ak
@@ -26,9 +27,9 @@ class MenuTable:
     """
 
     def __init__(self, config: dict):
-        self.config = MenuConfig(config)
-        self.table = None
-        self._seed_masks = None
+        self.config: MenuConfig = MenuConfig(config)
+        self.table: Optional[list[dict[str, Union[str, float]]]] = None
+        self._seed_masks: dict[str, np.ndarray] = self._prepare_masks()
 
     @property
     def trigger_seeds(self) -> dict:
@@ -153,7 +154,7 @@ class MenuTable:
         return arr
 
     def get_legs_arrays_for_seed(
-        self, seed_legs: dict[str, dict[str, Union[list, str]]]
+        self, seed_legs: dict[str, dict[str, str]]
     ) -> dict[str, ak.Array]:
         """Parses the config file (menu definition)
         to get the cuts to be used for the definition of each trigger leg
@@ -176,8 +177,9 @@ class MenuTable:
                 raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
 
             # Prepare object ID mask
+            obj = objects.Object(leg["obj"], self.config.version)
             obj_mask = objects.compute_selection_mask_for_object_cuts(
-                leg["obj"], raw_object_arrays[leg["obj"]]
+                obj, raw_object_arrays[leg["obj"]]
             )
 
             # Substitute
@@ -244,23 +246,25 @@ class MenuTable:
         }
         return seed_legs
 
-    def get_eval_string(self, legs_arrays: dict[str, ak.Array]):
-        """
-        Function that selects only relevant entries in the arrays and returns the
+    def get_eval_string(self, legs_arrays: dict[str, ak.Array]) -> str:
+        """ Selects only relevant entries in the arrays and returns the
         awkward array corresponding to events which satisfy the cuts on the trigger
         legs.
+
+        Returns:
+          eval_str: TODO!
         """
-        eval_str = []
+        eval_strings: list = []
         for leg, leg_arr in legs_arrays.items():
             if "var" in str(leg_arr.type):
-                eval_str.append(f"(ak.num({leg}) > 0)")
+                eval_strings.append(f"(ak.num({leg}) > 0)")
             else:
-                eval_str.append(f"(ak.is_none({leg}) == False)")
-        eval_str = " & ".join(eval_str)
+                eval_strings.append(f"(ak.is_none({leg}) == False)")
+        eval_str: str = " & ".join(eval_str)
 
         return eval_str
 
-    def _load_cross_seeds(self, seed_name: str) -> Any:
+    def _load_cross_seeds(self, seed_name: str) -> list:
         """Loads the cross seeds
 
         seed: name of the trigger seed
@@ -268,7 +272,7 @@ class MenuTable:
         Returns:
             cross_seeds: todo
         """
-        cross_seeds = []
+        cross_seeds: list = []
         seeds = self.trigger_seeds[seed_name]
         if "x_seeds" not in seeds:
             return cross_seeds
@@ -316,17 +320,20 @@ class MenuTable:
         total_mask = ak.fill_none(total_mask, False)
         return total_mask
 
-    def _prepare_masks(self) -> None:
+    def _prepare_masks(self) -> dict[str, np.ndarray]:
         """Calls `get_trigger_pass_mask` for each object defined in the menu.
         The function returns the masks for each object.
+
+        Returns:
+            seed_masks: array contining masks all trigger seeds
         """
-        seed_masks = {}
+        seed_masks: dict = {}
 
         for seed_name in self.trigger_seeds:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
 
-        self._seed_masks = seed_masks
+        return seed_masks
 
     def print_table(self) -> None:
         """
@@ -345,10 +352,9 @@ class MenuTable:
         Function that prints to screen the rates table.
         Returns a list containing the csv-compatible table.
         """
-        self._prepare_masks()
 
-        table = []
-        all_seeds_or_mask = 0
+        table: list[dict[str, Union[str, float]]] = []
+        all_seeds_or_mask = ak.zeros_like(self._seed_masks.values()[0])
         for seed, mask in self._seed_masks.items():
             # Compute seed values
             npass = np.sum(mask)
@@ -382,10 +388,6 @@ class MenuTable:
         """
         Dumps the masks produced by `_prepare_masks` to parquet file.
         """
-        if self._seed_masks is None:
-            print("No masks created! Run `_prepare_masks` via `make_table` first.")
-            return
-
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_path = os.path.join(
             self.config.table_outdir,
@@ -396,6 +398,10 @@ class MenuTable:
 
     def save_table(self) -> None:
         """Function that saves to file the table produced by `make_table`."""
+        if self.table is None:
+            warnings.warn("Table was not computed yet. Run `make_table` first.")
+            return
+
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_file = os.path.join(
             self.config.table_outdir,
