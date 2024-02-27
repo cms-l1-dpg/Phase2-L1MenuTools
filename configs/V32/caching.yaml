@@ -14,26 +14,22 @@ V32:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/TT_TuneCP5_14TeV-powheg-pythia8/TT_131_200PU_v32_reL1only/240206_115846/0000/L1NtuplePhaseII_Step1_*.root
     trees_branches:
       genTree/L1GenTree:
-        # genMetTrue: "all"
+        # genMetTrue: "all" # DOES NOT EXIST IN ABOVE
         jet: [Pt, Eta, Phi]
       l1PhaseIITree/L1PhaseIITree:
-        # puppiMET: "all"
+        puppiMET: "all"
         phase1PuppiJet: [Pt, Et, Eta, Phi]
-        # phase1PuppiMHT: "all"
-        # phase1PuppiHT: "all"
+        phase1PuppiMHT: "all"
+        phase1PuppiHT: "all"
         seededConePuppiJet: [Pt, Et, Eta, Phi]
         seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
-        # seededConePuppiHT: "all"
-        # seededConePuppiMHT: "all"
+        seededConePuppiHT: "all"
+        seededConePuppiMHT: "all"
         trackerJet: [Pt, Eta, Phi]
-        # trackerMET: "all"
-        # trackerMHT: "all"
-        # trackerHT: "all"
-        # caloJet: "all"
+        trackerMET: "all"
+        trackerMHT: "all"
+        trackerHT: "all"
         caloJet: [Et, Pt, Eta, Phi]
-  #       ## DEBUG
-  #       #tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, HGC, PassesEleID, PassesPhoID]
-  #       #tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_v32_reL1only/240206_115854/0000/L1NtuplePhaseII_Step1_*.root
     trees_branches:
