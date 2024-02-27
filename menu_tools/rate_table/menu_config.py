@@ -1,27 +1,27 @@
 class MenuConfig:
-    def __init__(self, cfg: dict):
-        self._cfg = cfg
+    def __init__(self, config: dict) -> None:
+        self._config = config
 
     @property
     def sample(self) -> str:
-        return self._cfg["sample"]
+        return self._config["sample"]
 
     @property
-    def menu_cfg(self):
-        return self._cfg["menu_config"]
+    def menu_config(self):
+        return self._config["menu_config"]
 
     @property
     def menu_objects(self):
-        return self._cfg["menu_objects"]
+        return self._config["menu_objects"]
 
     @property
     def version(self):
-        return self._cfg["version"]
+        return self._config["version"]
 
     @property
     def table_outdir(self):
-        return self._cfg["table"]["table_outdir"]
+        return self._config["table"]["table_outdir"]
 
     @property
     def table_fname(self):
-        return self._cfg["table"]["table_fname"]
+        return self._config["table"]["table_fname"]

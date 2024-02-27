@@ -16,8 +16,9 @@ def main():
         menu_config_dict = yaml.safe_load(f)
 
     menu_table = MenuTable(menu_config_dict)
-    table = menu_table.make_table()
-    menu_table.dump_table(table)
+    menu_table.make_table()
+    menu_table.print_table()
+    menu_table.save_table()
     menu_table.dump_masks()
 
 

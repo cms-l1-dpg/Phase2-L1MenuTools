@@ -1,6 +1,5 @@
 version: "V29"
-sample: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/MinBias_1.root" 
-menu_config: "cfg/v29/v29_WITHMUONS_Final_clean_cfg.yml"
+menu_config: "configs/V29/rate_table/v29_WITHMUONS_Final_clean_cfg.yml"
 table:
     table_fname: "rates_full_Final"
     table_outdir: "rates_tables/V29"
