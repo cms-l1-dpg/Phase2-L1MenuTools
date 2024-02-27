@@ -1,0 +1,42 @@
+phase1PuppiHT:
+  label: "Histogrammed Puppi HT"
+  ids:
+    default: {}
+
+phase1PuppiMHT:
+  label: "Phase1 Puppi MHT"
+  ids:
+    default: {}
+
+L1puppiMET:
+  label: "Puppi MET"
+  ids:
+    default: {}
+
+L1puppiJetSC4sums:
+  label: "SeededCone HT"
+  ids:
+    HT:
+      cuts:
+        inclusive:
+          - "{sumType} == 0"
+    MHT:
+      cuts:
+        inclusive:
+          - "{sumType} == 1"
+
+
+# trackerHT:
+#   label: "Tracker HT"
+#   ids:
+#     default: {}
+
+# trackerMET:
+#   label: "Tracker MET"
+#   ids:
+#     default: {}
+
+# trackerMHT:
+#   label: "Tracker MHT"
+#   ids:
+#     default: {}

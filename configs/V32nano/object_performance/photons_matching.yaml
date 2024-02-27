@@ -1,49 +1,49 @@
-TausMatchingBarrel:
-  sample: VBFHToTauTau
+PhotonsMatching_Barrel:
+  sample: Hgg
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "GenVisTau"
+    object: "part_gamma"
     x_arg: "pt"
-    label: "Gen Taus"
+    label: "Gen Photons"
     cuts:
       event:
-        # - "{dr_0.3} < 0.15"
+        - "{dr_0.3} < 0.15"
         - "abs({eta}) < 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnTau:default: "pt"
-    L1caloTau:default: "pt"
-    L1caloTau:PtGe20: "Pt"
+    EG:default: "pt"
+    L1tkPhoton:NoIso: "pt"
+    L1tkPhoton:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
     min: 0
-    max: 150
-    step: 6
+    max: 100
+    step: 3
 
-TausMatchingEndcap:
-  sample: VBFHToTauTau
+PhotonsMatching_Endcap:
+  sample: Hgg
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "GenVisTau"
+    object: "part_gamma"
     x_arg: "pt"
-    label: "Gen Taus"
+    label: "Gen Photons"
     cuts:
       event:
-        # - "{dr_0.3} < 0.15"
+        - "{dr_0.3} < 0.15"
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnTau:default: "pt"
-    L1caloTau:default: "pt"
-    L1caloTau:PtGe20: "Pt"
+    EG:default: "pt"
+    L1tkPhoton:NoIso: "pt"
+    L1tkPhoton:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:
     min: 0
-    max: 150
-    step: 6
+    max: 100
+    step: 3

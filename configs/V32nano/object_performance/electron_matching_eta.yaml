@@ -1,9 +1,9 @@
-ElectronsMatching_Eta_pt10to25:
+ElectronsMatching_Eta_Pt10to25:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "prunedGenPart"
+    object: "GenPart"
     x_arg: "eta"
     label: "Gen Electrons"
     cuts:
@@ -15,7 +15,7 @@ ElectronsMatching_Eta_pt10to25:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    # EG:default: "eta"
+    L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"
     L1tkElectron:Iso: "eta"
   xlabel: "Gen. $\\eta$"
@@ -25,12 +25,12 @@ ElectronsMatching_Eta_pt10to25:
     max: 3
     step: 0.2
 
-ElectronsMatching_Eta_pt25toInf:
+ElectronsMatching_Eta_Pt25toInf:
   sample: DYLL_M50
   version: V32nano
   match_test_to_ref: True
   reference_object:
-    object: "prunedGenPart"
+    object: "GenPart"
     x_arg: "eta"
     label: "Gen Electrons"
     cuts:
@@ -41,7 +41,7 @@ ElectronsMatching_Eta_pt25toInf:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    # EG:default: "eta"
+    L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"
     L1tkElectron:Iso: "eta"
   xlabel: "Gen. $\\eta$"
