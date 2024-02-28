@@ -46,71 +46,6 @@ class MenuTable:
 
         return menu_seeds
 
-    def add_offline_pt(self, arr, obj_scalings, pt_var=None):
-        """
-        Use the scalings to convert online pT to offline pT.
-        The `pt_var` argument can be used to specify which observables
-        should be used as "pT" for a given object.
-        If `pt_var` is not specified, `pt` or `et` are used.
-        For each object, a dedicated scaling in the barrel/endcap regions
-        is applied to the online pT.
-        """
-        # initialise array of zeros identical to the original pt
-        if pt_var is not None:
-            pt_orig = arr[pt_var]
-        elif "et" in arr.fields:
-            pt_orig = arr.et
-        elif "pt" in arr.fields:
-            pt_orig = arr.pt
-        elif "" in arr.fields:
-            pt_orig = arr[""][:, 0]
-        else:
-            print("Error! Unknown pt branch")
-            return 0
-
-        if None in obj_scalings:
-            values = obj_scalings[None]
-            new_pt = pt_orig * values["slope"] + values["offset"] * (pt_orig > 0)
-        else:
-            new_pt = ak.zeros_like(pt_orig)
-
-            # loop through eta regions with it's scaling parameters
-            for region, values in obj_scalings.items():
-                # create eta mask for this eta region
-                eta_mask = (abs(arr.eta) >= values["eta_min"]) & (
-                    abs(arr.eta) < values["eta_max"]
-                )
-                # scale pt for non-masked elements of this eta region
-                new_pt = new_pt + eta_mask * (
-                    pt_orig * values["slope"] + values["offset"]
-                )
-
-        return ak.with_field(arr, new_pt, "offline_pt")
-
-    def scale_pt(self, obj, arr):
-        """
-        Wrapper function that calls `add_offline_pt` if the scaling is defined.
-        If the scaling for a given object is not found, `offline_pt` is set to
-        be equal to the online pt.
-        """
-
-        if obj in self.scalings:
-            # print(self.scalings[obj])
-            arr = self.add_offline_pt(arr, self.scalings[obj])
-        else:
-            print("No scalings found for " + obj)
-            if "" in arr.fields:
-                arr["et"] = arr[""]
-                arr["pt"] = arr[""]
-            arr["offline_pt"] = arr.pt
-
-        if "eta" in arr.fields:
-            arr["mass"] = 0.0 * ak.ones_like(arr["eta"])
-            arr = ak.with_name(arr, "Momentum4D")
-
-        arr["idx"] = ak.local_index(arr)
-        return arr
-
     def _transform_key(self, raw_key: str, obj: objects.Object) -> str:
         """Maps <object_name><obj_field> to <object_field>.
 
@@ -151,6 +86,15 @@ class MenuTable:
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
         #     arr = arr["jagged0"]
+        arr = ak.with_name(arr, "Momentum4D")
+        return arr
+
+    def remove_empty_events_and_nones(self, arr: ak.Array) -> ak.Array:
+        ## apply mask if regular (non-jagged) array, e.g. MET/HT etc
+        if "var" in str(arr.type):
+            arr = arr[ak.num(arr) > 0]
+        else:
+            arr = arr[~ak.is_none(arr)]
         return arr
 
     def get_legs_arrays_for_seed(
@@ -183,7 +127,9 @@ class MenuTable:
             )
 
             # Substitute
-            leg_mask_str = re.sub(r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"])
+            leg_mask_str = re.sub(
+                r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
+            )
             leg_array = raw_object_arrays[leg["obj"]]
             threshold_mask = eval(leg_mask_str)
 
@@ -198,7 +144,7 @@ class MenuTable:
 
         return masked_object_arrays
 
-    def get_combined_legs(self, leg_arrs: dict[str, ak.Array], seed_legs):
+    def get_combined_legs(self, leg_arrs: dict[str, ak.Array], seed_legs) -> ak.Array:
         """
         For multi-leg triggers, this function creates the combination of the legs.
         After the trigger legs are combined, the resulting array corresponding to the
@@ -212,24 +158,28 @@ class MenuTable:
         # duplicate handling (exclude combinations)
         # first check whether objects are repeating
         objs = [o["obj"] for o in seed_legs.values()]
-        obj_cnts = {i: objs.count(i) for i in objs}
+        seed_has_one_leg_per_object = all([objs.count(o) <= 1 for o in objs])
 
-        if np.max(list(obj_cnts.values())) <= 1:
+        if seed_has_one_leg_per_object:
             return combined_arrays
 
-        mask_no_duplicates = []
+        masks_remove_duplicates = []
         for leg1, leg2 in combinations(leg_arrs, 2):
             ## check that the legs are the same type object, skip otherwise
             if seed_legs[leg1]["obj"] == seed_legs[leg2]["obj"]:
-                mask_no_duplicates.append(
+                print(combined_arrays[leg1].fields)
+                masks_remove_duplicates.append(
                     combined_arrays[leg1].idx != combined_arrays[leg2].idx
                 )
 
-        nodup_mask = ak.ones_like(combined_arrays)
-        for mask in mask_no_duplicates:
-            nodup_mask = nodup_mask & mask
+        no_duplicates_mask = ak.from_numpy(
+            np.ones(len(combined_arrays), dtype=np.bool_)
+        )
+        for i, mask in enumerate(masks_remove_duplicates):
+            print(f"{i=}")
+            no_duplicates_mask = no_duplicates_mask & mask
 
-        combined_arrays = combined_arrays[nodup_mask]
+        combined_arrays = combined_arrays[no_duplicates_mask]
         return combined_arrays
 
     def _filter_seed_legs(self, seed: str) -> dict:
@@ -247,7 +197,7 @@ class MenuTable:
         return seed_legs
 
     def get_eval_string(self, legs_arrays: dict[str, ak.Array]) -> str:
-        """ Selects only relevant entries in the arrays and returns the
+        """Selects only relevant entries in the arrays and returns the
         awkward array corresponding to events which satisfy the cuts on the trigger
         legs.
 
@@ -291,23 +241,33 @@ class MenuTable:
         Returns:
             total_mask: boolean awkward array mask defining trigger `seed`
         """
+        print("====")
+        print(seed_name)
         total_mask = 1
         ##
         seed_legs = self._filter_seed_legs(seed_name)
         legs_arrays = self.get_legs_arrays_for_seed(seed_legs)
         combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
-        for leg, leg_arr in legs_arrays.items():
-            _leg = combined_legs[leg]
-            # TODO: comment what this check is about
-            if "var" in str(leg_arr.type):
-                total_mask = total_mask & (ak.num(_leg) > 0)
-            else:
-                total_mask = total_mask & ~ak.is_none(_leg)
+        combined_legs = self.remove_empty_events_and_nones(combined_legs)
+
+        # for leg, leg_arr in legs_arrays.items():
+        # print(leg)
+        # _leg = combined_legs[leg]
+        # TODO: comment what this check is about
+        # if "var" in str(leg_arr.type):
+        #     total_mask = total_mask & (ak.num(_leg) > 0)
+        # else:
+        #     total_mask = total_mask & ~ak.is_none(_leg)
 
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
         if len(cross_mask_strs) > 0:
             eval_str = " & ".join(cross_mask_strs)
+            eval_str = re.sub(r"(leg\d)", r"combined_legs['\1']", eval_str)
+            _ = combined_legs["leg1"]
+            _ = combined_legs["leg2"]
+            print(combined_legs["leg1"].deltaR(combined_legs["leg2"]))
+            print(eval_str)
             cross_mask = eval(f"ak.any({eval_str}, axis=1)")
             total_mask = total_mask & cross_mask
 
