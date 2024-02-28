@@ -1,4 +1,4 @@
-MHT30_90perc:
+MHT_debug_METrefGenMHT:
   sample: TT
   version: V32nano
   reference_object:
@@ -11,12 +11,12 @@ MHT30_90perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    phase1PuppiMHT:default: "et"
-    seededConePuppiMHT:default: "et"
-  thresholds: [70, 150]
-  scalings:
-    method: "naive"
-    threshold: 0.90
+    L1puppiMET:default: "pt"
+  #thresholds: [-1, 0, 70, 150, 500]
+  thresholds: [150]
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.50
   xlabel: "Gen. MHT30 (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
@@ -24,7 +24,7 @@ MHT30_90perc:
     max: 500
     step: 20
 
-MHT30_50perc:
+MHT_debug:
   sample: TT
   version: V32nano
   reference_object:
@@ -37,13 +37,33 @@ MHT30_50perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    phase1PuppiMHT:default: "et"
-    seededConePuppiMHT:default: "et"
-    trackerMHT:default: ""
-  thresholds: [70, 150]
-  scalings:
-    method: "naive"
-    threshold: 0.50
+    L1puppiJetSC4sums:MHT: "pt"
+  #thresholds: [-1, 0, 70, 150, 500]
+  thresholds: [150]
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.50
+  xlabel: "Gen. MHT30 (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+MHT_debug_refL1MET:
+  sample: TT
+  version: V32nano
+  reference_object:
+    object: "L1puppiMET"
+    x_arg: "pt"
+    label: "Gen MHT"
+  test_objects:
+    L1puppiJetSC4sums:MHT: "pt"
+  # thresholds: [-1, 0, 70, 150, 500]
+  thresholds: [150]
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.50
   xlabel: "Gen. MHT30 (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:

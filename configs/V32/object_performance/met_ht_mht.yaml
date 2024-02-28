@@ -11,8 +11,8 @@ HT_90perc:
          - "abs({eta}) < 2.4"
          - "{pt} > 30"
   test_objects:
-    # trackerHT:default: ""
-    # phase1PuppiHT:default: ""
+    trackerHT:default: ""
+    phase1PuppiHT:default: ""
     seededConePuppiHT:default: ""
   thresholds: [350]
   scalings:
@@ -65,8 +65,8 @@ MHT_50perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    # trackerMHT:default: ""
-    # phase1PuppiMHT:default: "et"
+    trackerMHT:default: ""
+    phase1PuppiMHT:default: "et"
     seededConePuppiMHT:default: "et"
   thresholds: [70, 150]
   scalings:
@@ -114,7 +114,7 @@ MHT_50perc:
 #     x_arg: ""
 #     label: "Gen MET"
 #   test_objects:
-#     # trackerMET:default: ""
+#     trackerMET:default: ""
 #     puppiMET:default: "et"
 #   thresholds: [150]
 #   xlabel: "Gen. MET (GeV)"
