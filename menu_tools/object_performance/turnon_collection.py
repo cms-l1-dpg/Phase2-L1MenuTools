@@ -105,7 +105,7 @@ class TurnOnCollection:
         test_objects = self.cfg_plot.test_objects
         for obj_key, x_arg in test_objects.items():
             obj = Object(obj_key, self.cfg_plot.version)
-            if "L1" in obj:
+            if "L1" in obj_key:
                 obj_args.append((obj, x_arg))
             else:
                 obj_args.append((obj, x_arg.lower()))
@@ -361,11 +361,12 @@ class TurnOnCollection:
         return eff, err
 
     def _apply_cuts(self):
+        # Apply cuts on test objects
+        self._apply_test_obj_cuts()
+
         # Apply cuts on reference objects
         self._apply_reference_cuts()
         self._apply_reference_trafo()
-        # Apply cuts on test objects
-        self._apply_test_obj_cuts()
 
     def create_hists(self):
         self._load_arrays()
