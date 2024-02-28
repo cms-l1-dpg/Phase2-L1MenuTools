@@ -1,0 +1,46 @@
+TauRates:
+  sample: MinBias
+  version: V32nano
+  test_objects:
+    - L1nnTau:default
+    - L1hpsTau:default
+    - L1caloTau:default
+    - L1nnCaloTau:default
+  binning:
+    min: 10
+    max: 155
+    step: 5
+
+JetDefaultRates:
+  sample: MinBias
+  version: V32nano
+  test_objects:
+    - L1puppiJetHisto:default
+    - L1puppiJetSC4:default
+    - L1caloJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetSC8Rates:
+  sample: MinBias
+  version: V32nano
+  test_objects:
+    # - L1puppiJetSC4:default
+    - L1puppiJetSC8:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+METRates:
+  sample: MinBias
+  version: V32nano
+  test_objects:
+    - L1puppiMET:default
+    - L1puppiMLMET:default
+  binning:
+    min: 50
+    max: 300
+    step: 10
