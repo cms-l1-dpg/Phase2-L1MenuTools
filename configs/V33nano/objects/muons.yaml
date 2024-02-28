@@ -1,4 +1,15 @@
-gmtMuon:
+GenPart:
+  label: "Gen Muon"
+  eta_ranges:
+    inclusive: [0, 7]
+  ids:
+    gen_electron_default:
+      cuts:
+        inclusive:
+          - "(({statusFlags}>>7)&1) == 1"
+
+
+L1gmtMuon:
   label: "GMT Muon"
   match_dR: 0.3
   eta_ranges:
@@ -8,13 +19,8 @@ gmtMuon:
     endcap: [1.24, 2.4]
   ids:
     default: {}
-    oldRateID:
-      label: "GMT Muon, Qual>=12 in OMTF"
-      cuts:
-        overlap:
-          - "{quality} >= 12"
 
-gmtTkMuon:
+L1gmtTkMuon:
   label: "GMT TkMuon"
   match_dR: 0.1
   eta_ranges:
@@ -26,4 +32,4 @@ gmtTkMuon:
     default:
       cuts:
         inclusive:
-          - "({quality} > 0) | ({pt} > 8)" # quality criterion only to be appied for p_T < 8 GeV
+          - "({hwQual} > 0) | ({pt} > 8)" # quality criterion only to be appied for p_T < 8 GeV

@@ -1,21 +1,22 @@
 MuonsMatching_Eta_Pt2to5:
   sample: DYLL_M50
-  version: V29
+  version: V33nano
   match_test_to_ref: True
   reference_object:
-    object: "part_mu"
-    x_arg: "Eta"
+    object: "GenPart"
+    x_arg: "eta"
     label: "Gen Muons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
         - "{pt} > 2"
         - "{pt} < 5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    gmtMuon:default: "Eta"
-    gmtTkMuon:default: "Eta"
+    L1gmtMuon:default: "eta"
+    L1gmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -25,22 +26,22 @@ MuonsMatching_Eta_Pt2to5:
 
 MuonsMatching_Eta_Pt15toInf:
   sample: DYLL_M50
-  version: V29
+  version: V33nano
   match_test_to_ref: True
   reference_object:
-    object: "part_mu"
-    x_arg: "Eta"
+    object: "GenPart"
+    x_arg: "eta"
     label: "Gen Muons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
         - "{pt} > 15"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    gmtMuon:default: "Eta"
-    gmtMuon:oldRateID: "Eta"
-    gmtTkMuon:default: "Eta"
+    L1gmtMuon:default: "eta"
+    L1gmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

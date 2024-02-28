@@ -1,6 +1,6 @@
 ElectronsMatching_Eta_Pt10to25:
   sample: DYLL_M50
-  version: V32nano
+  version: V33nano
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -27,7 +27,7 @@ ElectronsMatching_Eta_Pt10to25:
 
 ElectronsMatching_Eta_Pt25toInf:
   sample: DYLL_M50
-  version: V32nano
+  version: V33nano
   match_test_to_ref: True
   reference_object:
     object: "GenPart"

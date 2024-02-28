@@ -7,3 +7,15 @@ L1puppiMLMET:
   label: "Puppi ML MET"
   ids:
     default: {}
+
+L1puppiJetSC4sums:
+  label: "SeededCone HT"
+  ids:
+    HT:
+      cuts:
+        inclusive:
+          - "{sumType} == 0"
+    MHT:
+      cuts:
+        inclusive:
+          - "{sumType} == 1"

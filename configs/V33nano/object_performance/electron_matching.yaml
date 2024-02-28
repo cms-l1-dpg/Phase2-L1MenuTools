@@ -1,6 +1,6 @@
 ElectronsMatchingBarrel:
   sample: DYLL_M50
-  version: V32nano
+  version: V33nano
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -26,10 +26,10 @@ ElectronsMatchingBarrel:
 
 # ElectronsMatchingBarrel_wPrunedGenPart:
 #   sample: DYLL_M50
-#   version: V32nano
+#   version: V33nano
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "prunedGenPart"
+#     object: "GenPart"
 #     x_arg: "pt"
 #     label: "Gen Electrons"
 #     cuts:
@@ -52,7 +52,7 @@ ElectronsMatchingBarrel:
 
 ElectronsMatchingEndcap:
   sample: DYLL_M50
-  version: V32nano
+  version: V33nano
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -78,10 +78,10 @@ ElectronsMatchingEndcap:
 
 # ElectronsMatchingEndcap_wPrunedGenPart:
 #   sample: DYLL_M50
-#   version: V32nano
+#   version: V33nano
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "prunedGenPart"
+#     object: "GenPart"
 #     x_arg: "pt"
 #     label: "Gen Electrons"
 #     cuts:

@@ -1,19 +1,20 @@
 MuonsMatchingBarrel:
   sample: DYLL_M50
-  version: V29
+  version: V33nano
   match_test_to_ref: True
   reference_object:
-    object: "part_mu"
-    x_arg: "Pt"
+    object: "GenPart"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
       object:
         - "abs({eta}) < 0.83"
   test_objects:
-    gmtMuon:default:barrel: "Pt"
-    gmtTkMuon:default:barrel: "Pt"
+    L1gmtMuon:default:barrel: "pt"
+    L1gmtTkMuon:default:barrel: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
   binning:
@@ -23,22 +24,22 @@ MuonsMatchingBarrel:
 
 MuonsMatchingOverlap:
   sample: DYLL_M50
-  version: V29
+  version: V33nano
   match_test_to_ref: True
   reference_object:
-    object: "part_mu"
-    x_arg: "Pt"
+    object: "GenPart"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
       object:
         - "abs({eta}) > 0.83"
         - "abs({eta}) < 1.24"
   test_objects:
-    gmtMuon:default:overlap: "Pt"
-    gmtMuon:oldRateID:overlap: "Pt"
-    gmtTkMuon:default:overlap: "Pt"
+    L1gmtMuon:default:overlap: "pt"
+    L1gmtTkMuon:default:overlap: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (overlap)"
   binning:
@@ -48,21 +49,22 @@ MuonsMatchingOverlap:
 
 MuonsMatchingEndcap:
   sample: DYLL_M50
-  version: V29
+  version: V33nano
   match_test_to_ref: True
   reference_object:
-    object: "part_mu"
-    x_arg: "Pt"
+    object: "GenPart"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
-        - "{dr_0.3} < 0.15"
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
       object:
         - "abs({eta}) > 1.24"
         - "abs({eta}) < 2.4"
   test_objects:
-    gmtMuon:default:endcap: "Pt"
-    gmtTkMuon:default:endcap: "Pt"
+    L1gmtMuon:default:endcap: "pt"
+    L1gmtTkMuon:default:endcap: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
   binning:

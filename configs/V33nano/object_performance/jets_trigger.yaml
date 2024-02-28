@@ -1,9 +1,9 @@
 JetTurnonBarrel:
-  version: V32
+  version: V33nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -12,10 +12,10 @@ JetTurnonBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default:barrel: "Pt"
-    seededConePuppiJet:default:barrel: "Pt"
-    caloJet:default:barrel: "Pt"
-    # trackerJet:default:barrel: "Pt"
+    L1puppiJetHisto:default:barrel: "pt"
+    L1puppiJetSC4:default:barrel: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default:barrel: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
@@ -28,11 +28,11 @@ JetTurnonBarrel:
     step: 10
 
 JetTurnonEndcap:
-  version: V32
+  version: V33nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -41,10 +41,10 @@ JetTurnonEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    phase1PuppiJet:default:endcap: "Pt"
-    seededConePuppiJet:default:endcap: "Pt"
-    caloJet:default:endcap: "Pt"
-    # trackerJet:default:endcap: "Pt"
+    L1puppiJetHisto:default:endcap: "pt"
+    L1puppiJetSC4:default:endcap: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default:endcap: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
@@ -57,11 +57,11 @@ JetTurnonEndcap:
     step: 10
 
 JetTurnonForward:
-  version: V32
+  version: V33nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet" # HACK -> using the nano GenJet parquet file here until fixing the menu ntuples
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -70,9 +70,9 @@ JetTurnonForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    phase1PuppiJet:default:forward: "Pt"
-    seededConePuppiJet:default:forward: "Pt"
-    caloJet:default:forward: "Pt"
+    L1puppiJetHisto:default:forward: "pt"
+    L1puppiJetSC4:default:forward: "pt"
+    L1caloJet:default: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
