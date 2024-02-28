@@ -63,11 +63,11 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
         elif "L1PhaseII" in tree:
             prefix = "L1PhaseII/"
         elif "Events" in tree:
-            prefix = "Events/"
+            prefix = ""
 
         ## nano
         if tree == "Events":
-            obj_branches = [x.split("_")[-1] for x in all_branches if x.startswith(prefix+obj)]
+            obj_branches = [x.split("_")[-1] for x in all_branches if x.startswith(obj)]
         ## no nano
         else:
             obj_branches = [x.removeprefix(prefix + obj) for x in all_branches if x.startswith(prefix+obj)]
