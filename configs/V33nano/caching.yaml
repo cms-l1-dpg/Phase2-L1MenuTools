@@ -41,10 +41,12 @@ V33nano:
         L1TrackMET: [pt]
         L1TrackHT: [ht, mht]
         L1TrackJet: [pt, eta, phi]
-  # VBFHToTauTau:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_v32_reL1only/240206_115854/0000/l1nano_*.root
-  #   trees_branches:
-  #     Events:
-  #       GenVisTau: "all" 
-  #       L1nnTau: "all" 
-  #       L1caloTau: "all" 
+  VBFHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v33_fromEmyr/vbfHTauTau.root
+    trees_branches:
+      Events:
+        GenVisTau: "all" 
+        L1nnPuppiTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all" 
+        L1nnCaloTau: "all"
