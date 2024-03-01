@@ -81,7 +81,7 @@ class MenuTable:
 
         # Apply scalings
         arr = scalings.add_offline_pt(arr, obj)
-        arr["pt"] = scalings.get_pt_branch(arr)
+        arr["pt"] = arr["offline_pt"]  # TODO: Implement `overwrite_pt` keyword in `scalings.add_offline_pt`
 
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
@@ -118,6 +118,7 @@ class MenuTable:
         for leg_key, leg in seed_legs.items():
             # Load object array if not already loeaded
             if leg["obj"] not in raw_object_arrays:
+                print("Loading ", leg["obj"])
                 raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
 
             # Prepare object ID mask
@@ -127,10 +128,13 @@ class MenuTable:
             )
 
             # Substitute
+            print(leg["threshold_cut"])
             leg_mask_str = re.sub(
                 r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
             )
+            leg_mask_str = re.sub(r"(leg\d)", r"leg_array.\1", leg["threshold_cut"])
             leg_array = raw_object_arrays[leg["obj"]]
+            print("135: ", leg_mask_str)
             threshold_mask = eval(leg_mask_str)
 
             # Combined leg mask
@@ -267,7 +271,7 @@ class MenuTable:
             _ = combined_legs["leg1"]
             _ = combined_legs["leg2"]
             print(combined_legs["leg1"].deltaR(combined_legs["leg2"]))
-            print(eval_str)
+            print("271: ", eval_str)
             cross_mask = eval(f"ak.any({eval_str}, axis=1)")
             total_mask = total_mask & cross_mask
 
@@ -300,6 +304,7 @@ class MenuTable:
         TODO: This function should take all the printing stuff out of
         `make_table`
         """
+        print(self.table)
         raise NotImplementedError
         # print(seed.ljust(50), ":\t%8i\t%.5f\t%.1f" % (npass, efficiency, rate))
         # tot_str = "Total:".ljust(50) + "\t%8i\t%.5f\t%.1f" % (npass, efficiency, rate)
@@ -314,7 +319,8 @@ class MenuTable:
         """
 
         table: list[dict[str, Union[str, float]]] = []
-        all_seeds_or_mask = ak.zeros_like(self._seed_masks.values()[0])
+        print(list(self._seed_masks.values()))
+        all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
         for seed, mask in self._seed_masks.items():
             # Compute seed values
             npass = np.sum(mask)
