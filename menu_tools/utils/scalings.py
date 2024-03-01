@@ -70,5 +70,10 @@ def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
                 abs(arr.eta) < eta_min_max[1]
             )
             new_pt = new_pt + eta_mask * (pt_orig * slope + offset)
+
+    if "eta" in arr.fields:
+        arr["mass"] = 0.0 * ak.ones_like(arr["eta"])
+
     arr["idx"] = ak.local_index(arr)
+
     return ak.with_field(arr, new_pt, "offline_pt")
