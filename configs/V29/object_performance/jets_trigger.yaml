@@ -1,0 +1,82 @@
+JetTurnonBarrel:
+  version: V29
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    phase1PuppiJet:default:barrel: "Pt"
+    seededConePuppiJet:default:barrel: "Pt"
+    trackerJet:default:barrel: "Pt"
+  thresholds: [50, 100]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetTurnonEndcap:
+  version: V29
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    phase1PuppiJet:default:endcap: "Pt"
+    seededConePuppiJet:default:endcap: "Pt"
+    trackerJet:default:endcap: "Pt"
+  thresholds: [50]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetTurnonForward:
+  version: V29
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    phase1PuppiJet:default:forward: "Pt"
+    seededConePuppiJet:default:forward: "Pt"
+  thresholds: [50, 100]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+  binning:
+    min: 0
+    max: 500
+    step: 10

@@ -1,0 +1,41 @@
+name: Code quality
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  black-lint:
+    runs-on: ubuntu-latest
+    name: black
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          src: "./menu_tools"
+          version: "~= 23.12"
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: flake8
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          path: "./menu_tools"
+  mypy-type-check:
+    runs-on: ubuntu-latest
+    name: mypy
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          architecture: 'x64'
+      - run: |
+          python -m pip install --upgrade pip poetry
+          poetry install
+          poetry run mypy

@@ -1,0 +1,80 @@
+V29:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/DY_M50_1252_crab_v29_Snap3/230413_214444/0000/*.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_mu: [Id, Stat, Pt, Eta, Phi]
+        part_e: [Id, Stat, Pt, Eta, Phi]
+      l1PhaseIITree/L1PhaseIITree:
+        tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesEleID, PassesPhoID]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]
+        gmtMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, Bx]
+        gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/TT_1252_crab_v29_Snap3/230413_214422/0000/*.root
+    trees_branches:
+      genTree/L1GenTree:
+        genMetTrue: "all"
+        jet: "all"
+      l1PhaseIITree/L1PhaseIITree:
+        puppiMET: "all"
+        phase1PuppiJet: "all"
+        phase1PuppiMHT: "all"
+        phase1PuppiHT: "all"
+        seededConePuppiJet: [Pt, Et, Eta, Phi]
+        seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
+        seededConePuppiHT: "all"
+        seededConePuppiMHT: "all"
+        trackerJet: [Pt, Eta, Phi]
+        trackerMET: "all"
+        trackerMHT: "all"
+        trackerHT: "all"
+        # caloJet: "all"
+        caloJet: [Et, Pt, Eta, Phi]
+        ## DEBUG
+        #tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, EGRefPt, EGRefEta, EGRefPhi, HGC, PassesEleID, PassesPhoID]
+        #tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]
+  VBFHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/VBFHToTauTau_1252_crab_v29_Snap3/230413_214647/*/*.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]
+      l1PhaseIITree/L1PhaseIITree:
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+  HHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/HHToTauTau_1252_crab_v29_Snap3/230417_072539/0000/*.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_tau: [Id, Stat, Pt, Eta, Phi, Parent, E]
+      l1PhaseIITree/L1PhaseIITree:
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual]
+  Hgg:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/GluGluHToGG_1252_crab_v29_Snap3/230413_214505/0000/*.root
+    trees_branches:
+      genTree/L1GenTree:
+        part_gamma: [Id, Stat, Pt, Eta, Phi]
+      l1PhaseIITree/L1PhaseIITree:
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID, TrkIsoPV]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]
+  MinBias:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/CMSSW_12_5_2p1/v29/MinBias_1252_crb_v29_Snap3/230413_214525/*/*.root
+    trees_branches:
+      l1PhaseIITree/L1PhaseIITree:
+        puppiMET: "all"
+        phase1PuppiJet: "all"
+        phase1PuppiMHT: "all"
+        phase1PuppiHT: "all"
+        seededConePuppiJet: [Pt, Et, Eta, Phi]
+        seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
+        seededConePuppiHT: "all"
+        seededConePuppiMHT: "all"
+        tkElectron: [Pt, Et, Eta, Phi, Chg, Bx, TrkIso, PfIso, PuppiIso, zVtx, HwQual, HGC, PassesEleID, PassesPhoID]
+        EG: [Pt, Et, Eta, Phi, Bx, Iso, HwQual, HGC, PassesEleID, PassesSaID]
+        gmtTkMuon: [Pt, Eta, Phi, Z0, D0, IPt, IEta, IPhi, IZ0, ID0, Chg, Iso, Qual, Beta, NStubs, Bx]
+        nnTau: [Et, Eta, Pt, Phi, FullIso, Z0, PassTightNN, Chg, DXY, PassLooseNN]
+        tkPhoton: [Pt, Et, Eta, Phi, Bx, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID, TrkIsoPV]
+        z0L1TkPV: "all"
+        caloTau: [Et, Eta, Pt, Phi, Iso, HwQual, Bx]
+

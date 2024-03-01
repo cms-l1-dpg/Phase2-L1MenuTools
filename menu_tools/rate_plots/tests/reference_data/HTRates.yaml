@@ -1,0 +1,10 @@
+HTRates:
+  binning:
+    max: 420
+    min: 40
+    step: 20
+  sample: MinBias
+  test_objects:
+  - phase1PuppiHT:default
+  - seededConePuppiHT:default
+  version: V29

@@ -1,0 +1,70 @@
+MuonsMatchingBarrel:
+  sample: DYLL_M50
+  version: V29
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    gmtMuon:default:barrel: "Pt"
+    gmtTkMuon:default:barrel: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingOverlap:
+  sample: DYLL_M50
+  version: V29
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    gmtMuon:default:overlap: "Pt"
+    gmtTkMuon:default:overlap: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (overlap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingEndcap:
+  sample: DYLL_M50
+  version: V29
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    gmtMuon:default:endcap: "Pt"
+    gmtTkMuon:default:endcap: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

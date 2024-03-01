@@ -13,20 +13,24 @@
   Detailed instructions on how to run each step of the workflow are
   provided in each folder.
 
-## Setup of Python environment
-  **Note:** The code should run without any setup on `lxplus`.
+## Setup
 
   A standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
-  dependencies installed via `pip install -r requirements.txt`.
+  dependencies installed via `pip install .`:
 
-  You can then execute the scripts either with `python <path_to_script>.py`
-  or by modifying the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29).
-  (the very first line of the executable `.py` files which starts
-  with `#!`) to point
-  to your newly set up Python installation. To find the path run
+  ```bash
+  python3.11 -m venv pyenv
+  source <name_of_venv>/bin/activate
+  pip install .
+  ```
 
-    source <name_of_venv>/bin/activate
-    which python
+  **ATTENTION:** Whenever you pull changes you need to `pip install . --upgrade`
 
-  and replace the current path in the shebang with the output.
+  You can then execute the tools via
+
+  ```python
+  cach_objects <path_to_config>
+  object_performance <path_to_config>
+  rate_plots <path_to_config>
+  ```
