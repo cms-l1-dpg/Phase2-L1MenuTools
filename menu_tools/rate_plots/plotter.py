@@ -29,6 +29,9 @@ class RatePlotter:
         self.data = data
         self.offline_pt = offline_pt
 
+        ## Overwrite outdir
+        self._outdir = os.path.join("outputs", self.cfg.version, "object_performance", "rates")
+
     @property
     def _online_offline(self):
         if self.offline_pt:
@@ -214,7 +217,7 @@ class RateComputer:
         # Apply scalings if so configured
         if self.apply_offline_conversion:
             arr = scalings.add_offline_pt(arr, self.object)
-        arr["pt"] = scalings.get_pt_branch(arr)
+        arr["pt"] = scalings.get_pt_branch(arr, str(self.object))
 
         return arr
 

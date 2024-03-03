@@ -1,7 +1,7 @@
 import awkward as ak
 
-version = "V32nano"
-sample = "DYLL_M50"
+version = "V33nano"
+sample = "MinBias"
 # sample = "Hgg"
 pattern = f"cache/{version}/{version}_{sample}_%s.parquet"
 objects = ["L1EGbarrel","L1EGendcap"]
