@@ -68,7 +68,7 @@ class RatePlotter:
 
             xvals = list(rate_values.keys())
             yvals = list(rate_values.values())
-            label = f"{obj_instances[version].plot_label} @ {version}"
+            label = f"{obj_instances[version].plot_label}"
 
             plot_dict[obj_specifier] = {
                 "x_values": xvals,

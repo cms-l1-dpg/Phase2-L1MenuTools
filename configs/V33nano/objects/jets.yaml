@@ -3,6 +3,9 @@ L1caloJet:
   label: "Calo Jet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
   cuts:
     inclusive:
       - "abs({eta}) < 7"
@@ -17,6 +20,9 @@ L1puppiExtJetSC4:
   label: "Seeded Cone Extended PuppiJet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
   ids:
     default:
       cuts:
@@ -45,6 +51,20 @@ L1puppiJetHisto:
 L1puppiJetSC4:
   match_dR: 0.35
   label: "Seeded Cone PuppiJet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+L1puppiJetSC8:
+  match_dR: 0.35
+  label: "Seeded Cone PuppiJet 8"
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.5]

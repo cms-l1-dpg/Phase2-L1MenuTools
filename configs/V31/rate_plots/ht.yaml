@@ -1,0 +1,11 @@
+HTRates:
+  sample: MinBias
+  version: V31
+  test_objects:
+    - phase1PuppiHT:default
+    - seededConePuppiHT:default
+    - trackerHT:default
+  binning:
+    min: 50
+    max: 975
+    step: 25
