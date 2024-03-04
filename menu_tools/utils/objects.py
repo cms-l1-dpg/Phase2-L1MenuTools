@@ -172,12 +172,16 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
     if not obj.cuts:
         return sel
 
+    ## add fake eta 
+    if "eta" not in ak_array["eta"].fields:
+        ak_array["eta"] = 0
+
     for range_i, range_cuts in obj.cuts.items():
         # Initialize temporary mask (for rangei) with True everywhere
         _sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
         for cut in range_cuts:
             cut = re.sub(r"{([^&|]*)}", r"ak_array['\1']", cut)
-            eta_sel = (abs(ak_array["eta"]) > obj.eta_ranges[range_i][0]) & (
+            eta_sel = (abs(ak_array["eta"]) >= obj.eta_ranges[range_i][0]) & (
                 abs(ak_array["eta"]) < obj.eta_ranges[range_i][1]
             )
             _sel = _sel & (eval(cut) + ~eta_sel)
