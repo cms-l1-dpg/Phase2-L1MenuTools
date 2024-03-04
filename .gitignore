@@ -15,3 +15,4 @@ outputs
 menu_tools.egg-info
 dist
 ph2-menu-tools
+prod_ph2-menu-tools
