@@ -30,7 +30,9 @@ class RatePlotter:
         self.offline_pt = offline_pt
 
         ## Overwrite outdir
-        self._outdir = os.path.join("outputs", self.cfg.version, "object_performance", "rates")
+        self._outdir = os.path.join(
+            "outputs", self.cfg.version, "object_performance", "rates"
+        )
 
     @property
     def _online_offline(self):
@@ -92,7 +94,7 @@ class RatePlotter:
             self._outdir,
             f"{version}_{self._online_offline}_{self.cfg.plot_name}",
         )
-        print ('Saving to ',fname)
+        print("Saving to ", fname)
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
 
@@ -189,7 +191,7 @@ class RateComputer:
             transformed to quality
         """
         ## nano
-        if ("_" in raw_key):
+        if "_" in raw_key:
             key = raw_key.removeprefix(self.object.nano_obj_name).split("_")[-1]
         ## menu ntuples
         else:

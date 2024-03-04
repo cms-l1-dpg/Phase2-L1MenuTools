@@ -299,7 +299,7 @@ class TurnOnCollection:
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
             if (self.ak_arrays["ref"].ndim == 1) and (sel.ndim == 2):
-                sel = sel[:,0]
+                sel = sel[:, 0]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
             self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
