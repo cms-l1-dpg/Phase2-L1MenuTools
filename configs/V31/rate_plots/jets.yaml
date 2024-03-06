@@ -6,7 +6,7 @@ JetDefaultRates:
     - seededConePuppiJet:default
     # - seededConeExtendedPuppiJet:default
     - trackerJet:default
-    # - caloJet:default
+    - caloJet:default
   binning:
     min: 40
     max: 420

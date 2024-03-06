@@ -73,6 +73,7 @@ V31:
         seededConeExtendedPuppiHT: "all"
         seededConePuppiHT: "all"
         seededConePuppiMHT: "all"
+        caloJet: [Et, Pt, Eta, Phi]
         tkElectron: [Pt, Et, Eta, Phi, Chg, TrkIso, PfIso, PuppiIso, zVtx, HwQual, HGC, PassesEleID, PassesPhoID]
         EG: [Pt, Et, Eta, Phi, Iso, HwQual, HGC, PassesEleID, PassesSaID]
         gmtTkMuon: [Pt, Eta, Phi, Z0, D0, Chg, Qual ]
