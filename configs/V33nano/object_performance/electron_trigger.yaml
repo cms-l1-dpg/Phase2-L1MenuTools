@@ -14,7 +14,7 @@ ElectronsTriggerBarrel:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    # L1EG:default:barrel: "pt"
+    L1EG:default:barrel: "pt"
     L1tkElectron:NoIso:barrel: "pt"
     L1tkElectron:Iso:barrel: "pt"
   thresholds: [10, 20, 30, 40]
@@ -44,7 +44,7 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    # L1EG:default:endcap: "pt"
+    L1EG:default:endcap: "pt"
     L1tkElectron:NoIso:endcap: "pt"
     L1tkElectron:Iso:endcap: "pt"
   thresholds: [10, 20, 30, 40]
@@ -74,7 +74,7 @@ ElectronsTriggerEndcap:
 #       object:
 #         - "abs({eta}) < 2.8"
 #   test_objects:
-#     # L1EG:default:barrel: "pt"
+    # L1EG:default:barrel: "pt"
 #     L1tkElectron:NoIso:barrel: "pt"
 #     L1tkElectron:Iso:barrel: "pt"
 #   thresholds: [10, 20, 30, 40]
