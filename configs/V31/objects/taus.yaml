@@ -24,6 +24,8 @@ caloTau:
     endcap: [1.5, 2.4]
   ids:
     default:
+      label: "Calo Tau, pt>20"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
+          - "{pt} > 20"
