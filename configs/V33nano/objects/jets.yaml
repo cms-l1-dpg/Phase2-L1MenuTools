@@ -3,6 +3,9 @@ L1caloJet:
   label: "Calo Jet"
   eta_ranges:
     inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
   cuts:
     inclusive:
       - "abs({eta}) < 7"
