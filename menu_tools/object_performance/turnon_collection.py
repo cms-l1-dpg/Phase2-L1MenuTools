@@ -24,7 +24,13 @@ class ArrayLoader:
         NTuple branch names for quality and region
         to "quality"/"region".
         """
-        key = raw_key.removeprefix(obj).lower()
+        ## nano
+        if ("_" in raw_key) and ("dr_0" not in raw_key):
+            key = raw_key.removeprefix(obj).split("_")[-1]
+        ## menu ntuples
+        else:
+            key = raw_key.removeprefix(obj).lower()
+
         if "qual" in key:
             return "quality"
         else:
@@ -45,7 +51,7 @@ class ArrayLoader:
         )
         array = ak.from_parquet(fname)
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
-        if self.cfg_plot.reference_trafo:
+        if self.cfg_plot.reference_trafo and not obj.startswith("L1"):
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
@@ -99,7 +105,10 @@ class TurnOnCollection:
         test_objects = self.cfg_plot.test_objects
         for obj_key, x_arg in test_objects.items():
             obj = Object(obj_key, self.cfg_plot.version)
-            obj_args.append((obj, x_arg.lower()))
+            if "L1" in obj_key:
+                obj_args.append((obj, x_arg))
+            else:
+                obj_args.append((obj, x_arg.lower()))
 
         return obj_args
 
@@ -136,7 +145,7 @@ class TurnOnCollection:
 
             pass_dR = dR < test_obj.match_dR
             pt_max = ak.argmax(ref_test["test"]["pt"][pass_dR], axis=-1, keepdims=True)
-            if "iso" not in x_arg:
+            if "iso" not in x_arg.lower():
                 self.numerators["ref"][str(test_obj)] = ref_test["ref"][x_arg][pass_dR][
                     pt_max
                 ][:, :, 0]
@@ -257,6 +266,9 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
+            ## add dummy eta
+            if "eta" not in self.ak_arrays[str(test_obj)].fields:
+                self.ak_arrays[str(test_obj)]["eta"] = 0
             for (
                 range_i,
                 range_cuts,
@@ -267,7 +279,7 @@ class TurnOnCollection:
                     )
                     eta_sel = (
                         abs(self.ak_arrays[str(test_obj)]["eta"])
-                        > test_obj.eta_ranges[range_i][0]
+                        >= test_obj.eta_ranges[range_i][0]
                     ) & (
                         abs(self.ak_arrays[str(test_obj)]["eta"])
                         < test_obj.eta_ranges[range_i][1]
@@ -286,6 +298,8 @@ class TurnOnCollection:
 
         for test_obj, x_arg in self.test_objects:
             sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
+            if (self.ak_arrays["ref"].ndim == 1) and (sel.ndim == 2):
+                sel = sel[:, 0]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])
             self.hists[str(test_obj)] = np.histogram(ak_array, bins=self.bins)
 
@@ -347,11 +361,12 @@ class TurnOnCollection:
         return eff, err
 
     def _apply_cuts(self):
+        # Apply cuts on test objects
+        self._apply_test_obj_cuts()
+
         # Apply cuts on reference objects
         self._apply_reference_cuts()
         self._apply_reference_trafo()
-        # Apply cuts on test objects
-        self._apply_test_obj_cuts()
 
     def create_hists(self):
         self._load_arrays()

@@ -1,0 +1,79 @@
+Photons_Turnons_V29:
+  files:
+    PhotonsMatching_10_-999_V29:
+      object: tkIsoPhoton
+      dir: outputs/V29/turnons/
+      label: "tkIsoPhoton (L1 $p_T$>10)"
+    PhotonsMatching_20_-999_V29:
+      object: tkIsoPhoton
+      dir: outputs/V29/turnons/
+      label: "tkIsoPhoton (L1 $p_T$>20)"
+    PhotonsMatching_30_-999_V29:
+      object: tkIsoPhoton
+      dir: outputs/V29/turnons/
+      label: "tkIsoPhoton (L1 $p_T$>30)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  watermark: "V29_tkIsoPhoton_Comp"
+  save_dir: "outputs/V29/turnons"
+
+Jets_Turnons_V29:
+  files:
+    JetMatching_25_-999_V29:
+      object: seededConePuppiJet
+      dir: outputs/V29/turnons/
+      label: "SC PuppiJet (L1 $p_T$>25)"
+    JetMatching_50_-999_V29:
+      object: seededConePuppiJet
+      dir: outputs/V29/turnons/
+      label: "SC PuppiJet (L1 $p_T$>50)"
+    JetMatching_75_-999_V29:
+      object: seededConePuppiJet
+      dir: outputs/V29/turnons/
+      label: "SC PuppiJet (L1 $p_T$>75)"
+    JetMatching_100_-999_V29:
+      object: seededConePuppiJet
+      dir: outputs/V29/turnons/
+      label: "SC PuppiJet (L1 $p_T$>100)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  watermark: "V29_SCJet_Comp"
+  save_dir: "outputs/V29/turnons"
+
+Electrons_Turnons_V29:
+  files:
+    ElectronsMatching_10_-999_V29:
+      object: tkIsoElectron
+      dir: outputs/V29/turnons/
+      label: "tkIsoElectron (L1 $p_T$>10)"
+    ElectronsMatching_20_-999_V29:
+      object: tkIsoElectron
+      dir: outputs/V29/turnons/
+      label: "tkIsoElectron (L1 $p_T$>20)"
+    ElectronsMatching_30_-999_V29:
+      object: tkIsoElectron
+      dir: outputs/V29/turnons/
+      label: "tkIsoElectron (L1 $p_T$>30)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  watermark: "V29_tkIsoEle_Comp"
+  save_dir: "outputs/V29/turnons"
+
+Muons_Turnons_V29:
+  files:
+    MuonsMatching_5_-999_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>5)"
+    MuonsMatching_15_-999_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>15)"
+    MuonsMatching_25_-999_V29:
+      object: gmtTkMuon
+      dir: outputs/V29/turnons/
+      label: "GMT TkMuon (L1 $p_T$>25)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  watermark: "V29_gmtTkMuon_Comp"
+  save_dir: "outputs/V29/turnons"

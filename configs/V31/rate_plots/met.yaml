@@ -1,0 +1,10 @@
+METRates:
+  sample: MinBias
+  version: V31
+  test_objects:
+    - puppiMET:default
+    - trackerMET:default
+  binning:
+    min: 50
+    max: 500
+    step: 25

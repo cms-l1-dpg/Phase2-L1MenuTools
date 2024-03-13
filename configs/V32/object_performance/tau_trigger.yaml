@@ -1,0 +1,111 @@
+TauTriggerBarrel_90perc:
+  sample: VBFHToTauTau
+  version: V32
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default:barrel: "Pt"
+    caloTau:default:barrel: "Pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TauTriggerEndcap_90perc:
+  sample: VBFHToTauTau
+  version: V32
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default:endcap: "Pt"
+    caloTau:default:endcap: "Pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TauTriggerBarrel_50perc:
+  sample: VBFHToTauTau
+  version: V32
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default:barrel: "Pt"
+    caloTau:default:barrel: "Pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.50
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TauTriggerEndcap_50perc:
+  sample: VBFHToTauTau
+  version: V32
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default:endcap: "Pt"
+    caloTau:default:endcap: "Pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.50
+  binning:
+    min: 0
+    max: 150
+    step: 6

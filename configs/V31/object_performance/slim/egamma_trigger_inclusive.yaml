@@ -1,0 +1,85 @@
+ElectronsTrigger_Inclusive:
+  sample: DYLL_M50
+  default_version: V29
+  reference_object:
+    object: "part_e"
+    suffix: "Pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+  test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG"
+      match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
+    tkElectron:
+      suffix: "Pt"
+      label: "tkElectron"
+      match_dR: 0.15
+      cuts:
+        - "{passeseleid} == 1"
+    tkIsoElectron:
+      base_obj: "tkElectron"
+      suffix: "Pt"
+      label: "tkIsoElectron"
+      iso_BB: 0.13
+      iso_EE: 0.28
+      iso_branch: "trkiso"
+      match_dR: 0.15
+      cuts:
+        - "{passeseleid} == 1"
+  thresholds: [30] #[10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5
+
+PhotonsTrigger_Inclusive:
+  sample: Hgg
+  default_version: V29
+  reference_object:
+    object: "part_gamma"
+    suffix: "Pt"
+    label: "Gen Photons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+  test_objects:
+    EG:
+      suffix: "Pt"
+      label: "EG"
+      match_dR: 0.2
+      quality_id: "QUAL_125x_EGID"
+      cuts:
+        - "{passeseleid} == 1"
+    tkPhoton:
+      match_dR: 0.15
+      suffix: "Pt"
+      label: "tkPhoton"
+      quality_id: "QUAL_125x_tkPhoID"
+    tkIsoPhoton:
+      base_obj: "tkPhoton"
+      match_dR: 0.15
+      suffix: "Pt"
+      label: "tkIsoPhoton"
+      iso_EE: 0.2
+      iso_BB: 0.2
+      iso_branch: trkiso
+      quality_id: "QUAL_125x_tkPhoID"
+  thresholds: [30] #[10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5

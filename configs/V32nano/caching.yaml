@@ -1,0 +1,59 @@
+V32nano:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_131_200PU_v32_reL1only/240205_120621/0000/l1nano_*.root
+    trees_branches:
+      Events:
+        GenPart: "all" 
+        prunedGenPart: "all" 
+        # GenVisTau: "all" 
+        # L1scJet: [pt, eta, phi]
+        # L1scExtJet: [pt, eta, phi, btagScore]
+        L1gmtTkMuon: "all" 
+        L1StaMu: "all"  # aka gmtMuon
+        L1tkElectron: "all" 
+        # L1nnTau: "all" 
+        ## merge below with python3.11 menu_tools/caching/merge_arrays.py
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+  TT:
+      ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/TT_TuneCP5_14TeV-powheg-pythia8/TT_131_200PU_v32_reL1only/240206_115846/0000/l1nano_*.root
+      trees_branches:
+        Events:
+          # gen
+          GenJet: [pt, eta, phi] 
+          GenJetAK8: [pt, eta, phi]
+          GenMET: "all"
+          # sums
+          L1puppiMET: [pt, phi]
+          L1puppiMLMET: "all"
+          L1puppiJetSC4sums: [pt, phi]
+          L1puppiHistoJetSums: [pt, phi]
+          # jets
+          L1puppiJetSC4: [pt, eta, phi]
+          L1puppiJetSC8: [pt, eta, phi]
+          L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+          L1puppiJetHisto: [pt, eta, phi]
+          L1caloJet: [pt, eta, phi]
+  VBFHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_v32_reL1only/240206_115854/0000/l1nano_*.root
+    trees_branches:
+      Events:
+        GenVisTau: "all" 
+        L1nnTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all" 
+        L1nnCaloTau: "all"
+  MinBias:
+    ntuple_path: 
+    trees_branches:
+      Events:
+        L1puppiMET: "all" 
+        L1puppiMLMET: "all" 
+        L1nnTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
