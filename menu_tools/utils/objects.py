@@ -173,7 +173,7 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
         return sel
 
     ## add fake eta
-    if "eta" not in ak_array["eta"].fields:
+    if "eta" not in ak_array.fields:
         ak_array["eta"] = 0
 
     for range_i, range_cuts in obj.cuts.items():
