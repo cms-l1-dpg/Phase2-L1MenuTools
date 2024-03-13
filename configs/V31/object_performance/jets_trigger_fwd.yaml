@@ -12,7 +12,7 @@ JetTurnonFwd_3p7to7:
       object:
         - "abs({eta}) < 7"
   test_objects:
-    phase1PuppiJet:default:forward: "Pt"
+    #phase1PuppiJet:default:forward: "Pt"
     seededConePuppiJet:default:forward: "Pt"
   thresholds: [50,100]
   scalings:

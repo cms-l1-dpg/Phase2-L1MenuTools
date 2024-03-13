@@ -1,4 +1,4 @@
-JetMatching_Eta_pt40To100_ExtendedVsRegular:
+JetMatching_Eta_Pt40To100_ExtendedVsRegular:
   sample: TT
   version: V33nano
   match_test_to_ref: True
@@ -22,7 +22,7 @@ JetMatching_Eta_pt40To100_ExtendedVsRegular:
     max: 5
     step: 0.25
 
-JetMatching_Eta_pt100ToInf_ExtendedVsRegular:
+JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
   sample: TT
   version: V33nano
   match_test_to_ref: True
@@ -45,7 +45,7 @@ JetMatching_Eta_pt100ToInf_ExtendedVsRegular:
     max: 5
     step: 0.25
 
-JetMatching_Eta_pt30ToInf_genBJets:
+JetMatching_Eta_Pt30ToInf_genBJets:
   sample: TT
   version: V33nano
   match_test_to_ref: True
@@ -68,7 +68,7 @@ JetMatching_Eta_pt30ToInf_genBJets:
     max: 2.4
     step: 0.25
 
-JetMatching_Eta_pt30ToInf_genNotBJets:
+JetMatching_Eta_Pt30ToInf_genNotBJets:
   sample: TT
   version: V33nano
   match_test_to_ref: True
@@ -91,7 +91,7 @@ JetMatching_Eta_pt30ToInf_genNotBJets:
     max: 2.4
     step: 0.25
 
-JetMatching_pt_pt30ToInf_genBJets:
+JetMatching_Pt_Pt30ToInf_genBJets:
   sample: TT
   version: V33nano
   match_test_to_ref: True
@@ -113,7 +113,7 @@ JetMatching_pt_pt30ToInf_genBJets:
     max: 200
     step: 10
 
-JetMatching_pt_pt30ToInf_genNotBJets:
+JetMatching_Pt_Pt30ToInf_genNotBJets:
   sample: TT
   version: V33nano
   match_test_to_ref: True

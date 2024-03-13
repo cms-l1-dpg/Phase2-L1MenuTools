@@ -65,19 +65,26 @@ V31:
     trees_branches:
       l1PhaseIITree/L1PhaseIITree:
         puppiMET: "all"
-        # phase1PuppiJet: "all"
-        # phase1PuppiMHT: "all"
-        # phase1PuppiHT: "all"
+        phase1PuppiJet: "all"
+        phase1PuppiMHT: "all"
+        phase1PuppiHT: "all"
         seededConePuppiJet: [Pt, Et, Eta, Phi]
         seededConeExtendedPuppiJet: [Pt, Et, Eta, Phi, BJetNN]
         seededConeExtendedPuppiHT: "all"
         seededConePuppiHT: "all"
         seededConePuppiMHT: "all"
+        caloJet: [Et, Pt, Eta, Phi]
         tkElectron: [Pt, Et, Eta, Phi, Chg, TrkIso, PfIso, PuppiIso, zVtx, HwQual, HGC, PassesEleID, PassesPhoID]
         EG: [Pt, Et, Eta, Phi, Iso, HwQual, HGC, PassesEleID, PassesSaID]
         gmtTkMuon: [Pt, Eta, Phi, Z0, D0, Chg, Qual ]
+        gmtMuon: [Pt, Eta, Phi, Z0, D0, Chg, Qual ]
         nnTau: [Et, Eta, Pt, Phi, Z0, PassTightNN, Chg, DXY, PassLooseNN]
         tkPhoton: [Pt, Et, Eta, Phi, TrkIso, HwQual, HGC, PassesEleID, PassesPhoID]
         z0L1TkPV: "all"
         caloTau: [Et, Eta, Pt, Phi, Iso, HwQual]
+        trackerJet: [Pt, Eta, Phi]
+        trackerMET: "all"
+        trackerMHT: "all"
+        trackerHT: "all"
+
 

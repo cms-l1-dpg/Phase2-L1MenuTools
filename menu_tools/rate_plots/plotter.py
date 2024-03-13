@@ -29,6 +29,11 @@ class RatePlotter:
         self.data = data
         self.offline_pt = offline_pt
 
+        ## Overwrite outdir
+        self._outdir = os.path.join(
+            "outputs", self.cfg.version, "object_performance", "rates"
+        )
+
     @property
     def _online_offline(self):
         if self.offline_pt:
@@ -65,7 +70,7 @@ class RatePlotter:
 
             xvals = list(rate_values.keys())
             yvals = list(rate_values.values())
-            label = f"{obj_instances[version].plot_label} @ {version}"
+            label = f"{obj_instances[version].plot_label}"
 
             plot_dict[obj_specifier] = {
                 "x_values": xvals,
@@ -89,7 +94,7 @@ class RatePlotter:
             self._outdir,
             f"{version}_{self._online_offline}_{self.cfg.plot_name}",
         )
-        print ('Saving to ',fname)
+        print("Saving to ", fname)
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf")
 
@@ -186,7 +191,7 @@ class RateComputer:
             transformed to quality
         """
         ## nano
-        if ("_" in raw_key):
+        if "_" in raw_key:
             key = raw_key.removeprefix(self.object.nano_obj_name).split("_")[-1]
         ## menu ntuples
         else:
@@ -214,7 +219,7 @@ class RateComputer:
         # Apply scalings if so configured
         if self.apply_offline_conversion:
             arr = scalings.add_offline_pt(arr, self.object)
-        arr["pt"] = scalings.get_pt_branch(arr)
+        arr["pt"] = scalings.get_pt_branch(arr, str(self.object))
 
         return arr
 

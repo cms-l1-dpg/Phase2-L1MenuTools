@@ -293,11 +293,12 @@ class ObjectCacher:
             self._final_ak_array = ak.zip({**all_arrays})
             # sums -> add local index
             if "sums" in self._object.lower():
-                self._final_ak_array[f"{self._object}_sumType"] = ak.local_index(self._final_ak_array)
+                self._final_ak_array[f"{self._object}_sumType"] = ak.local_index(
+                    self._final_ak_array
+                )
                 self._branches += [f"{self._object}_sumType"]
         else:
             self._final_ak_array = ak.Array(all_arrays)
-
 
     def _cache_file_exists(self):
         """
