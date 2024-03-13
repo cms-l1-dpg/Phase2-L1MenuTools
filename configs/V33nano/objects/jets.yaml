@@ -84,4 +84,9 @@ L1TrackJet:
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
   ids:
-    default
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+
