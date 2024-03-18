@@ -78,6 +78,7 @@ class RatePlotter:
                 "object": obj_instances[version].plot_label,
                 "label": label,
                 "version": version,
+                "xlabel": rf"{self._online_offline} $p_T$ [GeV]",
             }
 
             ax.plot(
