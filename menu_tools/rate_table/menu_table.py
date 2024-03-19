@@ -259,10 +259,8 @@ class MenuTable:
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
         if len(cross_mask_strs) > 0:
-            eval_str = " & ".join(cross_mask_strs)
+            eval_str = "(" + ") & (".join(cross_mask_strs) + ")"
             eval_str = re.sub(r"(leg\d)", r"combined_legs['\1']", eval_str)
-            _ = combined_legs["leg1"]
-            _ = combined_legs["leg2"]
             cross_mask = eval(f"ak.any({eval_str}, axis=1)")
             total_mask = total_mask & cross_mask
 
