@@ -31,7 +31,8 @@ class MenuTable:
         self.config: MenuConfig = MenuConfig(config)
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
-        self._seed_masks: dict[str, np.ndarray] = self._prepare_masks()
+        self._seed_masks: dict[str, np.ndarray] = {}
+        self._prepare_masks()
 
     @property
     def trigger_seeds(self) -> dict:
@@ -153,10 +154,7 @@ class MenuTable:
         After the trigger legs are combined, the resulting array corresponding to the
         AND of all the conditions on each leg is returned.
         """
-        if len(leg_arrs) > 1:
-            combined_arrays = ak.cartesian(leg_arrs)
-        else:
-            combined_arrays = leg_arrs
+        combined_arrays = ak.cartesian(leg_arrs)
 
         # duplicate handling (exclude combinations)
         # first check whether objects are repeating
@@ -248,13 +246,11 @@ class MenuTable:
         legs_arrays = self.get_legs_arrays_for_seed(seed_legs)
         combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
 
-        # TODO: comment what this check is about
-        """
-        if "var" in str(leg_arr.type):
-            total_mask = total_mask & (ak.num(_leg) > 0)
+        # Cut on the individual object thresholds
+        if "var" in str(combined_legs.type):
+            total_mask = total_mask & (ak.num(combined_legs, axis=-1) > 0)
         else:
             total_mask = total_mask & ~ak.is_none(_leg)
-        """
 
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
@@ -285,6 +281,10 @@ class MenuTable:
         for seed_name in self.trigger_seeds:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
+            # TODO: Make this printout configurable by a boolean in the cfg file
+            self._seed_masks = seed_masks
+            self.make_table()
+            self.print_table()
 
         return seed_masks
 
