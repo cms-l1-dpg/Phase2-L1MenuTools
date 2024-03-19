@@ -20,7 +20,7 @@ class MenuConfig:
 
     @property
     def table_outdir(self):
-        return self._config["table"]["table_outdir"]
+        return "outputs/V29/rate_tables"
 
     @property
     def table_fname(self):
