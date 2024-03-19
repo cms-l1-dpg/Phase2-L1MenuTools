@@ -7,6 +7,7 @@ import yaml
 
 import awkward as ak
 import numpy as np
+import pandas as pd
 import vector
 
 from menu_tools.rate_table.menu_config import MenuConfig
@@ -29,6 +30,7 @@ class MenuTable:
     def __init__(self, config: dict):
         self.config: MenuConfig = MenuConfig(config)
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
+        self._trigger_seeds: Optional[dict] = None
         self._seed_masks: dict[str, np.ndarray] = self._prepare_masks()
 
     @property
@@ -41,8 +43,14 @@ class MenuTable:
         Returns:
             menu_seeds: dict of
         """
+        # Only load seed table once
+        if self._trigger_seeds is not None:
+            return self._trigger_seeds
+
         with open(self.config.menu_config, "r") as f:
             menu_seeds = yaml.safe_load(f)
+
+        self._trigger_seeds = menu_seeds
 
         return menu_seeds
 
@@ -81,20 +89,12 @@ class MenuTable:
 
         # Apply scalings
         arr = scalings.add_offline_pt(arr, obj)
-        arr["pt"] = arr["offline_pt"]  # TODO: Implement `overwrite_pt` keyword in `scalings.add_offline_pt`
+        print(arr.fields)
 
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
         #     arr = arr["jagged0"]
         arr = ak.with_name(arr, "Momentum4D")
-        return arr
-
-    def remove_empty_events_and_nones(self, arr: ak.Array) -> ak.Array:
-        ## apply mask if regular (non-jagged) array, e.g. MET/HT etc
-        if "var" in str(arr.type):
-            arr = arr[ak.num(arr) > 0]
-        else:
-            arr = arr[~ak.is_none(arr)]
         return arr
 
     def get_legs_arrays_for_seed(
@@ -129,12 +129,14 @@ class MenuTable:
 
             # Substitute
             print(leg["threshold_cut"])
-            leg_mask_str = re.sub(
-                r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
-            )
-            leg_mask_str = re.sub(r"(leg\d)", r"leg_array.\1", leg["threshold_cut"])
+            if re.match(r"leg\d", leg["threshold_cut"]):
+                leg_mask_str = re.sub(r"(leg\d)", r"leg_array", leg["threshold_cut"])
+            else:
+                leg_mask_str = re.sub(
+                    r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
+                )
             leg_array = raw_object_arrays[leg["obj"]]
-            print("135: ", leg_mask_str)
+            print("leg_mask_str: ", leg_mask_str)
             threshold_mask = eval(leg_mask_str)
 
             # Combined leg mask
@@ -252,16 +254,14 @@ class MenuTable:
         seed_legs = self._filter_seed_legs(seed_name)
         legs_arrays = self.get_legs_arrays_for_seed(seed_legs)
         combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
-        combined_legs = self.remove_empty_events_and_nones(combined_legs)
 
-        # for leg, leg_arr in legs_arrays.items():
-        # print(leg)
-        # _leg = combined_legs[leg]
         # TODO: comment what this check is about
-        # if "var" in str(leg_arr.type):
-        #     total_mask = total_mask & (ak.num(_leg) > 0)
-        # else:
-        #     total_mask = total_mask & ~ak.is_none(_leg)
+        """
+        if "var" in str(leg_arr.type):
+            total_mask = total_mask & (ak.num(_leg) > 0)
+        else:
+            total_mask = total_mask & ~ak.is_none(_leg)
+        """
 
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
@@ -304,14 +304,12 @@ class MenuTable:
         TODO: This function should take all the printing stuff out of
         `make_table`
         """
-        print(self.table)
-        raise NotImplementedError
-        # print(seed.ljust(50), ":\t%8i\t%.5f\t%.1f" % (npass, efficiency, rate))
-        # tot_str = "Total:".ljust(50) + "\t%8i\t%.5f\t%.1f" % (npass, efficiency, rate)
-        # print((len(tot_str) + 5) * "-")
-        # print(tot_str)
-        # print("Total nev: %i" % len(total_mask))
-
+        print("===============")
+        print("=====TABLE=====")
+        print("===============\n")
+        df_table = pd.DataFrame(self.table)
+        print(df_table)
+        
     def make_table(self) -> None:
         """
         Function that prints to screen the rates table.
@@ -319,11 +317,11 @@ class MenuTable:
         """
 
         table: list[dict[str, Union[str, float]]] = []
-        print(list(self._seed_masks.values()))
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
         for seed, mask in self._seed_masks.items():
+            print(seed, " mask shape: ", mask.shape)
             # Compute seed values
-            npass = np.sum(mask)
+            npass = ak.sum(mask)
             efficiency = npass / len(mask)
             rate = efficiency * constants.RATE_NORM_FACTOR
             table.append(
