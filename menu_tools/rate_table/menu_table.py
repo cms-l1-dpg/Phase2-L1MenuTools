@@ -89,7 +89,6 @@ class MenuTable:
 
         # Apply scalings
         arr = scalings.add_offline_pt(arr, obj)
-        print(arr.fields)
 
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
@@ -128,7 +127,6 @@ class MenuTable:
             )
 
             # Substitute
-            print(leg["threshold_cut"])
             if re.match(r"leg\d", leg["threshold_cut"]):
                 leg_mask_str = re.sub(r"(leg\d)", r"leg_array", leg["threshold_cut"])
             else:
@@ -136,7 +134,6 @@ class MenuTable:
                     r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
                 )
             leg_array = raw_object_arrays[leg["obj"]]
-            print("leg_mask_str: ", leg_mask_str)
             threshold_mask = eval(leg_mask_str)
 
             # Combined leg mask
@@ -173,7 +170,6 @@ class MenuTable:
         for leg1, leg2 in combinations(leg_arrs, 2):
             ## check that the legs are the same type object, skip otherwise
             if seed_legs[leg1]["obj"] == seed_legs[leg2]["obj"]:
-                print(combined_arrays[leg1].fields)
                 masks_remove_duplicates.append(
                     combined_arrays[leg1].idx != combined_arrays[leg2].idx
                 )
@@ -182,7 +178,6 @@ class MenuTable:
             np.ones(len(combined_arrays), dtype=np.bool_)
         )
         for i, mask in enumerate(masks_remove_duplicates):
-            print(f"{i=}")
             no_duplicates_mask = no_duplicates_mask & mask
 
         combined_arrays = combined_arrays[no_duplicates_mask]
@@ -247,10 +242,8 @@ class MenuTable:
         Returns:
             total_mask: boolean awkward array mask defining trigger `seed`
         """
-        print("====")
-        print(seed_name)
+        print("==> ", seed_name)
         total_mask = 1
-        ##
         seed_legs = self._filter_seed_legs(seed_name)
         legs_arrays = self.get_legs_arrays_for_seed(seed_legs)
         combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
@@ -270,8 +263,6 @@ class MenuTable:
             eval_str = re.sub(r"(leg\d)", r"combined_legs['\1']", eval_str)
             _ = combined_legs["leg1"]
             _ = combined_legs["leg2"]
-            print(combined_legs["leg1"].deltaR(combined_legs["leg2"]))
-            print("271: ", eval_str)
             cross_mask = eval(f"ak.any({eval_str}, axis=1)")
             total_mask = total_mask & cross_mask
 
@@ -306,7 +297,7 @@ class MenuTable:
         """
         print("===============")
         print("=====TABLE=====")
-        print("===============\n")
+        print("===============")
         df_table = pd.DataFrame(self.table)
         print(df_table)
         
@@ -319,7 +310,6 @@ class MenuTable:
         table: list[dict[str, Union[str, float]]] = []
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
         for seed, mask in self._seed_masks.items():
-            print(seed, " mask shape: ", mask.shape)
             # Compute seed values
             npass = ak.sum(mask)
             efficiency = npass / len(mask)
