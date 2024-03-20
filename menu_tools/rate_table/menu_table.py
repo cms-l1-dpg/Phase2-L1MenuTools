@@ -89,7 +89,8 @@ class MenuTable:
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
         # Apply scalings
-        arr = scalings.add_offline_pt(arr, obj)
+        if "z0L1TkPV" not in object_name:
+            arr = scalings.add_offline_pt(arr, obj)
 
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
@@ -127,18 +128,18 @@ class MenuTable:
                 obj, raw_object_arrays[leg["obj"]]
             )
 
-            # Substitute
-            if re.match(r"leg\d", leg["threshold_cut"]):
-                leg_mask_str = re.sub(r"(leg\d)", r"leg_array", leg["threshold_cut"])
-            else:
-                leg_mask_str = re.sub(
-                    r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
-                )
+            leg_mask = obj_mask
             leg_array = raw_object_arrays[leg["obj"]]
-            threshold_mask = eval(leg_mask_str)
-
-            # Combined leg mask
-            leg_mask = threshold_mask & obj_mask
+            if leg["threshold_cut"] is not None:
+                # Substitute
+                if re.match(r"leg\d", leg["threshold_cut"]):
+                    leg_mask_str = re.sub(r"(leg\d)", r"leg_array", leg["threshold_cut"])
+                else:
+                    leg_mask_str = re.sub(
+                        r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
+                    )
+                threshold_mask = eval(leg_mask_str)
+                leg_mask = threshold_mask & obj_mask
 
             ## apply mask if regular (non-jagged) array, e.g. MET/HT etc
             if "var" in str(leg_array.type):
