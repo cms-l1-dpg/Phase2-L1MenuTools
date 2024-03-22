@@ -1,0 +1,11 @@
+V34nano:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v34/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_131_200PU_IB1400pre3V5_rerunL1wTT/240312_125645/*1/*.root
+    trees_branches:
+      Events:
+        GenPart: "all"
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
