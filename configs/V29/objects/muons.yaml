@@ -7,7 +7,9 @@ gmtMuon:
     overlap: [0.83, 1.24]
     endcap: [1.24, 2.4]
   ids:
-    default:
+    default: {}
+    oldRateID:
+      label: "GMT Muon, Qual>=12 in OMTF"
       cuts:
         overlap:
           - "{quality} >= 12"

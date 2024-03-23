@@ -1,0 +1,27 @@
+JetDefaultRates:
+  sample: MinBias
+  version: V31
+  test_objects:
+    - phase1PuppiJet:default
+    - seededConePuppiJet:default
+    # - seededConeExtendedPuppiJet:default
+    - trackerJet:default
+    - caloJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetsByRegion:
+  sample: MinBias
+  version: V31
+  test_objects:
+    - phase1PuppiJet:default:barrel
+    - phase1PuppiJet:default:endcap
+    - seededConePuppiJet:default:barrel
+    - seededConePuppiJet:default:endcap
+  binning:
+    min: 40
+    max: 420
+    step: 20
+

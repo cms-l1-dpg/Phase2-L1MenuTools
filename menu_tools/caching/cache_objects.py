@@ -258,7 +258,13 @@ class ObjectCacher:
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
 
-        branches = [self._object + x for x in self._branches]
+        ## Nano
+        if self._tree == "Events":
+            branches = [f"{self._object}_{x}" for x in self._branches]
+        ## menu ntuple
+        else:
+            branches = [self._object + x for x in self._branches]
+
         all_arrays = {x.removeprefix("part"): [] for x in branches}
 
         for fname in tqdm(fnames):
@@ -282,8 +288,15 @@ class ObjectCacher:
 
         if self._object.startswith("part"):
             all_arrays = {**all_arrays, **self._ref_part_iso}
+
         if len(all_arrays) > 1:
             self._final_ak_array = ak.zip({**all_arrays})
+            # sums -> add local index
+            if "sums" in self._object.lower():
+                self._final_ak_array[f"{self._object}_sumType"] = ak.local_index(
+                    self._final_ak_array
+                )
+                self._branches += [f"{self._object}_sumType"]
         else:
             self._final_ak_array = ak.Array(all_arrays)
 

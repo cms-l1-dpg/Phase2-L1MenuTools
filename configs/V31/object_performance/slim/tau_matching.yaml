@@ -1,0 +1,67 @@
+TausMatching_25:
+  sample: VBFHToTauTau
+  default_version: V29
+  reference_object:
+    object: "part_tau"
+    suffix: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 2.5"
+  test_objects:
+    nnTau:
+      suffix: "Pt"
+      label: "NN Tau (L1 $p_{T}$ > 25 GeV)"
+      cuts:
+        - "abs({eta}) < 2.5"
+        - "{pt} > 25"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau (L1 $p_{T}$ > 60 GeV)"
+      cuts:
+        - "abs({eta}) < 2.5"
+        - "{pt} > 60"
+      match_dR: 0.3
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TausMatching_75:
+  sample: VBFHToTauTau
+  default_version: V29
+  reference_object:
+    object: "part_tau"
+    suffix: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+  test_objects:
+    nnTau:
+      suffix: "Pt"
+      label: "NN Tau (L1 $p_{T}$ > 25 GeV)"
+      cuts:
+        - "abs({eta}) < 2.5"
+        - "{pt} > 75"
+        - "{passloosenn}==1"
+      match_dR: 0.1
+    caloTau:
+      suffix: "Pt"
+      label: "Calo Tau (L1 $p_{T}$ > 25 GeV)"
+      cuts:
+        - "abs({eta}) < 2.5"
+        - "{pt} > 75"
+      match_dR: 0.3
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 150
+    step: 6

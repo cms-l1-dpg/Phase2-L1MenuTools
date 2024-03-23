@@ -35,15 +35,20 @@ def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
     return scaling_params["slope"], scaling_params["offset"]
 
 
-def get_pt_branch(arr: ak.Array) -> ak.Array:
+def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
     if "pt" in arr.fields:
         pt_orig = arr.pt
     elif "et" in arr.fields:
         pt_orig = arr.et
     elif "" in arr.fields:
         pt_orig = arr[""]
+    ### HACK
+    elif "L1TrackHT:MHT" in obj_name:
+        pt_orig = arr["mht"]
+    elif "L1TrackHT:HT" in obj_name:
+        pt_orig = arr["ht"]
     else:
-        raise RuntimeError("Unknown pt branch!")
+        raise RuntimeError(f"Unknown pt branch for {obj_name}! in fields", arr.fields)
     return pt_orig
 
 
@@ -51,7 +56,7 @@ def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
     """
-    pt_orig = get_pt_branch(arr)
+    pt_orig = get_pt_branch(arr, str(obj))
     new_pt = ak.zeros_like(pt_orig)
 
     if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
