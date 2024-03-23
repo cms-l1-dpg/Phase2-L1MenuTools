@@ -133,7 +133,9 @@ class MenuTable:
             if leg["threshold_cut"] is not None:
                 # Substitute
                 if re.match(r"leg\d", leg["threshold_cut"]):
-                    leg_mask_str = re.sub(r"(leg\d)", r"leg_array", leg["threshold_cut"])
+                    leg_mask_str = re.sub(
+                        r"(leg\d)", r"leg_array", leg["threshold_cut"]
+                    )
                 else:
                     leg_mask_str = re.sub(
                         r"([a-zA-Z_]+ )", r"leg_array.\1", leg["threshold_cut"]
@@ -251,7 +253,8 @@ class MenuTable:
         if "var" in str(combined_legs.type):
             total_mask = total_mask & (ak.num(combined_legs, axis=-1) > 0)
         else:
-            total_mask = total_mask & ~ak.is_none(_leg)
+            raise RuntimeError("This part of the code needs some work!")
+            # total_mask = total_mask & ~ak.is_none(_leg)
 
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
@@ -299,7 +302,7 @@ class MenuTable:
         print("===============")
         df_table = pd.DataFrame(self.table)
         print(df_table)
-        
+
     def make_table(self) -> None:
         """
         Function that prints to screen the rates table.
