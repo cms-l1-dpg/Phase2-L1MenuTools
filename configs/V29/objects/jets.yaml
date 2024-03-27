@@ -54,6 +54,7 @@ seededConePuppiJet:
     default:
       cuts:
         inclusive:
+          - "{et}>25"
           - "abs({eta}) < 7"
 
 trackerJet:
