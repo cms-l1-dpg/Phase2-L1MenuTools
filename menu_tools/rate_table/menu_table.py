@@ -92,10 +92,6 @@ class MenuTable:
         if "z0L1TkPV" not in object_name:
             arr = scalings.add_offline_pt(arr, obj)
 
-        # TODO: What is this? Is it needed?
-        # if "jagged0" in arr.fields:
-        #     arr = arr["jagged0"]
-
         # When loading sums (MET, HT, etc.) transfrom the array structure to
         # mimic that of "normal" objects which have lists at the event level
         # instead of a single number.
@@ -205,24 +201,6 @@ class MenuTable:
         }
         return seed_legs
 
-    def get_eval_string(self, legs_arrays: dict[str, ak.Array]) -> str:
-        """Selects only relevant entries in the arrays and returns the
-        awkward array corresponding to events which satisfy the cuts on the trigger
-        legs.
-
-        Returns:
-          eval_str: TODO!
-        """
-        eval_strings: list = []
-        for leg, leg_arr in legs_arrays.items():
-            if "var" in str(leg_arr.type):
-                eval_strings.append(f"(ak.num({leg}) > 0)")
-            else:
-                eval_strings.append(f"(ak.is_none({leg}) == False)")
-        eval_str: str = " & ".join(eval_strings)
-
-        return eval_str
-
     def _load_cross_seeds(self, seed_name: str) -> list:
         """Loads the cross seeds
 
@@ -292,7 +270,6 @@ class MenuTable:
         for seed_name in self.trigger_seeds:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
-            # TODO: Make this printout configurable by a boolean in the cfg file
             self._seed_masks = seed_masks
             self.make_table()
             self.print_table()
