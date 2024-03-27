@@ -7,7 +7,7 @@ class MenuConfig:
 
     @property
     def sample(self) -> str:
-        raise NotImplementedError("Sample hardcoded to MinBias at this time")
+        return self._config["sample"]
 
     @property
     def menu_config(self) -> str:
