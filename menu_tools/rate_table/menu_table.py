@@ -75,20 +75,21 @@ class MenuTable:
         object.
 
         Returns:
-            arr: Array of cached `object_name` object from MinBias sample
+            arr: Array of cached `object_name` object from sample specified in
+            config
         """
         obj = objects.Object(object_name, self.config.version)
         fpath = os.path.join(
             "cache",
             self.config.version,
-            f"{self.config.version}_MinBias_{obj.nano_obj_name}.parquet",
+            f"{self.config.version}_{self.config.sample}_{obj.nano_obj_name}.parquet",
         )
         arr = ak.from_parquet(fpath)
 
         # Remove object name prefix from array fields
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
-        # Apply scalings
+        # Apply scalings, except for PV variable, which has no scalings
         if "z0L1TkPV" not in object_name:
             arr = scalings.add_offline_pt(arr, obj)
 
