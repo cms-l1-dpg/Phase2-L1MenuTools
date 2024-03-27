@@ -95,6 +95,13 @@ class MenuTable:
         # TODO: What is this? Is it needed?
         # if "jagged0" in arr.fields:
         #     arr = arr["jagged0"]
+
+        # When loading sums (MET, HT, etc.) transfrom the array structure to
+        # mimic that of "normal" objects which have lists at the event level
+        # instead of a single number.
+        if isinstance(arr[0], ak.highlevel.Record):
+            arr = ak.zip({field: [[k] for k in arr[field]] for field in arr.fields})
+
         arr = ak.with_name(arr, "Momentum4D")
         return arr
 
@@ -294,8 +301,7 @@ class MenuTable:
 
     def print_table(self) -> None:
         """
-        TODO: This function should take all the printing stuff out of
-        `make_table`
+        Prints the rate table to stdout.
         """
         print("===============")
         print("=====TABLE=====")

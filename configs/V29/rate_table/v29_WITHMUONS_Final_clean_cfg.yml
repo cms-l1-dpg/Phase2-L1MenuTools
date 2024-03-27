@@ -1,18 +1,18 @@
-# L1_PFHTT:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: offline_pt >= 450.0
-#     obj: seededConePuppiHT:default
-# L1_PFMHTT:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: offline_pt >= 135.5
-#     obj: seededConePuppiMHT:default
-# L1_PFMet:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: offline_pt >= 200.0
-#     obj: puppiMET:default
+L1_PFHTT:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt >= 450.0
+    obj: seededConePuppiHT:default
+L1_PFMHTT:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt >= 135.5
+    obj: seededConePuppiMHT:default
+L1_PFMet:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt >= 200.0
+    obj: puppiMET:default
 L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
   cross_masks:
     - (((leg1+leg2).mass > 7.0) & (leg1.deltaR(leg2) > 0))
