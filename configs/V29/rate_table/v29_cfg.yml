@@ -1,0 +1,4 @@
+version: "V29"
+sample: "MinBias"
+menu_config: "configs/V29/rate_table/v29_WITHMUONS_Final_clean_cfg.yml"
+table_fname: "rates_full_Final"

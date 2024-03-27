@@ -1,6 +1,7 @@
 **/__pycache__/*
 *.pyc
 pyenv/*
+*.swp
 **/*.png
 **/*.pdf
 **/.DS_Store
