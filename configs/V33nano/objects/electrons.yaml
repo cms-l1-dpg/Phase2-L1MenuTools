@@ -14,12 +14,10 @@ L1tkElectron:
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
-      label: "TkElectron id in barrel"
+      label: "TkElectron, no ID"
       cuts:
         inclusive:
           - "abs({eta}) < 2.7"
-        barrel:
-          - "({eleId} == 1) | ({pt} < 25)"
     Iso:
       label: "TkIsoElectron"
       cuts:
@@ -27,17 +25,6 @@ L1tkElectron:
           - "abs({eta}) < 2.4"
         barrel:
           - "abs({relIso}) < 0.13"
-          - "({eleId} == 1) | ({pt} < 25)"
-        endcap:
-          - "abs({relIso}) < 0.28"
-    IsoNoIDinEE:
-      label: "TkIsoElectron"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 2.4"
-        barrel:
-          - "abs({relIso}) < 0.13"
-          - "({eleId} == 1) | ({pt} < 25)"
         endcap:
           - "abs({relIso}) < 0.28"
 
