@@ -12,18 +12,18 @@ L1tkPhoton:
           - "abs({eta}) < 2.4"
           - "{pt} > 5"
         barrel:
-          - "{passeseleid} == 1"
+          - "{eleId} == 1"
         endcap:
-          - "{passesphoid} == 1"
+          - "{phoId} == 1"
     Iso:
-      label: "tkIsoPhoton"
+      label: "L1tkIsoPhoton"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
           - "{pt} > 5"
         barrel:
-          - "abs({trkiso}) < 0.2"
-          - "{passeseleid} == 1"
+          - "abs({relIso}) < 0.25"
+          - "{eleId} == 1"
         endcap:
-          - "abs({trkiso}) < 0.2"
-          - "{passesphoid} == 1"
+          - "abs({relIso}) < 0.205"
+          - "{phoId} == 1"
