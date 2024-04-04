@@ -9,3 +9,39 @@ V34nano:
         L1tkElectron: "all"
         L1EGbarrel: "all"
         L1EGendcap: "all"
+  MinBias:
+      ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v34/fromEmyr/minBias.root
+      trees_branches:
+        Events:
+          ## PV
+          L1PV: [z0]
+          ## EG
+          L1tkPhoton: "all" 
+          L1tkElectron: "all" 
+          L1EGbarrel: "all" 
+          L1EGendcap: "all" 
+          ## MUONS
+          L1gmtTkMuon: "all" 
+          L1gmtMuon: "all"  # aka gmtMuon
+          L1gmtDispMuon: "all"  # aka gmtMuon
+          ## TAUS
+          L1nnPuppiTau: "all" 
+          L1hpsTau: "all" 
+          L1caloTau: "all" 
+          L1nnCaloTau: "all"
+          ## MET/Sums
+          L1puppiMET: [pt, phi]
+          L1puppiMLMET: [pt]
+          L1puppiJetSC4sums: [pt, phi]
+          L1puppiHistoJetSums: [pt, phi]
+          # jets
+          L1puppiJetSC4: [pt, eta, phi]
+          L1puppiJetSC8: [pt, eta, phi]
+          L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+          L1puppiJetHisto: [pt, eta, phi]
+          L1caloJet: [pt, eta, phi]
+          ## track-only
+          L1TrackMET: [pt]
+          L1TrackHT: [ht, mht]
+          L1TrackJet: [pt, eta, phi]
+          L1ExtTrackJet: "all"

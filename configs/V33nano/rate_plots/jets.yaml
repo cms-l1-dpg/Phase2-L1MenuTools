@@ -17,8 +17,10 @@ JetsByRegion:
   test_objects:
     - L1puppiJetSC4:default:barrel
     - L1puppiJetSC4:default:endcap
+    - L1puppiJetSC4:default:forward
     - L1caloJet:default:barrel
     - L1caloJet:default:endcap
+    - L1caloJet:default:forward
     - L1TrackJet:default:barrel
     - L1TrackJet:default:endcap
   binning:
@@ -26,6 +28,21 @@ JetsByRegion:
     max: 420
     step: 20
 
+JetExtendedRates:
+  sample: MinBias
+  version: V33nano
+  test_objects:
+    - L1puppiJetSC4:default:barrel
+    - L1puppiJetSC4:default:endcap
+    - L1puppiJetSC4:default:forward
+    - L1puppiExtJetSC4:default:barrel
+    - L1puppiExtJetSC4:default:endcap
+    - L1puppiExtJetSC4:default:forward
+
+  binning:
+    min: 40
+    max: 420
+    step: 20
 JetSC8Rates:
   sample: MinBias
   version: V33nano
@@ -46,6 +63,7 @@ JetSC8Rates_byRegion:
     - L1puppiJetSC8:default
     - L1puppiJetSC8:default:barrel
     - L1puppiJetSC8:default:endcap
+    - L1puppiJetSC8:default:forward
   binning:
     min: 40
     max: 420
