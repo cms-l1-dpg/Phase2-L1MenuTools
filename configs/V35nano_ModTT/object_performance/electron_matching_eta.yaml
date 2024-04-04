@@ -1,0 +1,52 @@
+ElectronsMatching_Eta_Pt10to25:
+  sample: DYLL_M50
+  version: V35nano_ModTT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "{pt} < 25"
+        - "{pt} > 10"
+      object:
+        - "abs({eta}) < 3.0"
+  test_objects:
+    L1EG:default: "eta"
+    L1tkElectron:NoIso: "eta"
+    L1tkElectron:Iso: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
+  binning:
+    min: -3
+    max: 3
+    step: 0.2
+
+ElectronsMatching_Eta_Pt25toInf:
+  sample: DYLL_M50
+  version: V35nano_ModTT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "{pt} > 25"
+      object:
+        - "abs({eta}) < 3.0"
+  test_objects:
+    L1EG:default: "eta"
+    L1tkElectron:NoIso: "eta"
+    L1tkElectron:Iso: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
+  binning:
+    min: -3
+    max: 3
+    step: 0.2

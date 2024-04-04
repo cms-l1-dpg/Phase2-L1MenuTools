@@ -1,0 +1,12 @@
+EGRates:
+  sample: MinBias
+  version: V35nano_ModTT
+  test_objects:
+    - L1EG:default
+    - L1tkElectron:NoIso
+    - L1tkElectron:Iso
+    - L1tkPhoton:Iso
+  binning:
+    min: 10
+    max: 97
+    step: 3
