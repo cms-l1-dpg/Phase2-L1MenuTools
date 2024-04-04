@@ -1,20 +1,17 @@
-import argparse
-import os, sys
+import os
+import json
+import numpy as np
+import pandas as pd
 from glob import glob
-
 import matplotlib.pyplot as plt
+import mplhep as hep
 
 f = plt.figure()
 plt.close()
-import mplhep as hep
+
 
 plt.style.use(hep.style.CMS)
 plt.rcParams["figure.facecolor"] = "white"
-
-import numpy as np
-import pandas as pd
-import yaml
-import json
 
 
 def load_json(fname):
@@ -174,12 +171,13 @@ def comp_plots(
             diff.plot(
                 ax=axs[1], color=color, label=label
             )  # , marker = ".", color = color)
-            #             axs[1].errorbar(p1["xbins"],df_p1 - df_p2,
-            #                             yerr = np.hypot(plots[0]["efficiency_err"], plots[1]["efficiency_err"]),
-            #                             label = label, marker = ".", color = color
-            # #                             label = label, ls = lss[i], color = color, mfc="none" if i == 1 else color,
-            # #                             **(p1["err_kwargs"])
-            #                            )
+# axs[1].errorbar(
+#     p1["xbins"],df_p1 - df_p2,
+#     yerr = np.hypot(plots[0]["efficiency_err"], plots[1]["efficiency_err"]),
+#     # label = label, marker = ".", color = color,
+#     label = label, ls = lss[i], color = color, mfc="none" if i == 1 else color,
+#     **(p1["err_kwargs"])
+#     )
             if ptype == "turnon":
                 if len(plots[0]["efficiency_err"][0]) != len(
                     plots[1]["efficiency_err"][0]
@@ -254,7 +252,7 @@ def main(v0, v1, v0_jsons):
             print("WARNING, unsupported plot type")
             continue
 
-        f = comp_plots(
+        comp_plots(
             plot1,
             plot2,
             sfxs=[v0, v1],
@@ -264,7 +262,10 @@ def main(v0, v1, v0_jsons):
             ptype=ptype,
         )
 
-        # outfname = v0_json.replace(v0,"%svs%s"%(v0,v1)).replace(".json",".png").replace("tools","tools/comparisons")
+        # outfname = v0_json.replace(
+        #     v0,"%svs%s"%(v0,v1)).replace(
+        #         ".json",".png").replace("tools","tools/comparisons")
+
         outfname = (
             v0_json.replace(v0, "%svs%s" % (v0, v1))
             .replace(".json", ".png")
@@ -295,9 +296,10 @@ v0 = "V33nano"
 # v0 = "V32nano"
 # v0 = "V31"
 
+basedir = "/eos/user/a/alobanov/www/L1T/Phase2/menu/Validation/NewMenuTools"
 v0_jsons = glob(
-    # f"/eos/user/a/alobanov/www/L1T/Phase2/menu/Validation/tool_refact_test/object_performance/{v0}//s*/**.json")
-    f"/eos/user/a/alobanov/www/L1T/Phase2/menu/Validation/NewMenuTools/{v0}/object_performance/r*/*JetsBy*.json"
+    # f"{basedir}/{v0}//s*/**.json")
+    f"{basedir}/{v0}/object_performance/r*/*JetsBy*.json"
 )
 
 # v1 = "V29"
