@@ -58,40 +58,41 @@ V36nano_noTT:
         L1hpsTau: "all" 
         L1caloTau: "all" 
         L1nnCaloTau: "all"
-  # MinBias:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v33_fromEmyr/minbias.root
-  #   trees_branches:
-  #     Events:
-  #       ## PV
-  #       L1PV: [z0]
-  #       ## EG
-  #       L1tkPhoton: "all" 
-  #       L1tkElectron: "all" 
-  #       L1EGbarrel: "all" 
-  #       L1EGendcap: "all" 
-  #       ## MUONS
-  #       L1gmtTkMuon: "all" 
-  #       L1gmtMuon: "all"  # aka gmtMuon
-  #       ## TAUS
-  #       L1nnPuppiTau: "all" 
-  #       L1hpsTau: "all" 
-  #       L1caloTau: "all" 
-  #       L1nnCaloTau: "all"
-  #       ## MET/Sums
-  #       L1puppiMET: [pt, phi]
-  #       L1puppiMLMET: [pt]
-  #       L1puppiJetSC4sums: [pt, phi]
-  #       L1puppiHistoJetSums: [pt, phi]
-  #       # jets
-  #       L1puppiJetSC4: [pt, eta, phi]
-  #       L1puppiJetSC8: [pt, eta, phi]
-  #       L1puppiExtJetSC4: [pt, eta, phi, btagScore]
-  #       L1puppiJetHisto: [pt, eta, phi]
-  #       L1caloJet: [pt, eta, phi]
-  #       ## track-only
-  #       L1TrackMET: [pt]
-  #       L1TrackHT: [ht, mht]
-  #       L1TrackJet: [pt, eta, phi]
+  MinBias:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v36/MinBias_TuneCP5_14TeV-pythia8/MinBias_131_L1Fix_myIBv6_noTkTrg_reSub2/240404_202321/000*/*
+    trees_branches:
+      Events:
+        ## PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all" 
+        L1tkElectron: "all" 
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+        ## MUONS
+        L1gmtTkMuon: "all" 
+        L1gmtMuon: "all"  # aka gmtMuon
+        ## TAUS
+        L1nnPuppiTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all" 
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        # jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+  #### LLP
   HtoLLPto4mu_Ctau900mm:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v36/HTo2LongLivedTo4mu_MH-125_MFF-12_CTau-900mm_TuneCP5_14TeV-pythia8/HtoLLPto4mu_Ctau90cm_131_L1Fix_myIBv6_noTkTrg_resub/240403_222836/0000/L1Nano_*.root
     trees_branches:
