@@ -1,0 +1,23 @@
+HTRates:
+  sample: MinBias
+  version: V37nano
+  test_objects:
+    # - L1puppiHistoJetSums:HT
+    - L1puppiJetSC4sums:HT
+    # - L1TrackHT:HT
+  binning:
+    min: 50
+    max: 975
+    step: 25
+
+MHTRates:
+  sample: MinBias
+  version: V37nano
+  test_objects:
+    # - L1puppiHistoJetSums:MHT
+    - L1puppiJetSC4sums:MHT
+    # - L1TrackHT:MHT
+  binning:
+    min: 50
+    max: 975
+    step: 25
