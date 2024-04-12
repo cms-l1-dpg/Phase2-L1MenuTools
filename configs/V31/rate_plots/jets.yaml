@@ -40,3 +40,7 @@ JetExtendedRates:
     - seededConeExtendedPuppiJet:default:barrel
     - seededConeExtendedPuppiJet:default:endcap
     - seededConeExtendedPuppiJet:default:forward
+  binning:
+    min: 40
+    max: 420
+    step: 20

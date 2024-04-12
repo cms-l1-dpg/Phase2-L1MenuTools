@@ -10,6 +10,18 @@ gmtMuonByRegion:
     max: 75
     step: 3
 
+gmtTkMuonByRegion:
+  sample: MinBias
+  version: V31
+  test_objects:
+    - gmtTkMuon:default:barrel
+    - gmtTkMuon:default:overlap
+    - gmtTkMuon:default:endcap
+  binning:
+    min: 0
+    max: 75
+    step: 3
+
 MuonRates:
   sample: MinBias
   version: V31
