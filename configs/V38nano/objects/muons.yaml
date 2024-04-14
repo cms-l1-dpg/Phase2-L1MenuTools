@@ -18,9 +18,27 @@ L1gmtTkMuon:
     endcap: [1.24, 2.4]
   ids:
     default:
+      cuts: {}
+    VLoose: # x.numberOfMatches() > 0
+      label: "GMT TkMuon, VLoose ID" 
       cuts:
         inclusive:
-          - "({hwQual} > 0) | ({pt} > 8)" # quality criterion only to be appied for p_T < 8 GeV
+          - "{hwQual} >= 1"
+    Loose: # x.numberOfMatches() >1
+      label: "GMT TkMuon, Loose ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 3"
+    Medium: # x.stubs().size()>1
+      label: "GMT TkMuon, Medium ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 7"
+    Tight: # x.numberOfMatches()>2
+      label: "GMT TkMuon, Tight ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 15"
 
 
 L1gmtMuon:
