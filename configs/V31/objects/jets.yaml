@@ -29,6 +29,7 @@ seededConeExtendedPuppiJet:
         inclusive:
           - "abs({eta}) < 5"
     bjetnn:
+      label: "SC Extended PuppiJet, BtagScore > 0.71"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
