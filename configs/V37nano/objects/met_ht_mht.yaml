@@ -1,13 +1,3 @@
-# phase1PuppiHT:
-#   label: "Histogrammed Puppi HT"
-#   ids:
-#     default: {}
-
-# phase1PuppiMHT:
-#   label: "Phase1 Puppi MHT"
-#   ids:
-#     default: {}
-
 L1puppiMET:
   label: "Puppi MET"
   ids:
@@ -60,5 +50,10 @@ L1ExtTrackHT:
 
 L1TrackMET:
   label: "Tracker MET"
+  ids:
+    default: {}
+
+L1TrackTripletWord:
+  label: "Track Triplet for W3Pi"
   ids:
     default: {}
