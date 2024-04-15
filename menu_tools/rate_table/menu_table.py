@@ -94,21 +94,41 @@ class MenuTable:
         )
 
         arr = ak.from_parquet(fpath)
+        # if fpath not in self.arr_cache:
+        #     print("Loading from parquet")
+        #     arr = ak.from_parquet(fpath)
+        #     print(f"adding to cache: {fpath}")
+        #     self.arr_cache[fpath] = arr
+        # else:
+        #     print("Loading from cache")
+        #     arr = self.arr_cache[fpath]
 
         # Remove object name prefix from array fields
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
         # Apply scalings, except for PV variable, which has no scalings
-        if "PV" not in object_name:
+        if ("PV" not in object_name) and (
+            "disp" not in object_name.lower()) and (
+                "TrackTripletWord" not in object_name) and (
+                    "ExtTrackHT" not in object_name
+                ):
+            print("adding scalings")
             arr = scalings.add_offline_pt(arr, obj)
+
+        if "idx" not in arr.fields:
+            arr["idx"] = ak.local_index(arr)
 
         # When loading sums (MET, HT, etc.) transfrom the array structure to
         # mimic that of "normal" objects which have lists at the event level
         # instead of a single number.
         if isinstance(arr[0], ak.highlevel.Record):
             arr = ak.zip({field: [[k] for k in arr[field]] for field in arr.fields})
+            # arr = ak.zip({field: np.expand_dims(arr[field], 0) for field in arr.fields})
 
-        arr = ak.with_name(arr, "Momentum4D")
+        if "eta" in arr.fields:
+            arr = ak.with_name(arr, "Momentum4D")
+
+        print("done loading")
         return arr
 
     def get_legs_arrays_for_seed(
@@ -252,11 +272,11 @@ class MenuTable:
         combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
 
         # Cut on the individual object thresholds
-        if "var" in str(combined_legs.type):
-            total_mask = total_mask & (ak.num(combined_legs, axis=-1) > 0)
-        else:
-            raise RuntimeError("This part of the code needs some work!")
-            # total_mask = total_mask & ~ak.is_none(_leg)
+        # if "var" in str(combined_legs.type):
+        total_mask = total_mask & (ak.num(combined_legs, axis=-1) > 0)
+        # else:
+        #     raise RuntimeError("This part of the code needs some work!")
+        #     # total_mask = total_mask & ~ak.is_none(_leg)
 
         ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
@@ -288,8 +308,10 @@ class MenuTable:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
             self._seed_masks = seed_masks
-            # self.make_table()
-            # self.print_table()
+            self.make_table()
+            self.print_table()
+
+        # self.compute_tot_and_pure()
 
         return seed_masks
 
@@ -311,9 +333,31 @@ class MenuTable:
         for seed in df_masks.columns:
             counts[seed] = {
                 "total": df_masks[seed].sum(),
-                "pure" : ((df_masks[seed]==True)&~(df_masks.drop(seed, axis=1).any(axis=1))).sum()}
+                "pure" : ((df_masks[seed]==True)&~(df_masks.drop(seed, axis=1).any(axis=1))).sum()
+                }
+            
+        counts["total"] = {
+            "total": np.sum(np.any(df_masks, axis = 1)),
+            "pure": 0,
+            }
 
         df_counts = pd.DataFrame(counts).T
+        df_counts.index.name = "seed"
+
+        # ## ALTERNATIVE
+        ntot = len(df_masks[seed])
+        df_counts["eff_total"] = df_counts["total"] / ntot
+        df_counts["eff_pure"] = df_counts["pure"] / ntot
+
+        df_counts["rate_total"] = df_counts["eff_total"] * constants.RATE_NORM_FACTOR
+        df_counts["rate_pure"] = df_counts["eff_pure"] * constants.RATE_NORM_FACTOR
+
+        print(df_counts)
+        out_file = os.path.join(
+            self.config.table_outdir,
+            f"{self.config.table_fname}_{self.config.version}_pd.csv",
+        )
+        df_counts.to_csv(out_file)
 
         return df_counts
 
@@ -322,8 +366,10 @@ class MenuTable:
         Function that prints to screen the rates table.
         Returns a list containing the csv-compatible table.
         """
+        print("Making table")
 
         table: list[dict[str, Union[str, float]]] = []
+        ntot = len(list(self._seed_masks.values())[0])
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
 
         for seed, mask in self._seed_masks.items():
@@ -352,7 +398,6 @@ class MenuTable:
                 "rate": np.nan,
             }
         )
-
         self.table = table
 
     def dump_masks(self) -> None:

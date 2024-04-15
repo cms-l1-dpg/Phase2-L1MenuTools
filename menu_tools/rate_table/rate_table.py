@@ -9,6 +9,7 @@ def main():
     parser.add_argument(
         "config_file",
         help="Path to the menu config file, e.g. `configs/V29/rate_table/v29_cfg.yml`",
+        default="configs/V38nano/rate_table/v38_cfg.yml",
     )
     args = parser.parse_args()
 
@@ -21,6 +22,7 @@ def main():
     menu_table.save_table()
     menu_table.dump_masks()
 
+    menu_table.compute_tot_and_pure()
 
 if __name__ == "__main__":
     main()

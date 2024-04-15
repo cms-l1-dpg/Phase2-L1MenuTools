@@ -446,24 +446,7 @@ L1_PFIsoTau_TkMu:
 #################################
 ########## STEP 2
 #################################
-L1_PFHTT_QuadJet_BTagNNScore:
-  cross_masks:
-    - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
-  leg1:
-    threshold_cut: offline_pt >= 299.0
-    obj: L1puppiJetSC4sums:HT
-  leg2:
-    threshold_cut: offline_pt >= 0.0
-    obj: L1puppiExtJetSC4:PtGe25
-  leg3:
-    threshold_cut: offline_pt >= 0.0
-    obj: L1puppiExtJetSC4:PtGe25
-  leg4:
-    threshold_cut: offline_pt >= 0.0
-    obj: L1puppiExtJetSC4:PtGe25
-  leg5:
-    threshold_cut: offline_pt >= 0.0
-    obj: L1puppiExtJetSC4:PtGe25
+### SC8 wide cone jet seeds
 L1_SinglePfJet8:
   cross_masks: []
   leg1:
@@ -478,3 +461,72 @@ L1_DoublePFJet8_dEtaMax:
   leg2:
     threshold_cut: leg2.offline_pt >= 200.0
     obj: L1puppiJetSC8:default
+### Bjet seed
+L1_PFHTT_QuadJet_BTagNNScore:
+  cross_masks:
+    - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
+  leg1:
+    threshold_cut: offline_pt >= 299.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg3:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg4:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg5:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+##############################
+### Displaced Muons
+##############################
+L1_SingleDispMu:
+  cross_masks: []
+  leg1:
+    threshold_cut: pt >= 22.0
+    obj: L1gmtDispMuon:qual15_Eta2p0
+# L1_SingleDispMu_BMTF:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: pt >= 22.0
+#     obj: L1gmtDispMuon:default:barrel
+# L1_SingleDispMu_OMTF:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: pt >= 22.0
+#     obj: L1gmtDispMuon:default:overlap
+# # L1_SingleDispMu_EMTF:
+# #   cross_masks: []
+# #   leg1:
+# #     threshold_cut: pt >= 22.0
+# #     obj: L1gmtDispMuon:default:endcap
+# L1_SingleDispMu_EMTF_SQ_eta2p0:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: pt >= 22.0
+#     obj: L1gmtDispMuon:qual15_Eta2p0:endcap
+L1_DoubleDispMu:
+  cross_masks: []
+    # - ((abs(leg1.z0-leg2.z0) < 1) & (leg1.deltaR(leg2) > 0))
+  leg1:
+    threshold_cut: pt > 15.0
+    obj: L1gmtDispMuon:default
+  leg2:
+    threshold_cut: pt > 7
+    obj: L1gmtDispMuon:default
+# ##############################
+# ### GTT
+# ##############################
+L1_W3pi_GTT:
+  cross_masks: []
+  leg1:
+    threshold_cut: pt > -99
+    obj: L1TrackTripletWord:default
+# L1_TkDispHT:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: ht >= 200
+#     obj: L1ExtTrackHT:HT
