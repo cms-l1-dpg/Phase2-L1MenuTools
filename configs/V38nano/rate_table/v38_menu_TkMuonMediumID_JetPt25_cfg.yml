@@ -106,7 +106,7 @@ L1_SinglePfJet:
 L1_SinglePfJet8:
   cross_masks: []
   leg1:
-    threshold_cut: offline_pt >= 300.0
+    threshold_cut: offline_pt >= 230.0
     obj: L1puppiJetSC8:default
 L1_SingleTkEle:
   cross_masks: []
@@ -428,6 +428,24 @@ L1_PFHTT_QuadJet:
   leg5:
     threshold_cut: offline_pt >= 40.0
     obj: L1puppiJetSC4:PtGe25
+L1_PFHTT_QuadJet_BTagNNScore:
+  cross_masks:
+    - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
+  leg1:
+    threshold_cut: offline_pt >= 299.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiExtJetSC4:PtGe25
+  leg3:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiExtJetSC4:PtGe25
+  leg4:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiExtJetSC4:PtGe25
+  leg5:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiExtJetSC4:PtGe25
 L1_PFIsoTau_PFIsoTau:
   cross_masks:
     - leg1.deltaR(leg2) > 0.5
