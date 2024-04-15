@@ -34,9 +34,24 @@ JetExtendedRates:
   sample: MinBias
   version: V31
   test_objects:
+    - seededConePuppiJet:default:inclusive
+    - seededConeExtendedPuppiJet:default:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesByRegion:
+  sample: MinBias
+  version: V31
+  test_objects:
     - seededConePuppiJet:default:barrel
     - seededConePuppiJet:default:endcap
     - seededConePuppiJet:default:forward
     - seededConeExtendedPuppiJet:default:barrel
     - seededConeExtendedPuppiJet:default:endcap
     - seededConeExtendedPuppiJet:default:forward
+  binning:
+    min: 40
+    max: 420
+    step: 20

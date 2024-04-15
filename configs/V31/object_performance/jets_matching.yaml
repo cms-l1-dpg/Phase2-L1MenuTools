@@ -14,7 +14,7 @@ JetMatchingForward_3p7to7:
   test_objects:
     caloJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+  ylabel: "Matching Efficiency (forward)"
   binning:
     min: 0
     max: 300
@@ -39,7 +39,7 @@ JetMatchingBarrel:
     caloJet:default: "Pt"
     trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  ylabel: "Matching Efficiency (barrel)"
   binning:
     min: 0
     max: 500
@@ -64,7 +64,7 @@ JetMatchingEndcap:
     caloJet:default: "Pt"
     trackerJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
+  ylabel: "Matching Efficiency (endcap)"
   binning:
     min: 0
     max: 500
@@ -88,7 +88,7 @@ JetMatchingForward:
     seededConePuppiJet:default: "Pt"
     caloJet:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+  ylabel: "Matching Efficiency (forward)"
   binning:
     min: 0
     max: 500
