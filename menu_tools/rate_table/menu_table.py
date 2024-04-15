@@ -5,7 +5,10 @@ import re
 import warnings
 import yaml
 
+from tqdm import tqdm
+
 import awkward as ak
+
 import numpy as np
 import pandas as pd
 import vector
@@ -29,6 +32,7 @@ class MenuTable:
 
     def __init__(self, config: dict):
         self.config: MenuConfig = MenuConfig(config)
+        self.arr_cache = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
         self._seed_masks: dict[str, np.ndarray] = {}
@@ -62,7 +66,11 @@ class MenuTable:
             key: string of with the l1 object name prefix removed, qual
             transformed to quality
         """
-        key = raw_key.removeprefix(obj.nano_obj_name).lower()
+        if raw_key.startswith("L1"):
+            key = raw_key.removeprefix(obj.nano_obj_name+"_")
+        else:
+            key = raw_key.removeprefix(obj.nano_obj_name).lower()
+
         if "qual" in key:
             return "quality"
         return key
@@ -84,13 +92,14 @@ class MenuTable:
             self.config.version,
             f"{self.config.version}_{self.config.sample}_{obj.nano_obj_name}.parquet",
         )
+
         arr = ak.from_parquet(fpath)
 
         # Remove object name prefix from array fields
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
         # Apply scalings, except for PV variable, which has no scalings
-        if "z0L1TkPV" not in object_name:
+        if "PV" not in object_name:
             arr = scalings.add_offline_pt(arr, obj)
 
         # When loading sums (MET, HT, etc.) transfrom the array structure to
@@ -124,7 +133,14 @@ class MenuTable:
             # Load object array if not already loeaded
             if leg["obj"] not in raw_object_arrays:
                 print("Loading ", leg["obj"])
-                raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
+
+                if leg["obj"] not in self.arr_cache:
+                    print(f"Caching {leg['obj']}")
+                    self.arr_cache[leg["obj"]] = self._load_cached_arrays(leg["obj"]) 
+                else:
+                    print(f"Using cached {leg['obj']}")
+                # raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
+                raw_object_arrays[leg["obj"]] = self.arr_cache[leg["obj"]]
 
             # Prepare object ID mask
             obj = objects.Object(leg["obj"], self.config.version)
@@ -268,12 +284,12 @@ class MenuTable:
         """
         seed_masks: dict = {}
 
-        for seed_name in self.trigger_seeds:
+        for seed_name in tqdm(self.trigger_seeds):
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
             self._seed_masks = seed_masks
-            self.make_table()
-            self.print_table()
+            # self.make_table()
+            # self.print_table()
 
         return seed_masks
 
@@ -287,6 +303,20 @@ class MenuTable:
         df_table = pd.DataFrame(self.table)
         print(df_table)
 
+    def compute_tot_and_pure(self) -> pd.DataFrame:
+
+        df_masks = ak.to_dataframe(self._seed_masks)
+        counts = {}
+
+        for seed in df_masks.columns:
+            counts[seed] = {
+                "total": df_masks[seed].sum(),
+                "pure" : ((df_masks[seed]==True)&~(df_masks.drop(seed, axis=1).any(axis=1))).sum()}
+
+        df_counts = pd.DataFrame(counts).T
+
+        return df_counts
+
     def make_table(self) -> None:
         """
         Function that prints to screen the rates table.
@@ -295,6 +325,7 @@ class MenuTable:
 
         table: list[dict[str, Union[str, float]]] = []
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
+
         for seed, mask in self._seed_masks.items():
             # Compute seed values
             npass = ak.sum(mask)

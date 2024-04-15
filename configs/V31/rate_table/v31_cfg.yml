@@ -1,0 +1,4 @@
+version: "V31"
+sample: "MinBias"
+menu_config: "configs/V31/rate_table/v31_menu_cfg.yml"
+table_fname: "rates_full_Final"
