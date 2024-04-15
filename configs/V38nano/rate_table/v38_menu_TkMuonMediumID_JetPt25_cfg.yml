@@ -103,6 +103,11 @@ L1_SinglePfJet:
   leg1:
     threshold_cut: offline_pt >= 230.0
     obj: L1puppiJetSC4:PtGe25
+L1_SinglePfJet8:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt >= 300.0
+    obj: L1puppiJetSC8:default
 L1_SingleTkEle:
   cross_masks: []
   leg1:
@@ -319,6 +324,15 @@ L1_DoublePFJet_dEtaMax:
   leg2:
     threshold_cut: leg2.offline_pt >= 112.0
     obj: L1puppiJetSC4:PtGe25
+L1_DoublePFJet8_dEtaMax:
+  cross_masks:
+    - abs(leg2.eta-leg1.eta) < 1.6
+  leg1:
+    threshold_cut: leg1.offline_pt >= 200.0
+    obj: L1puppiJetSC8:default
+  leg2:
+    threshold_cut: leg2.offline_pt >= 200.0
+    obj: L1puppiJetSC8:default
 L1_DoubleTkEle:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
