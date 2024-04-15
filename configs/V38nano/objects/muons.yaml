@@ -55,6 +55,17 @@ L1gmtMuon:
   ids:
     default: {}
 
+L1gmtDispMuon:
+  label: "GMT Displaced Muon"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}
+
 L1MuonKMTF:
   label: "KMTF Muon"
   match_dR: 0.3
