@@ -43,9 +43,9 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
     elif "" in arr.fields:
         pt_orig = arr[""]
     ### HACK
-    elif "L1TrackHT:MHT" in obj_name:
+    elif "TrackHT:MHT" in obj_name:
         pt_orig = arr["mht"]
-    elif "L1TrackHT:HT" in obj_name:
+    elif "TrackHT:HT" in obj_name:
         pt_orig = arr["ht"]
     else:
         raise RuntimeError(f"Unknown pt branch for {obj_name}! in fields", arr.fields)

@@ -107,9 +107,16 @@ class MenuTable:
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
         # Apply scalings, except for PV variable, which has no scalings
-        if "PV" not in object_name:
+        if ("PV" not in object_name) and (
+            "disp" not in object_name.lower()) and (
+                "TrackTripletWord" not in object_name) and (
+                    "ExtTrackHT" not in object_name
+                ):
             print("adding scalings")
             arr = scalings.add_offline_pt(arr, obj)
+
+        if "idx" not in arr.fields:
+            arr["idx"] = ak.local_index(arr)
 
         # When loading sums (MET, HT, etc.) transfrom the array structure to
         # mimic that of "normal" objects which have lists at the event level
@@ -118,7 +125,9 @@ class MenuTable:
             arr = ak.zip({field: [[k] for k in arr[field]] for field in arr.fields})
             # arr = ak.zip({field: np.expand_dims(arr[field], 0) for field in arr.fields})
 
-        arr = ak.with_name(arr, "Momentum4D")
+        if "eta" in arr.fields:
+            arr = ak.with_name(arr, "Momentum4D")
+
         print("done loading")
         return arr
 
@@ -299,10 +308,10 @@ class MenuTable:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
             self._seed_masks = seed_masks
-            # self.make_table()
-            # self.print_table()
+            self.make_table()
+            self.print_table()
 
-        compute_tot_and_pure()
+        # self.compute_tot_and_pure()
 
         return seed_masks
 
@@ -337,7 +346,6 @@ class MenuTable:
 
         # ## ALTERNATIVE
         ntot = len(df_masks[seed])
-        df_counts = self.compute_tot_and_pure()
         df_counts["eff_total"] = df_counts["total"] / ntot
         df_counts["eff_pure"] = df_counts["pure"] / ntot
 
