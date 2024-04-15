@@ -106,7 +106,7 @@ L1_SinglePfJet:
 L1_SinglePfJet8:
   cross_masks: []
   leg1:
-    threshold_cut: offline_pt >= 300.0
+    threshold_cut: offline_pt >= 230.0
     obj: L1puppiJetSC8:default
 L1_SingleTkEle:
   cross_masks: []
