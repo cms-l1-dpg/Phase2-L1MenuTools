@@ -30,6 +30,7 @@ class MenuTable:
 
     def __init__(self, config: dict):
         self.config: MenuConfig = MenuConfig(config)
+        self.arr_cache = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
         self._seed_masks: dict[str, np.ndarray] = {}
@@ -130,7 +131,14 @@ class MenuTable:
             # Load object array if not already loeaded
             if leg["obj"] not in raw_object_arrays:
                 print("Loading ", leg["obj"])
-                raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
+
+                if leg["obj"] not in self.arr_cache:
+                    print(f"Caching {leg['obj']}")
+                    self.arr_cache[leg["obj"]] = self._load_cached_arrays(leg["obj"]) 
+                else:
+                    print(f"Using cached {leg['obj']}")
+                # raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
+                raw_object_arrays[leg["obj"]] = self.arr_cache[leg["obj"]]
 
             # Prepare object ID mask
             obj = objects.Object(leg["obj"], self.config.version)
@@ -278,8 +286,8 @@ class MenuTable:
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
             self._seed_masks = seed_masks
-            self.make_table()
-            self.print_table()
+            # self.make_table()
+            # self.print_table()
 
         return seed_masks
 
