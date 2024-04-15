@@ -55,6 +55,8 @@ class ArrayLoader:
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
+
+        array = ak.with_name(array, "Momentum4D")
         return array
 
     def _load_ref_branches(self) -> None:
@@ -62,7 +64,6 @@ class ArrayLoader:
         Load reference object.
         """
         ref_array = self._load_array_from_parquet(self.cfg_plot.reference_object)
-        ref_array = ak.with_name(ref_array, "Momentum4D")
         self.turnon_collection.ak_arrays["ref"] = ref_array
 
     def _load_test_branches(self) -> None:
@@ -71,7 +72,6 @@ class ArrayLoader:
         """
         for obj in self.cfg_plot.test_object_instances:
             test_array = self._load_array_from_parquet(obj.nano_obj_name)
-            test_array = ak.with_name(test_array, "Momentum4D")
             self.turnon_collection.ak_arrays[str(obj)] = test_array
 
     def load_arrays(self) -> None:
