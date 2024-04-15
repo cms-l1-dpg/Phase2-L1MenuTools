@@ -62,6 +62,11 @@ L1puppiJetSC4:
       cuts:
         inclusive:
           - "abs({eta}) < 7"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
 
 L1puppiJetSC8:
   match_dR: 0.35
