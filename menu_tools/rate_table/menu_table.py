@@ -5,6 +5,8 @@ import re
 import warnings
 import yaml
 
+from tqdm import tqdm
+
 import awkward as ak
 
 import numpy as np
@@ -282,7 +284,7 @@ class MenuTable:
         """
         seed_masks: dict = {}
 
-        for seed_name in self.trigger_seeds:
+        for seed_name in tqdm(self.trigger_seeds):
             mask = self.get_trigger_pass_mask(seed_name)
             seed_masks[seed_name] = mask.to_numpy()
             self._seed_masks = seed_masks
