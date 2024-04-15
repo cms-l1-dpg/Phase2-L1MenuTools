@@ -94,6 +94,7 @@ V38nano:
         L1TrackHT: [ht, mht]
         L1TrackJet: [pt, eta, phi]
         L1TrackTripletWord: [pt]
+        L1ExtTrackHT: [ht, mht]
 # #   #### LLP
 # #   HtoLLPto4mu_Ctau900mm:
 # #     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v36/HTo2LongLivedTo4mu_MH-125_MFF-12_CTau-900mm_TuneCP5_14TeV-pythia8/HtoLLPto4mu_Ctau90cm_131_L1Fix_myIBv6_noTkTrg_resub/240403_222836/0000/L1Nano_*.root
