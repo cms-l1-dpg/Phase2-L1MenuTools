@@ -72,6 +72,7 @@ V38nano:
         ## MUONS
         L1gmtTkMuon: "all" 
         L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
         ## TAUS
         L1nnPuppiTau: "all" 
         L1hpsTau: "all" 
