@@ -16,6 +16,7 @@ MuonsMatching_Eta_Pt2to5:
         - "abs({eta}) < 2.4"
   test_objects:
     L1gmtMuon:default: "eta"
+    L1gmtMuon:dR0p6: "eta"
     L1gmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
