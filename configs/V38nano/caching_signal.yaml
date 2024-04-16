@@ -1,0 +1,106 @@
+# #   #### LLP
+# #   HtoLLPto4mu_Ctau900mm:
+# #     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v36/HTo2LongLivedTo4mu_MH-125_MFF-12_CTau-900mm_TuneCP5_14TeV-pythia8/HtoLLPto4mu_Ctau90cm_131_L1Fix_myIBv6_noTkTrg_resub/240403_222836/0000/L1Nano_*.root
+# #     trees_branches:
+# #       Events:
+# #         GenPart: "all"
+# #         ## Muons
+# #         L1gmtTkMuon: "all"
+# #         L1gmtMuon: "all"
+# #         L1gmtDispMuon: "all"
+# #         ## TF Muons
+# #         L1MuonKMTF: "all"
+# #         L1MuonOMTF: "all"
+# #         L1MuonEMTF: "all"
+# #         L1DispMuonKMTF: "all"
+# #         L1DispMuonOMTF: "all"
+# #         L1DispMuonEMTF: "all"
+#   HtoLLPto4b_M125_Phi60_ctau100:
+#     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v37/HiddenGluGluH_mH-125_Phi-60_ctau-100_bbbb_TuneCP5_14TeV-pythia8/HiddenHto4b_M125_Phi60_ctau100_IBv8_wTT/240411_082132/0000/*.root
+#     trees_branches:
+#       Events:
+#         GenJet: "all"
+#         # # jets
+#         L1puppiJetSC4sums: [pt, phi]
+#         # L1puppiJetSC4: [pt, eta, phi]
+#         # L1puppiJetSC8: [pt, eta, phi]
+#         # L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+#         # L1caloJet: [pt, eta, phi]
+#         ## track-only
+#         # L1TrackMET: [pt]
+#         L1TrackHT: [ht, mht]
+#         L1ExtTrackHT: [ht, mht]
+#         # L1TrackJet: [pt, eta, phi]
+  HHToBBTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v38/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/HHTo2B2Tau_131_200PU_IBv9_wTT/240412_210926/0000/*.root
+    trees_branches:
+      Events:
+	# PV
+	L1PV: [z0]
+	## EG
+	L1tkPhoton: "all"
+	L1tkElectron: "all"
+	L1EGbarrel: "all"
+	L1EGendcap: "all"
+	## MUONS
+	L1gmtTkMuon: "all"
+	L1gmtMuon: "all"  # aka gmtMuon
+	L1gmtDispMuon: "all"
+	## TAUS
+	L1nnPuppiTau: "all"
+	# L1hpsTau: "all"
+	L1caloTau: "all"
+	# L1nnCaloTau: "all"
+	## MET/Sums
+	L1puppiMET: [pt, phi]
+	L1puppiMLMET: [pt]
+	L1puppiJetSC4sums: [pt, phi]
+	# L1puppiHistoJetSums: [pt, phi]
+	# # jets
+	L1puppiJetSC4: [pt, eta, phi]
+	L1puppiJetSC8: [pt, eta, phi]
+	L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+	# L1puppiJetHisto: [pt, eta, phi]
+	# L1caloJet: [pt, eta, phi]
+	## track-only
+	L1TrackMET: [pt]
+	L1TrackHT: [ht, mht]
+	L1TrackJet: [pt, eta, phi]
+	L1TrackTripletWord: [pt]
+
+  HtoLLPto4B_M125_Phi60_ctau100:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v38/HiddenGluGluH_mH-125_Phi-60_ctau-100_bbbb_TuneCP5_14TeV-pythia8/*/*/*/*.root
+    trees_branches:
+      Events:
+	# PV
+	L1PV: [z0]
+	## EG
+	L1tkPhoton: "all"
+	L1tkElectron: "all"
+	L1EGbarrel: "all"
+	L1EGendcap: "all"
+	## MUONS
+	L1gmtTkMuon: "all"
+	L1gmtMuon: "all"  # aka gmtMuon
+	L1gmtDispMuon: "all"
+	## TAUS
+	L1nnPuppiTau: "all"
+	# L1hpsTau: "all"
+	L1caloTau: "all"
+	# L1nnCaloTau: "all"
+	## MET/Sums
+	L1puppiMET: [pt, phi]
+	L1puppiMLMET: [pt]
+	L1puppiJetSC4sums: [pt, phi]
+	# L1puppiHistoJetSums: [pt, phi]
+	# # jets
+	L1puppiJetSC4: [pt, eta, phi]
+	L1puppiJetSC8: [pt, eta, phi]
+	L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+	# L1puppiJetHisto: [pt, eta, phi]
+	# L1caloJet: [pt, eta, phi]
+	## track-only
+	L1TrackMET: [pt]
+	L1TrackHT: [ht, mht]
+	L1TrackJet: [pt, eta, phi]
+	L1TrackTripletWord: [pt]
