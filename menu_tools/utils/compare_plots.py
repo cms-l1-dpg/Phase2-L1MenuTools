@@ -171,13 +171,13 @@ def comp_plots(
             diff.plot(
                 ax=axs[1], color=color, label=label
             )  # , marker = ".", color = color)
-# axs[1].errorbar(
-#     p1["xbins"],df_p1 - df_p2,
-#     yerr = np.hypot(plots[0]["efficiency_err"], plots[1]["efficiency_err"]),
-#     # label = label, marker = ".", color = color,
-#     label = label, ls = lss[i], color = color, mfc="none" if i == 1 else color,
-#     **(p1["err_kwargs"])
-#     )
+            # axs[1].errorbar(
+            #     p1["xbins"],df_p1 - df_p2,
+            #     yerr = np.hypot(plots[0]["efficiency_err"], plots[1]["efficiency_err"]),
+            #     # label = label, marker = ".", color = color,
+            #     label = label, ls = lss[i], color = color, mfc="none" if i == 1 else color,
+            #     **(p1["err_kwargs"])
+            #     )
             if ptype == "turnon":
                 if len(plots[0]["efficiency_err"][0]) != len(
                     plots[1]["efficiency_err"][0]

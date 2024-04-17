@@ -24,5 +24,6 @@ def main():
 
     menu_table.compute_tot_and_pure()
 
+
 if __name__ == "__main__":
     main()
