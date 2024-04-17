@@ -372,7 +372,6 @@ class MenuTable:
         print("Making table")
 
         table: list[dict[str, Union[str, float]]] = []
-        ntot = len(list(self._seed_masks.values())[0])
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
 
         for seed, mask in self._seed_masks.items():

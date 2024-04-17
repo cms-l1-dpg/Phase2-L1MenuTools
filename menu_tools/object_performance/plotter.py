@@ -423,8 +423,8 @@ class ScalingCentral:
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj) -> list[int]:
-        if test_obj in self.scaling_thresholds:
-            return self.scaling_thresholds[test_obj]
+        if str(test_obj) in self.scaling_thresholds:
+            return self.scaling_thresholds[str(test_obj)]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
         if any(
@@ -531,11 +531,13 @@ def main():
         type=str,
         help="Path of YAML configuration file specifying the desired plots.",
     )
+    parser.add_argument("-s", "--scalings_only", action="store_true")
     args = parser.parse_args()
 
     for path_cfg_plot in args.cfg_plots:
-        plotter = EfficiencyCentral(path_cfg_plot)
-        plotter.run()
+        if not args.scalings_only:
+            plotter = EfficiencyCentral(path_cfg_plot)
+            plotter.run()
 
         scalings = ScalingCentral(path_cfg_plot)
         scalings.run()
