@@ -17,13 +17,12 @@ def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
         scaling_params: parameters computed in object_performance
         for the online-offline scaling
     """
-    fname = str(obj).replace("inclusive", eta_range)
     fpath = os.path.join(
         "outputs",
         obj.version,
         "object_performance",
         "scalings",
-        obj.scaling_object + ".yaml",
+        obj.get_scaling_object(eta_range) + ".yaml",
     )
     try:
         with open(fpath, "r") as f:

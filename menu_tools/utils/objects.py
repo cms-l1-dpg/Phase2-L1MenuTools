@@ -128,15 +128,14 @@ class Object:
     def plot_label(self) -> str:
         return self._object_params["label"]
 
-    @property
-    def scaling_object(self) -> str:
+    def get_scaling_object(self, eta_range: str) -> str:
         """
         This enables the definition of an object/id which uses
         the scalings from a different object.
         """
         if "use_scalings_from_object" in self._object_params:
             return self._object_params["use_scalings_from_object"]
-        return str(self)
+        return str(self).replace("inclusive", eta_range)
 
     @property
     def eta_ranges(self) -> dict[str, tuple[float, float]]:
