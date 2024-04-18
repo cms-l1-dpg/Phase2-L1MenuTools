@@ -19,7 +19,11 @@ def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
     """
     fname = str(obj).replace("inclusive", eta_range)
     fpath = os.path.join(
-        "outputs", obj.version, "object_performance", "scalings", fname + ".yaml"
+        "outputs",
+        obj.version,
+        "object_performance",
+        "scalings",
+        obj.scaling_object + ".yaml",
     )
     try:
         with open(fpath, "r") as f:

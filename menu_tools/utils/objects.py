@@ -129,6 +129,16 @@ class Object:
         return self._object_params["label"]
 
     @property
+    def scaling_object(self) -> str:
+        """
+        This enables the definition of an object/id which uses
+        the scalings from a different object.
+        """
+        if "use_scalings_from_object" in self._object_params:
+            return self._object_params["use_scalings_from_object"]
+        return str(self)
+
+    @property
     def eta_ranges(self) -> dict[str, tuple[float, float]]:
         _eta_ranges = {}
         if "eta_ranges" in self._object_params.keys():
