@@ -392,8 +392,8 @@ class ScalingPlotter(Plotter):
             transform=ax.transAxes,
         )
         fig.tight_layout()
-        ax.set_xlim(0, np.max(x_points))
-        ax.set_ylim(0, np.max(y_points))
+        ax.set_xlim(0, np.max(x_points) * 1.1)
+        ax.set_ylim(0, np.max(y_points) * 1.1)
 
         plot_fname = os.path.join(
             "outputs",
