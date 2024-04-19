@@ -1,0 +1,133 @@
+GenPart:
+  label: "Gen Muon"
+  eta_ranges:
+    inclusive: [0, 7]
+  ids:
+    gen_electron_default:
+      cuts:
+        inclusive:
+          - "(({statusFlags}>>7)&1) == 1"
+
+L1gmtTkMuon:
+  label: "GMT TkMuon"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default:
+      label: "GMT TkMuon, Loose ID"
+      cuts:
+        inclusive:
+          - "{hwQual} >= 3"
+    VLoose: # x.numberOfMatches() > 0
+      label: "GMT TkMuon, VLoose ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 1"
+    Loose: # x.numberOfMatches() >1
+      label: "GMT TkMuon, Loose ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 3"
+    Medium: # x.stubs().size()>1
+      label: "GMT TkMuon, Medium ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 7"
+    Tight: # x.numberOfMatches()>2
+      label: "GMT TkMuon, Tight ID" 
+      cuts:
+        inclusive:
+          - "{hwQual} >= 15"
+
+L1gmtMuon:
+  label: "GMT Muon"
+  match_dR: 0.6
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default:
+      cuts:
+        overlap:
+          - "{hwQual} >= 12"
+        endcap:
+          - "{hwQual} >= 14"
+    dR0p6:
+      label: "GMT Muon, match dR < 0.6" 
+      match_dR: 0.6
+      cuts: {}
+
+L1gmtDispMuon:
+  label: "GMT Displaced Muon"
+  match_dR: 0.6
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}
+    dXYge8: 
+      label: "Disp. Muon, dXY>8" 
+      cuts:
+        endcap:
+          - "{d0} >= 8"
+    dXYge8Qual15: 
+        label: "Disp. Muon, dXY>8, qual>=15" 
+        cuts:
+          endcap:
+            - "{hwQual} >= 15"
+            - "{d0} >= 8"
+    qual15: 
+        label: "Disp. Muon, qual>=15" 
+        cuts:
+          endcap:
+            - "{hwQual} >= 15"
+    qual15_Eta2p0: 
+        label: "Disp. Muon, eta < 2, qual>=15" 
+        cuts:
+          inclusive:
+            - "abs({eta}) < 2"
+          endcap:
+            - "{hwQual} >= 15"
+
+L1MuonKMTF:
+  label: "KMTF Muon"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}
+
+L1MuonOMTF:
+  label: "OMTF Muon"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}
+
+L1MuonEMTF:
+  label: "EMTF Muon"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}
+          
+    

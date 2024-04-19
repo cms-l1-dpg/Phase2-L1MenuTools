@@ -1,0 +1,13 @@
+JetSC8Rates_byRegion2:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    # - L1puppiJetSC4:default
+    - L1puppiJetSC8:default
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:default:barrel
+    #- L1puppiJetSC8:default:endcap
+  binning:
+    min: 40
+    max: 420
+    step: 20

@@ -1,0 +1,58 @@
+V38nano_DT12x:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/IBv9_muons/IBv9_Combined/12DT_wTT/ForArthurPartial/DYToLL_IBv9_12DT.root
+    trees_branches:
+      Events:
+        GenPart: "all" 
+        ## EG
+        # L1tkElectron: "all" 
+        # L1EGbarrel: "all" 
+        # L1EGendcap: "all" 
+        ## Muons
+        L1gmtTkMuon: "all" 
+        L1gmtMuon: "all"
+        # L1gmtDispMuon: "all"
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        # L1DispMuonKMTF: "all"
+        # L1DispMuonOMTF: "all"
+        # L1DispMuonEMTF: "all"
+#   MinBias:
+#     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/IBv9_muons/IBv9_Combined/12DT_wTT/ForArthurPartial/Minbias.root
+#     trees_branches:
+#       Events:
+# #         # PV
+# #         L1PV: [z0]
+# #         ## EG
+# #         L1tkPhoton: "all" 
+# #         L1tkElectron: "all" 
+# #         L1EGbarrel: "all" 
+# #         L1EGendcap: "all" 
+# #         ## MUONS
+#         L1gmtTkMuon: "all" 
+#         L1gmtMuon: "all"  # aka gmtMuon
+#         L1gmtDispMuon: "all"
+#         ## TAUS
+#         L1nnPuppiTau: "all" 
+#         L1hpsTau: "all" 
+#         L1caloTau: "all" 
+#         L1nnCaloTau: "all"
+#         ## MET/Sums
+#         L1puppiMET: [pt, phi]
+#         L1puppiMLMET: [pt]
+#         L1puppiJetSC4sums: [pt, phi]
+#         L1puppiHistoJetSums: [pt, phi]
+#         # # jets
+#         L1puppiJetSC4: [pt, eta, phi]
+#         L1puppiJetSC8: [pt, eta, phi]
+#         L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+#         L1puppiJetHisto: [pt, eta, phi]
+#         L1caloJet: [pt, eta, phi]
+#         ## track-only
+#         L1TrackMET: [pt]
+#         L1TrackHT: [ht, mht]
+#         L1TrackJet: [pt, eta, phi]
+#         L1TrackTripletWord: [pt]
+#         L1ExtTrackHT: [ht]

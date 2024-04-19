@@ -1,0 +1,40 @@
+gmtDispMuon:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1gmtMuon:default
+    - L1gmtDispMuon:default
+  binning:
+    min: 0
+    max: 75
+    step: 3
+
+gmtDispMuonByRegion:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    # - L1gmtMuon:default
+    # - L1gmtDispMuon:default
+    - L1gmtDispMuon:default:barrel
+    - L1gmtDispMuon:default:overlap
+    - L1gmtDispMuon:default:endcap
+  binning:
+    min: 0
+    max: 75
+    step: 3
+
+gmtDispMuonEndcap:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    # - L1gmtDispMuon:default:barrel
+    # - L1gmtDispMuon:default:overlap
+    - L1gmtDispMuon:default:endcap
+    - L1gmtDispMuon:dXYge8:endcap
+    - L1gmtDispMuon:dXYge8Qual15:endcap
+    - L1gmtDispMuon:qual15:endcap
+    - L1gmtDispMuon:qual15_Eta2p0:endcap
+  binning:
+    min: 0
+    max: 75
+    step: 3

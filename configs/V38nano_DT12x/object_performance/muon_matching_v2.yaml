@@ -1,0 +1,77 @@
+MuonsMatchingBarrel_Alt:
+  sample: DYLL_M50
+  version: V38nano_DT12x_DT12x
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    L1gmtMuon:default:barrel: "pt"
+    L1gmtMuon:dR0p6:barrel: "pt"
+    L1gmtTkMuon:VLoose:barrel: "pt"
+    # L1gmtTkMuon:VLooseDr0p6:barrel: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingOverlap_Alt:
+  sample: DYLL_M50
+  version: V38nano_DT12x_DT12x
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    L1gmtMuon:default:overlap: "pt"
+    L1gmtMuon:dR0p6:overlap: "pt"
+    L1gmtTkMuon:default:overlap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (overlap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingEndcap_Alt:
+  sample: DYLL_M50
+  version: V38nano_DT12x_DT12x
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1gmtMuon:default:endcap: "pt"
+    L1gmtMuon:dR0p6:endcap: "pt"
+    L1gmtTkMuon:default:endcap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
