@@ -1,6 +1,6 @@
 TkMuonsMatchingBarrel:
   sample: DYLL_M50
-  version: V38nano_DT12x_DT12x
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -28,7 +28,7 @@ TkMuonsMatchingBarrel:
 
 TkMuonsMatchingOverlap:
   sample: DYLL_M50
-  version: V38nano_DT12x_DT12x
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -57,7 +57,7 @@ TkMuonsMatchingOverlap:
 
 TkMuonsMatchingEndcap:
   sample: DYLL_M50
-  version: V38nano_DT12x_DT12x
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"

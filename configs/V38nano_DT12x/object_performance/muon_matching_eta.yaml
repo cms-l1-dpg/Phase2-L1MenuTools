@@ -1,6 +1,6 @@
 MuonsMatching_Eta_Pt2to5:
   sample: DYLL_M50
-  version: V38nano_DT12x_DT12x
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -27,7 +27,7 @@ MuonsMatching_Eta_Pt2to5:
 
 MuonsMatching_Eta_Pt15toInf:
   sample: DYLL_M50
-  version: V38nano_DT12x_DT12x
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
