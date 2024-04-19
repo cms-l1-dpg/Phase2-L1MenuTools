@@ -94,3 +94,4 @@ V38nano:
         L1TrackHT: [ht, mht]
         L1TrackJet: [pt, eta, phi]
         L1TrackTripletWord: [pt]
+        L1ExtTrackHT: [ht]

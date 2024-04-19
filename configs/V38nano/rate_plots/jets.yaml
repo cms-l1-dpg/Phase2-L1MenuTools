@@ -2,9 +2,9 @@ JetDefaultRates:
   sample: MinBias
   version: V38nano
   test_objects:
-    - L1puppiJetHisto:default
+    # - L1puppiJetHisto:default
     - L1puppiJetSC4:default
-    - L1caloJet:default
+    # - L1caloJet:default
     # - L1TrackJet:default
   binning:
     min: 40
