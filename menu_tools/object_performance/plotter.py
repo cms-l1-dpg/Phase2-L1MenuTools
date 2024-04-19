@@ -366,6 +366,8 @@ class ScalingPlotter(Plotter):
         self._make_output_dirs(self.version)
 
         fig, ax = self._create_new_plot()
+        _xlim_upper = 0
+        _ylim_upper = 0
         for obj_key, points in self.scalings.items():
             obj = Object(obj_key, self.version)
             x_points = np.array(list(points.keys()))
@@ -377,6 +379,9 @@ class ScalingPlotter(Plotter):
             x = np.linspace(0, 2500, 20)
             y = utils.scaling_func(x, a, b)
             ax.plot(x, y, color=pts[0].get_color(), label=label)
+
+            _xlim_upper = max(_xlim_upper, np.max(x_points) * 1.1)
+            _ylim_upper = max(_ylim_upper, np.max(y_points) * 1.1)
 
         ax.legend(loc="lower right")
         ax.set_xlabel("L1 threshold [GeV]")
@@ -392,8 +397,8 @@ class ScalingPlotter(Plotter):
             transform=ax.transAxes,
         )
         fig.tight_layout()
-        ax.set_xlim(0, np.max(x_points) * 1.1)
-        ax.set_ylim(0, np.max(y_points) * 1.1)
+        ax.set_xlim(0, _xlim_upper)
+        ax.set_ylim(0, _ylim_upper)
 
         plot_fname = os.path.join(
             "outputs",
