@@ -52,7 +52,6 @@ L1gmtMuon:
     overlap: [0.83, 1.24]
     endcap: [1.24, 2.4]
   ids:
-
     default:
       cuts:
         overlap:
@@ -62,7 +61,11 @@ L1gmtMuon:
     dR0p6:
       label: "GMT Muon, match dR < 0.6" 
       match_dR: 0.6
-      cuts: {}
+      cuts:
+        overlap:
+          - "{hwQual} >= 12"
+        endcap:
+          - "{hwQual} >= 14"
 
 L1gmtDispMuon:
   label: "GMT Displaced Muon"

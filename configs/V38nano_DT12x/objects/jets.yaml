@@ -28,6 +28,11 @@ L1puppiExtJetSC4:
       cuts:
         inclusive:
           - "abs({eta}) < 5"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
     bjetnn:
       label: "SC Extended PuppiJet, BtagScore > 0.71"
       cuts:
@@ -62,6 +67,11 @@ L1puppiJetSC4:
       cuts:
         inclusive:
           - "abs({eta}) < 7"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
 
 L1puppiJetSC8:
   match_dR: 0.35

@@ -1,0 +1,4 @@
+version: "V38nano_DT12x"
+sample: "MinBias"
+menu_config: "configs/V38nano_DT12x/rate_table/v38_menu_Step1and2.yml"
+table_fname: "rates_Step1and2"
