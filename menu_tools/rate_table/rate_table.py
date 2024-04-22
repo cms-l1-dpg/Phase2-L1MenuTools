@@ -22,7 +22,7 @@ def main():
     menu_table.save_table()
     menu_table.dump_masks()
 
-    menu_table.compute_tot_and_pure()
+    # menu_table.compute_tot_and_pure()
 
 if __name__ == "__main__":
     main()
