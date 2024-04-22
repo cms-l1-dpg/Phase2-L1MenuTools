@@ -1,6 +1,6 @@
-MuonsMatching_Eta_Pt2to5:
+MuonTFsMatching_Eta_Pt2to5:
   sample: DYLL_M50
-  version: V38nano
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -16,7 +16,9 @@ MuonsMatching_Eta_Pt2to5:
         - "abs({eta}) < 2.4"
   test_objects:
     L1gmtMuon:default: "eta"
-    L1gmtMuon:dR0p6: "eta"
+    L1MuonKMTF:default: "eta"
+    L1MuonOMTF:default: "eta"
+    L1MuonEMTF:default: "eta"
     L1gmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
@@ -25,9 +27,9 @@ MuonsMatching_Eta_Pt2to5:
     max: 3
     step: 0.2
 
-MuonsMatching_Eta_Pt15toInf:
+MuonTFsMatching_Eta_Pt15toInf:
   sample: DYLL_M50
-  version: V38nano
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -42,6 +44,9 @@ MuonsMatching_Eta_Pt15toInf:
         - "abs({eta}) < 2.4"
   test_objects:
     L1gmtMuon:default: "eta"
+    L1MuonKMTF:default: "eta"
+    L1MuonOMTF:default: "eta"
+    L1MuonEMTF:default: "eta"
     L1gmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"

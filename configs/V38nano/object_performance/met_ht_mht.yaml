@@ -1,4 +1,31 @@
-HT_90perc:
+# HT_90perc:
+#   sample: TT
+#   version: V38nano
+#   reference_object:
+#     object: "GenJet"
+#     x_arg: "pt"
+#     label: "Gen HT"
+#     trafo: "HT"
+#     cuts:
+#        object:
+#          - "abs({eta}) < 2.4"
+#          - "{pt} > 30"
+#   test_objects:
+#     # L1puppiHistoJetSums:HT: "pt"
+#     L1puppiJetSC4sums:HT: "pt"
+#     L1TrackHT:HT: "ht"
+#   thresholds: [350]
+#   scalings:
+#     method: "naive"
+#     threshold: 0.90
+#   xlabel: "Gen. HT (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   binning:
+#     min: 0
+#     max: 750
+#     step: 20
+
+TkHT_90perc:
   sample: TT
   version: V38nano
   reference_object:
@@ -11,10 +38,10 @@ HT_90perc:
          - "abs({eta}) < 2.4"
          - "{pt} > 30"
   test_objects:
-    L1puppiHistoJetSums:HT: "pt"
+    # L1puppiHistoJetSums:HT: "pt"
     L1puppiJetSC4sums:HT: "pt"
     L1TrackHT:HT: "ht"
-  thresholds: [350]
+  thresholds: [150, 350]
   scalings:
     method: "naive"
     threshold: 0.90
@@ -25,54 +52,54 @@ HT_90perc:
     max: 750
     step: 20
 
-MHT_50perc:
-  sample: TT
-  version: V38nano
-  reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen MHT"
-    cuts:
-      object:
-        - "abs({eta}) < 2.4"
-        - "{pt} > 30"
-    trafo: "MHT"
-  test_objects:
-    L1puppiHistoJetSums:MHT: "pt"
-    L1puppiJetSC4sums:MHT: "pt"
-    L1TrackHT:MHT: "mht"
-  thresholds: [70, 150]
-  scalings:
-    method: "naive"
-    threshold: 0.50
-  xlabel: "Gen. MHT30 (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV)"
-  binning:
-    min: 0
-    max: 500
-    step: 20
+# MHT_50perc:
+#   sample: TT
+#   version: V38nano
+#   reference_object:
+#     object: "GenJet"
+#     x_arg: "pt"
+#     label: "Gen MHT"
+#     cuts:
+#       object:
+#         - "abs({eta}) < 2.4"
+#         - "{pt} > 30"
+#     trafo: "MHT"
+#   test_objects:
+#     L1puppiHistoJetSums:MHT: "pt"
+#     L1puppiJetSC4sums:MHT: "pt"
+#     L1TrackHT:MHT: "mht"
+#   thresholds: [70, 150]
+#   scalings:
+#     method: "naive"
+#     threshold: 0.50
+#   xlabel: "Gen. MHT30 (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20
 
-MET_90perc:
-  sample: TT
-  version: V38nano
-  reference_object:
-    object: "GenMET"
-    x_arg: "pt"
-    label: "Gen MET"
-  test_objects:
-    L1puppiMET:default: "pt"
-    L1puppiMLMET:default: "pt"
-    L1TrackMET:default: "pt"
-  thresholds: [125, 150, 175, 200]
-  xlabel: "Gen. MET (GeV)"
-  ylabel: "Trigger Efficiency (<threshold> GeV)"
-  scalings:
-    method: "naive"
-    threshold: 0.90
-  binning:
-    min: 0
-    max: 500
-    step: 20
+# MET_90perc:
+#   sample: TT
+#   version: V38nano
+#   reference_object:
+#     object: "GenMET"
+#     x_arg: "pt"
+#     label: "Gen MET"
+#   test_objects:
+#     L1puppiMET:default: "pt"
+#     L1puppiMLMET:default: "pt"
+#     L1TrackMET:default: "pt"
+#   thresholds: [125, 150, 175, 200]
+#   xlabel: "Gen. MET (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   scalings:
+#     method: "naive"
+#     threshold: 0.90
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20
 
 # MET_90perc_scTanh:
 #   sample: TT

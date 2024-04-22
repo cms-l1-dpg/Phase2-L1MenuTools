@@ -1,6 +1,6 @@
-MuonsMatching_Eta_Pt2to5:
+TkMuonsMatching_Eta_Pt2to5:
   sample: DYLL_M50
-  version: V38nano
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -15,9 +15,12 @@ MuonsMatching_Eta_Pt2to5:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1gmtMuon:default: "eta"
-    L1gmtMuon:dR0p6: "eta"
+    # L1gmtMuon:default: "eta"
     L1gmtTkMuon:default: "eta"
+    L1gmtTkMuon:VLoose: "eta"
+    L1gmtTkMuon:Loose: "eta"
+    L1gmtTkMuon:Medium: "eta"
+    L1gmtTkMuon:Tight: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -25,9 +28,9 @@ MuonsMatching_Eta_Pt2to5:
     max: 3
     step: 0.2
 
-MuonsMatching_Eta_Pt15toInf:
+TkMuonsMatching_Eta_Pt15toInf:
   sample: DYLL_M50
-  version: V38nano
+  version: V38nano_DT12x
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
@@ -41,8 +44,12 @@ MuonsMatching_Eta_Pt15toInf:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1gmtMuon:default: "eta"
+    # L1gmtMuon:default: "eta"
     L1gmtTkMuon:default: "eta"
+    L1gmtTkMuon:VLoose: "eta"
+    L1gmtTkMuon:Loose: "eta"
+    L1gmtTkMuon:Medium: "eta"
+    L1gmtTkMuon:Tight: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

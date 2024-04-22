@@ -1,6 +1,6 @@
 JetDefaultRates:
   sample: MinBias
-  version: V38nano
+  version: V38nano_DT12x
   test_objects:
     # - L1puppiJetHisto:default
     - L1puppiJetSC4:default
@@ -13,7 +13,7 @@ JetDefaultRates:
 
 # JetsByRegion:
 #   sample: MinBias
-#   version: V38nano
+#   version: V38nano_DT12x
 #   test_objects:
 #     - L1puppiJetSC4:default:barrel
 #     - L1puppiJetSC4:default:endcap
@@ -30,7 +30,7 @@ JetDefaultRates:
 
 JetExtendedRates:
   sample: MinBias
-  version: V38nano
+  version: V38nano_DT12x
   test_objects:
     - L1puppiJetSC4:default:inclusive
     - L1puppiExtJetSC4:default:inclusive
@@ -44,7 +44,7 @@ JetExtendedRates:
 
 JetExtendedRatesByRegion:
   sample: MinBias
-  version: V38nano
+  version: V38nano_DT12x
   test_objects:
     # - L1puppiJetSC4:default:barrel
     # - L1puppiJetSC4:default:endcap
@@ -59,7 +59,7 @@ JetExtendedRatesByRegion:
 
 # JetSC8Rates:
 #   sample: MinBias
-#   version: V38nano
+#   version: V38nano_DT12x
 #   test_objects:
 #     - L1puppiJetSC4:default
 #     - L1puppiJetSC8:default
@@ -71,7 +71,7 @@ JetExtendedRatesByRegion:
 
 # JetSC8Rates_byRegion:
 #   sample: MinBias
-#   version: V38nano
+#   version: V38nano_DT12x
 #   test_objects:
 #     # - L1puppiJetSC4:default
 #     - L1puppiJetSC8:default

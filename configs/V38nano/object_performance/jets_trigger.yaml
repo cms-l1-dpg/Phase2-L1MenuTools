@@ -14,12 +14,12 @@ JetTurnonBarrel:
   test_objects:
     # L1puppiJetHisto:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
-    # L1caloJet:default:barrel: "pt"
-    # L1TrackJet:default:barrel: "pt"
+    L1caloJet:default:barrel: "pt"
+    L1TrackJet:default:barrel: "pt"
   thresholds: [50, 100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -43,12 +43,12 @@ JetTurnonEndcap:
   test_objects:
     # L1puppiJetHisto:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
-    # L1caloJet:default:endcap: "pt"
-    # L1TrackJet:default:endcap: "pt"
+    L1caloJet:default:endcap: "pt"
+    L1TrackJet:default:endcap: "pt"
   thresholds: [50, 100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -72,11 +72,11 @@ JetTurnonForward:
   test_objects:
     # L1puppiJetHisto:default:forward: "pt"
     L1puppiJetSC4:default:forward: "pt"
-    # L1caloJet:default:forward: "pt"
-  # thresholds: [50, 100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
+    L1caloJet:default:forward: "pt"
+  thresholds: [50, 100]
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:
