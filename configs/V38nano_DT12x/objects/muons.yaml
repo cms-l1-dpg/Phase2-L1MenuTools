@@ -6,7 +6,7 @@ GenPart:
     gen_electron_default:
       cuts:
         inclusive:
-          - "(({statusFlags}>>7)&1) == 1"
+          - "({statusFlags}>>7)&1 == 1"
 
 L1gmtTkMuon:
   label: "GMT TkMuon"
@@ -21,27 +21,27 @@ L1gmtTkMuon:
       label: "GMT TkMuon"
       cuts:
         inclusive:
-          - "({hwQual} >=3) | (({pt} > 8) & ({hwQual} >= 1))" # Loose(>=3) for pt < 8 VLoose(>=1) for pt > 8
+          - "(({hwQual}>>1)&1 == 1) | (({pt} > 8) & (({hwQual}>>0)&1 == 1))" # Loose (bit 2) for pt < 8 VLoose (bit 1) for pt > 8
     VLoose: # x.numberOfMatches() > 0
       label: "GMT TkMuon, VLoose ID" 
       cuts:
         inclusive:
-          - "{hwQual} >= 1"
+          - "({hwQual}>>0)&1 == 1"
     Loose: # x.numberOfMatches() >1
       label: "GMT TkMuon, Loose ID" 
       cuts:
         inclusive:
-          - "{hwQual} >= 3"
+          - "({hwQual}>>1)&1 == 1"
     Medium: # x.stubs().size()>1
       label: "GMT TkMuon, Medium ID" 
       cuts:
         inclusive:
-          - "{hwQual} >= 7"
+          - "({hwQual}>>2)&1 == 1"
     Tight: # x.numberOfMatches()>2
       label: "GMT TkMuon, Tight ID" 
       cuts:
         inclusive:
-          - "{hwQual} >= 15"
+          - "({hwQual}>>3)&1 == 1"
 
 L1gmtMuon:
   label: "GMT Muon"
