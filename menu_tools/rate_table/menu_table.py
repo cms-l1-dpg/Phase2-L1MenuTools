@@ -67,7 +67,7 @@ class MenuTable:
             transformed to quality
         """
         if raw_key.startswith("L1"):
-            key = raw_key.removeprefix(obj.nano_obj_name+"_")
+            key = raw_key.removeprefix(obj.nano_obj_name + "_")
         else:
             key = raw_key.removeprefix(obj.nano_obj_name).lower()
 
@@ -107,11 +107,12 @@ class MenuTable:
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
         # Apply scalings, except for PV variable, which has no scalings
-        if ("PV" not in object_name) and (
-            "disp" not in object_name.lower()) and (
-                "TrackTripletWord" not in object_name) and (
-                    "ExtTrackHT" not in object_name
-                ):
+        if (
+            ("PV" not in object_name)
+            and ("disp" not in object_name.lower())
+            and ("TrackTripletWord" not in object_name)
+            and ("ExtTrackHT" not in object_name)
+        ):
             print("adding scalings")
             arr = scalings.add_offline_pt(arr, obj)
 
@@ -156,7 +157,7 @@ class MenuTable:
 
                 if leg["obj"] not in self.arr_cache:
                     print(f"Caching {leg['obj']}")
-                    self.arr_cache[leg["obj"]] = self._load_cached_arrays(leg["obj"]) 
+                    self.arr_cache[leg["obj"]] = self._load_cached_arrays(leg["obj"])
                 else:
                     print(f"Using cached {leg['obj']}")
                 # raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
@@ -326,20 +327,22 @@ class MenuTable:
         print(df_table)
 
     def compute_tot_and_pure(self) -> pd.DataFrame:
-
         df_masks = ak.to_dataframe(self._seed_masks)
         counts = {}
 
         for seed in df_masks.columns:
             counts[seed] = {
                 "total": df_masks[seed].sum(),
-                "pure" : ((df_masks[seed]==True)&~(df_masks.drop(seed, axis=1).any(axis=1))).sum()
-                }
-            
-        counts["total"] = {
-            "total": np.sum(np.any(df_masks, axis = 1)),
-            "pure": 0,
+                "pure": (
+                    (df_masks[seed] == True)
+                    & ~(df_masks.drop(seed, axis=1).any(axis=1))
+                ).sum(),
             }
+
+        counts["total"] = {
+            "total": np.sum(np.any(df_masks, axis=1)),
+            "pure": 0,
+        }
 
         df_counts = pd.DataFrame(counts).T
         df_counts.index.name = "seed"
@@ -369,7 +372,6 @@ class MenuTable:
         print("Making table")
 
         table: list[dict[str, Union[str, float]]] = []
-        ntot = len(list(self._seed_masks.values())[0])
         all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
 
         for seed, mask in self._seed_masks.items():

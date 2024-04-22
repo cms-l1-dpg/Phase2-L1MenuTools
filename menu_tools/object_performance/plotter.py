@@ -366,6 +366,8 @@ class ScalingPlotter(Plotter):
         self._make_output_dirs(self.version)
 
         fig, ax = self._create_new_plot()
+        _xlim_upper = 0
+        _ylim_upper = 0
         for obj_key, points in self.scalings.items():
             obj = Object(obj_key, self.version)
             x_points = np.array(list(points.keys()))
@@ -377,6 +379,9 @@ class ScalingPlotter(Plotter):
             x = np.linspace(0, 2500, 20)
             y = utils.scaling_func(x, a, b)
             ax.plot(x, y, color=pts[0].get_color(), label=label)
+
+            _xlim_upper = max(_xlim_upper, np.max(x_points) * 1.1)
+            _ylim_upper = max(_ylim_upper, np.max(y_points) * 1.1)
 
         ax.legend(loc="lower right")
         ax.set_xlabel("L1 threshold [GeV]")
@@ -392,8 +397,8 @@ class ScalingPlotter(Plotter):
             transform=ax.transAxes,
         )
         fig.tight_layout()
-        ax.set_xlim(0, np.max(x_points))
-        ax.set_ylim(0, np.max(y_points))
+        ax.set_xlim(0, _xlim_upper)
+        ax.set_ylim(0, _ylim_upper)
 
         plot_fname = os.path.join(
             "outputs",
@@ -423,8 +428,8 @@ class ScalingCentral:
             self.scaling_thresholds = yaml.safe_load(f)
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj) -> list[int]:
-        if test_obj in self.scaling_thresholds:
-            return self.scaling_thresholds[test_obj]
+        if str(test_obj) in self.scaling_thresholds:
+            return self.scaling_thresholds[str(test_obj)]
         if any("Muon" in x for x in cfg_plot["test_objects"]):
             return self.scaling_thresholds["Muon"]
         if any(
@@ -531,11 +536,13 @@ def main():
         type=str,
         help="Path of YAML configuration file specifying the desired plots.",
     )
+    parser.add_argument("-s", "--scalings_only", action="store_true")
     args = parser.parse_args()
 
     for path_cfg_plot in args.cfg_plots:
-        plotter = EfficiencyCentral(path_cfg_plot)
-        plotter.run()
+        if not args.scalings_only:
+            plotter = EfficiencyCentral(path_cfg_plot)
+            plotter.run()
 
         scalings = ScalingCentral(path_cfg_plot)
         scalings.run()
