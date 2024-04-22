@@ -18,10 +18,10 @@ L1gmtTkMuon:
     endcap: [1.24, 2.4]
   ids:
     default:
-      label: "GMT TkMuon, Loose ID"
+      label: "GMT TkMuon"
       cuts:
         inclusive:
-          - "{hwQual} >= 3"
+          - "({hwQual} >=3) | (({pt} > 8) & ({hwQual} >= 1))" # Loose(>=3) for pt < 8 VLoose(>=1) for pt > 8
     VLoose: # x.numberOfMatches() > 0
       label: "GMT TkMuon, VLoose ID" 
       cuts:
