@@ -7,7 +7,7 @@ centrally, by default at
 configs/<VERSION>/objects
 ```
 
-All objects found in yaml files in this directory will be found by
+All objects defined in yaml files in this directory will be found by
 the code.
 
 ## Object configuration
