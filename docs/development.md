@@ -4,10 +4,10 @@
 Poetry is used as a backend for packaging and for dependency
 management. To set up a working development environment, create
 a virtual environment and install the `poetry` python package.
-Then install all develpoment dependencies:
+Then `poetry install` installs all develpoment dependencies:
 
 ```bash
-python@3.11 -m venv <name_of_venv>
+python3.11 -m venv <name_of_venv>
 source <name_of_venv>/bin/activate
 pip install poetry
 poetry install
@@ -24,7 +24,7 @@ pytest -vv
 ```
 
 to run all tests. The `-vv` option is optional and can be omitted.
-For some of the tests the presence of the V29 caching files is required.
+For some of the tests the presence of the `V29` caching files is required.
 
 
 ## Code Formatting and Linting
