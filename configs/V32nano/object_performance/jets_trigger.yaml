@@ -17,9 +17,9 @@ JetTurnonBarrel:
     L1caloJet:default: "pt"
     # trackerJet:default:barrel: "pt"
   thresholds: [50, 100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -46,9 +46,9 @@ JetTurnonEndcap:
     L1caloJet:default: "pt"
     # trackerJet:default:endcap: "pt"
   thresholds: [50, 100]
-  scalings:
-    method: "naive"
-    threshold: 0.95
+  # scalings:
+  #   method: "naive"
+  #   threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:

@@ -14,10 +14,10 @@ TausMatchingBarrel:
         - "abs({eta}) < 2.4"
   test_objects:
     L1nnTau:default: "pt"
-    L1hpsTau:default: "pt"
+    # L1hpsTau:default: "pt"
     L1caloTau:default: "pt"
-    L1nnCaloTau:default: "pt"
-    L1caloTau:PtGe20: "Pt"
+    # L1nnCaloTau:default: "pt"
+    # L1caloTau:PtGe20: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -41,10 +41,10 @@ TausMatchingEndcap:
         - "abs({eta}) < 2.4"
   test_objects:
     L1nnTau:default: "pt"
-    L1hpsTau:default: "pt"
+    # L1hpsTau:default: "pt"
     L1caloTau:default: "pt"
-    L1nnCaloTau:default: "pt"
-    L1caloTau:PtGe20: "Pt"
+    # L1nnCaloTau:default: "pt"
+    # L1caloTau:PtGe20: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:
