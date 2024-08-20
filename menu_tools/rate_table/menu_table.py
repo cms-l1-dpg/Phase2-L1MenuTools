@@ -124,7 +124,6 @@ class MenuTable:
         # instead of a single number.
         if isinstance(arr[0], ak.highlevel.Record):
             arr = ak.zip({field: [[k] for k in arr[field]] for field in arr.fields})
-            # arr = ak.zip({field: np.expand_dims(arr[field], 0) for field in arr.fields})
 
         if "eta" in arr.fields:
             arr = ak.with_name(arr, "Momentum4D")
