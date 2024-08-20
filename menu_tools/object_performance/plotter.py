@@ -5,6 +5,7 @@ from typing import Any
 import warnings
 import yaml
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
@@ -17,6 +18,19 @@ from menu_tools.utils import utils
 from menu_tools.utils.objects import Object
 
 
+colors = [
+    "#3f90da",
+    "#ffa90e",
+    "#bd1f01",
+    "#94a4a2",
+    "#832db6",
+    "#a96b59",
+    "#e76300",
+    "#b9ac70",
+    "#717581",
+    "#92dadd",
+]
+mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=colors)
 plt.style.use(hep.style.CMS)
 
 
@@ -170,8 +184,12 @@ class EfficiencyPlotter(Plotter):
 
         # Save figure
         plot_fname = f"{self.plot_name}_{self.threshold}_{self.version}"
-        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.png"))
-        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"))
+        plt.savefig(
+            os.path.join(self._outdir_turnons, f"{plot_fname}.png"), bbox_inches="tight"
+        )
+        plt.savefig(
+            os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"), bbox_inches="tight"
+        )
         self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
 
         # Save config
@@ -210,7 +228,9 @@ class EfficiencyPlotter(Plotter):
         # Save figure
         plot_fname = f"{self.plot_name}_{self.threshold}_{self.version}"
         plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.png"))
-        plt.savefig(os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"))
+        plt.savefig(
+            os.path.join(self._outdir_turnons, f"{plot_fname}.pdf"), bbox_inches="tight"
+        )
         self._save_json(os.path.join(self._outdir_turnons, f"{plot_fname}.json"))
 
         # Save config
@@ -243,10 +263,18 @@ class EfficiencyPlotter(Plotter):
                 xbins,
                 ref_hist[0],
                 where="mid",
-                label="ref: " + obj_key,
-                ls="--",
-                color="k",
+                ls="-.",
             )
+
+        # mock plot outside of visible range to create legend entry for ref
+        ax.plot(
+            [xbins[0] - 100, xbins[0] - 99],
+            [0, 0],
+            label="reference object",
+            color="black",
+            linestyle="-.",
+        )
+        plt.gca().set_prop_cycle(None)
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
@@ -263,11 +291,14 @@ class EfficiencyPlotter(Plotter):
                 **err_kwargs,
             )
 
-        self._style_plot(fig, ax)
+        self._style_plot(fig, ax, legend_loc="best")
         # Save figure
         plot_fname = f"{self.plot_name}_{self.threshold}_dist_{self.version}"
         plt.savefig(os.path.join(self._outdir_distributions, f"{plot_fname}.png"))
-        plt.savefig(os.path.join(self._outdir_distributions, f"{plot_fname}.pdf"))
+        plt.savefig(
+            os.path.join(self._outdir_distributions, f"{plot_fname}.pdf"),
+            bbox_inches="tight",
+        )
 
         plt.close()
 
@@ -408,7 +439,7 @@ class ScalingPlotter(Plotter):
             f"{self.plot_name}_{self.version}",
         )
         plt.savefig(f"{plot_fname}.png")
-        plt.savefig(f"{plot_fname}.pdf")
+        plt.savefig(f"{plot_fname}.pdf", bbox_inches="tight")
         self._save_json(f"{plot_fname}.json")
 
         ## save config
