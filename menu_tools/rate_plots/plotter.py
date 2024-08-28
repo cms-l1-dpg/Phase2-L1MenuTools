@@ -3,6 +3,7 @@ import os
 import json
 
 import awkward as ak
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
@@ -14,6 +15,19 @@ from menu_tools.utils import scalings
 from menu_tools.utils.objects import Object
 from menu_tools.rate_plots.config import RatePlotConfig
 
+colors = [
+    "#3f90da",
+    "#ffa90e",
+    "#bd1f01",
+    "#94a4a2",
+    "#832db6",
+    "#a96b59",
+    "#e76300",
+    "#b9ac70",
+    "#717581",
+    "#92dadd",
+]
+mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=colors)
 plt.style.use(hep.style.CMS)
 
 
@@ -97,7 +111,7 @@ class RatePlotter:
         )
         print("Saving to ", fname)
         plt.savefig(fname + ".png")
-        plt.savefig(fname + ".pdf")
+        plt.savefig(fname + ".pdf", bbox_inches="tight")
 
         with open(fname + ".json", "w") as outfile:
             outfile.write(json.dumps(plot_dict, indent=4))
@@ -152,7 +166,7 @@ class RatePlotter:
             self._outdir, f"{v1}-vs-{v2}_{self._online_offline}_{self.cfg.plot_name}"
         )
         plt.savefig(fname + ".png")
-        plt.savefig(fname + ".pdf")
+        plt.savefig(fname + ".pdf", bbox_inches="tight")
 
         plt.close()
 

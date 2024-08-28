@@ -155,12 +155,12 @@ def comp_plots(
             d_p2 = dict(zip(plots[1]["xbins"], plots[1]["efficiency"]))
 
             # add 100% eff line
-        #             axs[0].axhline(1,ls = ":", alpha = 0.5, c = "k")
+        # axs[0].axhline(1,ls = ":", alpha = 0.5, c = "k")
 
         df_p1 = pd.Series(d_p1)
         df_p2 = pd.Series(d_p2)
 
-        #         ax = axs[1]
+        # ax = axs[1]
 
         if (df_p1.sum() != 0) and (df_p1.sum() != 0):
             diff = df_p1 - df_p2
@@ -168,16 +168,7 @@ def comp_plots(
                 diff /= df_p2
             label = p1["label"].split(",")[0]
 
-            diff.plot(
-                ax=axs[1], color=color, label=label
-            )  # , marker = ".", color = color)
-            # axs[1].errorbar(
-            #     p1["xbins"],df_p1 - df_p2,
-            #     yerr = np.hypot(plots[0]["efficiency_err"], plots[1]["efficiency_err"]),
-            #     # label = label, marker = ".", color = color,
-            #     label = label, ls = lss[i], color = color, mfc="none" if i == 1 else color,
-            #     **(p1["err_kwargs"])
-            #     )
+            diff.plot(ax=axs[1], color=color, label=label)
             if ptype == "turnon":
                 if len(plots[0]["efficiency_err"][0]) != len(
                     plots[1]["efficiency_err"][0]
@@ -192,7 +183,7 @@ def comp_plots(
                     diff.index,
                     diff.values - y_err,
                     diff.values + y_err,
-                    #                                 label = label,
+                    # label = label,
                     alpha=0.3,
                     color=color,
                 )
