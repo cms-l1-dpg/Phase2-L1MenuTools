@@ -28,8 +28,10 @@ tkElectron:
       cuts:
         inclusive:
           - "abs({eta}) < 2.7"
-        barrel:
+        endcap:
           - "({passeseleid} == 1) | ({pt} < 25)"
+        barrel:
+          - "{passeseleid} == 1"
     Iso:
       label: "TkIsoElectron"
       cuts:
@@ -37,7 +39,6 @@ tkElectron:
           - "abs({eta}) < 2.4"
         barrel:
           - "abs({trkiso}) < 0.13"
-          - "({passeseleid} == 1) | ({pt} < 25)"
         endcap:
           - "abs({trkiso}) < 0.28"
     IsoNoIDinEE:

@@ -40,9 +40,10 @@ V32nano:
       Events:
         GenVisTau: "all" 
         L1nnTau: "all" 
-        L1hpsTau: "all" 
+        L1GTnnTau: "all" 
+        # L1hpsTau: "all" 
         L1caloTau: "all" 
-        L1nnCaloTau: "all"
+        # L1nnCaloTau: "all"
   MinBias:
     ntuple_path: 
     trees_branches:
