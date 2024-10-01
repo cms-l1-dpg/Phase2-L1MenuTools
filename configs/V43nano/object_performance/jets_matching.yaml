@@ -1,0 +1,118 @@
+JetMatchingBarrel:
+  sample: TT
+  version: V43nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingEndcap:
+  sample: TT
+  version: V43nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (<threshold> GeV, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingForward:
+  version: V43nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1puppiJetHisto:default: "pt"
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (<threshold> GeV, forward)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+
+JetMatchingBarrelSC8:
+  sample: TT
+  version: V43nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:barrel: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (<threshold> GeV, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingEndcapSC8:
+  sample: TT
+  version: V43nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:endcap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (<threshold> GeV, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10

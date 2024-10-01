@@ -1,0 +1,4 @@
+version: "V43nano"
+sample: "MinBias"
+menu_config: "configs/V43nano/rate_table/v38_menu_TkMuonMediumID_JetPt25_cfg.yml"
+table_fname: "rates_full_TkMuonMediumID_JetPt25"
