@@ -5,7 +5,6 @@ L1caloJet:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
   cuts:
     inclusive:
       - "abs({eta}) < 7"
@@ -13,46 +12,16 @@ L1caloJet:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 7"
-
-L1puppiExtJetSC4:
-  match_dR: 0.35
-  label: "Seeded Cone Extended PuppiJet"
-  eta_ranges:
-    inclusive: [0, 7]
-    barrel: [0, 1.5]
-    endcap: [1.5, 2.4]
-    forward: [2.4, 5]
-  ids:
-    default:
-      cuts:
-        inclusive:
-          - "abs({eta}) < 5"
-    PtGe25:
-        cuts:
-          inclusive:
-            - "abs({eta}) < 7"
-            - "abs({pt}) >= 25"
-    bjetnn:
-      label: "SC Extended PuppiJet, BtagScore > 0.71"
+          - "abs({eta}) < 2.4"
+    default_ptcut:
+      label: "Calo Jet (L1 $p_{T}$ > 182 GeV)"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
-          - "{btagScore} > 0.71"
-
-L1puppiJetHisto:
-  match_dR: 0.3
-  label: "Histogrammed PuppiJet"
-  eta_ranges:
-    inclusive: [0, 7]
-    barrel: [0, 1.5]
-    endcap: [1.5, 2.4]
-    forward: [2.4, 5]
-  ids:
-    default:
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
+        barrel:
+          - "{pt} > 215"
+        endcap:
+          - "{pt} > 148"
 
 L1puppiJetSC4:
   match_dR: 0.35
@@ -61,31 +30,20 @@ L1puppiJetSC4:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
   ids:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 7"
-    PtGe25:
-        cuts:
-          inclusive:
-            - "abs({eta}) < 7"
-            - "abs({pt}) >= 25"
-
-L1puppiJetSC8:
-  match_dR: 0.35
-  label: "Seeded Cone PuppiJet 8"
-  eta_ranges:
-    inclusive: [0, 7]
-    barrel: [0, 1.5]
-    endcap: [1.5, 2.4]
-    forward: [2.4, 5]
-  ids:
-    default:
+          - "abs({eta}) < 2.4"
+    default_ptcut:
+      label: "Seeded Cone PuppiJet (L1 $p_{T}$ > 143 GeV)"
       cuts:
         inclusive:
-          - "abs({eta}) < 7"
+          - "abs({eta}) < 2.4"
+        barrel:
+          - "{pt} > 164"
+        endcap:
+          - "{pt} > 121"
 
 L1TrackJet:
   match_dR: 0.4
@@ -98,6 +56,31 @@ L1TrackJet:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 7"
+          - "abs({eta}) < 2.4"
+    default_ptcut:
+      label: "Tracker Jet (L1 $p_{T}$ > 114 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+        barrel:
+          - "{pt} > 135"
+        endcap:
+          - "{pt} > 92"
 
-
+L1puppiJetSC8:
+  match_dR: 0.35
+  label: "Seeded Cone PuppiJet 8"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+    default_ptcut:
+       cuts:
+         inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 140"

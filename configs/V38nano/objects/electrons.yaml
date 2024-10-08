@@ -3,24 +3,21 @@ L1tkElectron:
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.479]
-    endcap: [1.479, 5]
+    endcap: [1.479, 2.4]
   ids:
     NoIso:
       label: "TkElectron"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
-        endcap:
           - "({eleId} == 1) | ({pt} < 25)"
-        barrel:
-          - "{eleId} == 1"
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
       label: "TkElectron, no ID"
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.7"
     Iso:
       label: "TkIsoElectron"
       cuts:
@@ -30,13 +27,36 @@ L1tkElectron:
           - "abs({relIso}) < 0.13"
         endcap:
           - "abs({relIso}) < 0.28"
+    Iso_ptcut:
+      label: "TkIsoElectron (L1 $p_{T}$ > 29 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 29"
+        barrel:
+          - "abs({relIso}) < 0.13"
+            # - "{pt} > 29"
+        endcap:
+          - "abs({relIso}) < 0.28"
+            # - "{pt} > 28"
+    NoIso_ptcut:
+      label: "TkElectron (L1 $p_{T}$ > 29 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "({eleId} == 1) | ({pt} < 25)"
+          - "{pt} > 29"
+        # barrel:
+        # - "{pt} > 29"
+        # endcap:
+        #  - "{pt} > 28"
 
 L1EG:
   match_dR: 0.2
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.479]
-    endcap: [1.479, 3.0]
+    endcap: [1.479, 2.4]
   label: "EG"
   ids:
     default:
@@ -47,3 +67,15 @@ L1EG:
           - "{eleId} == 1"
         endcap:
           - "{saId} == 1"
+    default_ptcut:
+      label: "EG (L1 $p_{T}$ > 29 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3.0"
+          - "{pt} > 29"
+        barrel:
+          - "{eleId} == 1"
+          # - "{pt} > 29"
+        endcap:
+          - "{saId} == 1"
+          # - "{pt} > 28"

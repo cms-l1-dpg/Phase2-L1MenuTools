@@ -1,0 +1,47 @@
+JetEfficiencyBarrel:
+  sample: TT
+  version: V38nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC4:default_ptcut: "pt"
+    L1caloJet:default_ptcut: "pt"
+    L1TrackJet:default_ptcut: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetEfficiencyEndcap:
+  sample: TT
+  version: V38nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC4:default_ptcut: "pt"
+    L1caloJet:default_ptcut: "pt"
+    L1TrackJet:default_ptcut: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 10

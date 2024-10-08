@@ -10,13 +10,12 @@ JetTurnonBarrel:
       event:
         - "abs({eta}) < 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.5"
   test_objects:
-    # L1puppiJetHisto:default:barrel: "pt"
-    L1puppiJetSC4:default:barrel: "pt"
-    L1caloJet:default:barrel: "pt"
-    L1TrackJet:default:barrel: "pt"
-  thresholds: [50] #, 100]
+    L1puppiJetSC4:eta2p5:barrel: "pt"
+    L1caloJet:eta2p5:barrel: "pt"
+    # L1TrackJet:eta2p5:barrel: "pt"
+  thresholds: [50]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -39,13 +38,12 @@ JetTurnonEndcap:
       event:
         - "abs({eta}) > 1.5"
       object:
-        - "abs({eta}) < 2.4"
+        - "abs({eta}) < 2.5"
   test_objects:
-    # L1puppiJetHisto:default:endcap: "pt"
-    L1puppiJetSC4:default:endcap: "pt"
-    L1caloJet:default:endcap: "pt"
-    L1TrackJet:default:endcap: "pt"
-  thresholds: [50] #, 100]
+    L1puppiJetSC4:eta2p5:endcap: "pt"
+    L1caloJet:eta2p5:endcap: "pt"
+    # L1TrackJet:eta2p5:endcap: "pt"
+  thresholds: [50]
   scalings:
     method: "naive"
     threshold: 0.95
