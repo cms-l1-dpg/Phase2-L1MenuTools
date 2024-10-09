@@ -6,7 +6,7 @@ GenPart:
     gen_electron_default:
       cuts:
         inclusive:
-          - "({statusFlags}>>7)&1 == 1"
+          - "(({statusFlags}>>7)&1) == 1"
 
 L1gmtTkMuon:
   label: "GMT TkMuon"
@@ -18,33 +18,59 @@ L1gmtTkMuon:
     endcap: [1.24, 2.4]
   ids:
     default:
-      label: "GMT TkMuon"
+      label: "GMT TkMuon, Loose ID (L1 $p_{T}$ > 10 GeV)"
       cuts:
         inclusive:
-          - "(({hwQual}>>1)&1 == 1) | (({pt} > 8) & (({hwQual}>>0)&1 == 1))" # Loose (bit 2) for pt < 8 VLoose (bit 1) for pt > 8
+          - "{hwQual} >= 3"
+          - "{pt} > 10"
+    lowpt_id:
+      label: "GMT TkMuon, Loose ID for $p_{T}$ > 8 GeV"
+      cuts:
+        inclusive:
+          - "(({hwQual} >=3) | (({pt} > 8) & ({hwQual} >= 1)))"
+    default_ptcut:
+      label: "GMT TkMuon, Loose ID (L1 $p_{T}$ > 20 GeV)"
+      cuts:
+        inclusive:
+          # - "(({hwQual} >=3) | (({pt} > 8) & ({hwQual} >= 1))"
+          - "{hwQual} >= 1"
+          # - "{hwQual} >= 3"
+        barrel:
+          - "{hwQual} >= 1"
+          - "{pt} > 20"
+        endcap:
+          - "{hwQual} >= 1"
+          - "{pt} > 20"
+        overlap:
+          - "{hwQual} >= 1"
+          - "{pt} > 20"
     VLoose: # x.numberOfMatches() > 0
-      label: "GMT TkMuon, VLoose ID" 
+      label: "GMT TkMuon, VLoose ID (L1 $p_{T}$ > 10 GeV)" 
       cuts:
         inclusive:
-          - "({hwQual}>>0)&1 == 1"
+          - "{hwQual} >= 1"
+          - "{pt} > 10"
     Loose: # x.numberOfMatches() >1
-      label: "GMT TkMuon, Loose ID" 
+      label: "GMT TkMuon, Loose ID (L1 $p_{T}$ > 10 GeV)" 
       cuts:
         inclusive:
-          - "({hwQual}>>1)&1 == 1"
+          - "{hwQual} >= 3"
+          - "{pt} > 10"
     Medium: # x.stubs().size()>1
-      label: "GMT TkMuon, Medium ID" 
+      label: "GMT TkMuon, Medium ID (L1 $p_{T}$ > 10 GeV)" 
       cuts:
         inclusive:
-          - "({hwQual}>>2)&1 == 1"
+          - "{hwQual} >= 7"
+          - "{pt} > 10"
     Tight: # x.numberOfMatches()>2
-      label: "GMT TkMuon, Tight ID" 
+      label: "GMT TkMuon, Tight ID (L1 $p_{T}$ > 10 GeV)" 
       cuts:
         inclusive:
-          - "({hwQual}>>3)&1 == 1"
+          - "{hwQual} >= 15"
+          - "{pt} > 10"
 
 L1gmtMuon:
-  label: "GMT Muon"
+  label: "GMT Muon (L1 $p_{T}$ > 10 GeV)"
   match_dR: 0.6
   eta_ranges:
     inclusive: [0, 7]
@@ -54,10 +80,22 @@ L1gmtMuon:
   ids:
     default:
       cuts:
+        inclusive:
+          - "{pt} > 10"
         overlap:
           - "{hwQual} >= 12"
         endcap:
           - "{hwQual} >= 14"
+    default_ptcut:
+      cuts:
+        overlap:
+          - "{hwQual} >= 12"
+          - "{pt} > 18"
+        endcap:
+          - "{hwQual} >= 14"
+          - "{pt} > 20"
+        barrel:
+          - "{pt} > 11"
     dR0p6:
       label: "GMT Muon, match dR < 0.6" 
       match_dR: 0.6

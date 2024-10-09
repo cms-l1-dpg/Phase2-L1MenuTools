@@ -45,31 +45,22 @@ L1gmtTkMuon:
 
 L1gmtMuon:
   label: "GMT Muon"
-  match_dR: 0.6
+  match_dR: 0.3
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 0.83]
     overlap: [0.83, 1.24]
     endcap: [1.24, 2.4]
   ids:
-    default:
-      cuts:
-        overlap:
-          - "{hwQual} >= 12"
-        endcap:
-          - "{hwQual} >= 14"
+    default: {}
     dR0p6:
       label: "GMT Muon, match dR < 0.6" 
       match_dR: 0.6
-      cuts:
-        overlap:
-          - "{hwQual} >= 12"
-        endcap:
-          - "{hwQual} >= 14"
+      cuts: {}
 
 L1gmtDispMuon:
   label: "GMT Displaced Muon"
-  match_dR: 0.6
+  match_dR: 0.3
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 0.83]

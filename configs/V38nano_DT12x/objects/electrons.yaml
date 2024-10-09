@@ -10,17 +10,14 @@ L1tkElectron:
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
-        endcap:
           - "({eleId} == 1) | ({pt} < 25)"
-        barrel:
-          - "{eleId} == 1"
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
       label: "TkElectron, no ID"
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.7"
     Iso:
       label: "TkIsoElectron"
       cuts:

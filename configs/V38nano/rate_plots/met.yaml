@@ -3,9 +3,9 @@ METRates:
   version: V38nano
   test_objects:
     - L1puppiMET:default
-    - L1puppiMLMET:default
-    # - L1TrackMET:default
+      # - L1puppiMLMET:default
+    - L1TrackMET:default
   binning:
     min: 50
-    max: 500
+    max: 650
     step: 25

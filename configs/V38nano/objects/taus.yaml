@@ -9,10 +9,21 @@ L1nnPuppiTau:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.5"
           # - "{passLooseNN}==1"
           # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
           - "{chargedIso} > 0.22"
+    default_ptcut:
+      label: "NN Tau (L1 $p_{T}$ > 35 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.5"
+          - "{chargedIso} > 0.22"
+          - "{pt} > 38"
+        # barrel:
+        #  - "{pt} > 38"
+        #endcap:
+        #  - "{pt} > 31"  
 
 L1hpsTau:
   label: "HPS Tau"
@@ -25,7 +36,7 @@ L1hpsTau:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.5"
 
 L1caloTau:
   label: "Calo Tau"
@@ -38,7 +49,16 @@ L1caloTau:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.5"
+    default_ptcut:
+      label: "Calo Tau (L1 $p_{T}$ > 84 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.5"
+        barrel:
+          - "{pt} > 97"
+        endcap:
+          - "{pt} > 78"
   PtGe20:
     label: "Calo Tau, pt > 20"
     cuts:
@@ -57,5 +77,15 @@ L1nnCaloTau:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 2.5"
           - "{hwQual}==3"
+    default_ptcut:
+      label: "NN Calo Tau (L1 $p_{T}$ > 80 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.5"
+          - "{hwQual}==3"
+        barrel:
+          - "{pt} > 90"
+        endcap:
+          - "{pt} > 84"
