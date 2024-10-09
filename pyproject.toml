@@ -25,7 +25,7 @@ python = "~3.11.0"
 awkward = "2.5.2"
 fsspec = "2023.12.2"
 pyyaml = "6.0.1"
-matplotlib = "3.8.2"
+matplotlib = "3.9.2"
 mplhep = "0.3.31"
 numpy = "^1.23.0"
 pandas = "2.1.4"
@@ -67,6 +67,7 @@ files = [
 ]
 disable_error_code = [
     "import-untyped",
-    "index"
+    "index",
+    "attr-defined"
 ]
 explicit_package_bases = true
