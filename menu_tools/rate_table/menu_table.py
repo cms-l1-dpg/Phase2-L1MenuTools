@@ -32,7 +32,7 @@ class MenuTable:
 
     def __init__(self, config: dict):
         self.config: MenuConfig = MenuConfig(config)
-        self.arr_cache = {}
+        self.arr_cache: dict = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
         self._seed_masks: dict[str, np.ndarray] = {}
