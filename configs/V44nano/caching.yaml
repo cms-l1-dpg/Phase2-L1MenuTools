@@ -1,0 +1,98 @@
+V44nano:
+  # Hgg:
+  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+  #   trees_branches:
+  #     Events:
+  #       GenPart: [pt, eta, phi, pdgId, statusFlags]
+  #       L1tkPhoton: "all" 
+  #       L1EGbarrel: "all" 
+  #       L1EGendcap: "all" 
+  # DYLL_M50:
+  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+  #   trees_branches:
+  #     Events:
+  #       GenPart: "all" 
+  #       ## EG
+  #       L1tkElectron: "all" 
+  #       L1EGbarrel: "all" 
+  #       L1EGendcap: "all" 
+  #       ## Muons
+  #       L1gmtTkMuon: "all" 
+  #       L1gmtMuon: "all"
+  #       L1gmtDispMuon: "all"
+  #       ## TF Muons
+  #       L1MuonKMTF: "all"
+  #       L1MuonOMTF: "all"
+  #       L1MuonEMTF: "all"
+  #       L1DispMuonKMTF: "all"
+  #       L1DispMuonOMTF: "all"
+  #       L1DispMuonEMTF: "all"
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+    trees_branches:
+      Events:
+        # gen
+        GenJet: [pt, eta, phi, partonFlavour]
+        GenJetAK8: [pt, eta, phi]
+        GenMET: "all"
+        # # sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        # # jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+  VBFHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+    trees_branches:
+      Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        GenVisTau: "all" 
+        L1nnPuppiTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all" 
+        L1nnCaloTau: "all"
+  MinBias:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/MinBias_TuneCP5_14TeV-pythia8/MinBias_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+    trees_branches:
+      Events:
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all" 
+        L1tkElectron: "all" 
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+        ## MUONS
+        L1gmtTkMuon: "all" 
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS
+        L1nnPuppiTau: "all" 
+        L1hpsTau: "all" 
+        L1caloTau: "all" 
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        # # jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: [pt]
+        L1ExtTrackHT: [ht]

@@ -1,0 +1,4 @@
+version: "V44nano"
+sample: "MinBias"
+menu_config: "configs/V44nano/rate_table/v38_menu_cfg.yml"
+table_fname: "rates_full_Final_test"

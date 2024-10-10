@@ -1,0 +1,44 @@
+V41nano:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/140MC_content/dy_140_pilot_PU200_nano.root
+    trees_branches:
+      Events:
+        GenPart: "all" 
+        # GenVisTau: "all" 
+        # L1scJet: [pt, eta, phi]
+        # L1scExtJet: [pt, eta, phi, btagScore]
+        L1gmtTkMuon: "all" 
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1tkElectron: "all" 
+        # L1nnTau: "all" 
+        ## merge below with python3.11 menu_tools/caching/merge_arrays.py
+        # L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+  # TT:
+  #     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/140MC_content/tt_140_pilot_nano.root
+  #     trees_branches:
+  #       Events:
+  #         # gen
+  #         GenJet: [pt, eta, phi, partonFlavour]
+  #         GenJetAK8: [pt, eta, phi]
+  #         GenMET: "all"
+  #         # sums
+  #         L1puppiMET: [pt, phi]
+  #         # L1puppiMLMET: "all"
+  #         L1puppiJetSC4sums: [pt, phi]
+  #         L1puppiHistoJetSums: [pt, phi]
+  #         # jets
+  #         L1puppiJetSC4: [pt, eta, phi]
+  #         # L1puppiJetSC8: [pt, eta, phi]
+  #         L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+  #         L1puppiJetHisto: [pt, eta, phi]
+  #         L1caloJet: [pt, eta, phi]
+  # VBFHToTauTau:
+  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/140MC_content/tt_140_pilot_nano.root
+  #   trees_branches:
+  #     Events:
+  #       GenVisTau: "all" 
+  #       L1nnPuppiTau: "all" 
+  #       # L1hpsTau: "all" 
+  #       # L1caloTau: "all" 
+  #       # L1nnCaloTau: "all"
