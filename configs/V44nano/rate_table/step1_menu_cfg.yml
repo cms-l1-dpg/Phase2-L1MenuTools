@@ -26,10 +26,10 @@ L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
     - ((abs(leg2.z0-leg1.z0) < 1) & (leg1.deltaR(leg2) > 0))
   leg1:
     threshold_cut: pt > 4.4
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 4.4
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax:
   cross_masks:
     - abs(leg2.eta) < 2.4
@@ -41,16 +41,16 @@ L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax:
     obj: L1PV:default
   leg2:
     threshold_cut: offline_pt >= 12.0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg4:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg5:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4:
   cross_masks:
     - (abs(leg1.eta) < 1.5)
@@ -61,10 +61,10 @@ L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4:
     - ((leg1.deltaR(leg2) > 0))
   leg1:
     threshold_cut: pt > 0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut:  pt > 0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_SingleTkPhoIso:
   cross_masks: []
   leg1:
@@ -102,7 +102,7 @@ L1_SinglePfJet:
   cross_masks: []
   leg1:
     threshold_cut: offline_pt >= 230.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_SingleTkEle:
   cross_masks: []
   leg1:
@@ -117,7 +117,7 @@ L1_SingleTkMu:
   cross_masks: []
   leg1:
     threshold_cut: offline_pt >= 22.0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_TkEleIso_EG:
   cross_masks:
     - leg1.deltaR(leg2) > 0.1
@@ -163,7 +163,7 @@ L1_TkEle_PFJet_dRMin:
     obj: L1tkElectron:NoIso:inclusive
   leg3:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_TkEle_TkMu:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
@@ -172,14 +172,14 @@ L1_TkEle_TkMu:
     obj: L1tkElectron:NoIso:inclusive
   leg2:
     threshold_cut: offline_pt >= 20.0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_TkMu_DoubleTkEle:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 6
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: offline_pt >= 17.0
     obj: L1tkElectron:NoIso:inclusive
@@ -194,7 +194,7 @@ L1_TkMu_PfHTT:
     obj: L1PV:default
   leg2:
     threshold_cut: pt > 6
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: offline_pt >= 320.0
     obj: L1puppiJetSC4sums:HT
@@ -206,10 +206,10 @@ L1_TkMu_PfJet_PfMet:
     obj: L1PV:default
   leg2:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: offline_pt >= 110.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg4:
     threshold_cut: offline_pt >= 120.0
     obj: L1puppiMET:default
@@ -218,7 +218,7 @@ L1_TkMu_TkEle:
     - abs(leg2.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 7
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: offline_pt >= 23.0
     obj: L1tkElectron:NoIso:inclusive
@@ -227,7 +227,7 @@ L1_TkMu_TkEleIso:
     - abs(leg2.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 7
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: offline_pt >= 20.0
     obj: L1tkElectron:Iso:inclusive
@@ -237,13 +237,13 @@ L1_TripleTkMu:
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9:
   cross_masks:
     - (leg1+leg2).mass < 9.0
@@ -252,13 +252,13 @@ L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9:
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: pt > 0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
@@ -268,13 +268,13 @@ L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17:
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 3.5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: pt > 2.5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_DoubleTkEle_PFHTT:
   cross_masks:
     - (abs(leg2.z0-leg1.z0) < 1 & (leg2.deltaR(leg3) > 0))
@@ -306,19 +306,19 @@ L1_DoublePFJet_MassMin:
     - (leg1 + leg2).mass > 620
   leg1:
     threshold_cut: offline_pt >= 160.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg2:
     threshold_cut: offline_pt >= 35.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_DoublePFJet_dEtaMax:
   cross_masks:
     - abs(leg2.eta-leg1.eta) < 1.6
   leg1:
     threshold_cut: leg1.offline_pt >= 112.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg2:
     threshold_cut: leg2.offline_pt >= 112.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_DoubleTkEle:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
@@ -333,10 +333,10 @@ L1_DoubleTkMu:
     - ((abs(leg1.z0-leg2.z0) < 1) & (leg1.deltaR(leg2) > 0))
   leg1:
     threshold_cut: offline_pt > 15.0
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 7
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
   cross_masks:
     - ((leg1.deltaR(leg2) < 1.2) & (leg1.deltaR(leg2) > 0))
@@ -344,10 +344,10 @@ L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
     - ((abs(leg2.z0-leg1.z0) < 1) & (leg1.deltaR(leg2) > 0))
   leg1:
     threshold_cut: pt > 4
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 4
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
 L1_DoubleTkMu_PfHTT:
   cross_masks:
     - (abs(leg2.z0-leg1.z0) < 1 & (leg3.deltaR(leg2) > 0))
@@ -358,10 +358,10 @@ L1_DoubleTkMu_PfHTT:
     obj: L1PV:default
   leg2:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg4:
     threshold_cut: offline_pt >= 300.0
     obj: L1puppiJetSC4sums:HT
@@ -374,13 +374,13 @@ L1_DoubleTkMu_PfJet_PfMet:
     obj: L1PV:default
   leg2:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: pt > 3
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg4:
     threshold_cut: offline_pt >= 60.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg5:
     threshold_cut: offline_pt >= 130.0
     obj: L1puppiMET:default
@@ -390,10 +390,10 @@ L1_DoubleTkMu_TkEle:
     - abs(leg3.z0-leg1.z0) < 1
   leg1:
     threshold_cut: pt > 5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg2:
     threshold_cut: pt > 5
-    obj: L1gmtTkMuon:Medium
+    obj: L1gmtTkMuon:default
   leg3:
     threshold_cut: offline_pt >= 9.0
     obj: L1tkElectron:NoIso:inclusive
@@ -404,16 +404,16 @@ L1_PFHTT_QuadJet:
     obj: L1puppiJetSC4sums:HT
   leg2:
     threshold_cut: offline_pt >= 70.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg3:
     threshold_cut: offline_pt >= 55.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg4:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
   leg5:
     threshold_cut: offline_pt >= 40.0
-    obj: L1puppiJetSC4:PtGe25
+    obj: L1puppiJetSC4:default
 L1_PFIsoTau_PFIsoTau:
   cross_masks:
     - leg1.deltaR(leg2) > 0.5
@@ -442,91 +442,4 @@ L1_PFIsoTau_TkMu:
     obj: L1nnPuppiTau:default
   leg3:
     threshold_cut: offline_pt >= 18.0
-    obj: L1gmtTkMuon:Medium
-#################################
-########## STEP 2
-#################################
-### SC8 wide cone jet seeds
-L1_SinglePfJet8:
-  cross_masks: []
-  leg1:
-    threshold_cut: offline_pt >= 230.0
-    obj: L1puppiJetSC8:default
-L1_DoublePFJet8_dEtaMax:
-  cross_masks:
-    - abs(leg2.eta-leg1.eta) < 1.6
-  leg1:
-    threshold_cut: leg1.offline_pt >= 200.0
-    obj: L1puppiJetSC8:default
-  leg2:
-    threshold_cut: leg2.offline_pt >= 200.0
-    obj: L1puppiJetSC8:default
-### Bjet seed
-L1_PFHTT_QuadJet_BTagNNScore:
-  cross_masks:
-    - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
-  leg1:
-    threshold_cut: offline_pt >= 299.0
-    obj: L1puppiJetSC4sums:HT
-  leg2:
-    threshold_cut: pt >= 25
-    obj: L1puppiExtJetSC4:default
-  leg3:
-    threshold_cut: pt >= 25
-    obj: L1puppiExtJetSC4:default
-  leg4:
-    threshold_cut: pt >= 25
-    obj: L1puppiExtJetSC4:default
-  leg5:
-    threshold_cut: pt >= 25
-    obj: L1puppiExtJetSC4:default
-##############################
-### Displaced Muons
-##############################
-L1_SingleDispMu:
-  cross_masks: []
-  leg1:
-    threshold_cut: pt >= 22.0
-    obj: L1gmtDispMuon:qual15_Eta2p0
-# L1_SingleDispMu_BMTF:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: pt >= 22.0
-#     obj: L1gmtDispMuon:default:barrel
-# L1_SingleDispMu_OMTF:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: pt >= 22.0
-#     obj: L1gmtDispMuon:default:overlap
-# # L1_SingleDispMu_EMTF:
-# #   cross_masks: []
-# #   leg1:
-# #     threshold_cut: pt >= 22.0
-# #     obj: L1gmtDispMuon:default:endcap
-# L1_SingleDispMu_EMTF_SQ_eta2p0:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: pt >= 22.0
-#     obj: L1gmtDispMuon:qual15_Eta2p0:endcap
-L1_DoubleDispMu:
-  cross_masks: []
-    # - ((abs(leg1.z0-leg2.z0) < 1) & (leg1.deltaR(leg2) > 0))
-  leg1:
-    threshold_cut: pt > 15.0
-    obj: L1gmtDispMuon:default
-  leg2:
-    threshold_cut: pt > 7
-    obj: L1gmtDispMuon:default
-# ##############################
-# ### GTT
-# ##############################
-L1_W3pi_GTT:
-  cross_masks: []
-  leg1:
-    threshold_cut: pt > -99
-    obj: L1TrackTripletWord:default
-# L1_TkDispHT:
-#   cross_masks: []
-#   leg1:
-#     threshold_cut: ht >= 200
-#     obj: L1ExtTrackHT:HT
+    obj: L1gmtTkMuon:default

@@ -1,0 +1,4 @@
+version: "V44nano"
+sample: "MinBias"
+menu_config: "configs/V44nano/rate_table/step1_menu_cfg.yml"
+table_fname: "v44_Step1Menu"
