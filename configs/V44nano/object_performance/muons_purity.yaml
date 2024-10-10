@@ -1,0 +1,82 @@
+Purity_Muons_Barrel:
+  sample: DYLL_M50
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1gmtTkMuon"
+    x_arg: "pt"
+    label: "L1gmtTkMuon"
+    cuts:
+      event:
+        - "({hwQual}>>0)&1 == 1"
+        - "abs({eta}) < 0.83"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenPart:muon: "pt"
+    L1gmtMuon:default: "pt"
+    # L1tkElectron:NoIso: "pt"
+    # L1tkElectron:NoIsoNoLowPtID: "pt"
+    # L1tkElectron:Iso: "pt"
+  xlabel: "L1 TkMuon. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+Purity_Muons_Overlap:
+  sample: DYLL_M50
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1gmtTkMuon"
+    x_arg: "pt"
+    label: "L1gmtTkMuon"
+    cuts:
+      event:
+        - "({hwQual}>>0)&1 == 1"
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenPart:muon: "pt"
+    L1gmtMuon:default: "pt"
+    # L1tkElectron:NoIso: "pt"
+    # L1tkElectron:NoIsoNoLowPtID: "pt"
+    # L1tkElectron:Iso: "pt"
+  xlabel: "L1 TkMuon. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Overlap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+Purity_Muons_Endcap:
+  sample: DYLL_M50
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1gmtTkMuon"
+    x_arg: "pt"
+    label: "L1gmtTkMuon"
+    cuts:
+      event:
+        - "({hwQual}>>0)&1 == 1"
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenPart:muon: "pt"
+    L1gmtMuon:default: "pt"
+    # L1tkElectron:NoIso: "pt"
+    # L1tkElectron:NoIsoNoLowPtID: "pt"
+    # L1tkElectron:Iso: "pt"
+  xlabel: "L1 TkMuon. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

@@ -1,0 +1,21 @@
+GenPart:
+  match_dR: 0.15
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.479]
+    endcap: [1.479, 5]
+  ids:
+    electron:
+      label: "Gen Electron"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3"
+          - "(({statusFlags}>>7)&1) == 1"
+          - "abs({pdgId}) == 11"
+    muon:
+      label: "Gen Muon"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3"
+          - "(({statusFlags}>>7)&1) == 1"
+          - "abs({pdgId}) == 13"
