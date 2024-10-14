@@ -25,11 +25,11 @@ python = "~3.11.0"
 awkward = "2.5.2"
 fsspec = "2023.12.2"
 pyyaml = "6.0.1"
-matplotlib = "3.8.2"
+matplotlib = "3.9.2"
 mplhep = "0.3.31"
 numpy = "^1.23.0"
 pandas = "2.1.4"
-progress = "1.6"
+tqdm = "4.66.1"
 pyarrow = "14.0.2"
 scipy = "1.10.1"
 uproot = "5.0.4"
@@ -43,6 +43,12 @@ flake8 = "^7.0.0"
 [tool.poetry.group.test.dependencies]
 pytest = "7.4.3"
 
+[tool.poetry.scripts]
+cache_objects = "menu_tools.caching.cache_objects:main"
+object_performance = "menu_tools.object_performance.plotter:main"
+rate_plots = "menu_tools.rate_plots.plotter:main"
+rate_table = "menu_tools.rate_table.rate_table:main"
+
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
@@ -55,13 +61,13 @@ pythonpath = [
 testpaths = [
     "tests",
 ]
-
 [tool.mypy]
 files = [
     "menu_tools"
 ]
 disable_error_code = [
     "import-untyped",
-    "index"
+    "index",
+    "attr-defined"
 ]
 explicit_package_bases = true

@@ -2,32 +2,38 @@
 
 ## Trigger efficiencies and rates
 
-  This repository contains the python-based framework for the measurement of matching efficiencies, trigger turn-on curves, and scalings for the assessment of the physics performance of the CMS Phase-2 L1 Menu.
+  This repository contains the python-based framework for the measurement of matching efficiencies,
+  trigger turn-on curves, and scalings for the assessment of the physics performance of the CMS Phase-2 L1 Menu.
 
-  The repository is organized as follows:
+  For further instructions on how to run the tools, see the `docs`.
+  Some documentation can also be found in the [wiki](https://github.com/cms-l1-dpg/Phase2-L1MenuTools/wiki).
 
-  * `objectPerformance`: tools for the measurement of the performance (matching efficiency, L1 turn-on efficiency curves, and online-to-offline scalings) of L1 objects. The definition of the L1 objects should follow the recommendations detailed [here](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
+## Setup
 
-  * `rates`: tools for the measurement of trigger rates starting from the scalings derived with the tools in `objectPerformance`.
+  These tools are expected to be used primarily on lxplus.
+  To clone the repository run
 
-  Detailed instructions on how to run each step of the workflow are
-  provided in each folder.
-
-## Setup of Python environment
-  **Note:** The code should run without any setup on `lxplus`.
+  ```bash
+  git clone git@github.com:cms-l1-dpg/Phase2-L1MenuTools.git
+  ```
 
   A standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
-  dependencies installed via `pip install -r requirements.txt`:
+  dependencies installed via `pip install -e .`:
 
   ```bash
   python3.11 -m venv <name_of_venv>
   source <name_of_venv>/bin/activate
-  pip install .
+  pip install -e .
   ```
 
-  You can then execute the tools (e.g. for object performance) via
+  **ATTENTION:** If you do not use the `-e` flag (editable), you will `pip install . --upgrade` whenever you pull changes.
+
+  You can then execute the tools via
 
   ```python
-  python -m menu_tools.object_performance.plotter <path_to_config>
+  cache_objects <path_to_config>
+  object_performance <path_to_config>
+  rate_plots <path_to_config>
+  rate_table <path_to_config>
   ```

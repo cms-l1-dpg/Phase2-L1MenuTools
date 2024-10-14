@@ -1,0 +1,44 @@
+V22_V31_GMTMuonsBarrel_Comparison:
+  files:
+    MuonsTrigger_20_V22:
+      object: gmtMuon
+      dir: outputs/V22/turnons/
+      label: "GMT Muon (V22)"
+    MuonsTrigger_20_V31:
+      object: gmtMuon
+      dir: outputs/V31/turnons/
+      label: "GMT Muon (V31)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  watermark: "V22_V31_gmtMuonBarrel_Comp"
+  save_dir: "outputs/V22vs27/turnons"
+
+V22_V31_ElectronsBarrel_Comparison:
+  files:
+    ElectronsTriggerBarrel_30_V22:
+      object: tkElectron
+      dir: outputs/V22/turnons/
+      label: "tkElectron (V22)"
+    ElectronsTriggerBarrel_30_V31:
+      object: tkElectron
+      dir: outputs/V31/turnons/
+      label: "tkElectron (V31)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  watermark: "V22_V31_EGBarrel_Comp"
+  save_dir: "outputs/V22vs27/turnons"
+
+V22_V31_GMTtkMuonsBarrel_Comparison:
+  files:
+    MuonsTrigger_20_V22:
+      object: gmtMuon
+      dir: outputs/V22/turnons/
+      label: "GMT tkMuon (V22)"
+    MuonsTrigger_20_V31:
+      object: gmtMuon
+      dir: outputs/V31/turnons/
+      label: "GMT tkMuon (V31)"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  watermark: "V22_V31_gmtTkMuonBarrel_Comp"
+  save_dir: "outputs/V22vs27/turnons"

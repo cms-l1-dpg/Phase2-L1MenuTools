@@ -1,9 +1,10 @@
 ElectronsTriggerBarrel:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -12,31 +13,10 @@ ElectronsTriggerBarrel:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 2.8"
-    tkElectron:
-      suffix: "Pt"
-      label: "tkElectron"
-      match_dR: 0.15
-      cuts:
-        - "{passeseleid} == 1"
-        - "abs({eta}) < 2.8"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Pt"
-      label: "tkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.8"
-        - "{passeseleid} == 1"
+    EG:default:barrel: "Pt"
+    tkElectron:NoIso:barrel: "Pt"
+    tkElectron:NoIsoLowPt:barrel: "Pt"
+    tkElectron:Iso:barrel: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -50,10 +30,11 @@ ElectronsTriggerBarrel:
 
 ElectronsTriggerEndcap:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Electrons"
     cuts:
       event:
@@ -62,31 +43,10 @@ ElectronsTriggerEndcap:
       object:
         - "abs({eta}) < 2.8"
   test_objects:
-    EG:
-      suffix: "Pt"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 2.8"
-    tkElectron:
-      suffix: "Pt"
-      label: "tkElectron"
-      match_dR: 0.15
-      cuts:
-        - "{passeseleid} == 1"
-        - "abs({eta}) < 2.8"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Pt"
-      label: "tkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.8"
-        - "{passeseleid} == 1"
+    EG:default:endcap: "Pt"
+    tkElectron:NoIso:endcap: "Pt"
+    tkElectron:NoIsoLowPt:endcap: "Pt"
+    tkElectron:Iso:endcap: "Pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

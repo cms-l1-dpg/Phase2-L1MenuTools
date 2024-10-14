@@ -1,0 +1,47 @@
+HHTausMatchingBarrel:
+  sample: HHToTauTau
+  version: V31
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default: "Pt"
+    caloTau:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+HHTausMatchingEndcap:
+  sample: HHToTauTau
+  version: V31
+  match_test_to_ref: True
+  reference_object:
+    object: "part_tau"
+    x_arg: "Pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    nnTau:default: "Pt"
+    caloTau:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Endcap)"
+  binning:
+    min: 0
+    max: 150
+    step: 6

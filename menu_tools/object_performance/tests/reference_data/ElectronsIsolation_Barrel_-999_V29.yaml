@@ -1,0 +1,23 @@
+ElectronsIsolation_Barrel:
+  binning:
+    max: 0.5
+    min: 0
+    step: 0.005
+  iso_vs_efficiency: true
+  match_test_to_ref: true
+  reference_object:
+    cuts:
+      event:
+      - '{dr_0.3} < 0.15'
+      - abs({eta}) < 1.479
+      object:
+      - abs({eta}) < 1.479
+    label: Gen Electrons
+    object: part_e
+    x_arg: Pt
+  sample: DYLL_M50
+  test_objects:
+    tkElectron:NoIsoLowPt: trkiso
+  version: V29
+  xlabel: Isolation
+  ylabel: Efficiency (Barrel)

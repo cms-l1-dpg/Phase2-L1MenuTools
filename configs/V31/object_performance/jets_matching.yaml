@@ -1,0 +1,95 @@
+JetMatchingForward_3p7to7:
+  sample: TT
+  version: V31
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.7"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    caloJet:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (forward)"
+  binning:
+    min: 0
+    max: 300
+    step: 5
+
+JetMatchingBarrel:
+  sample: TT
+  version: V31
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
+    trackerJet:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingEndcap:
+  sample: TT
+  version: V31
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
+    trackerJet:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingForward:
+  version: V31
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "jet"
+    x_arg: "Pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    phase1PuppiJet:default: "Pt"
+    seededConePuppiJet:default: "Pt"
+    caloJet:default: "Pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (forward)"
+  binning:
+    min: 0
+    max: 500
+    step: 10

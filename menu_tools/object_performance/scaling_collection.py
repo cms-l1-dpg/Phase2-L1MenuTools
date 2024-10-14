@@ -1,9 +1,10 @@
-#!/afs/cern.ch/user/d/dhundhau/public/miniconda3/envs/py310/bin/python
 from scipy.optimize import curve_fit
 import numpy as np
 
-from menu_tools.object_performance.plot_config import PlotConfig
+from menu_tools.object_performance.config import PerformancePlotConfig
+from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.utils import utils
+from menu_tools.utils.objects import Object
 
 
 class ScalingCollection:
@@ -14,7 +15,9 @@ class ScalingCollection:
     objects.
     """
 
-    def __init__(self, cfg: PlotConfig, method: str, plateau_pct: float = 0.95):
+    def __init__(
+        self, cfg: PerformancePlotConfig, method: str, plateau_pct: float = 0.95
+    ):
         self.cfg = cfg
         self.method = method
         self.plateau_pct = plateau_pct
@@ -31,7 +34,7 @@ class ScalingCollection:
             if is_point:
                 return bins[i + 1]
 
-    def _find_turnon_cut(self, graph_x, graph_y, Target):
+    def _find_turnon_cut(self, graph_x, graph_y, Target) -> float:
         L = 0
         R = np.max(graph_x)
 
@@ -152,104 +155,70 @@ class ScalingCollection:
         return -1
 
     def _compute_scalings_naive(
-        self, turnon_collection, test_obj, scalings, scaling_pct
-    ):
+        self, turnon_collection: TurnOnCollection, test_obj: Object, scaling_pct: float
+    ) -> float:
         bins = turnon_collection.bins
         bins = 0.5 * (bins[1:] + bins[:-1])
-        threshold = turnon_collection.threshold
 
-        for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if (obj_key == "ref") | (obj_key != test_obj):
-                continue
-            efficiency, yerr = turnon_collection.get_efficiency(obj_key)
+        efficiency, yerr = turnon_collection.get_efficiency(test_obj)
 
-            xbins = bins
-            xbins = xbins[~np.isnan(efficiency)]
-            er_dn = yerr[0]
-            er_up = yerr[1]
-            er_dn = er_dn[~np.isnan(efficiency)]
-            er_up = er_up[~np.isnan(efficiency)]
-            efficiency = efficiency[~np.isnan(efficiency)]
+        xbins = bins
+        xbins = xbins[~np.isnan(efficiency)]
+        er_dn = yerr[0]
+        er_up = yerr[1]
+        er_dn = er_dn[~np.isnan(efficiency)]
+        er_up = er_up[~np.isnan(efficiency)]
+        efficiency = efficiency[~np.isnan(efficiency)]
 
-            K1 = []
-            for i in range(len(efficiency)):
-                K1.append(1 / (er_dn[i] + er_up[i]) / (er_up[i] + er_dn[i]))
+        K1 = []
+        for i in range(len(efficiency)):
+            K1.append(1 / (er_dn[i] + er_up[i]) / (er_up[i] + er_dn[i]))
 
-            percentage_point = self._find_turnon_cut(
-                xbins, self._interpolate(efficiency, K1, 100), scaling_pct
-            )
-            if percentage_point:
-                scalings[obj_key][threshold] = percentage_point
+        percentage_point = self._find_turnon_cut(
+            xbins, self._interpolate(efficiency, K1, 100), scaling_pct
+        )
+        return percentage_point
 
-        return scalings
-
-    def _compute_scalings_tanh(
-        self, turnon_collection, test_obj, scalings, scaling_pct
-    ):
+    def _compute_scalings_tanh(self, turnon_collection, test_obj, scaling_pct) -> float:
         bins = turnon_collection.bins
         bins = 0.5 * (bins[1:] + bins[:-1])
-        threshold = turnon_collection.threshold
 
-        for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if (obj_key == "ref") | (obj_key != test_obj):
-                continue
-            efficiency, _ = turnon_collection.get_efficiency(obj_key)
-            percentage_point = self._compute_value_of_tanh_at_threshold(
-                efficiency, bins, scaling_pct
-            )
-            if percentage_point:
-                scalings[obj_key][threshold] = percentage_point
+        efficiency, _ = turnon_collection.get_efficiency(test_obj)
+        percentage_point = self._compute_value_of_tanh_at_threshold(
+            efficiency, bins, scaling_pct
+        )
+        return percentage_point
 
-        return scalings
-
-    def _compute_scalings_errf(
-        self, turnon_collection, test_obj, scalings, scaling_pct
-    ):
+    def _compute_scalings_errf(self, turnon_collection, test_obj, scaling_pct) -> float:
         bins = turnon_collection.bins
         bins = 0.5 * (bins[1:] + bins[:-1])
-        threshold = turnon_collection.threshold
 
-        for obj_key, gen_hist_trig in turnon_collection.hists.items():
-            if (obj_key == "ref") | (obj_key != test_obj):
-                continue
-            efficiency, _ = turnon_collection.get_efficiency(obj_key)
-            percentage_point = self._compute_value_of_errf_at_threshold(
-                efficiency, bins, scaling_pct
-            )
-            if percentage_point:
-                scalings[obj_key][threshold] = percentage_point
-
-        return scalings
+        efficiency, _ = turnon_collection.get_efficiency(test_obj)
+        percentage_point = self._compute_value_of_errf_at_threshold(
+            efficiency, bins, scaling_pct
+        )
+        return percentage_point
 
     def _compute_scalings(
-        self, turnon_collection, test_obj, scalings, scaling_pct, method="tanh"
-    ) -> dict:
+        self,
+        turnon_collection: TurnOnCollection,
+        test_obj: Object,
+        scaling_pct: float,
+        method: str = "tanh",
+    ) -> float:
         if method == "tanh":
-            return self._compute_scalings_tanh(
-                turnon_collection, test_obj, scalings, scaling_pct
-            )
+            return self._compute_scalings_tanh(turnon_collection, test_obj, scaling_pct)
         if method == "errf":
-            return self._compute_scalings_errf(
-                turnon_collection, test_obj, scalings, scaling_pct
-            )
+            return self._compute_scalings_errf(turnon_collection, test_obj, scaling_pct)
         if method == "naive":
             return self._compute_scalings_naive(
-                turnon_collection, test_obj, scalings, scaling_pct
+                turnon_collection, test_obj, scaling_pct
             )
         else:
             raise ValueError(f"`{method}` is not a valid scaling method!")
 
-    def _fit_linear_functions(self, scalings):
-        params = {}
-        for obj, thresh_points in scalings.items():
-            xdata = [th for th, val in thresh_points.items() if val]
-            ydata = [thresh_points[x] for x in xdata]
-            if not ydata:
-                return None
-            popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
-            params[obj] = popt
-        return params
-
-
-if __name__ == "__main__":
-    pass
+    def fit_linear_function(self, scaling_values: dict[float, float]) -> np.ndarray:
+        xdata = [th for th, val in scaling_values.items() if val]
+        ydata = [scaling_values[x] for x in xdata]
+        popt, pcov = curve_fit(utils.scaling_func, xdata, ydata)
+        return popt

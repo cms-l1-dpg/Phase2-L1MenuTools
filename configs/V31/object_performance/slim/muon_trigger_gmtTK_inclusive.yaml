@@ -1,0 +1,27 @@
+MuonsTrigger_gmtkMu_Inclusive:
+  sample: DYLL_M50
+  default_version: V29
+  reference_object:
+    object: "part_mu"
+    suffix: "Pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+  test_objects:
+    gmtTkMuon:
+      suffix: "Pt"
+      label: "GMT TkMuon"
+      match_dR: 0.3
+      cuts:
+        - "({quality}) > 0"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (L1 $p_T > <threshold>$ GeV)"
+  thresholds: [5, 15, 25]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  binning:
+    min: 0
+    max: 50
+    step: 1.5

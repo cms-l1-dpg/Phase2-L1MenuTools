@@ -1,9 +1,10 @@
 TausMatchingBarrel:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -12,19 +13,8 @@ TausMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default: "Pt"
+    caloTau:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -34,10 +24,11 @@ TausMatchingBarrel:
 
 TausMatchingEndcap:
   sample: VBFHToTauTau
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_tau"
-    suffix: "Pt"
+    x_arg: "Pt"
     label: "Gen Taus"
     cuts:
       event:
@@ -46,19 +37,8 @@ TausMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    nnTau:
-      suffix: "Pt"
-      label: "NN Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passloosenn}==1"
-      match_dR: 0.1
-    caloTau:
-      suffix: "Pt"
-      label: "Calo Tau"
-      cuts:
-        - "abs({eta}) < 2.4"
-      match_dR: 0.3
+    nnTau:default: "Pt"
+    caloTau:default: "Pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

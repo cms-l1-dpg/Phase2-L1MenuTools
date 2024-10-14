@@ -1,9 +1,10 @@
 ElectronsMatching_Eta_Pt10to25:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Electrons"
     cuts:
       event:
@@ -13,31 +14,10 @@ ElectronsMatching_Eta_Pt10to25:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    EG:
-      suffix: "Eta"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkElectron:
-      match_dR: 0.15
-      suffix: "Eta"
-      label: "TkElectron"
-      cuts:
-        - "abs({eta}) < 3.0"
-        #- "{passeseleid} == 1"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Eta"
-      label: "TkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        #- "{passeseleid} == 1"
+    EG:default: "Eta"
+    tkElectron:NoIso: "Eta"
+    tkElectron:NoIsoLowPt: "Eta"
+    tkElectron:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   binning:
@@ -47,10 +27,11 @@ ElectronsMatching_Eta_Pt10to25:
 
 ElectronsMatching_Eta_Pt25toInf:
   sample: DYLL_M50
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_e"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Electrons"
     cuts:
       event:
@@ -59,31 +40,10 @@ ElectronsMatching_Eta_Pt25toInf:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    EG:
-      suffix: "Eta"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3.0"
-    tkElectron:
-      suffix: "Eta"
-      label: "TkElectron"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 3.0"
-        - "{passeseleid} == 1"
-    tkIsoElectron:
-      base_obj: "tkElectron"
-      suffix: "Eta"
-      label: "TkIsoElectron"
-      iso_BB: 0.13
-      iso_EE: 0.28
-      iso_branch: "trkiso"
-      match_dR: 0.15
-      cuts:
-        - "abs({eta}) < 2.4"
-        - "{passeseleid} == 1"
+    EG:default: "Eta"
+    tkElectron:NoIso: "Eta"
+    tkElectron:NoIsoLowPt: "Eta"
+    tkElectron:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"
   binning:

@@ -1,0 +1,59 @@
+TauTriggerBarrel_90perc:
+  sample: VBFHToTauTau
+  version: V35nano_ModTT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        # - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1nnPuppiTau:default:barrel: "pt"
+    L1hpsTau:default:barrel: "pt"
+    L1caloTau:default:barrel: "pt"
+    L1nnCaloTau:default:barrel: "pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+TauTriggerEndcap_90perc:
+  sample: VBFHToTauTau
+  version: V35nano_ModTT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        # - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1nnPuppiTau:default:endcap: "pt"
+    L1hpsTau:default:endcap: "pt"
+    L1caloTau:default:endcap: "pt"
+    L1nnCaloTau:default:endcap: "pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
+  thresholds: [20, 30]
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 150
+    step: 6

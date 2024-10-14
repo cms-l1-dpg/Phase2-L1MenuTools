@@ -1,9 +1,10 @@
 PhotonsMatching_Eta_Pt10to25:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Photons"
     cuts:
       event:
@@ -13,35 +14,9 @@ PhotonsMatching_Eta_Pt10to25:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    EG:
-      suffix: "Eta"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-        #- "{passeseleid} == 1"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Eta"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-        #- "({quality} // 4) == 1"
-        #- "{passeseleid} == 1"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Eta"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-        #- "{passeseleid} == 1"
+    EG:default: "Eta"
+    tkPhoton:NoIso: "Eta"
+    tkPhoton:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   binning:
@@ -51,10 +26,11 @@ PhotonsMatching_Eta_Pt10to25:
 
 PhotonsMatching_Eta_Pt25toInf:
   sample: Hgg
-  default_version: V29
+  version: V29
+  match_test_to_ref: True
   reference_object:
     object: "part_gamma"
-    suffix: "Eta"
+    x_arg: "Eta"
     label: "Gen Photons"
     cuts:
       event:
@@ -63,34 +39,9 @@ PhotonsMatching_Eta_Pt25toInf:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    EG:
-      suffix: "Eta"
-      label: "EG"
-      match_dR: 0.2
-      quality_id: "QUAL_125x_EGID"
-      cuts:
-        - "abs({eta}) < 3"
-        #- "{passeseleid} == 1"
-    tkPhoton:
-      match_dR: 0.15
-      suffix: "Eta"
-      label: "tkPhoton"
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-        #- "{passeseleid} == 1"
-    tkIsoPhoton:
-      base_obj: "tkPhoton"
-      match_dR: 0.15
-      suffix: "Eta"
-      label: "tkIsoPhoton"
-      iso_EE: 0.2
-      iso_BB: 0.2
-      iso_branch: trkiso
-      quality_id: "QUAL_125x_tkPhoID"
-      cuts:
-        - "abs({eta}) < 3.0"
-        #- "{passeseleid} == 1"
+    EG:default: "Eta"
+    tkPhoton:NoIso: "Eta"
+    tkPhoton:Iso: "Eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
   binning:
