@@ -129,7 +129,7 @@ class EfficiencyPlotter(Plotter):
         Cumulative ratio of efficiency vs L1 Iso histogram.
         """
 
-        l1_isolation_histogram = sum(test_hist)
+        l1_isolation_histogram = np.test_hist)
         l1_cumulative_sum = np.cumsum(test_hist) / l1_isolation_histogram
 
         return l1_cumulative_sum
