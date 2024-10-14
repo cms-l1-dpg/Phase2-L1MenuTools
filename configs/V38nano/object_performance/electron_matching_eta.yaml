@@ -17,6 +17,7 @@ ElectronsMatching_Eta_Pt10to25:
   test_objects:
     L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"
+    L1tkElectron:NoIsoNoLowPtID: "eta"
     L1tkElectron:Iso: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($10 < p_T < 25$ GeV)"
@@ -43,6 +44,7 @@ ElectronsMatching_Eta_Pt25toInf:
   test_objects:
     L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"
+    L1tkElectron:NoIsoNoLowPtID: "eta"
     L1tkElectron:Iso: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency ($p_T > 25$ GeV)"

@@ -16,6 +16,7 @@ ElectronsMatchingBarrel:
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"
+    L1tkElectron:NoIsoNoLowPtID: "pt"
     L1tkElectron:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
@@ -68,6 +69,7 @@ ElectronsMatchingEndcap:
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"
+    L1tkElectron:NoIsoNoLowPtID: "pt"
     L1tkElectron:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
