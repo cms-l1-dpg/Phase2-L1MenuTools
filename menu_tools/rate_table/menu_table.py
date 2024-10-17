@@ -411,7 +411,7 @@ class MenuTable:
             f"{self.config.table_fname}_{self.config.version}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
-        ak.to_parquet(ak.zip(self._seed_masks), out_path)
+        ak.to_parquet(ak.zip(self._seed_masks), out_path, compression = "LZ4")
 
     def save_table(self) -> None:
         """Function that saves to file the table produced by `make_table`."""

@@ -1,0 +1,57 @@
+PhotonsTrigger_Barrel:
+  sample: Hgg
+  version: V41nano
+  match_test_to_ref: True
+  reference_object:
+    object: "part_gamma"
+    x_arg: "pt"
+    label: "Gen Photons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    EG:default:barrel: "pt"
+    L1tkPhoton:NoIso:barrel: "pt"
+    L1tkPhoton:Iso:barrel: "pt"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5
+
+PhotonsTrigger_Endcap:
+  sample: Hgg
+  version: V41nano
+  match_test_to_ref: True
+  reference_object:
+    object: "part_gamma"
+    x_arg: "pt"
+    label: "Gen Photons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    EG:default:endcap: "pt"
+    L1tkPhoton:NoIso:endcap: "pt"
+    L1tkPhoton:Iso:endcap: "pt"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5

@@ -53,6 +53,7 @@ V38nano:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v38/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_IBv9_wTT/240412_210701/0000/*.root
     trees_branches:
       Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
         GenVisTau: "all" 
         L1nnPuppiTau: "all" 
         L1hpsTau: "all" 

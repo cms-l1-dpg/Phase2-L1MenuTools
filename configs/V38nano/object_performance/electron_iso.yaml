@@ -15,7 +15,7 @@ ElectronsIsolation_Barrel:
       object:
         - "abs({eta}) < 1.479"
   test_objects:
-    L1tkElectron:NoIso: "relIso"
+    L1tkElectron:NoIsoForIso: "relIso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Barrel)"
   binning:

@@ -1,0 +1,53 @@
+# Purity_ElectronsBarrel:
+#   sample: DYLL_M50
+#   version: V44nano
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "L1tkElectron"
+#     x_arg: "pt"
+#     label: "L1tkElectron"
+#     cuts:
+#       event:
+#         - "{eleId} == 1"
+#         - "abs({eta}) < 1.5"
+#       object:
+#         - "abs({eta}) < 2.4"
+#   test_objects:
+#     GenPart:electron: "pt"
+#     L1EG:default: "pt"
+#     # L1tkElectron:NoIso: "pt"
+#     # L1tkElectron:NoIsoNoLowPtID: "pt"
+#     # L1tkElectron:Iso: "pt"
+#   xlabel: "L1 TkEle. $p_T$ (GeV)"
+#   ylabel: "Matching Efficiency (Barrel)"
+#   binning:
+#     min: 0
+#     max: 100
+#     step: 3
+
+Purity_ElectronsEndcap:
+  sample: DYLL_M50
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1tkElectron"
+    x_arg: "pt"
+    label: "L1tkElectron"
+    cuts:
+      event:
+        - "{eleId} == 1"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenPart:electron: "pt"
+    L1EG:default: "pt"
+    # L1tkElectron:NoIso: "pt"
+    # L1tkElectron:NoIsoNoLowPtID: "pt"
+    # L1tkElectron:Iso: "pt"
+  xlabel: "L1 TkEle. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

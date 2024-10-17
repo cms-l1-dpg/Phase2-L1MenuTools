@@ -34,6 +34,13 @@ class BasePlotConfig:
             raise KeyError(f"No version configured for {self.plot_name}!")
 
     @property
+    def nObjects(self) -> int:
+        if "nObjects" in self._cfg:
+            return int(self._cfg["nObjects"])
+        else:
+            return 1
+
+    @property
     def bin_width(self) -> float:
         return float(self._cfg["binning"]["step"])
 

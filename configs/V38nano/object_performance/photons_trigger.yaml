@@ -17,7 +17,7 @@ PhotonsTrigger_Barrel:
     L1EG:default:barrel: "pt"
     L1tkPhoton:NoIso:barrel: "pt"
     L1tkPhoton:Iso:barrel: "pt"
-  thresholds: [10, 20, 30, 40]
+  thresholds: [8]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -47,7 +47,7 @@ PhotonsTrigger_Endcap:
     L1EG:default:endcap: "pt"
     L1tkPhoton:NoIso:endcap: "pt"
     L1tkPhoton:Iso:endcap: "pt"
-  thresholds: [10, 20, 30, 40]
+  thresholds: [8]
   scalings:
     method: "naive"
     threshold: 0.95

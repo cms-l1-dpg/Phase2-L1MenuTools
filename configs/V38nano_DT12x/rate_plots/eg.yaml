@@ -1,3 +1,16 @@
+# EGRates:
+#   sample: MinBias
+#   version: V38nano_DT12x
+#   test_objects:
+#     - L1EG:default
+#     - L1tkElectron:NoIso
+#     - L1tkElectron:Iso
+#     - L1tkPhoton:Iso
+#   binning:
+#     min: 10
+#     max: 97
+#     step: 3
+
 EGRates:
   sample: MinBias
   version: V38nano_DT12x
@@ -6,6 +19,32 @@ EGRates:
     - L1tkElectron:NoIso
     - L1tkElectron:Iso
     - L1tkPhoton:Iso
+  binning:
+    min: 10
+    max: 97
+    step: 3
+
+EG_NoIso_RatesByRegion:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1EG:default:barrel
+    - L1EG:default:endcap
+    - L1tkElectron:NoIso:barrel
+    - L1tkElectron:NoIso:endcap
+  binning:
+    min: 10
+    max: 97
+    step: 3
+
+EG_Iso_RatesByRegion:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1tkElectron:Iso:barrel
+    - L1tkElectron:Iso:endcap
+    - L1tkPhoton:Iso:barrel
+    - L1tkPhoton:Iso:endcap
   binning:
     min: 10
     max: 97
