@@ -1,0 +1,96 @@
+Purity_Tau_Barrel:
+  sample: VBFHToTauTau
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1nnPuppiTau"
+    x_arg: "pt"
+    label: "L1nnPuppiTau"
+    cuts:
+      event:
+        - "{passLooseNN} == 1"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenVisTau:default: "pt"
+    L1caloTau:default: "pt"
+  xlabel: "L1 nnPuppiTau $p_T$ (GeV)"
+  ylabel: "Purity (Barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+Purity_Tau_Endcap:
+  sample: VBFHToTauTau
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1nnPuppiTau"
+    x_arg: "pt"
+    label: "L1nnPuppiTau"
+    cuts:
+      event:
+        - "{passLooseNN} == 1"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenVisTau:default: "pt"
+    L1caloTau:default: "pt"
+  xlabel: "L1 nnPuppiTau $p_T$ (GeV)"
+  ylabel: "Purity (Barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+Purity_Tau_Eta_Pt40:
+  sample: VBFHToTauTau
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1nnPuppiTau"
+    x_arg: "eta"
+    label: "L1nnPuppiTau"
+    cuts:
+      event:
+        - "{passLooseNN} == 1"
+        - "{pt} > 40"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenVisTau:default: "eta"
+    L1caloTau:default: "eta"
+  xlabel: "L1 nnPuppiTau $\\eta$"
+  ylabel: "Purity (L1 $p_T$ > 40 GeV)"
+  binning:
+    min: -2.5
+    max: 2.5
+    step: 0.1
+
+Purity_Tau_Eta_Pt100:
+  sample: VBFHToTauTau
+  version: V44nano
+  match_test_to_ref: True
+  reference_object:
+    object: "L1nnPuppiTau"
+    x_arg: "eta"
+    label: "L1nnPuppiTau"
+    cuts:
+      event:
+        - "{passLooseNN} == 1"
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    GenVisTau:default: "eta"
+    L1caloTau:default: "eta"
+  xlabel: "L1 nnPuppiTau $\\eta$"
+  ylabel: "Purity (L1 $p_T$ > 100 GeV)"
+  binning:
+    min: -2.5
+    max: 2.5
+    step: 0.1
+
