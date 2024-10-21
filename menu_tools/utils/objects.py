@@ -6,17 +6,7 @@ import yaml
 import awkward as ak
 
 
-class Object:
-    """This class represents a physics object.
-
-    The objects are configurable under `configs/<version>/objects`.
-
-    Attributes:
-        eta_ranges: ranges with different cuts/quality criteria
-        cuts: the cuts to be applied in the different eta ranges
-        version: version of the menu
-    """
-
+class BaseObject:
     def __init__(
         self,
         object_key: str,
@@ -148,6 +138,29 @@ class Object:
 
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
+        raise NotImplementedError(
+            "This method should be implemented in the derived class."
+        )
+
+
+class Object(BaseObject):
+    """This class represents a physics test object.
+    It inherits from BaseObject which it shares with the implementation of
+    ReferenceObject.
+
+    The objects are configurable under `configs/<version>/objects`.
+
+    Attributes:
+        eta_ranges: ranges with different cuts/quality criteria
+        cuts: the cuts to be applied in the different eta ranges
+        version: version of the menu
+    """
+
+    def __init__(self, object_key: str, version: str) -> None:
+        super().__init__(object_key, version)
+
+    @property
+    def cuts(self) -> Optional[dict[str, list[str]]]:
         _cuts = {}
         if "cuts" in self._object_params.keys():
             _cuts = self._object_params["cuts"]
@@ -165,8 +178,71 @@ class Object:
         return _cuts
 
 
-def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> ak.Array:
-    """Compute selection mask for object cuts on array
+class ReferenceObject(BaseObject):
+    def __init__(self, object_key: str, version: str) -> None:
+        super().__init__(object_key, version)
+
+    @property
+    def trafo(self) -> Optional[str]:
+        """Returns the trafo key of the (reference) object if it is defined (HT, MHT, etc).
+        This is intended only for the *reference* object.
+        """
+        try:
+            return self._nano_obj["trafo"]
+        except KeyError:
+            return self._nano_obj["transformation"]
+        except KeyError:
+            return None
+
+    @property
+    def cuts(self) -> Optional[dict[str, list[str]]]:
+        """OBJECT level cuts! I.e. individual objects that don't fulfill the
+        criteria are removed from the events, but the events themselves are
+        retained.
+        """
+        _cuts = {}
+        if "cuts" in self._object_params.keys():
+            _cuts = self._object_params["cuts"]["object"]
+        if self.eta_range != "inclusive":
+            # if a region other than inclusive is specified an eta cut
+            eta_min = self.eta_ranges[self.eta_range][0]
+            eta_max = self.eta_ranges[self.eta_range][1]
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
+            try:
+                _cuts["inclusive"].append(global_eta_cut)
+            except KeyError:
+                _cuts["inclusive"] = [global_eta_cut]
+        return _cuts
+
+    @property
+    def event_cuts(self) -> Optional[dict[str, list[str]]]:
+        """EVENT level cuts! I.e. individual objects that don't fulfill the
+        criteria are removed from the events, but the events themselves are
+        retained.
+        """
+        _cuts = {}
+        if "cuts" in self._object_params.keys():
+            _cuts = self._object_params["cuts"]["event"]
+        if self.eta_range != "inclusive":
+            # if a region other than inclusive is specified an eta cut
+            eta_min = self.eta_ranges[self.eta_range][0]
+            eta_max = self.eta_ranges[self.eta_range][1]
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
+            try:
+                _cuts["inclusive"].append(global_eta_cut)
+            except KeyError:
+                _cuts["inclusive"] = [global_eta_cut]
+        return _cuts
+
+
+def compute_selection_mask_for_cuts(
+    obj: BaseObject, ak_array: ak.Array, cuts: dict
+) -> ak.Array:
+    """Compute selection mask for object/event cuts on array
 
     obj: Object that specifies the cuts to be applied
     ak_array: array on which the selection is evaluated
@@ -178,14 +254,14 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
     sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
 
     # If no cut are specified in object return true everywhere
-    if not obj.cuts:
+    if not cuts:
         return sel
 
     ## add fake eta
     if "eta" not in ak_array.fields:
         ak_array["eta"] = 0
 
-    for range_i, range_cuts in obj.cuts.items():
+    for range_i, range_cuts in cuts.items():
         # Initialize temporary mask (for rangei) with True everywhere
         _sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
         for cut in range_cuts:
@@ -197,6 +273,18 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
         # apply OR logic
         sel = sel & _sel
     return sel
+
+
+def compute_selection_mask_for_event_cuts(
+    obj: BaseObject, ak_array: ak.Array
+) -> ak.Array:
+    return compute_selection_mask_for_cuts(obj, ak_array, obj.event_cuts)
+
+
+def compute_selection_mask_for_object_cuts(
+    obj: BaseObject, ak_array: ak.Array
+) -> ak.Array:
+    return compute_selection_mask_for_cuts(obj, ak_array, obj.cuts)
 
 
 if __name__ == "__main__":

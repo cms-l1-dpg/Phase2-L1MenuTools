@@ -1,12 +1,18 @@
 part_e:
-  label: "Gen Electron"
+  # trafo: "Pt" -- Here no trafo needed but for HT like this.
+  label: "Gen Electrons"
   eta_ranges:
     inclusive: [0, 7]
   ids:
-    gen_electron_default:
+    default:
       cuts:
-        inclusive:
-          - "{dr_0.3} < 0.15"
+        event:
+          inclusive:
+            - "{dr_0.3} < 0.15"
+            - "abs({eta}) < 1.479"
+        object:
+          inclusive:
+            - "abs({eta}) < 1.479"
 
 tkElectron:
   match_dR: 0.15
