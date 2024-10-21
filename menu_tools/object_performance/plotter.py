@@ -105,6 +105,7 @@ class EfficiencyPlotter(Plotter):
 
             xbins = self.turnon_collection.bins
             xbins = 0.5 * (xbins[1:] + xbins[:-1])
+            print(len(xbins))
 
             if self.cfg.iso_vs_eff_plot:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
@@ -117,9 +118,9 @@ class EfficiencyPlotter(Plotter):
             yerr = np.array(
                 [yerr[0][~np.isnan(efficiency)], yerr[1][~np.isnan(efficiency)]]
             )
-            xerr = xerr[np.isfinite(efficiency)]
-            xbins = xbins[np.isfinite(efficiency)]
-            efficiency = efficiency[np.isfinite(efficiency)]
+            # xerr = xerr[np.isfinite(efficiency)]
+            # xbins = xbins[np.isfinite(efficiency)]
+            # efficiency = efficiency[np.isfinite(efficiency)]
 
             xerr = xerr.tolist()
             yerr = yerr.tolist()

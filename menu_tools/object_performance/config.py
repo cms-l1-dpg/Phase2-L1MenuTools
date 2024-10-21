@@ -24,7 +24,9 @@ class PerformancePlotConfig(BasePlotConfig):
         assert (
             len(object_id_strs) == 1
         ), f"Multiple reference objects defined in {self.plot_name}!"
-        return ReferenceObject(self._cfg["reference_object"], self.version)
+        return ReferenceObject(
+            list(self._cfg["reference_object"].keys())[0], self.version
+        )
 
     @property
     def test_objects(self) -> dict[str, Any]:

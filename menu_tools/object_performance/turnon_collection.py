@@ -1,5 +1,4 @@
 from typing import Any, Optional
-import re
 
 import awkward as ak
 import numpy as np
@@ -7,7 +6,11 @@ import vector
 
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import utils
-from menu_tools.utils.objects import Object, compute_selection_mask_for_event_cuts, compute_selection_mask_for_object_cuts
+from menu_tools.utils.objects import (
+    Object,
+    compute_selection_mask_for_event_cuts,
+    compute_selection_mask_for_object_cuts,
+)
 
 
 vector.register_awkward()
@@ -51,7 +54,7 @@ class ArrayLoader:
         )
         array = ak.from_parquet(fname)
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
-        if self.cfg_plot.reference_trafo and not obj.startswith("L1"):
+        if self.cfg_plot.reference_object.trafo and not obj.startswith("L1"):
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
@@ -228,12 +231,6 @@ class TurnOnCollection:
         sel_pt = ak.argmax(self.ak_arrays["ref"]["pt"], axis=-1, keepdims=True)
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
 
-    def _apply_list_of_reference_cuts(self, cut_dict: Optional[dict[str, list[str]]]) -> None:
-        for cut in cut_list:
-            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
-            sel = eval(cut)
-            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
-
     def _apply_reference_cuts(self) -> None:
         """Applies configured cuts on reference objects.
 
@@ -246,20 +243,19 @@ class TurnOnCollection:
 
         # Apply object level cuts, i.e. removing objects from event, while
         # retaining the events.
-        sel = compute_selection_mask_for_object_cuts(
-            self.cfg_plot.reference_object, self.ak_arrays["ref"]
-        )
-        self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        if self.cfg_plot.reference_object.cuts:
+            sel = compute_selection_mask_for_object_cuts(
+                self.cfg_plot.reference_object, self.ak_arrays["ref"]
+            )
+            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
-        # If spceified apply transformation
+        # If specified, apply transformation
         if self.cfg_plot.reference_object.trafo:
             # In this case each event is reduced to a single value already
             return None
 
         # Select highest pt object from each event and apply event level cuts.
         self._select_highest_pt_ref_object()
-        # ref_event_cuts = self.cfg_plot.reference_object.event_cuts
-        # self._apply_list_of_reference_cuts(ref_event_cuts)
         sel = compute_selection_mask_for_event_cuts(
             self.cfg_plot.reference_object, self.ak_arrays["ref"]
         )
@@ -273,7 +269,9 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
-            sel = compute_selection_mask_for_object_cuts(test_obj, self.ak_arrays[str(test_obj)])
+            sel = compute_selection_mask_for_object_cuts(
+                test_obj, self.ak_arrays[str(test_obj)]
+            )
             self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
 
     def _skim_to_hists(self) -> None:

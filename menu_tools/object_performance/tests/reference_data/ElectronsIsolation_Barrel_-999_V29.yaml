@@ -6,18 +6,7 @@ ElectronsIsolation_Barrel:
   iso_vs_efficiency: true
   match_test_to_ref: true
   reference_object:
-    part_e:inclusiveElectron: Pt
-
-  # reference_object: "GenElectron:"
-  #   cuts:
-  #     event:
-  #     - '{dr_0.3} < 0.15'
-  #     - abs({eta}) < 1.479
-  #     object:
-  #     - abs({eta}) < 1.479
-  #   label: Gen Electrons
-  #   object: part_e
-  #   x_arg: Pt
+    part_e:default: "Pt"
   sample: DYLL_M50
   test_objects:
     tkElectron:NoIsoLowPt: trkiso

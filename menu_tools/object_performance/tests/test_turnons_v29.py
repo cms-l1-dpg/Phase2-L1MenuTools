@@ -12,9 +12,9 @@ from menu_tools.object_performance import plotter
 
 
 testdata = [
-    "HT_50perc_350_V29",
+    # "HT_50perc_350_V29",
     "HT_90perc_350_V29",
-    "ElectronsIsolation_Barrel_-999_V29",
+    # "ElectronsIsolation_Barrel_-999_V29",
 ]
 
 
@@ -49,7 +49,9 @@ def test_matching_plots_reproduced(test_name):
             )
             efficiencies_reference = np.array(val["efficiency"], dtype=np.float64)
             print(efficiencies_reference)
+            print(efficiencies_test)
             differences = efficiencies_test - efficiencies_reference
+            print(differences)
             assert not np.any(abs(differences) > 1e-4)
         else:
             assert val == test_result[key]

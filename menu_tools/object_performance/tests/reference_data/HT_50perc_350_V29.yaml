@@ -5,14 +5,7 @@ HT_50perc:
     step: 20
   version: V29
   reference_object:
-    cuts:
-      object:
-      - abs({eta}) < 2.4
-      - '{pt} > 30'
-    label: Gen HT
-    object: jet
-    x_arg: Pt
-    trafo: HT
+    jet:ht: "Pt"
   sample: TT
   scalings:
     method: naive

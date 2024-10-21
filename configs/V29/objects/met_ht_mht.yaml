@@ -1,3 +1,16 @@
+jet:
+  eta_ranges:
+    inclusive: [0, 8]
+  ids:
+    ht:
+      label: "Gen HT"
+      trafo: "HT"
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) < 2.4"
+            - "{pt} > 30"
+
 phase1PuppiHT:
   label: "Histogrammed Puppi HT"
   ids:

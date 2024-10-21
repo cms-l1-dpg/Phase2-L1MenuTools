@@ -184,15 +184,39 @@ class ReferenceObject(BaseObject):
 
     @property
     def trafo(self) -> Optional[str]:
-        """Returns the trafo key of the (reference) object if it is defined (HT, MHT, etc).
+        """Returns the trafo key of the (reference) object
+        if it is defined (HT, MHT, etc).
         This is intended only for the *reference* object.
         """
         try:
-            return self._nano_obj["trafo"]
+            return self._object_params["trafo"]
         except KeyError:
-            return self._nano_obj["transformation"]
-        except KeyError:
+            print("No transformation defined in reference object")
             return None
+
+    def _get_cuts(self, event_or_object: str) -> Optional[dict[str, list[str]]]:
+        assert event_or_object in [
+            "event",
+            "object",
+        ], "Cuts are either event or object level"
+        _cuts = {}
+        if "cuts" in self._object_params.keys():
+            if event_or_object in self._object_params["cuts"].keys():
+                _cuts = self._object_params["cuts"][event_or_object]
+            else:
+                return None
+        if self.eta_range != "inclusive":
+            # if a region other than inclusive is specified an eta cut
+            eta_min = self.eta_ranges[self.eta_range][0]
+            eta_max = self.eta_ranges[self.eta_range][1]
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
+            try:
+                _cuts["inclusive"].append(global_eta_cut)
+            except KeyError:
+                _cuts["inclusive"] = [global_eta_cut]
+        return _cuts
 
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
@@ -200,21 +224,7 @@ class ReferenceObject(BaseObject):
         criteria are removed from the events, but the events themselves are
         retained.
         """
-        _cuts = {}
-        if "cuts" in self._object_params.keys():
-            _cuts = self._object_params["cuts"]["object"]
-        if self.eta_range != "inclusive":
-            # if a region other than inclusive is specified an eta cut
-            eta_min = self.eta_ranges[self.eta_range][0]
-            eta_max = self.eta_ranges[self.eta_range][1]
-            global_eta_cut = (
-                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
-            )
-            try:
-                _cuts["inclusive"].append(global_eta_cut)
-            except KeyError:
-                _cuts["inclusive"] = [global_eta_cut]
-        return _cuts
+        return self._get_cuts("object")
 
     @property
     def event_cuts(self) -> Optional[dict[str, list[str]]]:
@@ -222,21 +232,7 @@ class ReferenceObject(BaseObject):
         criteria are removed from the events, but the events themselves are
         retained.
         """
-        _cuts = {}
-        if "cuts" in self._object_params.keys():
-            _cuts = self._object_params["cuts"]["event"]
-        if self.eta_range != "inclusive":
-            # if a region other than inclusive is specified an eta cut
-            eta_min = self.eta_ranges[self.eta_range][0]
-            eta_max = self.eta_ranges[self.eta_range][1]
-            global_eta_cut = (
-                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
-            )
-            try:
-                _cuts["inclusive"].append(global_eta_cut)
-            except KeyError:
-                _cuts["inclusive"] = [global_eta_cut]
-        return _cuts
+        return self._get_cuts("event")
 
 
 def compute_selection_mask_for_cuts(
