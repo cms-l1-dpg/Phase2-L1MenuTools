@@ -245,7 +245,7 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, thresholds: np.ndarray, nObj = 1) -> dict:
+    def compute_rate(self, thresholds: np.ndarray, nObj=1) -> dict:
         """Computes rate at threholds after application of all object cuts.
 
         threshold: pt threshold for which to compute rate
@@ -261,7 +261,9 @@ class RateComputer:
 
         if (max_pt_obj := self.arrays[obj_mask][pt_field]).ndim > 1:
             # max_pt_obj = ak.max(max_pt_obj, axis=1)
-            max_pt_obj = max_pt_obj[ak.argsort(max_pt_obj, axis=1, ascending=False)][:,nObj-1:]
+            max_pt_obj = max_pt_obj[ak.argsort(max_pt_obj, axis=1, ascending=False)][
+                :, nObj - 1 :
+            ]
             max_pt_obj = ak.fill_none(ak.firsts(max_pt_obj), -1)
 
         cumsum = np.cumsum(
@@ -316,7 +318,9 @@ class RatePlotCentral:
                 apply_offline_conversion,
             )
 
-            rate_data[version] = rate_computer.compute_rate(self.get_bins(plot_config), nObj = plot_config.nObjects)
+            rate_data[version] = rate_computer.compute_rate(
+                self.get_bins(plot_config), nObj=plot_config.nObjects
+            )
 
         return rate_data
 
