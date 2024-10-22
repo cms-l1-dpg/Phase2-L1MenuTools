@@ -6,7 +6,7 @@ jet:
       label: "Gen HT"
       trafo: "HT"
       cuts:
-        event:
+        object:
           inclusive:
             - "abs({eta}) < 2.4"
             - "{pt} > 30"
