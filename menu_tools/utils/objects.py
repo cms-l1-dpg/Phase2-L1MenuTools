@@ -112,8 +112,7 @@ class BaseObject:
 
     @property
     def plot_label(self) -> str:
-        """Label of the object in the plots
-        """
+        """Label of the object in the plots"""
         return self._object_params["label"]
 
     def get_scaling_object(self, eta_range: str) -> str:
@@ -249,7 +248,7 @@ class ReferenceObject(BaseObject):
         For info on the structure of the returned object see docstring of base
         class.
 
-        Returns: 
+        Returns:
             object_cut_dict: For info on the structure of the returned object
             see docstring of base class.
         """
@@ -262,7 +261,7 @@ class ReferenceObject(BaseObject):
         Is meant to provied cuts to remove *events* whose object doesn't fulfill the
         criteria.
 
-        Returns: 
+        Returns:
             event_cut_dict: For info on the structure of the returned object
             see docstring of base class.
         """
