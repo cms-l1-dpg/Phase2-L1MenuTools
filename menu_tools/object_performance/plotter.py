@@ -105,7 +105,6 @@ class EfficiencyPlotter(Plotter):
 
             xbins = self.turnon_collection.bins
             xbins = 0.5 * (xbins[1:] + xbins[:-1])
-            print(len(xbins))
 
             if self.cfg.iso_vs_eff_plot:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])

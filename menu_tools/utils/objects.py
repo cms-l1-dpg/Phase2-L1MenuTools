@@ -213,7 +213,7 @@ class ReferenceObject(BaseObject):
         try:
             return self._object_params["trafo"]
         except KeyError:
-            print("No transformation defined in reference object")
+            # No transformation defined in reference object `self.object_key`
             return None
 
     def _get_cuts(self, event_or_object: str) -> dict[str, list[str]]:

@@ -52,6 +52,17 @@ GenPart:
         object:
           inclusive:
             - "abs({eta}) < 2.4"
+    reference_electron_barrel:
+      label: "Gen Electron"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "abs({eta}) < 1.479"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
     reference_electron:
       label: "Gen Electron"
       cuts:
