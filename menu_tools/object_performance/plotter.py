@@ -118,9 +118,9 @@ class EfficiencyPlotter(Plotter):
             yerr = np.array(
                 [yerr[0][~np.isnan(efficiency)], yerr[1][~np.isnan(efficiency)]]
             )
-            # xerr = xerr[np.isfinite(efficiency)]
-            # xbins = xbins[np.isfinite(efficiency)]
-            # efficiency = efficiency[np.isfinite(efficiency)]
+            xerr = xerr[np.isfinite(efficiency)]
+            xbins = xbins[np.isfinite(efficiency)]
+            efficiency = efficiency[np.isfinite(efficiency)]
 
             xerr = xerr.tolist()
             yerr = yerr.tolist()
