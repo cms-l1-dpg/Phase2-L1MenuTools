@@ -111,11 +111,9 @@ class BaseObject:
         return object_parameters
 
     @property
-    def match_dR(self) -> float:
-        return self._object_params["match_dR"]
-
-    @property
     def plot_label(self) -> str:
+        """Label of the object in the plots
+        """
         return self._object_params["label"]
 
     def get_scaling_object(self, eta_range: str) -> str:
@@ -138,6 +136,27 @@ class BaseObject:
 
     @property
     def cuts(self) -> Optional[dict[str, list[str]]]:
+        """Necessary interface for Object classes.
+        To be implemented in derived class.
+
+        Returns:
+            cut_dict: Dicitionary of the type
+                ```
+                {"eta_range_1: [
+                    "<cut string 1.1>",
+                    "<cut string 1.2>",
+                    ...
+                 ],
+                 "eta_range_2: [
+                     "<cut string 2.1>",
+                     ...
+                  ],
+                 ...
+                }
+                ```
+                where `<cut string>` are the requirements
+                as specified in the object config files.
+        """
         raise NotImplementedError(
             "This method should be implemented in the derived class."
         )
@@ -176,6 +195,10 @@ class Object(BaseObject):
             except KeyError:
                 _cuts["inclusive"] = [global_eta_cut]
         return _cuts
+
+    @property
+    def match_dR(self) -> float:
+        return self._object_params["match_dR"]
 
 
 class ReferenceObject(BaseObject):
@@ -223,14 +246,25 @@ class ReferenceObject(BaseObject):
         """OBJECT level cuts! I.e. individual objects that don't fulfill the
         criteria are removed from the events, but the events themselves are
         retained.
+        For info on the structure of the returned object see docstring of base
+        class.
+
+        Returns: 
+            object_cut_dict: For info on the structure of the returned object
+            see docstring of base class.
         """
         return self._get_cuts("object")
 
     @property
     def event_cuts(self) -> Optional[dict[str, list[str]]]:
-        """EVENT level cuts! I.e. individual objects that don't fulfill the
-        criteria are removed from the events, but the events themselves are
-        retained.
+        """EVENT level cuts! Applied after selection of highest pT object per
+        event.
+        Is meant to provied cuts to remove *events* whose object doesn't fulfill the
+        criteria.
+
+        Returns: 
+            event_cut_dict: For info on the structure of the returned object
+            see docstring of base class.
         """
         return self._get_cuts("event")
 
@@ -284,10 +318,11 @@ def compute_selection_mask_for_object_cuts(
 
 
 if __name__ == "__main__":
-    x = Object("tkElectron:Iso", "V29")
     x = Object("caloJet:default", "V29")
     print(x)
     print(x.match_dR)
     print(x.plot_label)
     print(x.eta_ranges)
     print(x.cuts)
+    y = Object("tkElectron:Iso", "V29")
+    z = ReferenceObject("jet:ht", "V29")
