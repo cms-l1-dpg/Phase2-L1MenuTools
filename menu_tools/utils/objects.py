@@ -134,7 +134,7 @@ class BaseObject:
         return _eta_ranges
 
     @property
-    def cuts(self) -> Optional[dict[str, list[str]]]:
+    def cuts(self) -> dict[str, list[str]]:
         """Necessary interface for Object classes.
         To be implemented in derived class.
 
@@ -178,12 +178,12 @@ class Object(BaseObject):
         super().__init__(object_key, version)
 
     @property
-    def cuts(self) -> Optional[dict[str, list[str]]]:
+    def cuts(self) -> dict[str, list[str]]:
         _cuts = {}
         if "cuts" in self._object_params.keys():
             _cuts = self._object_params["cuts"]
         if self.eta_range != "inclusive":
-            # if a region other than inclusive is specified an eta cut
+            # if a region other than inclusive is specified, add an eta cut
             eta_min = self.eta_ranges[self.eta_range][0]
             eta_max = self.eta_ranges[self.eta_range][1]
             global_eta_cut = (
@@ -216,7 +216,7 @@ class ReferenceObject(BaseObject):
             print("No transformation defined in reference object")
             return None
 
-    def _get_cuts(self, event_or_object: str) -> Optional[dict[str, list[str]]]:
+    def _get_cuts(self, event_or_object: str) -> dict[str, list[str]]:
         assert event_or_object in [
             "event",
             "object",
@@ -225,10 +225,10 @@ class ReferenceObject(BaseObject):
         if "cuts" in self._object_params.keys():
             if event_or_object in self._object_params["cuts"].keys():
                 _cuts = self._object_params["cuts"][event_or_object]
-            else:
-                return None
+            elif self.eta_range == "inclusive":
+                return {}
         if self.eta_range != "inclusive":
-            # if a region other than inclusive is specified an eta cut
+            # if a region other than inclusive is specified, add an eta cut
             eta_min = self.eta_ranges[self.eta_range][0]
             eta_max = self.eta_ranges[self.eta_range][1]
             global_eta_cut = (
@@ -241,7 +241,7 @@ class ReferenceObject(BaseObject):
         return _cuts
 
     @property
-    def cuts(self) -> Optional[dict[str, list[str]]]:
+    def cuts(self) -> dict[str, list[str]]:
         """OBJECT level cuts! I.e. individual objects that don't fulfill the
         criteria are removed from the events, but the events themselves are
         retained.
@@ -255,7 +255,7 @@ class ReferenceObject(BaseObject):
         return self._get_cuts("object")
 
     @property
-    def event_cuts(self) -> Optional[dict[str, list[str]]]:
+    def event_cuts(self) -> dict[str, list[str]]:
         """EVENT level cuts! Applied after selection of highest pT object per
         event.
         Is meant to provied cuts to remove *events* whose object doesn't fulfill the
@@ -282,11 +282,12 @@ def compute_selection_mask_for_cuts(
     # Initialize mask with True everywhere
     sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
 
-    # If no cut are specified in object return true everywhere
+    # If no cut are specified in object, return True everywhere.
+    # That case will be `cuts = {}`.
     if not cuts:
         return sel
 
-    ## add fake eta
+    ## add mock eta
     if "eta" not in ak_array.fields:
         ak_array["eta"] = 0
 

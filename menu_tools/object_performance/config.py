@@ -16,7 +16,7 @@ class PerformancePlotConfig(BasePlotConfig):
             return False
 
     @property
-    def reference_object(self) -> Object:
+    def reference_object(self) -> ReferenceObject:
         assert isinstance(
             self._cfg["reference_object"], dict
         ), f"Reference object is not a dict in {self.plot_name}!"
