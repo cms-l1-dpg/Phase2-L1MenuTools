@@ -3,14 +3,7 @@ JetTurnonBarrel:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
-    cuts:
-      event:
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenJet:reference_barrel: "pt"
   test_objects:
     # L1puppiJetHisto:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
@@ -32,14 +25,7 @@ JetTurnonEndcap:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
-    cuts:
-      event:
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenJet:reference_endcap: "pt"
   test_objects:
     # L1puppiJetHisto:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
@@ -61,14 +47,7 @@ JetTurnonForward:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
-    cuts:
-      event:
-        - "abs({eta}) > 2.4"
-      object:
-        - "abs({eta}) < 5"
+    GenJet:reference_forward: "pt"
   test_objects:
     # L1puppiJetHisto:default:forward: "pt"
     L1puppiJetSC4:default:forward: "pt"

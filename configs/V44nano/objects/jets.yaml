@@ -1,3 +1,144 @@
+GenJetAK8:
+  label: "Gen AK8 Jets"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    reference_matching_SC8_Pt100ToInf:
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 5"
+    reference_barrel:
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) < 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_endcap:
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) > 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_forward:
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) > 2.4"
+        object:
+          inclusive:
+            - "abs({eta}) < 5"
+
+
+GenJet:
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    mht_default:
+      label: "Gen MHT"
+      trafo: "MHT"
+      cuts:
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+            - "{pt} > 30"
+    ht_default:
+      label: "Gen HT"
+      trafo: "HT"
+      cuts:
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+            - "{pt} > 30"
+    reference_Pt40To100:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 40"
+            - "{pt} < 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 5"
+    reference_Pt100ToInf:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 5"
+    reference_Pt100ToInf_extEta:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 7"
+    reference_Pt30ToInf_genBJets:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 30"
+            - "abs({partonFlavour}) == 5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_Pt30ToInf_genNotBJets:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "{pt} > 30"
+            - "abs({partonFlavour}) != 5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_barrel:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) < 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_endcap:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) > 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_forward:
+      label: "Gen Jets"
+      cuts:
+        event:
+          inclusive:
+            - "abs({eta}) > 2.4"
+        object:
+          inclusive:
+            - "abs({eta}) < 5"
+
 L1caloJet:
   match_dR: 0.3
   label: "Calo Jet"

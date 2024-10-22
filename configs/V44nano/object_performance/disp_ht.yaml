@@ -2,14 +2,7 @@ HtoLLPto4b_M125_Phi60_ctau100_promptHT:
   sample: HtoLLPto4b_M125_Phi60_ctau100
   version: V44nano
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen HT"
-    trafo: "HT"
-    cuts:
-       object:
-         - "abs({eta}) < 2.4"
-         - "{pt} > 30"
+    GenJet:ht_default: "pt"
   test_objects:
     L1puppiJetSC4sums:HT: "pt"
     L1TrackHT:HT: "ht"
@@ -29,14 +22,7 @@ HtoLLPto4b_M125_Phi60_ctau100_promptHT:
 #   sample: HtoLLPto4b_M125_Phi60_ctau100
 #   version: V44nano
 #   reference_object:
-#     object: "GenJet"
-#     x_arg: "pt"
-#     label: "Gen HT"
-#     trafo: "HT"
-#     cuts:
-#        object:
-#          - "abs({eta}) < 2.4"
-#          - "{pt} > 30"
+#     GenJet:ht_default: "pt"
 #   test_objects:
 #     L1puppiJetSC4sums:HT: "pt"
 #     L1TrackHT:HT: "ht"

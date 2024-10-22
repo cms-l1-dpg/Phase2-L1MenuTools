@@ -3,16 +3,7 @@ ElectronsTriggerBarrel:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Electrons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 11"
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.8"
+    GenPart:reference_electron_trigger_barrel: "pt"
   test_objects:
     L1EG:default:barrel: "pt"
     L1tkElectron:NoIso:barrel: "pt"
@@ -34,9 +25,7 @@ ElectronsTriggerEndcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Electrons"
+    GenPart:reference_electron_trigger_endcap: "pt"
     cuts:
       event:
         - "(({statusFlags}>>7)&1) == 1"

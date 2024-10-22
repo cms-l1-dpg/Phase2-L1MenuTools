@@ -1,4 +1,5 @@
 L1tkElectron:
+  label: "L1tkElectron"
   match_dR: 0.15
   eta_ranges:
     inclusive: [0, 7]
@@ -30,6 +31,21 @@ L1tkElectron:
           - "abs({relIso}) < 0.13"
         endcap:
           - "abs({relIso}) < 0.28"
+    reference:
+      cuts:
+        event:
+          inclusive:
+            - "{eleId} == 1"
+    reference_endcap:
+      cuts:
+        event:
+          inclusive:
+            - "{eleId} == 1"
+            - "abs({eta}) > 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+
 
 L1EG:
   match_dR: 0.2
