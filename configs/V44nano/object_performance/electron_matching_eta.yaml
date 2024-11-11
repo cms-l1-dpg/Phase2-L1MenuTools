@@ -3,17 +3,7 @@ ElectronsMatching_Eta_Pt10to25:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Electrons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 11"
-        - "{pt} < 25"
-        - "{pt} > 10"
-      object:
-        - "abs({eta}) < 3.0"
+    GenPart:reference_electron_pt10to25: "eta"
   test_objects:
     L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"
@@ -31,16 +21,7 @@ ElectronsMatching_Eta_Pt25toInf:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Electrons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 11"
-        - "{pt} > 25"
-      object:
-        - "abs({eta}) < 3.0"
+    GenPart:reference_electron_pt25toInf: "eta"
   test_objects:
     L1EG:default: "eta"
     L1tkElectron:NoIso: "eta"

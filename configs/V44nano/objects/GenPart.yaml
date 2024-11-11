@@ -3,7 +3,10 @@ GenPart:
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.479]
+    barrel_muon: [0, 0.83]
+    overlap: [0.83, 1.24]
     endcap: [1.479, 5]
+    endcap_muon: [1.24, 2.4]
   ids:
     electron:
       label: "Gen Electron"
@@ -19,3 +22,105 @@ GenPart:
           - "abs({eta}) < 3"
           - "(({statusFlags}>>7)&1) == 1"
           - "abs({pdgId}) == 13"
+    reference_muon:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+    reference_muon_Pt2to5:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+            - "{pt} > 2"
+            - "{pt} < 5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_muon_Pt15toInf:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+            - "{pt} > 15"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_electron_barrel:
+      label: "Gen Electron"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "abs({eta}) < 1.479"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_electron:
+      label: "Gen Electron"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+    reference_electron_endcap:
+      label: "Gen Electron Endcap"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "abs({eta}) > 1.479"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    reference_electron_pt10to25:
+      label: "Gen Electron $p_T=10-25$GeV"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "{pt} < 25"
+            - "{pt} > 10"
+        object:
+          inclusive:
+            - "abs({eta}) < 3.0"
+    reference_electron_pt25toInf:
+      label: "Gen Electron $p_T>25$GeV"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "{pt} > 25"
+        object:
+          inclusive:
+            - "abs({eta}) < 3.0"
+    reference_electron_trigger_barrel:
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "abs({eta}) < 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.8"
+    reference_electron_trigger_endcap:
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 11"
+            - "abs({eta}) > 1.5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.8"

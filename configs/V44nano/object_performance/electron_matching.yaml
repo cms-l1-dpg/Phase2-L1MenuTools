@@ -3,16 +3,7 @@ ElectronsMatchingBarrel:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Electrons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 11"
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenPart:reference_electron:barrel: "pt"
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"
@@ -30,16 +21,7 @@ ElectronsMatchingBarrel:
 #   version: V44nano
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "GenPart"
-#     x_arg: "pt"
-#     label: "Gen Electrons"
-#     cuts:
-#       event:
-#         - "(({statusFlags}>>7)&1) == 1"
-#         - "abs({pdgId}) == 11"
-#         - "abs({eta}) < 1.5"
-#       object:
-#         - "abs({eta}) < 2.4"
+#     GenPart:reference_electron:barrel: "pt"
 #   test_objects:
 #     L1EG:default: "pt"
 #     L1tkElectron:NoIso: "pt"
@@ -56,16 +38,7 @@ ElectronsMatchingEndcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Electrons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 11"
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenPart:reference_electron_endcap: "pt"
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"
@@ -83,16 +56,7 @@ ElectronsMatchingEndcap:
 #   version: V44nano
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "GenPart"
-#     x_arg: "pt"
-#     label: "Gen Electrons"
-#     cuts:
-#       event:
-#         - "(({statusFlags}>>7)&1) == 1"
-#         - "abs({pdgId}) == 11"
-#         - "abs({eta}) > 1.5"
-#       object:
-#         - "abs({eta}) < 2.4"
+#     GenPart:reference_electron_endcap: "pt"
 #   test_objects:
 #     L1EG:default: "pt"
 #     L1tkElectron:NoIso: "pt"

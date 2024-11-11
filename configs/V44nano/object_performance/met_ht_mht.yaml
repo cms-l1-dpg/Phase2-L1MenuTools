@@ -2,14 +2,7 @@ HT_90perc:
   sample: TT
   version: V44nano
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen HT"
-    trafo: "HT"
-    cuts:
-       object:
-         - "abs({eta}) < 2.4"
-         - "{pt} > 30"
+    GenJet:ht_default: "pt"
   test_objects:
     # L1puppiHistoJetSums:HT: "pt"
     L1puppiJetSC4sums:HT: "pt"
@@ -29,14 +22,7 @@ HT_90perc:
 #   sample: TT
 #   version: V44nano
 #   reference_object:
-#     object: "GenJet"
-#     x_arg: "pt"
-#     label: "Gen HT"
-#     trafo: "HT"
-#     cuts:
-#        object:
-#          - "abs({eta}) < 2.4"
-#          - "{pt} > 30"
+#     GenJet:ht_default: "pt"
 #   test_objects:
 #     # L1puppiHistoJetSums:HT: "pt"
 #     L1puppiJetSC4sums:HT: "pt"
@@ -56,14 +42,7 @@ MHT_50perc:
   sample: TT
   version: V44nano
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen MHT"
-    cuts:
-      object:
-        - "abs({eta}) < 2.4"
-        - "{pt} > 30"
-    trafo: "MHT"
+    GenJet:mht_default: "pt"
   test_objects:
     L1puppiHistoJetSums:MHT: "pt"
     L1puppiJetSC4sums:MHT: "pt"
@@ -83,9 +62,7 @@ MET_90perc:
   sample: TT
   version: V44nano
   reference_object:
-    object: "GenMET"
-    x_arg: "pt"
-    label: "Gen MET"
+    GenMET:default: "pt"
   test_objects:
     L1puppiMET:default: "pt"
     L1puppiMLMET:default: "pt"
@@ -105,9 +82,7 @@ MET_90perc:
 #   sample: TT
 #   version: V44nano
 #   reference_object:
-#     object: "GenMET"
-#     x_arg: "pt"
-#     label: "Gen MET"
+#     GenMET:default: "pt"
 #   test_objects:
 #     L1puppiMET:default: "pt"
 #     L1puppiMLMET:default: "pt"

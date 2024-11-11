@@ -67,12 +67,13 @@ class EfficiencyPlotter(Plotter):
             "outputs", self.version, "object_performance", "distributions"
         )
 
-    def _style_plot(self, fig, ax, legend_loc="lower right"):
+    def _style_plot(self, fig, ax, legend_loc="lower right", ylabel=False):
         ax.axvline(self.threshold, ls=":", c="k")
         ax.axhline(1, ls=":", c="k")
         ax.legend(loc=legend_loc, frameon=False)
         ax.set_xlabel(rf"{self.cfg.xlabel}")
-        ylabel = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
+        if not ylabel:
+            ylabel = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg.bin_min, self.cfg.bin_max)
         ax.tick_params(direction="in")
@@ -291,7 +292,9 @@ class EfficiencyPlotter(Plotter):
                 **err_kwargs,
             )
 
-        self._style_plot(fig, ax, legend_loc="best")
+        ylabel = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
+        ylabel = ylabel.replace("Trigger Efficiency", "Events")
+        self._style_plot(fig, ax, legend_loc="best", ylabel=ylabel)
         # Save figure
         plot_fname = f"{self.plot_name}_{self.threshold}_dist_{self.version}"
         plt.savefig(os.path.join(self._outdir_distributions, f"{plot_fname}.png"))

@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from menu_tools.utils.config import BasePlotConfig
-from menu_tools.utils.objects import Object
+from menu_tools.utils.objects import Object, ReferenceObject
 
 
 class PerformancePlotConfig(BasePlotConfig):
@@ -16,36 +16,17 @@ class PerformancePlotConfig(BasePlotConfig):
             return False
 
     @property
-    def reference_object(self):
-        return self._cfg["reference_object"]["object"]
-
-    @property
-    def reference_event_cuts(self):
-        try:
-            return self._cfg["reference_object"]["cuts"]["event"]
-        except KeyError:
-            return []
-
-    @property
-    def reference_object_cuts(self):
-        try:
-            return self._cfg["reference_object"]["cuts"]["object"]
-        except KeyError:
-            return []
-
-    @property
-    def reference_trafo(self) -> Optional[str]:
-        try:
-            return self._cfg["reference_object"]["trafo"]
-        except KeyError:
-            return None
-
-    @property
-    def reference_label(self) -> str:
-        try:
-            return self._cfg["reference_object"]["label"]
-        except KeyError:
-            raise KeyError("No label defined for reference object in {self.plot_name}!")
+    def reference_object(self) -> ReferenceObject:
+        assert isinstance(
+            self._cfg["reference_object"], dict
+        ), f"Reference object is not a dict in {self.plot_name}!"
+        object_id_strs = list(self._cfg["reference_object"].keys())
+        assert (
+            len(object_id_strs) == 1
+        ), f"Multiple reference objects defined in {self.plot_name}!"
+        return ReferenceObject(
+            list(self._cfg["reference_object"].keys())[0], self.version
+        )
 
     @property
     def test_objects(self) -> dict[str, Any]:
@@ -54,14 +35,6 @@ class PerformancePlotConfig(BasePlotConfig):
             raise ValueError(f"Misconfigured obj:id key in {self.plot_name}!")
 
         return self._cfg["test_objects"]
-
-        # DEPRECATED
-        # test_obj = {
-        #     x: {"base_obj": x.split(":")[0], "id": x.split(":")[1], "x_arg": x_arg}
-        #     for x, x_arg in self._cfg["test_objects"].items()
-        # }
-
-        # return test_obj
 
     @property
     def matching(self):
@@ -72,7 +45,7 @@ class PerformancePlotConfig(BasePlotConfig):
 
     @property
     def reference_field(self):
-        field = self._cfg["reference_object"]["x_arg"]
+        field = self._cfg["reference_object"][self.reference_object.object_key]
         return field.lower()
 
     @property

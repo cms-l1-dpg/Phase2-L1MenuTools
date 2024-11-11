@@ -1,4 +1,0 @@
-version: "V43nano"
-sample: "MinBias"
-menu_config: "configs/V43nano/rate_table/v38_menu_Step2.yml"
-table_fname: "rates_Step2"

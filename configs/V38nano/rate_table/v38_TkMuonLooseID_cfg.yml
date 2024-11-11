@@ -1,4 +1,0 @@
-version: "V38nano"
-sample: "MinBias"
-menu_config: "configs/V38nano/rate_table/v38_menu_TkMuonLooseID_cfg.yml"
-table_fname: "rates_full_TkMuonLooseID"

@@ -3,9 +3,7 @@ JetMatchingBarrel:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
+    GenJet:reference_barrel: "pt"
     cuts:
       event:
         - "abs({eta}) < 1.5"
@@ -28,14 +26,7 @@ JetMatchingEndcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
-    cuts:
-      event:
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenJet:reference_endcap: "pt"
   test_objects:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
@@ -53,14 +44,7 @@ JetMatchingForward:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
-    x_arg: "pt"
-    label: "Gen Jets"
-    cuts:
-      event:
-        - "abs({eta}) > 2.4"
-      object:
-        - "abs({eta}) < 5"
+    GenJet:reference_forward: "pt"
   test_objects:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
@@ -78,14 +62,7 @@ JetMatchingBarrelSC8:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
-    x_arg: "pt"
-    label: "Gen AK8 Jets"
-    cuts:
-      event:
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenJetAK8:reference_barrel: "pt"
   test_objects:
     L1puppiJetSC8:default:barrel: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
@@ -100,14 +77,7 @@ JetMatchingEndcapSC8:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
-    x_arg: "pt"
-    label: "Gen AK8 Jets"
-    cuts:
-      event:
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenJetAK8:reference_endcap: "pt"
   test_objects:
     L1puppiJetSC8:default:endcap: "pt"
   xlabel: "Gen. $p_T$ (GeV)"

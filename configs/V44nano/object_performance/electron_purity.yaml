@@ -3,15 +3,7 @@
 #   version: V44nano
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "L1tkElectron"
-#     x_arg: "pt"
-#     label: "L1tkElectron"
-#     cuts:
-#       event:
-#         - "{eleId} == 1"
-#         - "abs({eta}) < 1.5"
-#       object:
-#         - "abs({eta}) < 2.4"
+#     L1tkElectron:reference:barrel: "pt"
 #   test_objects:
 #     GenPart:electron: "pt"
 #     L1EG:default: "pt"
@@ -30,15 +22,7 @@ Purity_ElectronsEndcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "L1tkElectron"
-    x_arg: "pt"
-    label: "L1tkElectron"
-    cuts:
-      event:
-        - "{eleId} == 1"
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    L1tkElectron:reference_endcap: "pt"
   test_objects:
     GenPart:electron: "pt"
     L1EG:default: "pt"
