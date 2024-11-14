@@ -45,7 +45,8 @@ class RatePlotter:
 
         ## Overwrite outdir
         self._outdir = os.path.join(
-            "outputs", self.cfg.version, "object_performance", "rates"
+            "outputs", self.cfg.version, "rate_plots"
+            #"outputs", self.cfg.version, "object_performance", "rates"
         )
 
     @property
