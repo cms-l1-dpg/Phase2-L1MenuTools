@@ -1,13 +1,3 @@
-GenPart:
-  label: "Gen Muon"
-  eta_ranges:
-    inclusive: [0, 7]
-  ids:
-    gen_electron_default:
-      cuts:
-        inclusive:
-          - "({statusFlags}>>7)&1 == 1"
-
 L1gmtTkMuon:
   label: "GMT TkMuon"
   match_dR: 0.1
