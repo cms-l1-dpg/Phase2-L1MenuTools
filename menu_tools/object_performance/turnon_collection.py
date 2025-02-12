@@ -3,13 +3,14 @@ from typing import Any, Optional
 import awkward as ak
 import numpy as np
 import vector
+import re
 
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import utils
 from menu_tools.utils.objects import (
     Object,
-    compute_selection_mask_for_event_cuts,
-    compute_selection_mask_for_object_cuts,
+    # compute_selection_mask_for_event_cuts,
+    # compute_selection_mask_for_object_cuts,
 )
 
 
@@ -231,6 +232,16 @@ class TurnOnCollection:
         sel_pt = ak.argmax(self.ak_arrays["ref"]["pt"], axis=-1, keepdims=True)
         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel_pt]
 
+    def _apply_list_of_reference_cuts(self, cut_list):
+        for cut in cut_list:
+            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
+            sel = eval(cut)
+            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        if not isinstance(
+            self.ak_arrays["ref"], vector.backends.awkward.MomentumArray4D
+        ):
+            self.ak_arrays["ref"] = ak.with_name(self.ak_arrays["ref"], "Momentum4D")
+
     def _apply_reference_cuts(self) -> None:
         """Applies configured cuts on reference objects.
 
@@ -240,26 +251,45 @@ class TurnOnCollection:
         if "met" in self.cfg_plot.reference_object.nano_obj_name.lower():
             # TODO: Maybe we want to modify it and allow possible cuts on MET
             return
+        ref_object_cuts = self.cfg_plot.reference_object.cuts
+        self._apply_list_of_reference_cuts(ref_object_cuts["inclusive"])
 
-        # Apply object level cuts, i.e. removing objects from event, while
-        # retaining the events.
-        if self.cfg_plot.reference_object.cuts:
-            sel = compute_selection_mask_for_object_cuts(
-                self.cfg_plot.reference_object, self.ak_arrays["ref"]
-            )
-            self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
-
-        # If specified, apply transformation
         if self.cfg_plot.reference_object.trafo:
             # In this case each event is reduced to a single value already
             return None
 
-        # Select highest pt object from each event and apply event level cuts.
         self._select_highest_pt_ref_object()
-        sel = compute_selection_mask_for_event_cuts(
-            self.cfg_plot.reference_object, self.ak_arrays["ref"]
-        )
-        self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+        ref_event_cuts = self.cfg_plot.reference_object.event_cuts
+        self._apply_list_of_reference_cuts(ref_event_cuts["inclusive"])
+
+    #     """Applies configured cuts on reference objects.
+
+    #     Should be applied before any matching and before the
+    #     selection of the highest pT object.
+    #     """
+    #     if "met" in self.cfg_plot.reference_object.nano_obj_name.lower():
+    #         # TODO: Maybe we want to modify it and allow possible cuts on MET
+    #         return
+
+    #     # Apply object level cuts, i.e. removing objects from event, while
+    #     # retaining the events.
+    #     if self.cfg_plot.reference_object.cuts:
+    #         sel = compute_selection_mask_for_object_cuts(
+    #             self.cfg_plot.reference_object, self.ak_arrays["ref"]
+    #         )
+    #         self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
+
+    #     # If specified, apply transformation
+    #     if self.cfg_plot.reference_object.trafo:
+    #         # In this case each event is reduced to a single value already
+    #         return None
+
+    #     # Select highest pt object from each event and apply event level cuts.
+    #     self._select_highest_pt_ref_object()
+    #     sel = compute_selection_mask_for_event_cuts(
+    #         self.cfg_plot.reference_object, self.ak_arrays["ref"]
+    #     )
+    #     self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
 
     def _apply_test_obj_cuts(self):
         """Applies configured cuts on all configured test objects.
@@ -269,10 +299,32 @@ class TurnOnCollection:
         for test_obj, _ in self.test_objects:
             if not test_obj.cuts:
                 continue
-            sel = compute_selection_mask_for_object_cuts(
-                test_obj, self.ak_arrays[str(test_obj)]
-            )
-            self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
+            if "eta" not in self.ak_arrays[str(test_obj)].fields:
+                self.ak_arrays[str(test_obj)]["eta"] = 0
+            for (
+                range_i,
+                range_cuts,
+            ) in test_obj.cuts.items():  # TODO: use the version from utils
+                for cut in range_cuts:
+                    cut = re.sub(
+                        r"{([^&|]*)}", r"self.ak_arrays[str(test_obj)]['\1']", cut
+                    )
+                    eta_sel = (
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
+                        >= test_obj.eta_ranges[range_i][0]
+                    ) & (
+                        abs(self.ak_arrays[str(test_obj)]["eta"])
+                        < test_obj.eta_ranges[range_i][1]
+                    )
+                    sel = eval(cut) + ~eta_sel
+                    self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
+
+            # NOTE: This is the previous implementation
+            #        --> See NOTE in defintion of function
+            # sel = compute_selection_mask_for_object_cuts(
+            #     test_obj, self.ak_arrays[str(test_obj)]
+            # )
+            # self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
 
     def _skim_to_hists(self) -> None:
         """

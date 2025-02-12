@@ -178,6 +178,13 @@ class Object(BaseObject):
         super().__init__(object_key, version)
 
     @property
+    def obj_type(self) -> str:
+        return "test"
+
+    @property
+    # TODO: I want to change the cuts dict to a list, without any key arguments,
+    # because it is called for specific ids, eta ranges, etc. anyways
+    # and  now it is all dumped in inclusive which is somewhat misleading
     def cuts(self) -> dict[str, list[str]]:
         _cuts = {}
         if "cuts" in self._object_params.keys():
@@ -205,6 +212,10 @@ class ReferenceObject(BaseObject):
         super().__init__(object_key, version)
 
     @property
+    def obj_type(self) -> str:
+        return "ref"
+
+    @property
     def trafo(self) -> Optional[str]:
         """Returns the trafo key of the (reference) object
         if it is defined (HT, MHT, etc).
@@ -216,6 +227,9 @@ class ReferenceObject(BaseObject):
             # No transformation defined in reference object `self.object_key`
             return None
 
+    # NOTE: ATM every cut is in inclusive
+    #       -> probably being a requirement from previous config structure.
+    # I find this misleading and also unnecessary.
     def _get_cuts(self, event_or_object: str) -> dict[str, list[str]]:
         assert event_or_object in [
             "event",
@@ -225,19 +239,6 @@ class ReferenceObject(BaseObject):
         if "cuts" in self._object_params.keys():
             if event_or_object in self._object_params["cuts"].keys():
                 _cuts = self._object_params["cuts"][event_or_object]
-            elif self.eta_range == "inclusive":
-                return {}
-        if self.eta_range != "inclusive":
-            # if a region other than inclusive is specified, add an eta cut
-            eta_min = self.eta_ranges[self.eta_range][0]
-            eta_max = self.eta_ranges[self.eta_range][1]
-            global_eta_cut = (
-                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
-            )
-            try:
-                _cuts["inclusive"].append(global_eta_cut)
-            except KeyError:
-                _cuts["inclusive"] = [global_eta_cut]
         return _cuts
 
     @property
@@ -252,7 +253,12 @@ class ReferenceObject(BaseObject):
             object_cut_dict: For info on the structure of the returned object
             see docstring of base class.
         """
-        return self._get_cuts("object")
+        cuts = self._get_cuts("object")
+        # TODO: Drop this in future, but then style in config has to change,
+        # maybe do a handling here, if nothing -> inclusive, else else
+        if not cuts:
+            cuts["inclusive"] = {}
+        return cuts
 
     @property
     def event_cuts(self) -> dict[str, list[str]]:
@@ -265,11 +271,39 @@ class ReferenceObject(BaseObject):
             event_cut_dict: For info on the structure of the returned object
             see docstring of base class.
         """
-        return self._get_cuts("event")
+        event_cuts = self._get_cuts("event")
+        if self.eta_range != "inclusive":
+            # if a region other than inclusive is specified, add an eta cut
+            eta_min = self.eta_ranges[self.eta_range][0]
+            eta_max = self.eta_ranges[self.eta_range][1]
+            global_eta_cut = (
+                f"((abs({{eta}}) > {eta_min}) & (abs({{eta}}) < {eta_max}))"
+            )
+            if "inclusive" not in event_cuts:
+                event_cuts["inclusive"] = [global_eta_cut]
+            else:
+                event_cuts["inclusive"].append(global_eta_cut)
+
+        if not event_cuts:
+            event_cuts["inclusive"] = {}
+        return event_cuts
+
+
+""" NOTE: I am not sure if this function is still called
+Problem with this function is, it should outsource common code,
+but the options between
+test/ref object and event/object level cut in ref object make the code less readable
+and prone to errors, because the sel mask is created in a suspicious for loop.
+Also the code runs slower
+--> It is now handled in turn on collection _apply_list_of_reference_cuts()
+/ _apply_list_of_testobject_cuts()"""
 
 
 def compute_selection_mask_for_cuts(
-    obj: BaseObject, ak_array: ak.Array, cuts: dict
+    obj: BaseObject,
+    ak_array: ak.Array,
+    cuts: dict,
+    obj_type: str,
 ) -> ak.Array:
     """Compute selection mask for object/event cuts on array
 
@@ -281,7 +315,6 @@ def compute_selection_mask_for_cuts(
     """
     # Initialize mask with True everywhere
     sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
-
     # If no cut are specified in object, return True everywhere.
     # That case will be `cuts = {}`.
     if not cuts:
@@ -296,25 +329,28 @@ def compute_selection_mask_for_cuts(
         _sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
         for cut in range_cuts:
             cut = re.sub(r"{([^&|]*)}", r"ak_array['\1']", cut)
-            eta_sel = (abs(ak_array["eta"]) >= obj.eta_ranges[range_i][0]) & (
-                abs(ak_array["eta"]) < obj.eta_ranges[range_i][1]
-            )
-            _sel = _sel & (eval(cut) + ~eta_sel)
+            if obj_type == "ref":
+                _sel = _sel & eval(cut)
+            elif obj_type == "test":
+                eta_sel = (abs(ak_array["eta"]) >= obj.eta_ranges[range_i][0]) & (
+                    abs(ak_array["eta"]) < obj.eta_ranges[range_i][1]
+                )
+                _sel = _sel & (eval(cut) + ~eta_sel)
         # apply OR logic
         sel = sel & _sel
-    return sel
+    return _sel
 
 
 def compute_selection_mask_for_event_cuts(
     obj: BaseObject, ak_array: ak.Array
 ) -> ak.Array:
-    return compute_selection_mask_for_cuts(obj, ak_array, obj.event_cuts)
+    return compute_selection_mask_for_cuts(obj, ak_array, obj.event_cuts, obj.obj_type)
 
 
 def compute_selection_mask_for_object_cuts(
     obj: BaseObject, ak_array: ak.Array
 ) -> ak.Array:
-    return compute_selection_mask_for_cuts(obj, ak_array, obj.cuts)
+    return compute_selection_mask_for_cuts(obj, ak_array, obj.cuts, obj.obj_type)
 
 
 if __name__ == "__main__":

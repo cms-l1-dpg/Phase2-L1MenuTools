@@ -3,7 +3,7 @@ MuonsMatching_Eta_Pt2to5:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    GenPart:reference_muon_Pt2to5: "eta"
+    GenPart:muon_Pt2to5: "eta"
   test_objects:
     L1gmtMuon:default: "eta"
     L1gmtMuon:dR0p6: "eta"
@@ -20,7 +20,7 @@ MuonsMatching_Eta_Pt15toInf:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    GenPart:reference_muon_Pt15toInf: "eta"
+    GenPart:muon_Pt15toInf: "eta"
   test_objects:
     L1gmtMuon:default: "eta"
     L1gmtTkMuon:default: "eta"

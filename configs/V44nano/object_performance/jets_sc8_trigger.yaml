@@ -1,9 +1,10 @@
+
 JetTurnonBarrelSC8:
   version: V44nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJetAK8:reference_barrel: "pt"
+    GenJetAK8:jet:barrel: "pt"
   test_objects:
     L1puppiJetSC8:default:barrel: "pt"
   thresholds: [150]
@@ -22,7 +23,7 @@ JetTurnonEndcapSC8:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJetAK8:reference_endcap: "pt"
+    GenJetAK8:jet:endcap: "pt"
   test_objects:
     L1puppiJetSC8:default:endcap: "pt"
   thresholds: [150]
@@ -41,7 +42,7 @@ JetTurnonForwardSC8:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJetAK8:reference_forward: "pt"
+    GenJetAK8:default:forward: "pt"
   test_objects:
     L1puppiJetSC8:default:forward: "pt"
   thresholds: [150]

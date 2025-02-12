@@ -3,7 +3,7 @@ JetTurnonBarrel:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJet:reference_barrel: "pt"
+    GenJet:jet:barrel: "pt"
   test_objects:
     # L1puppiJetHisto:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
@@ -25,7 +25,7 @@ JetTurnonEndcap:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJet:reference_endcap: "pt"
+    GenJet:jet:endcap: "pt"
   test_objects:
     # L1puppiJetHisto:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
@@ -47,7 +47,7 @@ JetTurnonForward:
   sample: TT
   match_test_to_ref: True
   reference_object:
-    GenJet:reference_forward: "pt"
+    GenJet:default:forward: "pt"
   test_objects:
     # L1puppiJetHisto:default:forward: "pt"
     L1puppiJetSC4:default:forward: "pt"

@@ -3,15 +3,7 @@ TauMatching_Eta_Pt40To100:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    object: "GenVisTau"
-    x_arg: "eta"
-    label: "Gen Taus"
-    cuts:
-      event:
-        - "{pt} > 40"
-        - "{pt} < 100"
-      object:
-        - "abs({eta}) < 2.4"
+    GenVisTau:tau_Pt40To100: "eta"
   test_objects:
     L1nnPuppiTau:default: "eta"
     L1hpsTau:default: "eta"
@@ -29,14 +21,7 @@ TauMatching_Eta_Pt100ToInf:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    object: "GenVisTau"
-    x_arg: "eta"
-    label: "Gen Taus"
-    cuts:
-      event:
-        - "{pt} > 100"
-      object:
-        - "abs({eta}) < 5"
+    GenVisTau:tau_Pt100ToInf: "eta"
   test_objects:
     L1nnPuppiTau:default: "eta"
     L1hpsTau:default: "eta"

@@ -3,7 +3,7 @@ JetMatching_Eta_Pt40To100_ExtendedVsRegular:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt40To100: "eta"
+    GenJet:jet_Pt40To100: "eta"
   test_objects:
     L1puppiJetSC4:default: "eta"
     L1puppiExtJetSC4:default: "eta"
@@ -19,7 +19,7 @@ JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt100ToInf: "eta"
+    GenJet:jet_Pt100ToInf: "eta"
   test_objects:
     L1puppiJetSC4:default: "eta"
     L1puppiExtJetSC4:default: "eta"
@@ -35,7 +35,7 @@ JetMatching_Eta_Pt30ToInf_genBJets:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt30ToInf_genBJets: "eta"
+    GenJet:jet_Pt30ToInf_genBJets: "eta"
   test_objects:
     L1puppiExtJetSC4:bjetnn: "eta"
   xlabel: "Gen. $\\eta$"
@@ -50,7 +50,7 @@ JetMatching_Eta_Pt30ToInf_genNotBJets:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt30ToInf_genNotBJets: "eta"
+    GenJet:jet_Pt30ToInf_genNotBJets: "eta"
   test_objects:
     L1puppiExtJetSC4:bjetnn: "eta"
   xlabel: "Gen. $\\eta$"
@@ -65,7 +65,7 @@ JetMatching_Pt_Pt30ToInf_genBJets:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt30ToInf_genBJets: "pt"
+    GenJet:jet_Pt30ToInf_genBJets: "pt"
   test_objects:
     L1puppiExtJetSC4:bjetnn: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
@@ -80,7 +80,7 @@ JetMatching_Pt_Pt30ToInf_genNotBJets:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt30ToInf_genNotBJets: "eta"
+    GenJet:jet_Pt30ToInf_genNotBJets: "pt"  
   test_objects:
     L1puppiExtJetSC4:bjetnn: "pt"
   xlabel: "Gen. $p_T$ (GeV)"

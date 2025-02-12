@@ -1,9 +1,24 @@
+JetMatching_Eta_SC8_Pt100ToInf:
+  sample: TT
+  version: V44nano
+  match_test_to_ref: True
+  reference_object: 
+    GenJetAK8:jet_matching_SC8_Pt100ToInf: "eta"
+  test_objects:
+    L1puppiJetSC8:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (>100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
 JetMatching_Eta_Pt40To100:
   sample: TT
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt40To100: "eta"
+    GenJet:jet_Pt40To100: "eta" # TODO
   test_objects:
     L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
@@ -21,7 +36,7 @@ JetMatching_Eta_Pt100ToInf:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt100ToInf: "eta"
+    GenJet:jet_Pt100ToInf: "eta"
   test_objects:
     L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
@@ -39,7 +54,7 @@ JetMatching_Eta_Pt100ToInf_extEta:
   version: V44nano
   match_test_to_ref: True
   reference_object: 
-    GenJet:reference_Pt100ToInf_extEta: "eta"
+    GenJet:jet_Pt100ToInf_extEta: "eta"
   test_objects:
     L1caloJet:default: "eta"
   xlabel: "Gen. $\\eta$"
@@ -47,19 +62,4 @@ JetMatching_Eta_Pt100ToInf_extEta:
   binning:
     min: -5.5
     max: 5.5
-    step: 0.25
-
-JetMatching_Eta_SC8_Pt100ToInf:
-  sample: TT
-  version: V44nano
-  match_test_to_ref: True
-  reference_object: 
-    GenJetAK8:reference_matching_SC8_Pt100ToInf: "eta"
-  test_objects:
-    L1puppiJetSC8:default: "eta"
-  xlabel: "Gen. $\\eta$"
-  ylabel: "Matching Efficiency (>100 GeV)"
-  binning:
-    min: -5
-    max: 5
     step: 0.25

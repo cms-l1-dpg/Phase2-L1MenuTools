@@ -4,7 +4,7 @@ ElectronsIsolation_Barrel:
   match_test_to_ref: True
   iso_vs_efficiency: True
   reference_object:
-    GenPart:reference_electron_barrel: "pt"
+    GenPart:electron_iso:barrel_iso: "pt"
   test_objects:
     L1tkElectron:NoIsoForIso: "relIso"
   xlabel: "Isolation"
@@ -20,7 +20,7 @@ ElectronsIsolation_Endcap:
   match_test_to_ref: True
   iso_vs_efficiency: True
   reference_object:
-    GenPart:reference_electron_endcap: "pt"
+    GenPart:electron:endcap_iso: "pt"
   test_objects:
     L1tkElectron:NoIsoForIso: "relIso"
   xlabel: "Isolation"

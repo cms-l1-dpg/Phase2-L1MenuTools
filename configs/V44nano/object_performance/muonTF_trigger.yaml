@@ -3,15 +3,7 @@ MuonTFsTrigger_Barrel:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Muons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 13"
-      object:
-        - "abs({eta}) < 0.83"
+    GenPart:muon_barrel: "eta"
   test_objects:
     L1gmtMuon:default:barrel: "pt"
     L1MuonKMTF:default:barrel: "pt"
@@ -21,9 +13,6 @@ MuonTFsTrigger_Barrel:
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
   thresholds: [20, 25]
-  # scalings:
-  #   method: "naive"
-  #   threshold: 0.95
   binning:
     min: 0
     max: 50

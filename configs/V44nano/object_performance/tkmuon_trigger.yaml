@@ -3,15 +3,7 @@ TkMuonsTrigger_Barrel:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Muons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 13"
-      object:
-        - "abs({eta}) < 0.83"
+    GenPart:muon_barrel: "eta"
   test_objects:
     # L1gmtMuon:default:barrel: "pt"
     # L1gmtTkMuon:default:barrel: "pt"
@@ -35,16 +27,7 @@ TkMuonsTrigger_Overlap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Muons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 13"
-      object:
-        - "abs({eta}) > 0.83"
-        - "abs({eta}) < 1.24"
+    GenPart:muon_overlap: "eta"
   test_objects:
     # L1gmtMuon:default:overlap: "pt"
     # L1gmtTkMuon:default:overlap: "pt"
@@ -68,15 +51,7 @@ TkMuonsTrigger_Endcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "eta"
-    label: "Gen Muons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 13"
-      object:
-        - "abs({eta}) > 1.24"
+    GenPart:muon_trigger_endcap: "eta"
   test_objects:
     # L1gmtMuon:default:endcap: "pt"
     # L1gmtTkMuon:default:endcap: "pt"

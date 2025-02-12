@@ -1,87 +1,52 @@
+
 GenPart:
   match_dR: 0.15
   eta_ranges:
+# == Inclusive =================
     inclusive: [0, 7]
-    barrel: [0, 1.479]
+# == General definition ========
+    barrel: [0, 1.5]
+    endcap: [1.5, 5]
+# == Definition for isolation ==
+    barrel_iso: [0, 1.479]
+    endcap_iso: [1.479, 2.4]
+# == Definition for muon =======
     barrel_muon: [0, 0.83]
     overlap: [0.83, 1.24]
-    endcap: [1.479, 5]
     endcap_muon: [1.24, 2.4]
   ids:
+# ==ELECTRONS==================================
     electron:
       label: "Gen Electron"
       cuts:
-        inclusive:
-          - "abs({eta}) < 3"
-          - "(({statusFlags}>>7)&1) == 1"
-          - "abs({pdgId}) == 11"
-    muon:
-      label: "Gen Muon"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 3"
-          - "(({statusFlags}>>7)&1) == 1"
-          - "abs({pdgId}) == 13"
-    reference_muon:
-      label: "Gen Muons"
-      cuts:
         event:
           inclusive:
             - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 13"
-    reference_muon_Pt2to5:
-      label: "Gen Muons"
-      cuts:
-        event:
-          inclusive:
-            - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 13"
-            - "{pt} > 2"
-            - "{pt} < 5"
+            - "abs({pdgId}) == 11"
         object:
-          inclusive:
+          inclusive: 
             - "abs({eta}) < 2.4"
-    reference_muon_Pt15toInf:
-      label: "Gen Muons"
-      cuts:
-        event:
-          inclusive:
-            - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 13"
-            - "{pt} > 15"
-        object:
-          inclusive:
-            - "abs({eta}) < 2.4"
-    reference_electron_barrel:
+    electron_iso:
       label: "Gen Electron"
       cuts:
         event:
           inclusive:
             - "(({statusFlags}>>7)&1) == 1"
             - "abs({pdgId}) == 11"
+        object:
+          inclusive: 
             - "abs({eta}) < 1.479"
-        object:
-          inclusive:
-            - "abs({eta}) < 2.4"
-    reference_electron:
+    electron_trigger:
       label: "Gen Electron"
       cuts:
         event:
           inclusive:
             - "(({statusFlags}>>7)&1) == 1"
             - "abs({pdgId}) == 11"
-    reference_electron_endcap:
-      label: "Gen Electron Endcap"
-      cuts:
-        event:
-          inclusive:
-            - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 11"
-            - "abs({eta}) > 1.479"
         object:
-          inclusive:
-            - "abs({eta}) < 2.4"
-    reference_electron_pt10to25:
+          inclusive: 
+            - "abs({eta}) < 2.8"
+    electron_pt10to25:
       label: "Gen Electron $p_T=10-25$GeV"
       cuts:
         event:
@@ -93,7 +58,7 @@ GenPart:
         object:
           inclusive:
             - "abs({eta}) < 3.0"
-    reference_electron_pt25toInf:
+    electron_pt25toInf:
       label: "Gen Electron $p_T>25$GeV"
       cuts:
         event:
@@ -104,23 +69,148 @@ GenPart:
         object:
           inclusive:
             - "abs({eta}) < 3.0"
-    reference_electron_trigger_barrel:
+# ==MUONS=======================================
+    muon_barrel:
+      label: "Gen Muons"
       cuts:
         event:
           inclusive:
             - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 11"
-            - "abs({eta}) < 1.5"
+            - "abs({pdgId}) == 13"
         object:
           inclusive:
-            - "abs({eta}) < 2.8"
-    reference_electron_trigger_endcap:
+             - "abs({eta}) < 0.83" 
+    muon_overlap:
+      label: "Gen Muons"
       cuts:
         event:
           inclusive:
             - "(({statusFlags}>>7)&1) == 1"
-            - "abs({pdgId}) == 11"
-            - "abs({eta}) > 1.5"
+            - "abs({pdgId}) == 13"
         object:
           inclusive:
-            - "abs({eta}) < 2.8"
+             - "abs({eta}) > 0.83"
+             - "abs({eta}) < 1.24"
+    muon_endcap:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+        object:
+          inclusive:
+             - "abs({eta}) > 1.24"
+             - "abs({eta}) < 2.4" 
+    muon_trigger_endcap:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+        object:
+          inclusive:
+             - "abs({eta}) > 1.24"
+    muon_Pt2to5:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+            - "{pt} > 2"
+            - "{pt} < 5"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    muon_Pt15toInf:
+      label: "Gen Muons"
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 13"
+            - "{pt} > 15"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+# ==PHOTONS====================================
+    photon:
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 22"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4"
+    photon_barrel:
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 22"
+        object:
+          inclusive:
+            - "abs({eta}) < 1.479"
+    photon_endcap:
+      cuts:
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 22"
+        object:
+          inclusive:
+            - "abs({eta}) > 1.479"
+    photon_Pt10to25:
+      cuts:
+        event: 
+          inclusive: 
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 22"
+            - "{pt} < 25"
+            - "{pt} > 10"
+        object:
+          inclusive:
+            - "abs({eta}) < 3.0"
+    photon_Pt25toInf:
+      cuts:
+        object:
+          inclusive:
+            - "abs({eta}) < 3.0"
+        event:
+          inclusive:
+            - "(({statusFlags}>>7)&1) == 1"
+            - "abs({pdgId}) == 22"
+            - "{pt} >= 25" 
+
+GenVisTau: 
+  label: "Gen Taus" 
+  eta_ranges: 
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 5]
+  ids:
+    default:
+      cuts:
+        object: 
+          inclusive: 
+            - "abs({eta}) < 2.4"
+    tau_Pt40To100:
+      cuts:
+        event: 
+          inclusive:
+            - "{pt} > 40"
+            - "{pt} < 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 2.4" 
+    tau_Pt100ToInf:
+      cuts: 
+        event: 
+          inclusive:
+            - "{pt} > 100"
+        object:
+          inclusive:
+            - "abs({eta}) < 5" 

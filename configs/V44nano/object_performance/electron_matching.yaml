@@ -1,9 +1,9 @@
 ElectronsMatchingBarrel:
-  sample: DYLL_M50
+  sample: DYLL_M50 # 
   version: V44nano
-  match_test_to_ref: True
+  match_test_to_ref: True # Delta R matching 
   reference_object:
-    GenPart:reference_electron:barrel: "pt"
+    GenPart:electron:barrel: "pt"
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"
@@ -38,7 +38,7 @@ ElectronsMatchingEndcap:
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    GenPart:reference_electron_endcap: "pt"
+    GenPart:electron:endcap: "pt"
   test_objects:
     L1EG:default: "pt"
     L1tkElectron:NoIso: "pt"

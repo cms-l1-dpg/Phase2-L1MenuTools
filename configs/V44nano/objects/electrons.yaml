@@ -11,6 +11,7 @@ L1tkElectron:
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
+          # - "{pt} > 5"
         endcap:
           - "({eleId} == 1) | ({pt} < 25)"
         barrel:
@@ -59,6 +60,7 @@ L1EG:
       cuts:
         inclusive:
           - "abs({eta}) < 3.0"
+          # - "{pt} > 5"
         barrel:
           - "{eleId} == 1"
         endcap:

@@ -1,3 +1,4 @@
+
 GenJetAK8:
   label: "Gen AK8 Jets"
   eta_ranges:
@@ -6,31 +7,20 @@ GenJetAK8:
     endcap: [1.5, 2.4]
     forward: [2.4, 5]
   ids:
-    reference_matching_SC8_Pt100ToInf:
+    jet_matching_SC8_Pt100ToInf:
       cuts:
         event:
           inclusive:
             - "{pt} > 100"
         object:
           inclusive:
-            - "abs({eta}) < 5"
-    reference_barrel:
+              - "abs({eta}) < 5"
+    jet:
       cuts:
-        event:
-          inclusive:
-            - "abs({eta}) < 1.5"
         object:
           inclusive:
             - "abs({eta}) < 2.4"
-    reference_endcap:
-      cuts:
-        event:
-          inclusive:
-            - "abs({eta}) > 1.5"
-        object:
-          inclusive:
-            - "abs({eta}) < 2.4"
-    reference_forward:
+    default:
       cuts:
         event:
           inclusive:
@@ -39,12 +29,11 @@ GenJetAK8:
           inclusive:
             - "abs({eta}) < 5"
 
-
 GenJet:
   eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.5]
-    endcap: [1.5, 2.4]
+    endcap: [1.5, 5]
     forward: [2.4, 5]
   ids:
     mht_default:
@@ -63,7 +52,7 @@ GenJet:
           inclusive:
             - "abs({eta}) < 2.4"
             - "{pt} > 30"
-    reference_Pt40To100:
+    jet_Pt40To100:
       label: "Gen Jets"
       cuts:
         event:
@@ -73,7 +62,7 @@ GenJet:
         object:
           inclusive:
             - "abs({eta}) < 5"
-    reference_Pt100ToInf:
+    jet_Pt100ToInf:
       label: "Gen Jets"
       cuts:
         event:
@@ -81,8 +70,8 @@ GenJet:
             - "{pt} > 100"
         object:
           inclusive:
-            - "abs({eta}) < 5"
-    reference_Pt100ToInf_extEta:
+          - "abs({eta}) < 5"
+    jet_Pt100ToInf_extEta:
       label: "Gen Jets"
       cuts:
         event:
@@ -91,9 +80,9 @@ GenJet:
         object:
           inclusive:
             - "abs({eta}) < 7"
-    reference_Pt30ToInf_genBJets:
+    jet_Pt30ToInf_genBJets:
       label: "Gen Jets"
-      cuts:
+      cuts: 
         event:
           inclusive:
             - "{pt} > 30"
@@ -101,7 +90,7 @@ GenJet:
         object:
           inclusive:
             - "abs({eta}) < 2.4"
-    reference_Pt30ToInf_genNotBJets:
+    jet_Pt30ToInf_genNotBJets:
       label: "Gen Jets"
       cuts:
         event:
@@ -111,30 +100,15 @@ GenJet:
         object:
           inclusive:
             - "abs({eta}) < 2.4"
-    reference_barrel:
+    jet:
       label: "Gen Jets"
       cuts:
-        event:
-          inclusive:
-            - "abs({eta}) < 1.5"
         object:
           inclusive:
             - "abs({eta}) < 2.4"
-    reference_endcap:
+    default:
       label: "Gen Jets"
       cuts:
-        event:
-          inclusive:
-            - "abs({eta}) > 1.5"
-        object:
-          inclusive:
-            - "abs({eta}) < 2.4"
-    reference_forward:
-      label: "Gen Jets"
-      cuts:
-        event:
-          inclusive:
-            - "abs({eta}) > 2.4"
         object:
           inclusive:
             - "abs({eta}) < 5"

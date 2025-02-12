@@ -52,20 +52,14 @@
 #     max: 400
 #     step: 20
 
+# TODO: This config is almost an exact copy of tau_matching.yaml 
+# except thresholds and binning 
 TauTriggerBarrel_90perc_highPt:
   sample: VBFHToTauTau
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenVisTau"
-    x_arg: "pt"
-    label: "Gen Taus"
-    cuts:
-      event:
-        # - "{dr_0.3} < 0.15"
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenVisTau:default:barrel: "pt" 
   test_objects:
     L1nnPuppiTau:default:barrel: "pt"
     L1hpsTau:default:barrel: "pt"
@@ -74,28 +68,20 @@ TauTriggerBarrel_90perc_highPt:
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
   thresholds: [30, 50]
-  # scalings:
-  #   method: "naive"
-  #   threshold: 0.90
   binning:
     min: 0
     max: 400
     step: 10
 
+
+# TODO: This config is almost an exact copy of tau_matching.yaml 
+# except thresholds and binning 
 TauTriggerEndcap_90perc_highPt:
   sample: VBFHToTauTau
   version: V44nano
   match_test_to_ref: True
   reference_object:
-    object: "GenVisTau"
-    x_arg: "pt"
-    label: "Gen Taus"
-    cuts:
-      event:
-        # - "{dr_0.3} < 0.15"
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
+    GenVisTau:default:endcap: "pt"
   test_objects:
     L1nnPuppiTau:default:endcap: "pt"
     L1hpsTau:default:endcap: "pt"
@@ -104,9 +90,6 @@ TauTriggerEndcap_90perc_highPt:
   xlabel: "Gen. pT (GeV)"
   ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
   thresholds: [30, 50]
-  # scalings:
-  #   method: "naive"
-  #   threshold: 0.90
   binning:
     min: 0
     max: 400

@@ -11,6 +11,7 @@ L1gmtTkMuon:
       label: "GMT TkMuon"
       cuts:
         inclusive:
+          # - "({hwQual}>>1)&1 == 1" # NOTE: In comparison this is often used as default in matching üplots for muons
           - "(({hwQual}>>1)&1 == 1) | (({pt} > 8) & (({hwQual}>>0)&1 == 1))" # Loose (bit 2) for pt < 8 VLoose (bit 1) for pt > 8
     VLoose: # x.numberOfMatches() > 0
       label: "GMT TkMuon, VLoose ID" 

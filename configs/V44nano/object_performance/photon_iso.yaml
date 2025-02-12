@@ -4,16 +4,7 @@ PhotonIsolation_Barrel:
   iso_vs_efficiency: True
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Photons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 22"
-        - "abs({eta}) < 1.479"
-      object:
-        - "abs({eta}) < 1.479"
+    GenPart:photon_barrel:barrel_iso: "pt"
   test_objects:
     L1tkPhoton:NoIso:barrel: "relIso"
   xlabel: "Isolation"
@@ -29,17 +20,7 @@ PhotonIsolation_Endcap:
   iso_vs_efficiency: True
   match_test_to_ref: True
   reference_object:
-    object: "GenPart"
-    x_arg: "pt"
-    label: "Gen Photons"
-    cuts:
-      event:
-        - "(({statusFlags}>>7)&1) == 1"
-        - "abs({pdgId}) == 22"
-        - "abs({eta}) > 1.479"
-        - "abs({eta}) < 2.4"
-      object:
-        - "abs({eta}) > 1.479"
+    GenPart:photon_endcap:endcap_iso: "pt" 
   test_objects:
     L1tkPhoton:NoIso:endcap: "relIso"
   xlabel: "Isolation"
