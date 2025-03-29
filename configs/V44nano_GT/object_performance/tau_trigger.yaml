@@ -13,7 +13,7 @@ TauTriggerBarrel_90perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnPuppiTau:default:barrel: "pt"
+    L1GTnnTau:default:barrel: "pt"
     L1hpsTau:default:barrel: "pt"
     L1caloTau:default:barrel: "pt"
     L1nnCaloTau:default:barrel: "pt"
@@ -43,7 +43,7 @@ TauTriggerEndcap_90perc:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnPuppiTau:default:endcap: "pt"
+    L1GTnnTau:default:endcap: "pt"
     L1hpsTau:default:endcap: "pt"
     L1caloTau:default:endcap: "pt"
     L1nnCaloTau:default:endcap: "pt"

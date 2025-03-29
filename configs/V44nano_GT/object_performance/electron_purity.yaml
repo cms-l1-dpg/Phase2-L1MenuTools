@@ -3,9 +3,9 @@
 #   version: V44nano_GT
 #   match_test_to_ref: True
 #   reference_object:
-#     object: "L1tkElectron"
+#     object: "L1GTtkElectron"
 #     x_arg: "pt"
-#     label: "L1tkElectron"
+#     label: "L1GTtkElectron"
 #     cuts:
 #       event:
 #         - "{eleId} == 1"
@@ -15,9 +15,9 @@
 #   test_objects:
 #     GenPart:electron: "pt"
 #     L1EG:default: "pt"
-#     # L1tkElectron:NoIso: "pt"
-#     # L1tkElectron:NoIsoNoLowPtID: "pt"
-#     # L1tkElectron:Iso: "pt"
+#     # L1GTtkElectron:NoIso: "pt"
+#     # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+#     # L1GTtkElectron:Iso: "pt"
 #   xlabel: "L1 TkEle. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Barrel)"
 #   binning:
@@ -30,9 +30,9 @@ Purity_ElectronsEndcap:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1tkElectron"
+    object: "L1GTtkElectron"
     x_arg: "pt"
-    label: "L1tkElectron"
+    label: "L1GTtkElectron"
     cuts:
       event:
         - "{eleId} == 1"
@@ -42,9 +42,9 @@ Purity_ElectronsEndcap:
   test_objects:
     GenPart:electron: "pt"
     L1EG:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
+    # L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    # L1GTtkElectron:Iso: "pt"
   xlabel: "L1 TkEle. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:

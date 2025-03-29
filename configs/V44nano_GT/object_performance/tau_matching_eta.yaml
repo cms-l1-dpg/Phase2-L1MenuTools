@@ -13,7 +13,7 @@ TauMatching_Eta_Pt40To100:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnPuppiTau:default: "eta"
+    L1GTnnTau:default: "eta"
     L1hpsTau:default: "eta"
     L1caloTau:default: "eta"
     L1nnCaloTau:default: "eta"
@@ -38,7 +38,7 @@ TauMatching_Eta_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1nnPuppiTau:default: "eta"
+    L1GTnnTau:default: "eta"
     L1hpsTau:default: "eta"
     L1caloTau:default: "eta"
     L1nnCaloTau:default: "eta"

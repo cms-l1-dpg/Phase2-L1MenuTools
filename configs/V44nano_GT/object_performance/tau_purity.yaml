@@ -3,9 +3,9 @@ Purity_Tau_Barrel:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1nnPuppiTau"
+    object: "L1GTnnTau"
     x_arg: "pt"
-    label: "L1nnPuppiTau"
+    label: "L1GTnnTau"
     cuts:
       event:
         - "{passLooseNN} == 1"
@@ -27,9 +27,9 @@ Purity_Tau_Endcap:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1nnPuppiTau"
+    object: "L1GTnnTau"
     x_arg: "pt"
-    label: "L1nnPuppiTau"
+    label: "L1GTnnTau"
     cuts:
       event:
         - "{passLooseNN} == 1"
@@ -51,9 +51,9 @@ Purity_Tau_Eta_Pt40:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1nnPuppiTau"
+    object: "L1GTnnTau"
     x_arg: "eta"
-    label: "L1nnPuppiTau"
+    label: "L1GTnnTau"
     cuts:
       event:
         - "{passLooseNN} == 1"
@@ -75,9 +75,9 @@ Purity_Tau_Eta_Pt100:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1nnPuppiTau"
+    object: "L1GTnnTau"
     x_arg: "eta"
-    label: "L1nnPuppiTau"
+    label: "L1GTnnTau"
     cuts:
       event:
         - "{passLooseNN} == 1"

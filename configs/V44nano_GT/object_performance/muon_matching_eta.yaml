@@ -15,9 +15,9 @@ MuonsMatching_Eta_Pt2to5:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1gmtMuon:default: "eta"
-    L1gmtMuon:dR0p6: "eta"
-    L1gmtTkMuon:default: "eta"
+    L1GTgmtMuon:default: "eta"
+    L1GTgmtMuon:dR0p6: "eta"
+    L1GTgmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -41,8 +41,8 @@ MuonsMatching_Eta_Pt15toInf:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1gmtMuon:default: "eta"
-    L1gmtTkMuon:default: "eta"
+    L1GTgmtMuon:default: "eta"
+    L1GTgmtTkMuon:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

@@ -14,7 +14,7 @@ JetMatching_Eta_Pt40To100:
         - "abs({eta}) < 5"
   test_objects:
     L1puppiJetHisto:default: "eta"
-    L1puppiJetSC4:default: "eta"
+    L1GTsc4Jet:default: "eta"
     L1caloJet:default: "eta"
     L1TrackJet:default: "eta"
   xlabel: "Gen. $\\eta$"
@@ -39,7 +39,7 @@ JetMatching_Eta_Pt100ToInf:
         - "abs({eta}) < 5"
   test_objects:
     L1puppiJetHisto:default: "eta"
-    L1puppiJetSC4:default: "eta"
+    L1GTsc4Jet:default: "eta"
     L1caloJet:default: "eta"
     L1TrackJet:default: "eta"
   xlabel: "Gen. $\\eta$"
@@ -85,7 +85,7 @@ JetMatching_Eta_SC8_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC8:default: "eta"
+    L1GTsc8Jet:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:

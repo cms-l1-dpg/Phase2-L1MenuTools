@@ -15,9 +15,9 @@ ElectronsMatchingBarrel:
         - "abs({eta}) < 2.4"
   test_objects:
     L1EG:default: "pt"
-    L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    L1tkElectron:Iso: "pt"
+    L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    L1GTtkElectron:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -42,8 +42,8 @@ ElectronsMatchingBarrel:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkElectron:NoIso: "pt"
-#     L1tkElectron:Iso: "pt"
+#     L1GTtkElectron:NoIso: "pt"
+#     L1GTtkElectron:Iso: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Barrel)"
 #   binning:
@@ -68,9 +68,9 @@ ElectronsMatchingEndcap:
         - "abs({eta}) < 2.4"
   test_objects:
     L1EG:default: "pt"
-    L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    L1tkElectron:Iso: "pt"
+    L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    L1GTtkElectron:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:
@@ -95,8 +95,8 @@ ElectronsMatchingEndcap:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkElectron:NoIso: "pt"
-#     L1tkElectron:Iso: "pt"
+#     L1GTtkElectron:NoIso: "pt"
+#     L1GTtkElectron:Iso: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Endcap)"
 #   binning:

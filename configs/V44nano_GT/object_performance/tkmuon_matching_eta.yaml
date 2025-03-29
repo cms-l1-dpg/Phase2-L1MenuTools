@@ -15,12 +15,12 @@ TkMuonsMatching_Eta_Pt2to5:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # L1gmtMuon:default: "eta"
-    L1gmtTkMuon:default: "eta"
-    L1gmtTkMuon:VLoose: "eta"
-    L1gmtTkMuon:Loose: "eta"
-    L1gmtTkMuon:Medium: "eta"
-    L1gmtTkMuon:Tight: "eta"
+    # L1GTgmtMuon:default: "eta"
+    L1GTgmtTkMuon:default: "eta"
+    L1GTgmtTkMuon:VLoose: "eta"
+    L1GTgmtTkMuon:Loose: "eta"
+    L1GTgmtTkMuon:Medium: "eta"
+    L1GTgmtTkMuon:Tight: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (2-5 GeV)"
   binning:
@@ -44,12 +44,12 @@ TkMuonsMatching_Eta_Pt15toInf:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # L1gmtMuon:default: "eta"
-    L1gmtTkMuon:default: "eta"
-    L1gmtTkMuon:VLoose: "eta"
-    L1gmtTkMuon:Loose: "eta"
-    L1gmtTkMuon:Medium: "eta"
-    L1gmtTkMuon:Tight: "eta"
+    # L1GTgmtMuon:default: "eta"
+    L1GTgmtTkMuon:default: "eta"
+    L1GTgmtTkMuon:VLoose: "eta"
+    L1GTgmtTkMuon:Loose: "eta"
+    L1GTgmtTkMuon:Medium: "eta"
+    L1GTgmtTkMuon:Tight: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>15 GeV)"
   binning:

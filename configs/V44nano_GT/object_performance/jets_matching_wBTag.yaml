@@ -13,7 +13,7 @@ JetMatching_Eta_Pt40To100_ExtendedVsRegular:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC4:default: "eta"
+    L1GTsc4Jet:default: "eta"
     L1puppiExtJetSC4:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (40-100 GeV)"
@@ -36,7 +36,7 @@ JetMatching_Eta_Pt100ToInf_ExtendedVsRegular:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC4:default: "eta"
+    L1GTsc4Jet:default: "eta"
     L1puppiExtJetSC4:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"

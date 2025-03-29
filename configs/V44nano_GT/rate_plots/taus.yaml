@@ -2,7 +2,7 @@ TauRates:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1nnPuppiTau:default
+    - L1GTnnTau:default
     # - L1hpsTau:default
     - L1caloTau:default
     - L1nnCaloTau:default
@@ -17,8 +17,8 @@ TauRatesByRegion:
   test_objects:
     - L1caloTau:default:barrel
     - L1caloTau:default:endcap
-    - L1nnPuppiTau:default:barrel
-    - L1nnPuppiTau:default:endcap
+    - L1GTnnTau:default:barrel
+    - L1GTnnTau:default:endcap
   binning:
     min: 10
     max: 155
@@ -29,7 +29,7 @@ DiTauRates:
   version: V44nano_GT
   nObjects: 2
   test_objects:
-    - L1nnPuppiTau:default
+    - L1GTnnTau:default
     # - L1hpsTau:default
     - L1caloTau:default
     - L1nnCaloTau:default

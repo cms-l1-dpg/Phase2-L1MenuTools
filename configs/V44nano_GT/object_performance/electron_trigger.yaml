@@ -15,9 +15,9 @@ ElectronsTriggerBarrel:
         - "abs({eta}) < 2.8"
   test_objects:
     L1EG:default:barrel: "pt"
-    L1tkElectron:NoIso:barrel: "pt"
-    # L1tkElectron:NoIsoNoLowPtID:barrel: "pt"
-    L1tkElectron:Iso:barrel: "pt"
+    L1GTtkElectron:NoIso:barrel: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID:barrel: "pt"
+    L1GTtkElectron:Iso:barrel: "pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"
@@ -46,9 +46,9 @@ ElectronsTriggerEndcap:
         - "abs({eta}) < 2.8"
   test_objects:
     L1EG:default:endcap: "pt"
-    L1tkElectron:NoIso:endcap: "pt"
-    # L1tkElectron:NoIsoNoLowPtID:endcap: "pt"
-    L1tkElectron:Iso:endcap: "pt"
+    L1GTtkElectron:NoIso:endcap: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID:endcap: "pt"
+    L1GTtkElectron:Iso:endcap: "pt"
   thresholds: [10, 20, 30, 40]
   scalings:
     method: "naive"

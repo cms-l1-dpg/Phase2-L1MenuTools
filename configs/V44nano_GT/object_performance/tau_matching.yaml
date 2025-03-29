@@ -13,7 +13,7 @@ TausMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnPuppiTau:default: "pt"
+    L1GTnnTau:default: "pt"
     L1hpsTau:default: "pt"
     L1caloTau:default: "pt"
     L1nnCaloTau:default: "pt"
@@ -40,7 +40,7 @@ TausMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1nnPuppiTau:default: "pt"
+    L1GTnnTau:default: "pt"
     L1hpsTau:default: "pt"
     L1caloTau:default: "pt"
     L1nnCaloTau:default: "pt"

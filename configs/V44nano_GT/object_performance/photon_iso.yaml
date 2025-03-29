@@ -15,7 +15,7 @@ PhotonIsolation_Barrel:
       object:
         - "abs({eta}) < 1.479"
   test_objects:
-    L1tkPhoton:NoIso:barrel: "relIso"
+    L1GTtkPhoton:NoIso:barrel: "relIso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Barrel)"
   binning:
@@ -41,7 +41,7 @@ PhotonIsolation_Endcap:
       object:
         - "abs({eta}) > 1.479"
   test_objects:
-    L1tkPhoton:NoIso:endcap: "relIso"
+    L1GTtkPhoton:NoIso:endcap: "relIso"
   xlabel: "Isolation"
   ylabel: "Efficiency (Endcap)"
   binning:

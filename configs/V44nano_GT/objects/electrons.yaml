@@ -1,4 +1,4 @@
-L1tkElectron:
+L1GTtkElectron:
   match_dR: 0.15
   eta_ranges:
     inclusive: [0, 7]

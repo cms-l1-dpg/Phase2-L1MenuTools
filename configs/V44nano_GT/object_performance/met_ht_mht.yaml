@@ -87,7 +87,7 @@ MET_90perc:
     x_arg: "pt"
     label: "Gen MET"
   test_objects:
-    L1puppiMET:default: "pt"
+    L1GTpuppiMET:default: "pt"
     L1puppiMLMET:default: "pt"
     L1TrackMET:default: "pt"
   thresholds: [125, 150, 175, 200]
@@ -109,7 +109,7 @@ MET_90perc:
 #     x_arg: "pt"
 #     label: "Gen MET"
 #   test_objects:
-#     L1puppiMET:default: "pt"
+#     L1GTpuppiMET:default: "pt"
 #     L1puppiMLMET:default: "pt"
 #     L1TrackMET:default: "pt"
 #   thresholds: [125, 150, 175]

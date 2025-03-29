@@ -2,10 +2,10 @@ gmtTkMuonByID:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1gmtTkMuon:VLoose
-    - L1gmtTkMuon:Loose
-    - L1gmtTkMuon:Medium
-    - L1gmtTkMuon:Tight
+    - L1GTgmtTkMuon:VLoose
+    - L1GTgmtTkMuon:Loose
+    - L1GTgmtTkMuon:Medium
+    - L1GTgmtTkMuon:Tight
   binning:
     min: 0
     max: 75
@@ -15,10 +15,10 @@ gmtTkMuonByID_barrel:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1gmtTkMuon:VLoose:barrel
-    - L1gmtTkMuon:Loose:barrel
-    - L1gmtTkMuon:Medium:barrel
-    - L1gmtTkMuon:Tight:barrel
+    - L1GTgmtTkMuon:VLoose:barrel
+    - L1GTgmtTkMuon:Loose:barrel
+    - L1GTgmtTkMuon:Medium:barrel
+    - L1GTgmtTkMuon:Tight:barrel
   binning:
     min: 0
     max: 75
@@ -28,10 +28,10 @@ gmtTkMuonByID_overlap:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1gmtTkMuon:VLoose:overlap
-    - L1gmtTkMuon:Loose:overlap
-    - L1gmtTkMuon:Medium:overlap
-    - L1gmtTkMuon:Tight:overlap
+    - L1GTgmtTkMuon:VLoose:overlap
+    - L1GTgmtTkMuon:Loose:overlap
+    - L1GTgmtTkMuon:Medium:overlap
+    - L1GTgmtTkMuon:Tight:overlap
   binning:
     min: 0
     max: 75
@@ -41,10 +41,10 @@ gmtTkMuonByID_endcap:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1gmtTkMuon:VLoose:endcap
-    - L1gmtTkMuon:Loose:endcap
-    - L1gmtTkMuon:Medium:endcap
-    - L1gmtTkMuon:Tight:endcap
+    - L1GTgmtTkMuon:VLoose:endcap
+    - L1GTgmtTkMuon:Loose:endcap
+    - L1GTgmtTkMuon:Medium:endcap
+    - L1GTgmtTkMuon:Tight:endcap
   binning:
     min: 0
     max: 75

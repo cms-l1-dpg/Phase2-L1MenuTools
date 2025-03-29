@@ -54,7 +54,7 @@ L1puppiJetHisto:
         inclusive:
           - "abs({eta}) < 7"
 
-L1puppiJetSC4:
+L1GTsc4Jet:
   match_dR: 0.35
   label: "Seeded Cone PuppiJet"
   eta_ranges:
@@ -73,7 +73,7 @@ L1puppiJetSC4:
             - "abs({eta}) < 7"
             - "abs({pt}) >= 25"
 
-L1puppiJetSC8:
+L1GTsc8Jet:
   match_dR: 0.35
   label: "Seeded Cone PuppiJet 8"
   eta_ranges:

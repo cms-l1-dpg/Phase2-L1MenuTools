@@ -8,7 +8,7 @@
 #   ids:
 #     default: {}
 
-L1puppiMET:
+L1GTpuppiMET:
   label: "Puppi MET"
   ids:
     default: {}

@@ -15,8 +15,8 @@ PhotonsMatching_Barrel:
         - "abs({eta}) < 2.4"
   test_objects:
     L1EG:default: "pt"
-    L1tkPhoton:NoIso: "pt"
-    L1tkPhoton:Iso: "pt"
+    L1GTtkPhoton:NoIso: "pt"
+    L1GTtkPhoton:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -41,8 +41,8 @@ PhotonsMatching_Endcap:
         - "abs({eta}) < 2.4"
   test_objects:
     L1EG:default: "pt"
-    L1tkPhoton:NoIso: "pt"
-    L1tkPhoton:Iso: "pt"
+    L1GTtkPhoton:NoIso: "pt"
+    L1GTtkPhoton:Iso: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:
@@ -67,8 +67,8 @@ PhotonsMatching_Endcap:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkPhoton:NoIso: "pt"
-#     L1tkPhoton:Iso: "pt"
+#     L1GTtkPhoton:NoIso: "pt"
+#     L1GTtkPhoton:Iso: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Barrel)"
 #   binning:
@@ -93,8 +93,8 @@ PhotonsMatching_Endcap:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkPhoton:NoIso: "pt"
-#     L1tkPhoton:Iso: "pt"
+#     L1GTtkPhoton:NoIso: "pt"
+#     L1GTtkPhoton:Iso: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Endcap)"
 #   binning:
@@ -119,10 +119,10 @@ PhotonsMatching_Endcap:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkPhoton:NoIso: "pt"
-#     L1tkPhoton:Iso: "pt"
-#     L1tkPhoton:NoIsoPt30: "pt"
-#     L1tkPhoton:IsoPt30: "pt"
+#     L1GTtkPhoton:NoIso: "pt"
+#     L1GTtkPhoton:Iso: "pt"
+#     L1GTtkPhoton:NoIsoPt30: "pt"
+#     L1GTtkPhoton:IsoPt30: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Barrel)"
 #   binning:
@@ -147,10 +147,10 @@ PhotonsMatching_Endcap:
 #         - "abs({eta}) < 2.4"
 #   test_objects:
 #     L1EG:default: "pt"
-#     L1tkPhoton:NoIso: "pt"
-#     L1tkPhoton:Iso: "pt"
-#     L1tkPhoton:NoIsoPt30: "pt"
-#     L1tkPhoton:IsoPt30: "pt"
+#     L1GTtkPhoton:NoIso: "pt"
+#     L1GTtkPhoton:Iso: "pt"
+#     L1GTtkPhoton:NoIsoPt30: "pt"
+#     L1GTtkPhoton:IsoPt30: "pt"
 #   xlabel: "Gen. $p_T$ (GeV)"
 #   ylabel: "Matching Efficiency (Endcap)"
 #   binning:

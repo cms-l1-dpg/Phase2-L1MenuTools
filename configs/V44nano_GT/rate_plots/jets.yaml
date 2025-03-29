@@ -3,7 +3,7 @@ JetDefaultRates:
   version: V44nano_GT
   test_objects:
     # - L1puppiJetHisto:default
-    - L1puppiJetSC4:default
+    - L1GTsc4Jet:default
     - L1caloJet:default
     - L1TrackJet:default
   binning:
@@ -15,9 +15,9 @@ JetsByRegion:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1puppiJetSC4:default:barrel
-    - L1puppiJetSC4:default:endcap
-    - L1puppiJetSC4:default:forward
+    - L1GTsc4Jet:default:barrel
+    - L1GTsc4Jet:default:endcap
+    - L1GTsc4Jet:default:forward
     - L1caloJet:default:barrel
     - L1caloJet:default:endcap
     - L1caloJet:default:forward
@@ -32,7 +32,7 @@ JetExtendedRates:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    - L1puppiJetSC4:default:inclusive
+    - L1GTsc4Jet:default:inclusive
     - L1puppiExtJetSC4:default:inclusive
     # - L1puppiExtJetSC4:default:barrel
     # - L1puppiExtJetSC4:default:endcap
@@ -46,9 +46,9 @@ JetExtendedRatesByRegion:
   sample: MinBias
   version: V44nano_GT
   test_objects:
-    # - L1puppiJetSC4:default:barrel
-    # - L1puppiJetSC4:default:endcap
-    # - L1puppiJetSC4:default:forward
+    # - L1GTsc4Jet:default:barrel
+    # - L1GTsc4Jet:default:endcap
+    # - L1GTsc4Jet:default:forward
     - L1puppiExtJetSC4:default:barrel
     - L1puppiExtJetSC4:default:endcap
     - L1puppiExtJetSC4:default:forward
@@ -61,8 +61,8 @@ JetExtendedRatesByRegion:
 #   sample: MinBias
 #   version: V44nano_GT
 #   test_objects:
-#     - L1puppiJetSC4:default
-#     - L1puppiJetSC8:default
+#     - L1GTsc4Jet:default
+#     - L1GTsc8Jet:default
 #   binning:
 #     min: 40
 #     max: 420
@@ -73,11 +73,11 @@ JetExtendedRatesByRegion:
 #   sample: MinBias
 #   version: V44nano_GT
 #   test_objects:
-#     # - L1puppiJetSC4:default
-#     - L1puppiJetSC8:default
-#     - L1puppiJetSC8:default:barrel
-#     - L1puppiJetSC8:default:endcap
-#     - L1puppiJetSC8:default:forward
+#     # - L1GTsc4Jet:default
+#     - L1GTsc8Jet:default
+#     - L1GTsc8Jet:default:barrel
+#     - L1GTsc8Jet:default:endcap
+#     - L1GTsc8Jet:default:forward
 #   binning:
 #     min: 40
 #     max: 420

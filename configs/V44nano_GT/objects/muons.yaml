@@ -1,4 +1,4 @@
-L1gmtTkMuon:
+L1GTgmtTkMuon:
   label: "GMT TkMuon"
   match_dR: 0.1
   eta_ranges:
@@ -33,7 +33,7 @@ L1gmtTkMuon:
         inclusive:
           - "({hwQual}>>3)&1 == 1"
 
-L1gmtMuon:
+L1GTgmtMuon:
   label: "GMT Muon"
   match_dR: 0.6
   eta_ranges:
@@ -53,7 +53,7 @@ L1gmtMuon:
       match_dR: 0.6
       cuts: {}
 
-L1gmtDispMuon:
+L1GTgmtDispMuon:
   label: "GMT Displaced Muon"
   match_dR: 0.6
   eta_ranges:

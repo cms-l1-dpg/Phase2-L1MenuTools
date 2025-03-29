@@ -3,9 +3,9 @@ Purity_Muons_Barrel:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1gmtTkMuon"
+    object: "L1GTgmtTkMuon"
     x_arg: "pt"
-    label: "L1gmtTkMuon"
+    label: "L1GTgmtTkMuon"
     cuts:
       event:
         - "({hwQual}>>0)&1 == 1"
@@ -14,10 +14,10 @@ Purity_Muons_Barrel:
         - "abs({eta}) < 2.4"
   test_objects:
     GenPart:muon: "pt"
-    L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
+    L1GTgmtMuon:default: "pt"
+    # L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    # L1GTtkElectron:Iso: "pt"
   xlabel: "L1 TkMuon. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Barrel)"
   binning:
@@ -30,9 +30,9 @@ Purity_Muons_Overlap:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1gmtTkMuon"
+    object: "L1GTgmtTkMuon"
     x_arg: "pt"
-    label: "L1gmtTkMuon"
+    label: "L1GTgmtTkMuon"
     cuts:
       event:
         - "({hwQual}>>0)&1 == 1"
@@ -42,10 +42,10 @@ Purity_Muons_Overlap:
         - "abs({eta}) < 2.4"
   test_objects:
     GenPart:muon: "pt"
-    L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
+    L1GTgmtMuon:default: "pt"
+    # L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    # L1GTtkElectron:Iso: "pt"
   xlabel: "L1 TkMuon. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Overlap)"
   binning:
@@ -58,9 +58,9 @@ Purity_Muons_Endcap:
   version: V44nano_GT
   match_test_to_ref: True
   reference_object:
-    object: "L1gmtTkMuon"
+    object: "L1GTgmtTkMuon"
     x_arg: "pt"
-    label: "L1gmtTkMuon"
+    label: "L1GTgmtTkMuon"
     cuts:
       event:
         - "({hwQual}>>0)&1 == 1"
@@ -70,10 +70,10 @@ Purity_Muons_Endcap:
         - "abs({eta}) < 2.4"
   test_objects:
     GenPart:muon: "pt"
-    L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
+    L1GTgmtMuon:default: "pt"
+    # L1GTtkElectron:NoIso: "pt"
+    # L1GTtkElectron:NoIsoNoLowPtID: "pt"
+    # L1GTtkElectron:Iso: "pt"
   xlabel: "L1 TkMuon. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (Endcap)"
   binning:

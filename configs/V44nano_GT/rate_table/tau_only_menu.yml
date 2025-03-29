@@ -3,10 +3,10 @@ L1_PFIsoTau_PFIsoTau:
     - leg1.deltaR(leg2) > 0.5
   leg1:
     threshold_cut: offline_pt >= 52.0
-    obj: L1nnPuppiTau:default
+    obj: L1GTnnTau:default
   leg2:
     threshold_cut: offline_pt >= 52.0
-    obj: L1nnPuppiTau:default
+    obj: L1GTnnTau:default
 L1_SinglePFTau:
   cross_masks: []
   leg1:

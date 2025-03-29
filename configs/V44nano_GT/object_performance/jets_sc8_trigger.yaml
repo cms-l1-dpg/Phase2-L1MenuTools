@@ -12,7 +12,7 @@ JetTurnonBarrelSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:barrel: "pt"
+    L1GTsc8Jet:default:barrel: "pt"
   thresholds: [150]
   scalings:
     method: "naive"
@@ -38,7 +38,7 @@ JetTurnonEndcapSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:endcap: "pt"
+    L1GTsc8Jet:default:endcap: "pt"
   thresholds: [150]
   scalings:
     method: "naive"
@@ -64,7 +64,7 @@ JetTurnonForwardSC8:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC8:default:forward: "pt"
+    L1GTsc8Jet:default:forward: "pt"
   thresholds: [150]
   scalings:
     method: "naive"
