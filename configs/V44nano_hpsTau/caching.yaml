@@ -50,7 +50,7 @@ V44nano_hpsTau:
   #       L1TrackHT: [ht, mht]
   #       L1TrackJet: [pt, eta, phi]
   VBFHToTauTau:
-    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1_hpsTau/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT_puppiHPS/*/0000/*.root
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1_hpsTau_again/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT_puppiHPS_again/*/0000/*.root
     trees_branches:
       Events:
         GenPart: [pt, eta, phi, pdgId, statusFlags]
