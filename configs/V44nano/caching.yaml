@@ -1,32 +1,32 @@
 V44nano:
-  # Hgg:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V44_reL1wTT/*/0000/*.root
-  #   trees_branches:
-  #     Events:
-  #       GenPart: [pt, eta, phi, pdgId, statusFlags]
-  #       L1tkPhoton: "all" 
-  #       L1EGbarrel: "all" 
-  #       L1EGendcap: "all" 
-  # DYLL_M50:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V44_reL1wTT/*/0000/*.root
-  #   trees_branches:
-  #     Events:
-  #       GenPart: "all" 
-  #       ## EG
-  #       L1tkElectron: "all" 
-  #       L1EGbarrel: "all" 
-  #       L1EGendcap: "all" 
-  #       ## Muons
-  #       L1gmtTkMuon: "all" 
-  #       L1gmtMuon: "all"
-  #       L1gmtDispMuon: "all"
-  #       ## TF Muons
-  #       L1MuonKMTF: "all"
-  #       L1MuonOMTF: "all"
-  #       L1MuonEMTF: "all"
-  #       L1DispMuonKMTF: "all"
-  #       L1DispMuonOMTF: "all"
-  #       L1DispMuonEMTF: "all"
+  Hgg:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+    trees_branches:
+      Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        L1tkPhoton: "all" 
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V44_reL1wTT/*/0000/*.root
+    trees_branches:
+      Events:
+        GenPart: "all" 
+        ## EG
+        L1tkElectron: "all" 
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
+        ## Muons
+        L1gmtTkMuon: "all" 
+        L1gmtMuon: "all"
+        L1gmtDispMuon: "all"
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
   TT:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/*/0000/*.root
     trees_branches:
