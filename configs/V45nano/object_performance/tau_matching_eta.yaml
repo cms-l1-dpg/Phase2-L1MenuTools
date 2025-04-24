@@ -14,7 +14,7 @@ TauMatching_Eta_Pt40To100:
         - "abs({eta}) < 2.4"
   test_objects:
     L1nnPuppiTau:default: "eta"
-    L1hpsTau:default: "eta"
+    # L1hpsTau:default: "eta"
     L1caloTau:default: "eta"
     L1nnCaloTau:default: "eta"
   xlabel: "Gen. $\\eta$"
@@ -39,7 +39,7 @@ TauMatching_Eta_Pt100ToInf:
         - "abs({eta}) < 5"
   test_objects:
     L1nnPuppiTau:default: "eta"
-    L1hpsTau:default: "eta"
+    # L1hpsTau:default: "eta"
     L1caloTau:default: "eta"
     L1nnCaloTau:default: "eta"
   xlabel: "Gen. $\\eta$"

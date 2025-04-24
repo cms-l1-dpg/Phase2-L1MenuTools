@@ -56,7 +56,7 @@ V45nano:
         GenPart: [pt, eta, phi, pdgId, statusFlags]
         GenVisTau: "all" 
         L1nnPuppiTau: "all" 
-        L1hpsTau: "all" 
+        # L1hpsTau: "all" # BUG: not included in 151pre2
         L1caloTau: "all" 
         L1nnCaloTau: "all"
   MinBias:
@@ -76,7 +76,7 @@ V45nano:
         L1gmtDispMuon: "all"
         ## TAUS
         L1nnPuppiTau: "all" 
-        L1hpsTau: "all" 
+        # L1hpsTau: "all" # BUG: not included in 151pre2
         L1caloTau: "all" 
         L1nnCaloTau: "all"
         ## MET/Sums
