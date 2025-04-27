@@ -17,16 +17,16 @@ cache_objects configs/V45nano_firstTrain/caching.yaml
 # object_performance configs/V45nano_firstTrain/object_performance/photons_matching_eta.yaml
 # object_performance configs/V45nano_firstTrain/object_performance/photons_trigger.yaml
 
-# # Jets
-# object_performance configs/V45nano_firstTrain/object_performance/jets_matching.yaml
-# object_performance configs/V45nano_firstTrain/object_performance/jets_matching_eta.yaml
-# object_performance configs/V45nano_firstTrain/object_performance/jets_trigger.yaml
+# Jets
+object_performance configs/V45nano_firstTrain/object_performance/jets_matching.yaml
+object_performance configs/V45nano_firstTrain/object_performance/jets_matching_eta.yaml
+object_performance configs/V45nano_firstTrain/object_performance/jets_trigger.yaml
 
-# Taus
-object_performance configs/V45nano_firstTrain/object_performance/tau_matching.yaml
-object_performance configs/V45nano_firstTrain/object_performance/tau_matching_eta.yaml
-object_performance configs/V45nano_firstTrain/object_performance/tau_matching_highPt.yaml
-object_performance configs/V45nano_firstTrain/object_performance/tau_trigger.yaml
+# # Taus
+# object_performance configs/V45nano_firstTrain/object_performance/tau_matching.yaml
+# object_performance configs/V45nano_firstTrain/object_performance/tau_matching_eta.yaml
+# object_performance configs/V45nano_firstTrain/object_performance/tau_matching_highPt.yaml
+# object_performance configs/V45nano_firstTrain/object_performance/tau_trigger.yaml
 
 # # Sums
 # object_performance configs/V45nano_firstTrain/object_performance/met_ht_mht.yaml

@@ -27,28 +27,28 @@ V45nano_firstTrain:
   #       L1DispMuonKMTF: "all"
   #       L1DispMuonOMTF: "all"
   #       L1DispMuonEMTF: "all"
-  # TT:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151pre2_firstTrain/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_firstTrain/*/0000/*.root
-  #   trees_branches:
-  #     Events:
-  #       # gen
-  #       GenJet: [pt, eta, phi, partonFlavour]
-  #       GenJetAK8: [pt, eta, phi]
-  #       GenMET: "all"
-  #       # # sums
-  #       L1puppiMET: [pt, phi]
-  #       L1puppiMLMET: [pt]
-  #       L1puppiJetSC4sums: [pt, phi]
-  #       L1puppiHistoJetSums: [pt, phi]
-  #       # # jets
-  #       L1puppiJetSC4: [pt, eta, phi]
-  #       L1puppiJetSC8: [pt, eta, phi]
-  #       L1puppiExtJetSC4: [pt, eta, phi, btagScore]
-  #       L1puppiJetHisto: [pt, eta, phi]
-  #       L1caloJet: [pt, eta, phi]
-  #       L1TrackMET: [pt]
-  #       L1TrackHT: [ht, mht]
-  #       L1TrackJet: [pt, eta, phi]
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151pre2_firstTrain/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_firstTrain/*/0000/*.root
+    trees_branches:
+      Events:
+        # gen
+        GenJet: [pt, eta, phi, partonFlavour]
+        GenJetAK8: [pt, eta, phi]
+        GenMET: "all"
+        # # sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        # # jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
   VBFHToTauTau:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151pre2_firstTrain/v45/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V45_reL1wTT_firstTrain/*/0000/*.root
     trees_branches:
