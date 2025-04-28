@@ -9,9 +9,11 @@ def deltar(eta1, eta2, phi1, phi2):
     return np.sqrt(
         np.power(abs(eta1 - eta2), 2)
         + np.power(
-            abs(phi1 - phi2)
-            if abs(phi1 - phi2) <= np.pi
-            else 2 * np.pi - abs(phi1 - phi2),
+            (
+                abs(phi1 - phi2)
+                if abs(phi1 - phi2) <= np.pi
+                else 2 * np.pi - abs(phi1 - phi2)
+            ),
             2,
         )
     )

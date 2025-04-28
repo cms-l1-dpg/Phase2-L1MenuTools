@@ -1,6 +1,7 @@
 """
 These tests check if V29 electron object performance plots can be reproduced.
 """
+
 import json
 from unittest.mock import patch
 import re

@@ -44,7 +44,9 @@ class Plotter:
 
     def _create_new_plot(self) -> tuple[plt.Figure, plt.Axes]:
         fig, ax = plt.subplots(figsize=(10, 10))
-        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14, rlabel=f"{self.pu_value} PU")
+        hep.cms.label(
+            ax=ax, llabel="Phase-2 Simulation", com=14, rlabel=f"{self.pu_value} PU"
+        )
         return fig, ax
 
 
@@ -77,7 +79,9 @@ class EfficiencyPlotter(Plotter):
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg.bin_min, self.cfg.bin_max)
         ax.tick_params(direction="in")
-        watermark = f"{self.version}_{self.plot_name}_{self.threshold} ({self.pu_value})"
+        watermark = (
+            f"{self.version}_{self.plot_name}_{self.threshold} ({self.pu_value})"
+        )
         ax.text(
             0,
             -0.1,
@@ -538,10 +542,10 @@ class ScalingCentral:
                     scaling_collection = ScalingCollection(
                         cfg_plot, method, scaling_pct
                     )
-                    scalings[str(test_obj)][
-                        threshold
-                    ] = scaling_collection._compute_scalings(
-                        turnon_collection, test_obj, scaling_pct, method
+                    scalings[str(test_obj)][threshold] = (
+                        scaling_collection._compute_scalings(
+                            turnon_collection, test_obj, scaling_pct, method
+                        )
                     )
                 # Fit parameters of scaling function
                 params = scaling_collection.fit_linear_function(scalings[str(test_obj)])
