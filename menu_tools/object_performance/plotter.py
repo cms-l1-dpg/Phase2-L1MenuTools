@@ -4,6 +4,12 @@ import os
 from typing import Any
 import warnings
 import yaml
+import sys
+from pathlib import Path
+
+# Add the workspace root to the Python path
+workspace_root = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(workspace_root))
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -317,7 +323,8 @@ class EfficiencyCentral:
     Class that orchestrates the plotting of
     """
 
-    def __init__(self, cfg_plots_path):
+    def __init__(self, cfg_plots_path, pu_value=200):
+        self.pu_value = pu_value
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
 
@@ -348,7 +355,7 @@ class EfficiencyCentral:
                 turnon_collection = TurnOnCollection(cfg_plot, threshold, plot_name)
                 turnon_collection.create_hists()
 
-                plotter = EfficiencyPlotter(plot_name, cfg_plot, turnon_collection)
+                plotter = EfficiencyPlotter(plot_name, cfg_plot, turnon_collection, self.pu_value)
                 plotter.plot()
 
 
@@ -569,11 +576,12 @@ def main():
         help="Path of YAML configuration file specifying the desired plots.",
     )
     parser.add_argument("-s", "--scalings_only", action="store_true")
+    parser.add_argument("--pu_value", type=int, default=200, help="PU value for plots.")
     args = parser.parse_args()
 
     for path_cfg_plot in args.cfg_plots:
         if not args.scalings_only:
-            plotter = EfficiencyCentral(path_cfg_plot)
+            plotter = EfficiencyCentral(path_cfg_plot, pu_value=args.pu_value)
             plotter.run()
 
         scalings = ScalingCentral(path_cfg_plot)
