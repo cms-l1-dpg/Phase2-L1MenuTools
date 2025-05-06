@@ -1,6 +1,7 @@
 import argparse
 import glob
 import os
+import time
 
 import awkward as ak
 from tqdm import tqdm
@@ -332,8 +333,10 @@ class ObjectCacher:
         if self._dryrun:
             return
 
+        start_time = time.time()
         self._concat_array_from_ntuples()
         self._save_array_to_parquet()
+        print(f"Loaded {self.parquet_fname} in {time.time() - start_time:.2f} s") 
 
 
 def parse_args():
@@ -353,8 +356,8 @@ def parse_args():
 
 
 def main():
+    start_time = time.time()
     args = parse_args()
-
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
@@ -376,6 +379,7 @@ def main():
                         dryrun=args.dry_run,
                     )
                     loader.load()
+    print(f"Cashing finished in {time.time() - start_time:.2f} s") 
 
 
 if __name__ == "__main__":
