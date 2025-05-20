@@ -44,18 +44,19 @@ class Plotter:
 
     def _create_new_plot(self) -> tuple[plt.Figure, plt.Axes]:
         fig, ax = plt.subplots(figsize=(10, 10))
-        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14)
+        hep.cms.label(ax=ax, llabel="Phase-2 Simulation", com=14, rlabel=f"{self.pu_value} PU")
         return fig, ax
 
 
 class EfficiencyPlotter(Plotter):
-    def __init__(self, name, cfg, turnon_collection):
+    def __init__(self, name, cfg, turnon_collection, pu_value=200):
         self.plot_name = name
         self.cfg = PerformancePlotConfig(cfg, name)
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
         self.threshold = self.turnon_collection.threshold
         self.bin_width = turnon_collection.cfg_plot.bin_width
+        self.pu_value = pu_value
 
     @property
     def _outdir_turnons(self) -> str:
@@ -76,7 +77,7 @@ class EfficiencyPlotter(Plotter):
         ax.set_ylabel(rf"{ylabel}")
         ax.set_xlim(self.cfg.bin_min, self.cfg.bin_max)
         ax.tick_params(direction="in")
-        watermark = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
+        watermark = f"{self.version}_{self.plot_name}_{self.threshold} ({self.pu_value})"
         ax.text(
             0,
             -0.1,
