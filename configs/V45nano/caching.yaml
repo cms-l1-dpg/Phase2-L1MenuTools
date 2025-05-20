@@ -21,7 +21,7 @@ V45nano:
         L1TrackMET: [pt]
         L1TrackHT: [ht, mht]
         L1TrackJet: [pt, eta, phi]
-        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore]
 
   MinBias:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151X/v45/MinBias_TuneCP5_14TeV-pythia8/MinBias_Spring24_200PUALCA_V45_reL1wTT_NGJetNano/250506_203903/0000/*.root
@@ -55,7 +55,7 @@ V45nano:
         L1puppiExtJetSC4: [pt, eta, phi, btagScore]
         L1puppiJetHisto: [pt, eta, phi]
         L1caloJet: [pt, eta, phi]
-        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore]
         ## track-only
         L1TrackMET: [pt]
         L1TrackHT: [ht, mht]

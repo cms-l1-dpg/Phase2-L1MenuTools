@@ -115,18 +115,6 @@ L1puppiJetSC4NG:
         inclusive:
           - "abs({eta}) < 2.4"
           - "{udsTagScore} > 0.54"
-    taupjetnn:
-      label: "NG SC4, TauptagScore > 0.1"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 2.4"
-          - "{tau_pTagScore} > 0.1"
-    taunjetnn:
-      label: "NG SC4, TauntagScore > 0.1"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 2.4"
-          - "{tau_nTagScore} > 0.1"
 
 L1puppiJetSC8:
   match_dR: 0.35
