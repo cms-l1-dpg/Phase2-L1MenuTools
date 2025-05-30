@@ -11,7 +11,8 @@ L1tkElectron:
         inclusive:
           - "abs({eta}) < 2.4"
         endcap:
-          - "({eleId} == 1) | ({pt} < 25)"
+          - "{eleId} == 1"
+          # - "({eleId} == 1) | ({pt} < 25)"
         barrel:
           - "{eleId} == 1"
     NoIsoForIso:
