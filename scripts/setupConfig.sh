@@ -5,4 +5,4 @@ OUTPUT=$2
 # grep -rl "$INPUT" configs/$OUTPUT | xargs sed -i "s/$INPUT/$OUTPUT/g"
 
 cp -r configs/V45nano_$INPUT configs/V45nano_$OUTPUT
-grep -rl "$INPUT" configs/V45nano_$OUTPUT | xargs sed -i "s/$INPUT/$OUTPUT/g"
+grep -rl "$INPUT" configs/V45nano_$OUTPUT | xargs sed -i "s/_$INPUT/_$OUTPUT/g"
