@@ -68,5 +68,5 @@ rate_plots configs/$VERSION/rate_plots/taus.yaml
 rate_table configs/$VERSION/rate_table/step1_cfg.yml
 
 # === Extras === #
-# rate_plots configs/$VERSION/rate_plots/bjet.yaml
-# rate_plots configs/$VERSION/rate_plots/disp_muons.yaml
+rate_plots configs/$VERSION/rate_plots/bjet.yaml
+rate_plots configs/$VERSION/rate_plots/disp_muons.yaml
