@@ -14,6 +14,22 @@ L1tkElectron:
           - "({eleId} == 1) | ({pt} < 25)"
         barrel:
           - "{eleId} == 1"
+    # NoIsoECAlways:
+    #   label: "TkElectron, EC Qual all PT"
+    #   cuts:
+    #     inclusive:
+    #       - "abs({eta}) < 2.4"
+    #     endcap:
+    #       - "{eleId} == 1"
+    #     barrel:
+    #       - "{eleId} == 1"
+    # NoIsoECNever:
+    #   label: "TkElectron, no Qual in EC"
+    #   cuts:
+    #     inclusive:
+    #       - "abs({eta}) < 2.4"
+    #     barrel:
+    #       - "{eleId} == 1"
     NoIsoForIso:
       # This id is exclusively used for the
       # isoloation wp derivation
