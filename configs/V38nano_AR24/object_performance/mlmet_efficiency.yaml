@@ -1,0 +1,33 @@
+MET_puppi_ml:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenMET"
+    x_arg: "pt"
+    label: "Gen MET"
+  test_objects:
+    L1puppiMET:default: "pt"
+  thresholds: [242]
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+MET_ml:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenMET"
+    x_arg: "pt"
+    label: "Gen MET"
+  test_objects:
+    L1puppiMLMET:default: "pt"
+  thresholds: [212]
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 20

@@ -1,0 +1,10 @@
+BJetRates:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1puppiExtJetSC4:default
+    - L1puppiExtJetSC4:bjetnn
+  binning:
+    min: 40
+    max: 420
+    step: 20

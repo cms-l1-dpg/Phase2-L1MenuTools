@@ -1,0 +1,69 @@
+# phase1PuppiHT:
+#   label: "Histogrammed Puppi HT"
+#   ids:
+#     default: {}
+
+# phase1PuppiMHT:
+#   label: "Phase1 Puppi MHT"
+#   ids:
+#     default: {}
+
+L1puppiMET:
+  label: "Puppi MET"
+  ids:
+    default: {}
+
+L1puppiMLMET:
+  label: "Puppi MLMET"
+  ids:
+    default: {}
+
+L1puppiJetSC4sums:
+  ids:
+    HT:
+      label: "SeededCone HT"
+      cuts:
+        inclusive:
+          - "{sumType} == 0"
+    MHT:
+      label: "SeededCone MHT"
+      cuts:
+        inclusive:
+          - "{sumType} == 1"
+
+L1puppiHistoJetSums:
+  ids:
+    HT:
+      label: "Histogrammed Puppi HT"
+      cuts:
+        inclusive:
+          - "{sumType} == 0"
+    MHT:
+      label: "Histogrammed Puppi MHT"
+      cuts:
+        inclusive:
+          - "{sumType} == 1"
+
+L1TrackHT:
+  ids:
+    HT:
+      label: "Tracker HT"
+    MHT:
+      label: "Tracker MHT"
+
+L1ExtTrackHT:
+  ids:
+    HT:
+      label: "ext. Tracker HT"
+    MHT:
+      label: "ext. Tracker MHT"
+
+L1TrackMET:
+  label: "Tracker MET"
+  ids:
+    default: {}
+
+L1TrackTripletWord:
+  label: "Track Triplet for W3Pi"
+  ids:
+    default: {}

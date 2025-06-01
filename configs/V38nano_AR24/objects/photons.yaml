@@ -1,0 +1,44 @@
+L1tkPhoton:
+  match_dR: 0.15
+  eta_ranges:
+    inclusive: [0, 2.4]
+    barrel: [0, 1.479]
+    endcap: [1.479, 2.4]
+  ids:
+    NoIso:
+      label: "TkPhoton"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 5"
+        barrel:
+          - "{eleId} == 1"
+        endcap:
+          - "{phoId} == 1"
+    Iso:
+      label: "TkIsoPhoton"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 5"
+        barrel:
+          - "abs({relIso}) < 0.25"
+          - "{eleId} == 1"
+        endcap:
+          - "abs({relIso}) < 0.205"
+          - "{phoId} == 1"
+    Iso_ptcut:
+      label: "TkIsoPhoton (L1 $p_{T}$ > 29 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{pt} > 5"
+          - "{pt} > 29"
+        barrel:
+          - "abs({relIso}) < 0.25"
+          - "{eleId} == 1"
+          # - "{pt} > 29"
+        endcap:
+          - "abs({relIso}) < 0.205"
+          - "{phoId} == 1"
+          # - "{pt} > 28"

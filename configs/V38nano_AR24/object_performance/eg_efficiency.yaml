@@ -1,0 +1,49 @@
+ElectronsEfficiencyEndcap:
+  sample: DYLL_M50
+  version: V38nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1EG:default_ptcut: "pt"
+    L1tkElectron:NoIso_ptcut: "pt"
+    L1tkElectron:Iso_ptcut: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+PhotonEfficiencyEndcap:
+  sample: Hgg
+  version: V38nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Photons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 22"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1tkPhoton:Iso_ptcut: "pt"
+  xlabel: "Gen. $p_{T}$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 100
+    step: 3

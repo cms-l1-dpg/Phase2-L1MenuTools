@@ -1,0 +1,43 @@
+MHT_offCut_puppi:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen MHT"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 30"
+    trafo: "MHT"
+  test_objects:
+    L1puppiJetSC4sums:MHT: "pt"
+  thresholds: [194]
+  xlabel: "Gen. MHT30 (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+MHT_offCut_tracker:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen MHT"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 30"
+    trafo: "MHT"
+  test_objects:
+    L1TrackHT:MHT: "mht"
+  thresholds: [157]
+  xlabel: "Gen. MHT30 (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 500
+    step: 20

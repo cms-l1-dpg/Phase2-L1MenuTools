@@ -1,0 +1,12 @@
+EGRates:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1EG:default
+    - L1tkElectron:NoIso
+    - L1tkElectron:Iso
+    - L1tkPhoton:Iso
+  binning:
+    min: 10
+    max: 97
+    step: 3
