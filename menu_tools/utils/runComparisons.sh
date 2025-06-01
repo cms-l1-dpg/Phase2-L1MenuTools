@@ -1,3 +1,13 @@
+MAX_JOBS=6
+
+run_when_ready() {
+    while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+        sleep 3
+    done
+    "$@" &
+}
+
+
 # python compare_json-wNano.py --v1 V44nano --v0 V45nano_jetSC8
 # python compare_json-wNano.py --v1 V45nano --v0 V45nano_jetSC8
 # python compare_json-wNano.py --v1 V44nano --v0 V45nano_l1Track
@@ -29,12 +39,23 @@
 # python compare_json-wNano.py --v1 V45nano --v0 V45nano_nanoSC4NG
 # python compare_json-wNano.py --v1 V45nano_nanoSC4NG --v0 V45nano_L1EG
 
-python compare_json-wNano.py --v1 V45nano --v0 V45nano_151pre3
+# python compare_json-wNano.py --v1 V45nano --v0 V45nano_151pre3
 
 
 # # Muon RPC Geometry change
 # python compare_json-wNano.py --v1 V45nano_150pre2 --v0 V45nano_150pre2_RPC
 # python compare_json-wNano.py --v1 V45nano_150pre2_RPC --v0 V45nano_150pre3
+
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151pre3_D110Fix # hacked 110 fix vs 151pre3
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3_D110Fix --v0 V45nano_151X_D121 # official 110 fix vs hacked one
+
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D110 # verify that D110 is the same
+run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D116 # look at intermediate version
+run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D116 --v0 V45nano_151X_D121 # look at fixed version
+
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D121 # look at fixed version directly vs official release
+
+
 
 # L1EG mega commit
 # python compare_json-wNano.py --v1 V45nano --v0 V45nano_noL1EG
