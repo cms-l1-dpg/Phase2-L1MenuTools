@@ -46,14 +46,14 @@ run_when_ready() {
 # python compare_json-wNano.py --v1 V45nano_150pre2 --v0 V45nano_150pre2_RPC
 # python compare_json-wNano.py --v1 V45nano_150pre2_RPC --v0 V45nano_150pre3
 
-run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151pre3_D110Fix # hacked 110 fix vs 151pre3
-run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3_D110Fix --v0 V45nano_151X_D121 # official 110 fix vs hacked one
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151pre3_D110Fix # hacked 110 fix vs 151pre3
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3_D110Fix --v0 V45nano_151X_D121 # official 110 fix vs hacked one
 
-run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D110 # verify that D110 is the same
-run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D116 # look at intermediate version
-run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D116 --v0 V45nano_151X_D121 # look at fixed version
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D110 # verify that D110 is the same
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D116 # look at intermediate version
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D116 --v0 V45nano_151X_D121 # look at fixed version
 
-run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D121 # look at fixed version directly vs official release
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D121 # look at fixed version directly vs official release
 
 
 
@@ -62,6 +62,8 @@ run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_15
 # python compare_json-wNano.py --v1 V45nano_noL1EG --v0 V45nano_L1EGupdate1
 # python compare_json-wNano.py --v1 V45nano_noL1EG --v0 V45nano_L1EG
 # python compare_json-wNano.py --v1 V45nano_L1EG --v0 V45nano_L1EGupdate1
+run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate2 # compare PR commit with previous PR commit: caveat update1 was with a 151X nightly that was no longer available
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate2 # compare commit with version it's based on
 
 # # L1Track differences
 # python compare_json-wNano.py --v1 V45nano_142pre3 --v0 V45nano_142pre3_L1Track
