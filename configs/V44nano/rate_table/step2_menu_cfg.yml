@@ -63,10 +63,10 @@ L1_SingleDispMu:
 L1_DoubleDispMu:
   cross_masks: []
   leg1:
-    threshold_cut: pt > 15.0
+    threshold_cut: pt >= 15.0
     obj: L1gmtDispMuon:default
   leg2:
-    threshold_cut: pt > 7
+    threshold_cut: pt >= 7
     obj: L1gmtDispMuon:default
 # # ##############################
 # # ### GTT
@@ -74,7 +74,7 @@ L1_DoubleDispMu:
 L1_W3pi_GTT:
   cross_masks: []
   leg1:
-    threshold_cut: pt > -99
+    threshold_cut: pt >= -99
     obj: L1TrackTripletWord:default
 # L1_TkDispHT:
 #   cross_masks: []
@@ -95,13 +95,13 @@ L1_W3pi_GTT:
 #     - abs(leg2.z0-leg1.z0) < 1
 #     - abs(leg3.z0-leg1.z0) < 1
 #   leg1:
-#     threshold_cut: pt > 5
+#     threshold_cut: pt >= 5
 #     obj: L1gmtTkMuon:Medium
 #   leg2:
-#     threshold_cut: pt > 3
+#     threshold_cut: pt >= 3
 #     obj: L1gmtTkMuon:Medium
 #   leg3:
-#     threshold_cut: pt > 3
+#     threshold_cut: pt >= 3
 #     obj: L1gmtTkMuon:Medium
 # L1_DoubleTkMu:
 #   cross_masks:
@@ -110,7 +110,7 @@ L1_W3pi_GTT:
 #     threshold_cut: offline_pt > 15.0
 #     obj: L1gmtTkMuon:Medium
 #   leg2:
-#     threshold_cut: pt > 7
+#     threshold_cut: pt >= 7
 #     obj: L1gmtTkMuon:Medium
 # L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
 #   cross_masks:
@@ -118,8 +118,8 @@ L1_W3pi_GTT:
 #     - ((leg1.charge*leg2.charge < 0.0) & (leg1.deltaR(leg2) > 0))
 #     - ((abs(leg2.z0-leg1.z0) < 1) & (leg1.deltaR(leg2) > 0))
 #   leg1:
-#     threshold_cut: pt > 4
+#     threshold_cut: pt >= 4
 #     obj: L1gmtTkMuon:Medium
 #   leg2:
-#     threshold_cut: pt > 4
+#     threshold_cut: pt >= 4
 #     obj: L1gmtTkMuon:Medium
