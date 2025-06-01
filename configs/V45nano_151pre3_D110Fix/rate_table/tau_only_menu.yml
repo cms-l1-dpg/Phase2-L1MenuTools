@@ -1,0 +1,23 @@
+L1_PFIsoTau_PFIsoTau:
+  cross_masks:
+    - leg1.deltaR(leg2) > 0.5
+  leg1:
+    threshold_cut: offline_pt >= 52.0
+    obj: L1nnPuppiTau:default
+  leg2:
+    threshold_cut: offline_pt >= 52.0
+    obj: L1nnPuppiTau:default
+L1_SinglePFTau:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt > 150.0
+    obj: L1caloTau:default
+L1_PFTau_PFTau:
+  cross_masks:
+    - leg1.deltaR(leg2) > 0.5
+  leg1:
+    threshold_cut: offline_pt > 90.0
+    obj: L1caloTau:default
+  leg2:
+    threshold_cut: offline_pt > 90.0
+    obj: L1caloTau:default
