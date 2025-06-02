@@ -69,6 +69,7 @@ run_when_ready object_performance configs/$VERSION/object_performance/met_ht_mht
 run_when_ready object_performance configs/$VERSION/object_performance/electron_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/photons_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/jets_trigger.yaml
+# run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml # comment for now whilst setting up step 2
 run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/muonTF_trigger.yaml
@@ -93,5 +94,7 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml
 # === Menu Performance === #
 
 run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml
+# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml # prepping to study step 2
+# run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml # prepping to study step 2
 
 echo "Plots and tables finished!"
