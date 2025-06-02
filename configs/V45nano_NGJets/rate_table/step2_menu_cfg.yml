@@ -1,7 +1,6 @@
 # B Jet Seeds
 L1_PFHTT_QuadJet_BTagNNScore:
-  cross_masks: #test
-    # test
+  cross_masks:
     - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
   leg1:
     threshold_cut: offline_pt >= 299.0
@@ -19,13 +18,12 @@ L1_PFHTT_QuadJet_BTagNNScore:
     threshold_cut: pt >= 25
     obj: L1puppiExtJetSC4:default
 
-# test
 L1_PFHTT_QuadJetNG_BTagNNScore:
   cross_masks:
     - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 2.20
   leg1:
     threshold_cut: offline_pt >= 299.0
-    obj: L1puppiJetSC4NGsums:HT #test
+    obj: L1puppiJetSC4NGsums:HT
   leg2:
     threshold_cut: pt >= 25
     obj: L1puppiJetSC4NG:default

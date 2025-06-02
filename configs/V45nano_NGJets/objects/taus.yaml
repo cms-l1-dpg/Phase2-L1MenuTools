@@ -1,11 +1,10 @@
 L1nnPuppiTau:
   label: "NN Tau"
   match_dR: 0.1
-  eta_ranges: # keys
+  eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.5]
-    endcap: [1.5, 2.4] # values
-  # etst
+    endcap: [1.5, 2.4]
   ids:
     default:
       cuts:
@@ -22,12 +21,10 @@ L1hpsTau:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    # etst
   ids:
     default:
       cuts:
         inclusive:
-          # test
           - "abs({eta}) < 2.4"
 
 L1caloTau:
@@ -37,7 +34,7 @@ L1caloTau:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-  ids: #test
+  ids:
     default:
       cuts:
         inclusive:
@@ -59,8 +56,6 @@ L1nnCaloTau:
   ids:
     default:
       cuts:
-        #comment
         inclusive:
           - "abs({eta}) < 2.4"
           - "{hwQual}==3"
-          # comment

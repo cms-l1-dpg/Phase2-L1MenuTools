@@ -9,7 +9,6 @@ L1caloJet:
   cuts:
     inclusive:
       - "abs({eta}) < 7"
-      # comment
   ids:
     default:
       cuts:
@@ -31,11 +30,9 @@ L1puppiExtJetSC4:
           - "abs({eta}) < 5"
     PtGe25:
         cuts:
-          # comment 1
           inclusive:
             - "abs({eta}) < 7"
             - "abs({pt}) >= 25"
-            # comment 2
     bjetnn:
       label: "Ext. SC4, BtagScore > 0.71"
       cuts:

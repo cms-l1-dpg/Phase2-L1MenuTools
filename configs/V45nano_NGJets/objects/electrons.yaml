@@ -4,8 +4,6 @@ L1tkElectron:
     inclusive: [0, 7]
     barrel: [0, 1.479]
     endcap: [1.479, 5]
-    # ets 1
-  # test 2
   ids:
     NoIso:
       label: "TkElectron"
@@ -35,7 +33,7 @@ L1tkElectron:
 
 L1EG:
   match_dR: 0.2
-  eta_ranges: #funny comment
+  eta_ranges:
     inclusive: [0, 7]
     barrel: [0, 1.479]
     endcap: [1.479, 3.0]
@@ -49,5 +47,4 @@ L1EG:
           - "{eleId} == 1"
         endcap:
           - "{saId} == 1"
-          # insert comment here
 
