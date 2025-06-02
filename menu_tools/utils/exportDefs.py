@@ -281,12 +281,16 @@ def main():
         if file_type == 'triggers':
             key_comments, value_comments, extra_comments = extract_comments(os.path.join(args.yaml_path, file))
             result = convert_triggers_to_markdown(yaml_content, result, key_comments, value_comments, extra_comments)
-            output = os.path.join(args.yaml_path, 'triggers.md')
+            outputDir = args.yaml_path.replace("configs", "outputs")
+            outputDir = outputDir.replace("rate_table", "rate_tables")
+            output = os.path.join(outputDir, 'triggers.md')
         else:  # object
             # Try to extract comments for object definitions
             key_comments, value_comments, extra_comments = extract_comments(os.path.join(args.yaml_path, file))
             result = convert_objects_to_markdown(yaml_content, result, key_comments, value_comments, extra_comments)
-            output = os.path.join(args.yaml_path, 'objects.md')
+            outputDir = args.yaml_path.replace("configs", "outputs")
+            outputDir = outputDir.replace("objects", "object_performance")
+            output = os.path.join(outputDir, 'objects.md')
         result += "\n\n"
 
     # Write output
