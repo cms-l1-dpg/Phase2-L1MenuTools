@@ -52,6 +52,7 @@ run_when_ready() {
 # run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D110 # verify that D110 is the same
 # run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D116 # look at intermediate version
 # run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D116 --v0 V45nano_151X_D121 # look at fixed version
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D121 # look at fixed version
 
 # run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D121 # look at fixed version directly vs official release
 
@@ -63,11 +64,13 @@ run_when_ready() {
 # python compare_json-wNano.py --v1 V45nano_noL1EG --v0 V45nano_L1EG
 # python compare_json-wNano.py --v1 V45nano_L1EG --v0 V45nano_L1EGupdate1
 # run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate2 # compare PR with previous PR version (but 151X vs 151pre3)
-run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate1p5 # rebase of update1 on 151pre3
-run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1p5 --v0 V45nano_L1EGupdate2 # better comparison of update1 vs update2
+# run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate1p5 # rebase of update1 on 151pre3
+# run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate1p5 --v0 V45nano_L1EGupdate2 # better comparison of update1 vs update2
+# run_when_ready python compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V45nano_L1EGupdate3 # compare new IDs with identical CMSSW
+run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate3 # compare new IDs with CMSSW 151pre3
 
 # run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate2 # compare commit with version it's based on
-run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate1p5 # compare commit with version it's based on
+# run_when_ready python compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate1p5 # compare commit with version it's based on
 
 # # L1Track differences
 # python compare_json-wNano.py --v1 V45nano_142pre3 --v0 V45nano_142pre3_L1Track
