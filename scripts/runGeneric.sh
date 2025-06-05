@@ -1,6 +1,6 @@
 VERSION=$1
 REVISION=$2
-MAX_JOBS=16
+MAX_JOBS=7
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -34,6 +34,7 @@ echo "Caching complete"
 # Electrons
 run_when_ready object_performance configs/$VERSION/object_performance/electron_matching.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/electron_matching_eta.yaml
+run_when_ready object_performance configs/$VERSION/object_performance/electron_trigger.yaml # submit earlier so it's more likely to run before photons
 
 # Photons
 run_when_ready object_performance configs/$VERSION/object_performance/photons_matching.yaml
@@ -66,18 +67,19 @@ run_when_ready object_performance configs/$VERSION/object_performance/tau_matchi
 # Sums (all in one!)
 run_when_ready object_performance configs/$VERSION/object_performance/met_ht_mht.yaml
 
-run_when_ready object_performance configs/$VERSION/object_performance/electron_trigger.yaml
-run_when_ready object_performance configs/$VERSION/object_performance/photons_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/jets_trigger.yaml
 # run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml # comment for now whilst setting up step 2
 run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/muonTF_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/tau_trigger.yaml
+run_when_ready object_performance configs/$VERSION/object_performance/photons_trigger.yaml # submit later so it's more likely to complete after electrons
 
 echo "Waiting for scalings"
 wait
 echo "Scalings complete"
+
+# TODO: Add explicit fix for case photons finish first
 
 # === Object Rates === #
 
