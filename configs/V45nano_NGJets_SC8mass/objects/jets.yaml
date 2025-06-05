@@ -130,7 +130,7 @@ L1puppiJetSC8:
         inclusive:
           - "abs({eta}) < 7"
     mass30:
-      label: "mass > 30 GeV & |eta| < 2.4"
+      label: "mass > 30 GeV"
       cuts:
         inclusive:
           - "abs({eta}) < 2.4"
