@@ -1,0 +1,71 @@
+JetDefaultRates:
+  sample: MinBias
+  version: V45nano_NGJets_SC8mass
+  test_objects:
+    - L1puppiJetSC4:default
+    - L1puppiJetSC4NG:default
+    - L1caloJet:default
+    - L1TrackJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetsByRegion:
+  sample: MinBias
+  version: V45nano_NGJets_SC8mass
+  test_objects:
+    - L1puppiJetSC4:default:barrel
+    - L1puppiJetSC4:default:endcap
+    - L1puppiJetSC4:default:forward
+    - L1puppiJetSC4NG:default:barrel
+    - L1puppiJetSC4NG:default:endcap
+    - L1puppiJetSC4NG:default:forward
+    - L1caloJet:default:barrel
+    - L1caloJet:default:endcap
+    - L1caloJet:default:forward
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRates:
+  sample: MinBias
+  version: V45nano_NGJets_SC8mass
+  test_objects:
+    - L1puppiJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
+    - L1puppiExtJetSC4:default:inclusive
+    - L1puppiExtJetSC4:bjetnn:inclusive
+    - L1puppiJetSC4NG:bjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesTags:
+  sample: MinBias
+  version: V45nano_NGJets_SC8mass
+  test_objects:
+    - L1puppiExtJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:mass30:inclusive
+    # - L1puppiJetSC4NG:taupjetnn:inclusive
+    # - L1puppiJetSC4NG:taunjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesByRegion:
+  sample: MinBias
+  version: V45nano_NGJets_SC8mass
+  test_objects:
+    - L1puppiExtJetSC4:default:barrel
+    - L1puppiExtJetSC4:default:endcap
+    - L1puppiExtJetSC4:default:forward
+  binning:
+    min: 40
+    max: 420
+    step: 20

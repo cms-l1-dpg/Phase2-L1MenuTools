@@ -1,0 +1,152 @@
+L1caloJet:
+  match_dR: 0.3
+  label: "Calo Jet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  cuts:
+    inclusive:
+      - "abs({eta}) < 7"
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+L1puppiExtJetSC4:
+  match_dR: 0.35
+  label: "Ext. SC4"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 5"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
+    bjetnn:
+      label: "Ext. SC4, BtagScore > 0.71"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{btagScore} > 0.71"
+
+L1puppiJetHisto:
+  match_dR: 0.3
+  label: "Histogrammed PuppiJet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+L1puppiJetSC4:
+  match_dR: 0.35
+  label: "SC4"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
+
+L1puppiJetSC4NG:
+  match_dR: 0.35
+  label: "NG SC4"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+    PtGe25:
+        cuts:
+          inclusive:
+            - "abs({eta}) < 7"
+            - "abs({pt}) >= 25"
+    bjetnn:
+      label: "NG SC4, BtagScore > 0.15"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{bTagScore} > 0.15"
+    cjetnn:
+      label: "NG SC4, CtagScore > 0.099"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{cTagScore} > 0.099"
+    gjetnn:
+      label: "NG SC4, GtagScore > 0.59"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{gTagScore} > 0.59"
+    lightjetnn:
+      label: "NG SC4, LighttagScore > 0.54"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{udsTagScore} > 0.54"
+
+L1puppiJetSC8:
+  match_dR: 0.35
+  label: "SC8"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+    mass30:
+      label: "mass > 30 GeV & |eta| < 2.4"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{mass} > 30"
+
+L1TrackJet:
+  match_dR: 0.4
+  label: "Tracker Jet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+
