@@ -164,8 +164,9 @@ def main():
                        lss=["-", "--"],
                        markers=[".", "o"],
                        ptype=ptype)
+
         
-        outfname = v0_json.replace(v0, f"{v0}vs{v1}").replace(".json", ".png").replace(f"{v0}vs{v1}/", f"comparisons/{v0}vs{v1}/")
+        outfname = v0_json.replace(v0, f"{v0}vs{v1}").replace(".json", ".png").replace(f"{v0}vs{v1}/", f"{args.output_dir}/{v0}vs{v1}/")
         
         outdir = os.path.dirname(outfname)
         if not os.path.exists(outdir): os.makedirs(outdir)
