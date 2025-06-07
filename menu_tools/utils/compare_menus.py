@@ -61,7 +61,11 @@ def main():
         args.vOld: f"{base_path}/{args.vOld}/rate_tables/{menu_vOld}_{args.vOld}.csv",
         args.vNew: f"{base_path}/{args.vNew}/rate_tables/{menu_vNew}_{args.vNew}.csv",
     }
+    parent_dir = f"{base_path}/{args.output_dir}"
+    if not os.path.exists(parent_dir):
+        raise FileNotFoundError(f"Parent directory not found, please confirm: {parent_dir}")
     output_dir = f"{base_path}/{args.output_dir}/{args.vNew}vs{args.vOld}/rate_tables"
+    os.makedirs(output_dir, exist_ok=True)
 
     # Check if input files exist
     for version, filepath in input_files.items():
