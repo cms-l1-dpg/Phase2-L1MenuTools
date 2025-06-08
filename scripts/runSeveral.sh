@@ -8,9 +8,21 @@
 # VERSIONS="L1EGupdate2"
 # NOTE: above versions assumed V45nano in the name
 
-VERSIONS="V46nano_L1EGupdate2 V46nano_151pre3"
-REVISION="250605"
-MAX_JOBS=2
+VERSIONS="V46nano_151pre3"
+REVISION="250608"
+MAX_JOBS=6
+
+# run_when_ready() {
+#     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+#         sleep 3
+#     done
+#     # Extract a meaningful identifier from the config path
+#     local filename=$(basename "$2")  # assumes config is 2nd argument
+#     local logname=${filename%.*}  # removes file extension
+#     echo Submitting $logname
+#     "$@" | tee -a logs/${VERSION}_${REVISION}/${VERSION}_${logname}.log &
+#     # "$@" &> logs/${VERSION}_${REVISION}/${VERSION}_${logname}.log &
+# }
 
 for VERSION in $VERSIONS; do
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -18,6 +30,7 @@ for VERSION in $VERSIONS; do
     done
     echo "Submitting ${VERSION}_${REVISION}"
     mkdir -p logs/${VERSION}_${REVISION}
+    # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
     source scripts/runGeneric.sh $VERSION $REVISION &> logs/${VERSION}_${REVISION}/${VERSION}.log &
 done
 
