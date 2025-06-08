@@ -1,4 +1,4 @@
-MAX_JOBS=6
+MAX_JOBS=10
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -39,7 +39,30 @@ run_when_ready() {
 # python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_nanoSC4NG
 # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_nanoSC4NG --v0 V45nano_L1EG
 
-# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_151pre3
+# Bisecting
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_142pre2 --output-dir "comparisons/bisecting" --menu-vOld v44_Step1Menu
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_142pre2 --output-dir "comparisons/bisecting"  --menu-vOld v44_Step1Menu
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre2 --vNew V45nano_142pre3 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre3 --vNew V45nano_142pre4 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre4 --vNew V45nano_150pre1 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre1 --vNew V45nano_150pre2 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre2 --vNew V45nano_150pre3 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre3 --vNew V45nano_151pre1 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre1 --vNew V45nano --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano --vNew V45nano_151pre3 --output-dir "comparisons/bisecting"
+
+# Fixed IDs - menus
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# Fixed IDs - plots
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
 
 
 # # Muon RPC Geometry change
@@ -67,7 +90,7 @@ run_when_ready() {
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate1p5 # rebase of update1 on 151pre3
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate1p5 --v0 V45nano_L1EGupdate2 # better comparison of update1 vs update2
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V45nano_L1EGupdate3 # compare new IDs with identical CMSSW
-run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate3 # compare new IDs with CMSSW 151pre3
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate3 # compare new IDs with CMSSW 151pre3
 
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate2 # compare commit with version it's based on
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate1p5 # compare commit with version it's based on
