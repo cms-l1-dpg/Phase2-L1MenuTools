@@ -141,10 +141,10 @@ def main():
     axs[0].set_xlabel("Rate [kHz]")
     df_rate_sort[["diff"]].plot(kind='barh', ax=axs[1], legend=False, rot=45)
     axs[1].grid()
-    axs[1].set_xlabel(f"Diff: {label1} - {label2} [kHz]")
+    axs[1].set_xlabel(f"Diff [kHz]")
     df_rate_sort[["pull"]].plot(kind='barh', ax=axs[2], legend=False, rot=45)
     axs[2].grid()
-    axs[2].set_xlabel(f"Pull: {label1}/{label2} - 1 [%]")
+    axs[2].set_xlabel(f"Pull")
     plt.subplots_adjust(wspace=0, hspace=0)
     for ext in ['png', 'pdf']:
         filepath = os.path.join(output_dir, f"{args.vNew}vs{args.vOld}_rate_diff_pull.{ext}")
