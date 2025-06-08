@@ -1,6 +1,6 @@
 VERSION=$1
 REVISION=$2
-MAX_JOBS=5
+MAX_JOBS=14
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -75,11 +75,23 @@ run_when_ready object_performance configs/$VERSION/object_performance/muonTF_tri
 run_when_ready object_performance configs/$VERSION/object_performance/tau_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/photons_trigger.yaml # submit later so it's more likely to complete after electrons
 
+# === Print Configs (Objects) === #
+run_when_ready python menu_tools/utils/exportDefs.py -t objects configs/$VERSION/objects
+
 echo "Waiting for scalings"
 wait
 echo "Scalings complete"
 
 # TODO: Add explicit fix for case photons finish first
+
+# === Menu Performance === #
+
+run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml
+# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml # prepping to study step 2
+# run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml # prepping to study step 2
+
+# === Print Configs (Menus) === #
+run_when_ready python menu_tools/utils/exportDefs.py -t triggers configs/$VERSION/rate_table
 
 # === Object Rates === #
 
@@ -92,11 +104,5 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/jets.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/taus.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml
-
-# === Menu Performance === #
-
-run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml
-# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml # prepping to study step 2
-# run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml # prepping to study step 2
 
 echo "Plots and tables finished!"
