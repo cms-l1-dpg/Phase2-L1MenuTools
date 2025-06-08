@@ -1,0 +1,2 @@
+source scripts/setupConfig.sh V46nano_151pre3 V47nano_151pre3
+source scripts/setupConfig.sh V46nano_L1EGupdate2 V47nano_L1EGupdate2
