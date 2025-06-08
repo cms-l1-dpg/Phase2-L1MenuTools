@@ -56,10 +56,17 @@ def main():
     menu_vNew = args.menu_vNew if args.menu_vNew else args.menu
 
     # Define input and output paths
+    # Define labels
+    if args.vNew == args.vOld:
+        label1 = args.vNew+"_"+menu_vNew
+        label2 = args.vOld+"_"+menu_vOld
+    else:
+        label1 = args.vNew
+        label2 = args.vOld
     base_path = "outputs"
     input_files = {
-        args.vOld: f"{base_path}/{args.vOld}/rate_tables/{menu_vOld}_{args.vOld}.csv",
-        args.vNew: f"{base_path}/{args.vNew}/rate_tables/{menu_vNew}_{args.vNew}.csv",
+        label2: f"{base_path}/{args.vOld}/rate_tables/{menu_vOld}_{args.vOld}.csv",
+        label1: f"{base_path}/{args.vNew}/rate_tables/{menu_vNew}_{args.vNew}.csv",
     }
     parent_dir = f"{base_path}/{args.output_dir}"
     if not os.path.exists(parent_dir):
@@ -97,7 +104,7 @@ def main():
     ax.set_xlabel("Rate [kHz]")
     ax.grid()
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{args.vNew}vs{args.vOld}_rate_total.{ext}")
+        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_total.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
@@ -109,10 +116,6 @@ def main():
     # Pivot tables
     df_rate = df_all.pivot(index='Trigger', columns='version', values='rate')
     df_counts = df_all.pivot(index='Trigger', columns='version', values='counts')
-
-    # Define labels
-    label1 = args.vNew
-    label2 = args.vOld
 
     # Calculate differences and ratios
     df_rate["diff"] = df_rate[label1] - df_rate[label2]
@@ -128,7 +131,7 @@ def main():
     ax.grid()
     ax.set_xscale("log")
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{args.vNew}vs{args.vOld}_rate_individual.{ext}")
+        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_individual.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
@@ -147,7 +150,7 @@ def main():
     axs[2].set_xlabel(f"Pull")
     plt.subplots_adjust(wspace=0, hspace=0)
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{args.vNew}vs{args.vOld}_rate_diff_pull.{ext}")
+        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_diff_pull.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
