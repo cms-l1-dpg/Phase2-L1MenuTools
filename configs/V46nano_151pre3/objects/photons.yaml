@@ -12,7 +12,7 @@ L1tkPhoton:
           - "abs({eta}) < 2.4"
           - "{pt} > 5"
         barrel:
-          - "{phoId} == 1"
+          - "{eleId} == 1"
         endcap:
           - "{phoId} == 1"
     NoIsoPt30:
@@ -22,7 +22,7 @@ L1tkPhoton:
           - "abs({eta}) < 2.4"
           - "{pt} > 30"
         barrel:
-          - "{phoId} == 1"
+          - "{eleId} == 1"
         endcap:
           - "{phoId} == 1"
     Iso:
@@ -33,7 +33,7 @@ L1tkPhoton:
           - "{pt} > 5"
         barrel:
           - "abs({relIso}) < 0.25"
-          - "{phoId} == 1"
+          - "{eleId} == 1"
         endcap:
           - "abs({relIso}) < 0.205"
           - "{phoId} == 1"
@@ -45,7 +45,7 @@ L1tkPhoton:
           - "{pt} > 30"
         barrel:
           - "abs({relIso}) < 0.25"
-          - "{phoId} == 1"
+          - "{eleId} == 1"
         endcap:
           - "abs({relIso}) < 0.205"
           - "{phoId} == 1"

@@ -28,10 +28,8 @@ L1tkElectron:
           - "abs({eta}) < 2.4"
         barrel:
           - "abs({relIso}) < 0.13"
-          - "{eleId} == 1"
         endcap:
           - "abs({relIso}) < 0.28"
-          - "{eleId} == 1"
 
 L1EG:
   match_dR: 0.2
