@@ -35,6 +35,9 @@ L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
 L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax:
   cross_masks:
     - abs(leg2.eta) < 2.4
+    - abs(leg3.eta) < 2.4
+    - abs(leg4.eta) < 2.4
+    - abs(leg5.eta) < 2.4
     - abs(leg2.z0-leg1.z0) < 1
     - leg2.deltaR(leg3) < 0.4
     - abs(leg5.eta-leg4.eta) < 1.6
@@ -101,7 +104,8 @@ L1_SinglePFTau:
     threshold_cut: offline_pt > 150.0
     obj: L1caloTau:default
 L1_SinglePfJet:
-  cross_masks: []
+  cross_masks:
+    - abs(leg1.eta) < 2.4
   leg1:
     threshold_cut: offline_pt >= 230.0
     obj: L1puppiJetSC4:default
@@ -156,7 +160,8 @@ L1_TkEleIso_PFIsoTau:
 L1_TkEle_PFJet_dRMin:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
-    - (abs(leg2.eta) < 2.1)
+    - abs(leg2.eta) < 2.1
+    - abs(leg3.eta) < 2.4
     - leg2.deltaR(leg3) > 0.3
   leg1:
     threshold_cut: null
@@ -204,6 +209,7 @@ L1_TkMu_PfHTT:
 L1_TkMu_PfJet_PfMet:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
+    - abs(leg3.eta) < 2.4
   leg1:
     threshold_cut: null
     obj: L1PV:default
@@ -309,13 +315,15 @@ L1_DoublePFJet_MassMin:
     - (leg1 + leg2).mass > 620
   leg1:
     threshold_cut: offline_pt >= 160.0
-    obj: L1puppiJetSC4:vbf
+    obj: L1puppiJetSC4:default
   leg2:
     threshold_cut: offline_pt >= 35.0
-    obj: L1puppiJetSC4:vbf
+    obj: L1puppiJetSC4:default
 L1_DoublePFJet_dEtaMax:
   cross_masks:
     - abs(leg2.eta-leg1.eta) < 1.6
+    - abs(leg1.eta) < 2.4
+    - abs(leg2.eta) < 2.4
   leg1:
     threshold_cut: leg1.offline_pt >= 112.0
     obj: L1puppiJetSC4:default
@@ -372,6 +380,7 @@ L1_DoubleTkMu_PfJet_PfMet:
   cross_masks:
     - abs(leg2.z0-leg1.z0) < 1
     - abs(leg3.z0-leg1.z0) < 1
+    - abs(leg4.eta) < 2.4
   leg1:
     threshold_cut: null
     obj: L1PV:default
@@ -401,7 +410,11 @@ L1_DoubleTkMu_TkEle:
     threshold_cut: offline_pt >= 9.0
     obj: L1tkElectron:NoIso:inclusive
 L1_PFHTT_QuadJet:
-  cross_masks: []
+  cross_masks:
+    - abs(leg2.eta) < 2.4
+    - abs(leg3.eta) < 2.4
+    - abs(leg4.eta) < 2.4
+    - abs(leg5.eta) < 2.4
   leg1:
     threshold_cut: offline_pt >= 400.0
     obj: L1puppiJetSC4sums:HT

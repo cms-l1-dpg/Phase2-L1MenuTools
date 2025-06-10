@@ -13,10 +13,6 @@ L1caloJet:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
-    extended:
-      cuts:
-        inclusive:
           - "abs({eta}) < 7"
 
 L1puppiExtJetSC4:
@@ -56,10 +52,6 @@ L1puppiJetHisto:
     default:
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
-    extended:
-      cuts:
-        inclusive:
           - "abs({eta}) < 7"
 
 L1puppiJetSC4:
@@ -72,14 +64,6 @@ L1puppiJetSC4:
     forward: [2.4, 5]
   ids:
     default:
-      cuts:
-        inclusive:
-          - "abs({eta}) < 2.4"
-    vbf:
-      cuts:
-        inclusive:
-          - "abs({eta}) < 5.0"
-    extended:
       cuts:
         inclusive:
           - "abs({eta}) < 7"
