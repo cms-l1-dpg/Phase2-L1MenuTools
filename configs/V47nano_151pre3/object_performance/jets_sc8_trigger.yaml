@@ -64,7 +64,8 @@ JetTurnonForwardSC8:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC8:default:forward: "pt"
+    L1puppiJetSC8:default:forwardHGC: "pt"
+    L1puppiJetSC8:default:forwardHF: "pt"
   thresholds: [150]
   scalings:
     method: "naive"

@@ -71,8 +71,10 @@ JetTurnonForward:
         - "abs({eta}) < 5"
   test_objects:
     # L1puppiJetHisto:default:forward: "pt"
-    L1puppiJetSC4:default:forward: "pt"
-    L1caloJet:default:forward: "pt"
+    L1puppiJetSC4:default:forwardHGC: "pt"
+    L1caloJet:default:forwardHGC: "pt"
+    L1puppiJetSC4:default:forwardHF: "pt"
+    L1caloJet:default:forwardHF: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"

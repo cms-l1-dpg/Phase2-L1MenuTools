@@ -5,7 +5,8 @@ L1caloJet:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
   cuts:
     inclusive:
       - "abs({eta}) < 7"
@@ -22,7 +23,8 @@ L1puppiExtJetSC4:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
   ids:
     default:
       cuts:
@@ -47,7 +49,8 @@ L1puppiJetHisto:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
   ids:
     default:
       cuts:
@@ -61,7 +64,8 @@ L1puppiJetSC4:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
   ids:
     default:
       cuts:
@@ -80,7 +84,8 @@ L1puppiJetSC8:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
   ids:
     default:
       cuts:

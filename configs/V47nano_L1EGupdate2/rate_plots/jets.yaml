@@ -17,10 +17,12 @@ JetsByRegion:
   test_objects:
     - L1puppiJetSC4:default:barrel
     - L1puppiJetSC4:default:endcap
-    - L1puppiJetSC4:default:forward
+    - L1puppiJetSC4:default:forwardHGC
+    - L1puppiJetSC4:default:forwardHF
     - L1caloJet:default:barrel
     - L1caloJet:default:endcap
-    - L1caloJet:default:forward
+    - L1caloJet:default:forwardHGC
+    - L1caloJet:default:forwardHF
     # - L1TrackJet:default:barrel
     # - L1TrackJet:default:endcap
   binning:
@@ -51,7 +53,8 @@ JetExtendedRatesByRegion:
     # - L1puppiJetSC4:default:forward
     - L1puppiExtJetSC4:default:barrel
     - L1puppiExtJetSC4:default:endcap
-    - L1puppiExtJetSC4:default:forward
+    - L1puppiExtJetSC4:default:forwardHGC
+    - L1puppiExtJetSC4:default:forwardHF
   binning:
     min: 40
     max: 420
