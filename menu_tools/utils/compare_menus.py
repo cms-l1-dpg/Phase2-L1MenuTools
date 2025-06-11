@@ -95,19 +95,19 @@ def main():
     df_all.Seed = df_all.Seed.str.strip()
     df_all["Trigger"] = df_all.Seed
 
-    # Plot: Totals (Rates > 300 kHz)
+    # # Plot: Totals (Rates > 300 kHz)
     sel = df_all.rate > 300
     print("Rates > 300 kHz:")
     print(df_all[sel]["rate"])
-    fig, ax = plt.subplots(figsize=(12, 4))
-    df_all[sel].pivot(index='Seed', columns='version', values='rate').plot(kind='barh', ax=ax)
-    ax.set_xlabel("Rate [kHz]")
-    ax.grid()
-    for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_total.{ext}")
-        plt.savefig(filepath, bbox_inches='tight', dpi=300)
-        print(f"Saving plot at: {filepath}")
-    plt.close()
+    # fig, ax = plt.subplots(figsize=(12, 4))
+    # df_all[sel].pivot(index='Seed', columns='version', values='rate').plot(kind='barh', ax=ax)
+    # ax.set_xlabel("Rate [kHz]")
+    # ax.grid()
+    # for ext in ['png', 'pdf']:
+    #     filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_total.{ext}")
+    #     plt.savefig(filepath, bbox_inches='tight', dpi=300)
+    #     print(f"Saving plot at: {filepath}")
+    # plt.close()
 
     # Filter for L1_ triggers
     sel = df_all.Trigger.str.contains("L1_")
@@ -136,7 +136,26 @@ def main():
         print(f"Saving plot at: {filepath}")
     plt.close()
 
-    # Plot: Rates, Diff, and Pull
+    # Plot: Rates, Diff, and Pull - sorted by total
+    fig, axs = plt.subplots(1, 3, figsize=(10, 15), sharey=True, gridspec_kw={'width_ratios': [3, 1, 1]})
+    df_rate_sort = df_rate.sort_values(label1)
+    df_rate_sort[[label1, label2]].plot(kind='barh', ax=axs[0], fontsize=11)
+    axs[0].grid()
+    axs[0].set_xlabel("Rate [kHz]")
+    df_rate_sort[["diff"]].plot(kind='barh', ax=axs[1], legend=False, rot=45)
+    axs[1].grid()
+    axs[1].set_xlabel(f"Diff [kHz]")
+    df_rate_sort[["pull"]].plot(kind='barh', ax=axs[2], legend=False, rot=45)
+    axs[2].grid()
+    axs[2].set_xlabel(f"Pull")
+    plt.subplots_adjust(wspace=0, hspace=0)
+    for ext in ['png', 'pdf']:
+        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_diff_pull_byTotal.{ext}")
+        plt.savefig(filepath, bbox_inches='tight', dpi=300)
+        print(f"Saving plot at: {filepath}")
+    plt.close()
+
+    # Plot: Rates, Diff, and Pull - sorted by diff
     fig, axs = plt.subplots(1, 3, figsize=(10, 15), sharey=True, gridspec_kw={'width_ratios': [3, 1, 1]})
     df_rate_sort = df_rate.sort_values("diff")
     df_rate_sort[[label1, label2]].plot(kind='barh', ax=axs[0], fontsize=11)
