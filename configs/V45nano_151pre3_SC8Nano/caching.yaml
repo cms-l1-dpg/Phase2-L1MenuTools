@@ -44,6 +44,7 @@ V45nano_151pre3_SC8Nano:
         L1puppiJetSC4: [pt, eta, phi]
         L1puppiJetSC8: [pt, eta, phi, mass]
         L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore]
         L1puppiJetHisto: [pt, eta, phi]
         L1caloJet: [pt, eta, phi]
         L1TrackMET: [pt]
@@ -88,6 +89,7 @@ V45nano_151pre3_SC8Nano:
         L1puppiJetSC4: [pt, eta, phi]
         L1puppiJetSC8: [pt, eta, phi, mass]
         L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore]
         L1puppiJetHisto: [pt, eta, phi]
         L1caloJet: [pt, eta, phi]
         ## track-only

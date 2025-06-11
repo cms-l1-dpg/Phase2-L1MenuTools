@@ -1,9 +1,9 @@
-JetTurnonBarrelSC8:
+JetTurnonBarrelExt:
   version: V45nano_151pre3_SC8Nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -12,10 +12,9 @@ JetTurnonBarrelSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:barrel: "pt"
-    L1puppiJetSC8:mass30:barrel: "pt"
-  thresholds: [150]
-  pu_value: 200
+    L1puppiExtJetSC4:default:barrel: "pt"
+    L1puppiJetSC4NG:default:barrel: "pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -26,12 +25,12 @@ JetTurnonBarrelSC8:
     max: 500
     step: 10
 
-JetTurnonEndcapSC8:
+JetTurnonEndcapExt:
   version: V45nano_151pre3_SC8Nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -40,9 +39,9 @@ JetTurnonEndcapSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:endcap: "pt"
-    L1puppiJetSC8:mass30:endcap: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:endcap: "pt"
+    L1puppiJetSC4NG:default:endcap: "pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -53,12 +52,12 @@ JetTurnonEndcapSC8:
     max: 500
     step: 10
 
-JetTurnonForwardSC8:
+JetTurnonForwardExt:
   version: V45nano_151pre3_SC8Nano
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -67,9 +66,9 @@ JetTurnonForwardSC8:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetSC8:default:forward: "pt"
-    L1puppiJetSC8:mass30:forward: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:forward: "pt"
+    L1puppiJetSC4NG:default:forward: "pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95

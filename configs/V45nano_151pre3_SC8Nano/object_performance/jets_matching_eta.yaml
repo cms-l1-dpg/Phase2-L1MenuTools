@@ -2,7 +2,7 @@ JetMatching_Eta_Pt40To100:
   sample: TT
   version: V45nano_151pre3_SC8Nano
   match_test_to_ref: True
-  reference_object: 
+  reference_object:
     object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
@@ -28,7 +28,7 @@ JetMatching_Eta_Pt100ToInf:
   sample: TT
   version: V45nano_151pre3_SC8Nano
   match_test_to_ref: True
-  reference_object: 
+  reference_object:
     object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
@@ -53,7 +53,7 @@ JetMatching_Eta_Pt100ToInf_extEta:
   sample: TT
   version: V45nano_151pre3_SC8Nano
   match_test_to_ref: True
-  reference_object: 
+  reference_object:
     object: "GenJet"
     x_arg: "eta"
     label: "Gen Jets"
@@ -75,7 +75,7 @@ JetMatching_Eta_SC8_Pt100ToInf:
   sample: TT
   version: V45nano_151pre3_SC8Nano
   match_test_to_ref: True
-  reference_object: 
+  reference_object:
     object: "GenJetAK8"
     x_arg: "eta"
     label: "Gen Jets"
@@ -86,6 +86,7 @@ JetMatching_Eta_SC8_Pt100ToInf:
         - "abs({eta}) < 5"
   test_objects:
     L1puppiJetSC8:default: "eta"
+    L1puppiJetSC8:mass30: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (>100 GeV)"
   binning:

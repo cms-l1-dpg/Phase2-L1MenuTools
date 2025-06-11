@@ -88,6 +88,7 @@ JetMatchingBarrelSC8:
         - "abs({eta}) < 2.4"
   test_objects:
     L1puppiJetSC8:default:barrel: "pt"
+    L1puppiJetSC8:mass30:barrel: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -110,6 +111,7 @@ JetMatchingEndcapSC8:
         - "abs({eta}) < 2.4"
   test_objects:
     L1puppiJetSC8:default:endcap: "pt"
+    L1puppiJetSC8:mass30:endcap: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (<threshold> GeV, endcap)"
   binning:
