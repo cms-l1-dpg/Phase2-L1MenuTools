@@ -34,7 +34,6 @@ echo "Caching complete"
 # Electrons
 run_when_ready object_performance configs/$VERSION/object_performance/electron_matching.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/electron_matching_eta.yaml
-run_when_ready object_performance configs/$VERSION/object_performance/electron_trigger.yaml # submit earlier so it's more likely to run before photons
 
 # Photons
 run_when_ready object_performance configs/$VERSION/object_performance/photons_matching.yaml
@@ -64,12 +63,12 @@ run_when_ready object_performance configs/$VERSION/object_performance/tau_matchi
 
 # === Object Performance (Triggers/Scalings) === #
 
-# Sums (all in one!)
-run_when_ready object_performance configs/$VERSION/object_performance/met_ht_mht.yaml
-
+run_when_ready object_performance configs/$VERSION/object_performance/electron_trigger.yaml
+run_when_ready object_performance configs/$VERSION/object_performance/met_ht_mht.yaml # Sums (all in one!)
 run_when_ready object_performance configs/$VERSION/object_performance/jets_trigger.yaml
-# run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml # comment for now whilst setting up step 2
-run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
+run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml # step 2
+run_when_ready object_performance configs/$VERSION/object_performance/jets_ext_trigger.yaml # step 2
+run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml # includes step 2 disp muons
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/muonTF_trigger.yaml
 run_when_ready object_performance configs/$VERSION/object_performance/tau_trigger.yaml
@@ -82,12 +81,12 @@ echo "Waiting for scalings"
 wait
 echo "Scalings complete"
 
-# TODO: Add explicit fix for case photons finish first
+swapToElectronScalings.sh $VERSION # Explicit scalings swap in case photons finish first
 
 # === Menu Performance === #
 
 run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml
-# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml # prepping to study step 2
+run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml
 # run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml # prepping to study step 2
 
 # === Print Configs (Menus) === #
@@ -100,9 +99,10 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/muons.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/tkmuons.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/ht.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/met.yaml
-run_when_ready rate_plots configs/$VERSION/rate_plots/jets.yaml
+run_when_ready rate_plots configs/$VERSION/rate_plots/jets.yaml # includes ext jets
+run_when_ready rate_plots configs/$VERSION/rate_plots/jets_sc8.yaml # step 2
 run_when_ready rate_plots configs/$VERSION/rate_plots/taus.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml
-run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml
+run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml # step 2
 
 echo "Plots and tables finished!"
