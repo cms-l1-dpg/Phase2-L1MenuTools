@@ -8,7 +8,8 @@
 # VERSIONS="L1EGupdate2"
 # NOTE: above versions assumed V45nano in the name
 
-VERSIONS="V48nano_151pre3 V48nano_L1EGupdate2"
+# VERSIONS="V48nano_151pre3 V48nano_L1EGupdate2"
+VERSIONS="V49nano_151pre3 V49nano_L1EGupdate2"
 REVISION="250611"
 MAX_JOBS=2
 
