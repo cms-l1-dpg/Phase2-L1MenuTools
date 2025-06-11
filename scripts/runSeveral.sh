@@ -10,7 +10,7 @@
 
 # VERSIONS="V48nano_151pre3 V48nano_L1EGupdate2"
 # VERSIONS="V49nano_151pre3 V49nano_L1EGupdate2"
-VERSIONS="V49nano_151pre3_E2ENNVtx V49nano_E2ENNVtxOff"
+VERSIONS="V49nano_151pre3_E2ENNVtx V49nano_151pre3_E2ENNVtxOff"
 REVISION="250611_E2E"
 MAX_JOBS=2
 
@@ -37,5 +37,5 @@ for VERSION in $VERSIONS; do
 done
 
 echo "All jobs submitted, but waiting as some are still running! Checking progress with tail -f."
-tail -f logs/*_${REVISION}/*_cache.log logs/*_${REVISION}/*_batch.log
+tail -f logs/*_${REVISION}/*_caching.log logs/*_${REVISION}/*_batch.log
 wait
