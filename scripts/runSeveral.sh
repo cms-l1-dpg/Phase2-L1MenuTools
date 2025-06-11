@@ -8,9 +8,9 @@
 # VERSIONS="L1EGupdate2"
 # NOTE: above versions assumed V45nano in the name
 
-VERSIONS="V46nano_151pre3"
-REVISION="250608"
-MAX_JOBS=6
+VERSIONS="V48nano_151pre3 V48nano_L1EGupdate2"
+REVISION="250611"
+MAX_JOBS=2
 
 # run_when_ready() {
 #     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -31,8 +31,9 @@ for VERSION in $VERSIONS; do
     echo "Submitting ${VERSION}_${REVISION}"
     mkdir -p logs/${VERSION}_${REVISION}
     # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
-    source scripts/runGeneric.sh $VERSION $REVISION &> logs/${VERSION}_${REVISION}/${VERSION}.log &
+    source scripts/runGeneric.sh $VERSION $REVISION &> logs/${VERSION}_${REVISION}/${VERSION}_batch.log &
 done
 
-echo "All jobs submitted, but waiting as some are still running! Check on progress in another tab."
+echo "All jobs submitted, but waiting as some are still running! Checking progress with tail -f."
+tail -f logs/*_${REVISION}/*_batch.log
 wait

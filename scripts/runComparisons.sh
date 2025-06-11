@@ -1,4 +1,4 @@
-MAX_JOBS=10
+MAX_JOBS=14
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -51,17 +51,71 @@ run_when_ready() {
 # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre1 --vNew V45nano --output-dir "comparisons/bisecting"
 # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano --vNew V45nano_151pre3 --output-dir "comparisons/bisecting"
 
-# Fixed IDs - menus
-run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
-# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
-# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
-run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # Fixed IDs - plots
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_L1EGupdate2 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V47nano_151pre3 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# # Fixed IDs - menus
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_L1EGupdate2 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V47nano_151pre3 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
 
 # Fixed IDs - plots
-run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V48nano_151pre3 --output-dir "comparisons/correctedIDs"
 # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
 # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
-run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_L1EGupdate2 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V48nano_151pre3 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# Fixed IDs - menus
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_L1EGupdate2 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+run_when_ready python menu_tools/utils/compare_menus.py --vOld V48nano_151pre3 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+
+
+# # Reproducing V44nano - menus
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu v44_Step1Menu --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_Oct24 --vNew V38nano --menu menu_Step1 --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V38nano_DT12x --menu menu_Step1 --output-dir "comparisons/validationOct24"
+
+# # Reproducing V44nano - plots
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano_Oct24 --v0 V44nano --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_Oct24 --v0 V38nano --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V38nano_DT12x --output-dir "comparisons/validationOct24"
+
+# Reproducing V44nano
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V44nano --menu-vOld v44_Step1Menu_gtneq --menu-vNew v44_Step1Menu --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_gtneq --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_gtneq_oldScalings --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_oldScalings --output-dir "comparisons/validationOct24"
 
 
 
