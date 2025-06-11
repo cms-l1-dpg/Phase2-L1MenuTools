@@ -81,7 +81,7 @@ echo "Waiting for scalings"
 wait
 echo "Scalings complete"
 
-swapToElectronScalings.sh $VERSION # Explicit scalings swap in case photons finish first
+source scripts/swapToElectronScalings.sh $VERSION # Explicit scalings swap in case photons finish first
 
 # === Menu Performance === #
 
