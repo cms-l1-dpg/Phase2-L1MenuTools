@@ -1,0 +1,61 @@
+L1nnPuppiTau:
+  label: "NN Tau"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          # - "{passLooseNN}==1"
+          # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
+          - "{chargedIso} > 0.22"
+
+L1hpsTau:
+  label: "HPS Tau"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+
+L1caloTau:
+  label: "Calo Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+  PtGe20:
+    label: "Calo Tau, pt > 20"
+    cuts:
+      inclusive:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 20"
+
+L1nnCaloTau:
+  label: "NN Calo Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{hwQual}==3"
