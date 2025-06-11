@@ -17,6 +17,7 @@ rates/table/rates_tables/*
 *.log
 outputs
 oldoutputs
+complogs
 logs
 menu_tools.egg-info
 dist
