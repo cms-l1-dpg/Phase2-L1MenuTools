@@ -17,5 +17,5 @@ if [ -f outputs/$VERSION/object_performance/scalings/ElectronsTriggerBarrel_L1EG
        rate_table configs/$VERSION/rate_table/step1_cfg.yml
    fi
 else
-   echo "Separate electron L1EG scalings don't exist, please check"
+   echo "Separate electron L1EG scalings don't exist, no need to swap"
 fi
