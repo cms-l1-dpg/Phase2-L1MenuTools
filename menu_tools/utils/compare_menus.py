@@ -95,7 +95,7 @@ def main():
     df_all.Seed = df_all.Seed.str.strip()
     df_all["Trigger"] = df_all.Seed
 
-    # # Plot: Totals (Rates > 300 kHz)
+    # Plot: Totals (Rates > 300 kHz)
     sel = df_all.rate > 300
     print("Rates > 300 kHz:")
     print(df_all[sel]["rate"])
