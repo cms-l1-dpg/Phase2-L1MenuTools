@@ -1,46 +1,42 @@
-JetMatchingBarrel:
+JetMatchingBarrelSC8:
   sample: TT
   version: V49nano_151pre3_SC8Nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
+    object: "GenJetAK8"
     x_arg: "pt"
-    label: "Gen Jets"
+    label: "Gen AK8 Jets"
     cuts:
       event:
         - "abs({eta}) < 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetHisto:default: "pt"
-    L1puppiJetSC4:default: "pt"
-    L1caloJet:default: "pt"
-    L1TrackJet:default: "pt"
+    L1puppiJetSC8:default:barrel: "pt"
+    L1puppiJetSC8:mass30:barrel: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (barrel)"
+  ylabel: "Matching Efficiency (<threshold> GeV, barrel)"
   binning:
     min: 0
     max: 500
     step: 10
 
-JetMatchingEndcap:
+JetMatchingEndcapSC8:
   sample: TT
   version: V49nano_151pre3_SC8Nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
+    object: "GenJetAK8"
     x_arg: "pt"
-    label: "Gen Jets"
+    label: "Gen AK8 Jets"
     cuts:
       event:
         - "abs({eta}) > 1.5"
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetHisto:default: "pt"
-    L1puppiJetSC4:default: "pt"
-    L1caloJet:default: "pt"
-    L1TrackJet:default: "pt"
+    L1puppiJetSC8:default:endcap: "pt"
+    L1puppiJetSC8:mass30:endcap: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -48,23 +44,22 @@ JetMatchingEndcap:
     max: 500
     step: 10
 
-JetMatchingForward:
-  version: V49nano_151pre3_SC8Nano
+JetMatchingForwardSC8:
   sample: TT
+  version: V49nano_151pre3_SC8Nano
   match_test_to_ref: True
   reference_object:
-    object: "GenJet"
+    object: "GenJetAK8"
     x_arg: "pt"
-    label: "Gen Jets"
+    label: "Gen AK8 Jets"
     cuts:
       event:
         - "abs({eta}) > 2.4"
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetHisto:default: "pt"
-    L1puppiJetSC4:default: "pt"
-    L1caloJet:default: "pt"
+    L1puppiJetSC8:default:forward: "pt"
+    L1puppiJetSC8:mass30:forward: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (<threshold> GeV, forward)"
   binning:

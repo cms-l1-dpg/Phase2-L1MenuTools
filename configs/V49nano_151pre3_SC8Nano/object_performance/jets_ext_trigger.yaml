@@ -13,6 +13,7 @@ JetTurnonBarrelExt:
         - "abs({eta}) < 2.4"
   test_objects:
     L1puppiExtJetSC4:default:barrel: "pt"
+    L1puppiJetSC4NG:default:barrel: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
@@ -39,6 +40,7 @@ JetTurnonEndcapExt:
         - "abs({eta}) < 2.4"
   test_objects:
     L1puppiExtJetSC4:default:endcap: "pt"
+    L1puppiJetSC4NG:default:endcap: "pt"
   thresholds: [50, 100]
   scalings:
     method: "naive"
