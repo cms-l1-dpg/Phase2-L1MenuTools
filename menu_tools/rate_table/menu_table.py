@@ -112,6 +112,7 @@ class MenuTable:
             and ("disp" not in object_name.lower())
             and ("TrackTripletWord" not in object_name)
             and ("ExtTrackHT" not in object_name)
+            and ("mass30" not in object_name)
         ):
             print("adding scalings")
             arr = scalings.add_offline_pt(arr, obj)
