@@ -80,7 +80,6 @@ L1puppiJetSC4NG:
     inclusive: [0, 7]
     barrel: [0, 1.5]
     endcap: [1.5, 2.4]
-    forward: [2.4, 5]
   ids:
     default:
       cuts:
@@ -133,7 +132,7 @@ L1puppiJetSC8:
       label: "mass > 30 GeV"
       cuts:
         inclusive:
-          - "abs({eta}) < 2.4"
+          - "abs({eta}) < 7"
           - "{mass} > 30"
 
 L1TrackJet:
