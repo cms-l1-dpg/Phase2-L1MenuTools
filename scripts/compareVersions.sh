@@ -2,17 +2,18 @@ VOLD=$1
 VNEW=$2
 OUTDIR=${3:-"comparisons"}
 
-MAX_JOBS=1
-# run_when_ready() {
-#     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
-#         sleep 3
-#     done
-#     # Extract a meaningful identifier from the config path
-#     local filename=$(basename "$2")  # assumes config is 2nd argument
-#     local logname=${filename%.*}  # removes file extension
-#     echo Submitting $logname
-#     "$@" |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_${logname}.log &
-# }
+MAX_JOBS=4
+
+run_when_ready() {
+    while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+        sleep 3
+    done
+    # Extract a meaningful identifier from the config path
+    local filename=$(basename "$2")  # assumes config is 2nd argument
+    local logname=${filename%.*}  # removes file extension
+    echo Submitting $logname
+    "$@" |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_${logname}.log &
+}
 
 if [ -z "$VOLD" ] || [ -z "$VNEW" ]; then
     echo "Usage: $0 <oldVersion> <newVersion> [outdir]"
