@@ -10,9 +10,11 @@
 
 # VERSIONS="V48nano_151pre3 V48nano_L1EGupdate2"
 # VERSIONS="V49nano_151pre3 V49nano_L1EGupdate2"
-VERSIONS="V49nano_151pre3_E2ENNVtx V49nano_151pre3_E2ENNVtxOff"
-REVISION="250611_E2E"
-MAX_JOBS=2
+# VERSIONS="V49nano_151pre3_E2ENNVtx V49nano_151pre3_E2ENNVtxOff"
+# VERSIONS="V49nano_AR24"
+VERSIONS=$1
+REVISION="250615"
+MAX_JOBS=1
 
 # run_when_ready() {
 #     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -34,8 +36,7 @@ for VERSION in $VERSIONS; do
     mkdir -p logs/${VERSION}_${REVISION}
     # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
     source scripts/runGeneric.sh $VERSION $REVISION &> logs/${VERSION}_${REVISION}/${VERSION}_batch.log &
+    echo "Check on progress with e.g: tail -f logs/${VERSION}_${REVISION}/*_caching.log logs/${VERSION}_${REVISION}/*_batch.log"
 done
 
-echo "All jobs submitted, but waiting as some are still running! Checking progress with tail -f."
-tail -f logs/*_${REVISION}/*_caching.log logs/*_${REVISION}/*_batch.log
-wait
+echo "All jobs submitted! Jobs are running in the background - check with 'jobs' and 'tail -f <logfile>'."
