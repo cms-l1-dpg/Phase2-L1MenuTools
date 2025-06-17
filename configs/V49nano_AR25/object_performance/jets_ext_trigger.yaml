@@ -1,9 +1,9 @@
-JetTurnonBarrelSC8:
-  version: V49nano_L1EGupdate3
+JetTurnonBarrelExt:
+  version: V49nano_AR25
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -12,8 +12,8 @@ JetTurnonBarrelSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:barrel: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:barrel: "pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -24,12 +24,12 @@ JetTurnonBarrelSC8:
     max: 500
     step: 10
 
-JetTurnonEndcapSC8:
-  version: V49nano_L1EGupdate3
+JetTurnonEndcapExt:
+  version: V49nano_AR25
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -38,8 +38,8 @@ JetTurnonEndcapSC8:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetSC8:default:endcap: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:endcap: "pt"
+  thresholds: [50, 100]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -50,12 +50,12 @@ JetTurnonEndcapSC8:
     max: 500
     step: 10
 
-JetTurnonForwardHGCSC8:
-  version: V49nano_L1EGupdate3
+JetTurnonForwardHGCExt:
+  version: V49nano_AR25
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -64,8 +64,8 @@ JetTurnonForwardHGCSC8:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    L1puppiJetSC8:default:forwardHGC: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:forwardHGC: "pt"
+  thresholds: [50, 100, 175]
   scalings:
     method: "naive"
     threshold: 0.95
@@ -76,12 +76,12 @@ JetTurnonForwardHGCSC8:
     max: 500
     step: 10
 
-JetTurnonForwardHFSC8:
-  version: V49nano_L1EGupdate3
+JetTurnonForwardHFExt:
+  version: V49nano_AR25
   sample: TT
   match_test_to_ref: True
   reference_object:
-    object: "GenJetAK8"
+    object: "GenJet"
     x_arg: "pt"
     label: "Gen Jets"
     cuts:
@@ -90,8 +90,8 @@ JetTurnonForwardHFSC8:
       object:
         - "abs({eta}) < 5.0"
   test_objects:
-    L1puppiJetSC8:default:forwardHF: "pt"
-  thresholds: [150]
+    L1puppiExtJetSC4:default:forwardHF: "pt"
+  thresholds: [50, 100, 175]
   scalings:
     method: "naive"
     threshold: 0.60
