@@ -14,6 +14,7 @@ JetMatchingBarrel:
   test_objects:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
+    L1puppiJetSC4NG:default: "pt"
     L1caloJet:default: "pt"
     L1TrackJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
@@ -39,6 +40,7 @@ JetMatchingEndcap:
   test_objects:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
+    L1puppiJetSC4NG:default: "pt"
     L1caloJet:default: "pt"
     L1TrackJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
@@ -64,6 +66,7 @@ JetMatchingForward:
   test_objects:
     L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
+    L1puppiJetSC4NG:default: "pt"
     L1caloJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (<threshold> GeV, forward)"
