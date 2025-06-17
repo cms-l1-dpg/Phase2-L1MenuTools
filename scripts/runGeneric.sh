@@ -1,6 +1,6 @@
 VERSION=$1
 REVISION=$2
-MAX_JOBS=12
+MAX_JOBS=8
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -89,9 +89,6 @@ run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml
 run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml
 run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml # prepping to study step 2
 
-# === Print Configs (Menus) === #
-run_when_ready python menu_tools/utils/exportDefs.py -t triggers configs/$VERSION/rate_table
-
 # === Object Rates === #
 
 run_when_ready rate_plots configs/$VERSION/rate_plots/eg.yaml
@@ -104,5 +101,8 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/jets_sc8.yaml # step 2
 run_when_ready rate_plots configs/$VERSION/rate_plots/taus.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml
 run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml # step 2
+
+# === Print Configs (Menus) === #
+run_when_ready python menu_tools/utils/exportDefs.py -t triggers configs/$VERSION/rate_table
 
 echo "Plots and tables finished submitting!"
