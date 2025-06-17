@@ -12,9 +12,10 @@
 # VERSIONS="V49nano_151pre3 V49nano_L1EGupdate2"
 # VERSIONS="V49nano_151pre3_E2ENNVtx V49nano_151pre3_E2ENNVtxOff"
 # VERSIONS="V49nano_AR24"
-VERSIONS=$1
-REVISION="250615"
-MAX_JOBS=1
+# VERSIONS=$1
+VERSIONS="V49nano_AR25_VtxFindOff V49nano_AR25_VtxOnlyAssoc V49nano_AR25_VtxBothOn V49nano_151pre3_L1EGupdate4 V49nano_151pre3_VtxOnlyFind V49nano_151pre3_VtxOnlyAssoc V49nano_151pre3_DispVtx"
+REVISION="250617"
+MAX_JOBS=3
 
 # run_when_ready() {
 #     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
