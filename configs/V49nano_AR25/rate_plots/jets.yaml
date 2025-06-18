@@ -4,6 +4,7 @@ JetDefaultRates:
   test_objects:
     # - L1puppiJetHisto:default
     - L1puppiJetSC4:default
+    - L1puppiJetSC4NG:default
     - L1caloJet:default
     - L1TrackJet:default
   binning:
@@ -35,10 +36,25 @@ JetExtendedRates:
   version: V49nano_AR25
   test_objects:
     - L1puppiJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
     - L1puppiExtJetSC4:default:inclusive
-    # - L1puppiExtJetSC4:default:barrel
-    # - L1puppiExtJetSC4:default:endcap
-    # - L1puppiExtJetSC4:default:forward
+    - L1puppiExtJetSC4:bjetnn:inclusive
+    - L1puppiJetSC4NG:bjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesTags:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    - L1puppiExtJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:mass30:inclusive
+    # - L1puppiJetSC4NG:taupjetnn:inclusive
+    # - L1puppiJetSC4NG:taunjetnn:inclusive
   binning:
     min: 40
     max: 420
@@ -48,40 +64,26 @@ JetExtendedRatesByRegion:
   sample: MinBias
   version: V49nano_AR25
   test_objects:
-    # - L1puppiJetSC4:default:barrel
-    # - L1puppiJetSC4:default:endcap
-    # - L1puppiJetSC4:default:forward
     - L1puppiExtJetSC4:default:barrel
     - L1puppiExtJetSC4:default:endcap
-    - L1puppiExtJetSC4:default:forwardHGC
     - L1puppiExtJetSC4:default:forwardHF
+    - L1puppiExtJetSC4:default:forwardHGC
   binning:
     min: 40
     max: 420
     step: 20
 
-# JetSC8Rates:
-#   sample: MinBias
-#   version: V49nano_AR25
-#   test_objects:
-#     - L1puppiJetSC4:default
-#     - L1puppiJetSC8:default
-#   binning:
-#     min: 40
-#     max: 420
-#     step: 20
-
-
-# JetSC8Rates_byRegion:
-#   sample: MinBias
-#   version: V49nano_AR25
-#   test_objects:
-#     # - L1puppiJetSC4:default
-#     - L1puppiJetSC8:default
-#     - L1puppiJetSC8:default:barrel
-#     - L1puppiJetSC8:default:endcap
-#     - L1puppiJetSC8:default:forward
-#   binning:
-#     min: 40
-#     max: 420
-#     step: 20
+JetSC8RatesMassID:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    # - L1puppiExtJetSC4:default:inclusive
+    # - L1puppiJetSC4NG:default:inclusive
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:mass30:inclusive
+    # - L1puppiJetSC4NG:taupjetnn:inclusive
+    # - L1puppiJetSC4NG:taunjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20

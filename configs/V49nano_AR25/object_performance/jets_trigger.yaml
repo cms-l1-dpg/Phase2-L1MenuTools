@@ -12,8 +12,9 @@ JetTurnonBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # # L1puppiJetHisto:default:barrel: "pt"
+    # L1puppiJetHisto:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
+    L1puppiJetSC4NG:default:barrel: "pt"
     L1caloJet:default:barrel: "pt"
     L1TrackJet:default:barrel: "pt"
   thresholds: [50, 100]
@@ -41,8 +42,9 @@ JetTurnonEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    # # L1puppiJetHisto:default:endcap: "pt"
+    # L1puppiJetHisto:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
+    L1puppiJetSC4NG:default:endcap: "pt"
     L1caloJet:default:endcap: "pt"
     L1TrackJet:default:endcap: "pt"
   thresholds: [50, 100]
@@ -70,7 +72,7 @@ JetTurnonForwardHGC:
       object:
         - "abs({eta}) < 3.0"
   test_objects:
-    # # L1puppiJetHisto:default:forward: "pt"
+    # L1puppiJetHisto:default:forward: "pt"
     L1puppiJetSC4:default:forwardHGC: "pt"
     L1caloJet:default:forwardHGC: "pt"
   thresholds: [50, 100, 175]
@@ -98,7 +100,7 @@ JetTurnonForwardHF:
       object:
         - "abs({eta}) < 5.0"
   test_objects:
-    # # L1puppiJetHisto:default:forward: "pt"
+    # L1puppiJetHisto:default:forward: "pt"
     L1puppiJetSC4:default:forwardHF: "pt"
     L1caloJet:default:forwardHF: "pt"
   thresholds: [50, 100, 175]

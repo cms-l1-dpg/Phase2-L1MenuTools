@@ -1,7 +1,8 @@
 VERSION=$1
 RERUN=$2
 
-BASE=V45nano_151pre3_SC8Nano
+# BASE=V45nano_151pre3_SC8Nano
+BASE=V49nano_151pre3_SC8Nano
 
 cp configs/$BASE/object_performance/jets_trigger.yaml configs/$VERSION/object_performance/.
 cp configs/$BASE/object_performance/jets_sc8_trigger.yaml configs/$VERSION/object_performance/.
