@@ -13,7 +13,7 @@ JetMatching_Eta_Pt40To100:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetHisto:default: "eta"
+    # L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
     L1caloJet:default: "eta"
     L1TrackJet:default: "eta"
@@ -38,7 +38,7 @@ JetMatching_Eta_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetHisto:default: "eta"
+    # L1puppiJetHisto:default: "eta"
     L1puppiJetSC4:default: "eta"
     L1caloJet:default: "eta"
     L1TrackJet:default: "eta"

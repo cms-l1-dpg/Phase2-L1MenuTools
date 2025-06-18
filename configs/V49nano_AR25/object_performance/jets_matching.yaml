@@ -12,7 +12,7 @@ JetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetHisto:default: "pt"
+    # L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
     L1caloJet:default: "pt"
     L1TrackJet:default: "pt"
@@ -37,7 +37,7 @@ JetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    L1puppiJetHisto:default: "pt"
+    # L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
     L1caloJet:default: "pt"
     L1TrackJet:default: "pt"
@@ -62,7 +62,7 @@ JetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    L1puppiJetHisto:default: "pt"
+    # L1puppiJetHisto:default: "pt"
     L1puppiJetSC4:default: "pt"
     L1caloJet:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"

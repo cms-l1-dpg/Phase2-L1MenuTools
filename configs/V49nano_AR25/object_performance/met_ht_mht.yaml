@@ -65,7 +65,7 @@ MHT_50perc:
         - "{pt} > 30"
     trafo: "MHT"
   test_objects:
-    L1puppiHistoJetSums:MHT: "pt"
+    # L1puppiHistoJetSums:MHT: "pt"
     L1puppiJetSC4sums:MHT: "pt"
     L1TrackHT:MHT: "mht"
   thresholds: [70, 150]
