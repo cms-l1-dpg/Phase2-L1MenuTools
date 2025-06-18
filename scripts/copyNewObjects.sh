@@ -1,9 +1,12 @@
 VERSION=$1
-RERUN=$2
+SWVERSION=$2
+RERUN=$3
 
 # BASE=V45nano_151pre3_SC8Nano
 BASE=V49nano_151pre3_SC8Nano
+SWBASE=151pre3_SC8Nano
 
+cp configs/$BASE/caching.yaml configs/$VERSION/.
 cp configs/$BASE/object_performance/jets_trigger.yaml configs/$VERSION/object_performance/.
 cp configs/$BASE/object_performance/jets_sc8_trigger.yaml configs/$VERSION/object_performance/.
 cp configs/$BASE/object_performance/jets_ext_trigger.yaml configs/$VERSION/object_performance/.
@@ -23,8 +26,11 @@ cp configs/$BASE/rate_table/step2_menu_cfg.yml configs/$VERSION/rate_table/.
 grep -rl "$BASE" configs/$VERSION/object_performance | xargs sed -i "s/$BASE/$VERSION/g"
 grep -rl "$BASE" configs/$VERSION/rate_plots | xargs sed -i "s/$BASE/$VERSION/g"
 grep -rl "$BASE" configs/$VERSION/rate_table | xargs sed -i "s/$BASE/$VERSION/g"
+sed -i "s/$BASE/$VERSION/g" configs/$VERSION/caching.yaml
+sed -i "s/$SWBASE/$SWVERSION/g" configs/$VERSION/caching.yaml
 
 if [[ $RERUN == "TRUE" ]]; then
+    cache_objects configs/$VERSION/caching.yaml
     object_performance configs/$VERSION/object_performance/jets_matching.yaml
     object_performance configs/$VERSION/object_performance/jets_matching_eta.yaml
     object_performance configs/$VERSION/object_performance/jets_sc8_matching.yaml
