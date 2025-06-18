@@ -2,13 +2,13 @@
 # source scripts/setupConfig.sh V46nano_L1EGupdate2 V47nano_L1EGupdate2
 
 # 151X versions
-# source scripts/setupConfig.sh V49nano_151pre3 V49nano_AR25 151pre3 151X_AllAR25_FindOn
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_AR25_VtxFindOff 151pre3 151X_AllAR25_FindOff
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_AR25_VtxOnlyAssoc 151pre3 151X_AllAR25_FindOffAssocOn
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_AR25_VtxBothOn 151pre3 151X_AllAR25_FindOnAssocOn
+# source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25 151pre3_L1EGupdate3 151X_AllAR25_FindOn
+# source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25_VtxFindOff 151pre3_L1EGupdate3 151X_AllAR25_FindOff
+# source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25_VtxOnlyAssoc 151pre3_L1EGupdate3 151X_AllAR25_FindOffAssocOn
+# source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25_VtxBothOn 151pre3_L1EGupdate3 151X_AllAR25_FindOnAssocOn
 
 # 151pre3 test versions
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_L1EGupdate4 151pre3 151pre3_L1EGupdate4
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyFind 151pre3 151pre3_E2ENNVtxOnlyFind
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyAssoc 151pre3 151pre3_E2ENNVtxOnlyAssoc
-source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_DispVtx 151pre3 151pre3_DispVtx
+# source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_L1EGupdate4 151pre3 151pre3_L1EGupdate4
+# source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyFind 151pre3 151pre3_E2ENNVtxOnlyFind
+# source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyAssoc 151pre3 151pre3_E2ENNVtxOnlyAssoc
+# source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_DispVtx 151pre3 151pre3_DispVtx
