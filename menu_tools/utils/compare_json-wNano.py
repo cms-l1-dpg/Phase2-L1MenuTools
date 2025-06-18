@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-import os, sys
+import os, sys, re
 from glob import glob
 
 import matplotlib.pyplot as plt
@@ -18,6 +18,10 @@ def load_json(fname):
         plot = json.load(f)
         return plot
 
+# Function to strip the prefix like Vxxnano_
+def strip_prefix(s):
+    return re.sub(r"^V\d+nano_", "", s)
+
 def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
                    lss=["-", "--"], keys=None, markers=["o", "s"]):
     
@@ -30,22 +34,27 @@ def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
                 
     # clean keys
     clean_keys = []
+    only1_keys = []
+    only2_keys = []
     for key in keys:
         if key in ['xlabel', 'ylabel', 'watermark']: 
             continue
         if key not in nano_plot.keys():
             print(f"Warning: {key} not in plot 1 keys. Skipping...")
+            only2_keys.append(key)
             continue
         if key not in menu_plot.keys():
             print(f"Warning: {key} not in plot 2 keys. Skipping...")
+            only1_keys.append(key)
             continue
         clean_keys.append(key)
         
+    jTot=0
     for j, key in enumerate(clean_keys):
         ## plot 1
         plots = [nano_plot[key], menu_plot[key]]
         color = f"C{j}"
-
+        jTot+=1
         for i, p1 in enumerate(plots):
             sfx = sfxs[i]
             label = f"{sfx}, {p1['label']}"
@@ -92,18 +101,68 @@ def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
                 if len(diff) != len(y_err): continue
                 axs[1].fill_between(diff.index, diff.values - y_err, diff.values + y_err,
                                     alpha=0.3, color=color)
-    
+
+    for j, key in enumerate(only1_keys):
+        ## plot 1
+        plots = [nano_plot[key]]
+        color = f"C{jTot}"
+        jTot+=1
+        for i, p1 in enumerate(plots):
+            sfx = sfxs[i]
+            label = f"{sfx}, {p1['label']}"
+
+            if ptype == "scalings":
+                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[i],
+                            label=label, ls=lss[i], mfc="none" if i == 1 else color)
+            elif ptype == "rate":
+                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[i],
+                            label=label, ls=lss[i], mfc="none" if i == 1 else color)
+            elif ptype == "turnon":
+                p1["err_kwargs"]["marker"] = markers[i]
+                p1["err_kwargs"]["xerr"] = None
+
+                axs[0].errorbar(p1["xbins"], p1["efficiency"], yerr=p1["efficiency_err"], 
+                            label=label, ls=lss[i], color=color, mfc="none" if i == 1 else color,
+                            **(p1["err_kwargs"]))
+
+    for j, key in enumerate(only2_keys):
+        ## plot 1
+        plots = [menu_plot[key]]
+        color = f"C{jTot}"
+        jTot+=1
+        for i, p1 in enumerate(plots):
+            sfx = sfxs[i]
+            label = f"{sfx}, {p1['label']}"
+
+            if ptype == "scalings":
+                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[i],
+                            label=label, ls=lss[i], mfc="none" if i == 0 else color)
+            elif ptype == "rate":
+                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[i],
+                            label=label, ls=lss[i], mfc="none" if i == 0 else color)
+            elif ptype == "turnon":
+                p1["err_kwargs"]["marker"] = markers[i]
+                p1["err_kwargs"]["xerr"] = None
+
+                axs[0].errorbar(p1["xbins"], p1["efficiency"], yerr=p1["efficiency_err"], 
+                                label=label, ls=lss[i], color=color, mfc="none" if i == 0 else color,
+                                **(p1["err_kwargs"]))
+
+                
+                
     # make axis stuff
     axs[0].legend(fontsize="x-small")
     axs[1].legend(fontsize="x-small")
     
     if ptype == "rate":
-        axs[1].set_ylabel(f"({sfxs[0]}-{sfxs[1]})/{sfxs[1]}", fontsize="x-small")
+        # axs[1].set_ylabel(f"({sfxs[0]}-{sfxs[1]})/{sfxs[1]}", fontsize="x-small")
+        axs[1].set_ylabel(f"({strip_prefix(sfxs[0])}-{strip_prefix(sfxs[1])})/{strip_prefix(sfxs[1])}", fontsize="x-small")
         axs[0].set_yscale("log")
         axs[1].set_xlabel(nano_plot[key]["xlabel"])
         axs[0].set_ylabel("Rate [kHz]")
     else:
-        axs[1].set_ylabel(f"{sfxs[0]} - {sfxs[1]}", fontsize="x-small")
+        # axs[1].set_ylabel(f"{sfxs[0]} - {sfxs[1]}", fontsize="x-small")
+        axs[1].set_ylabel(f"{strip_prefix(sfxs[0])} - {strip_prefix(sfxs[1])}", fontsize="x-small")
         
     if ptype == "scalings":
         axs[0].set_ylabel("95 % Location [GeV]")
