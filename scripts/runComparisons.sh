@@ -1,4 +1,4 @@
-MAX_JOBS=2
+MAX_JOBS=3
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -11,9 +11,19 @@ run_when_ready() {
 # source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtx  "comparisons/e2eNNVtx"
 # source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtxOff "comparisons/e2eNNVtx"
 # source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+# source scripts/compareVersions.sh V49nano_AR24 V49nano_142pre1 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_142pre1 V49nano_151pre3 "comparisons/ar25"
 
-run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_L1EGupdate3 "comparisons/thirdTrain"
-run_when_ready source scripts/compareVersions.sh V49nano_L1EGupdate2 V49nano_L1EGupdate3 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_L1EGupdate3 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_L1EGupdate2 V49nano_L1EGupdate3 "comparisons/thirdTrain"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V48_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25_VtxFindOff "comparisons/ar25"
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/thirdTrain"
 # run_when_ready source scripts/compareVersions.sh V38nano_DT12x V49nano_AR24 "comparisons/thirdTrain"
@@ -50,6 +60,10 @@ run_when_ready source scripts/compareVersions.sh V49nano_L1EGupdate2 V49nano_L1E
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR24 --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR25_VtxFindOff --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+
 
 
 # python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_jetSC8
@@ -155,7 +169,10 @@ run_when_ready source scripts/compareVersions.sh V49nano_L1EGupdate2 V49nano_L1E
 # # Reproducing V44nano - plots
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano_Oct24 --v0 V44nano --output-dir "comparisons/validationOct24"
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_Oct24 --v0 V38nano --output-dir "comparisons/validationOct24"
-# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V38nano_DT12x --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V49nano_AR24 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V49nano_AR24 --menu-vOld menu_Step1 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V49nano_AR25 --menu-vOld menu_Step1 --output-dir "comparisons/ar25"
 
 # Reproducing V44nano
 # run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V44nano --menu-vOld v44_Step1Menu_gtneq --menu-vNew v44_Step1Menu --output-dir "comparisons/validationOct24"
