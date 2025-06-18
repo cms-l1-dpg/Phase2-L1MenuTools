@@ -139,6 +139,96 @@ L1puppiJetSC8:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 30"
+    mass29:
+      label: "mass > 29 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 29"
+    mass28:
+      label: "mass > 28 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 28"
+    mass27p5:
+      label: "mass > 27.5 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 27.5"
+    mass27:
+      label: "mass > 27 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 27"
+    mass26:
+      label: "mass > 26 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 26"
+    mass25:
+      label: "mass > 25 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 25"
+    mass20:
+      label: "mass > 20 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 20"
+    mass19:
+      label: "mass > 19 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 19"
+    mass18p5:
+      label: "mass > 18.5 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 18.5"
+    mass18:
+      label: "mass > 18 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 18"
+    mass17:
+      label: "mass > 17 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 17"
+    mass16:
+      label: "mass > 16 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 16"
+    mass15:
+      label: "mass > 15 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 15"
+    mass10:
+      label: "mass > 10 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 10"
+    mass5:
+      label: "mass > 5 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{mass} > 5"
 
 L1TrackJet:
   match_dR: 0.4
