@@ -21,7 +21,7 @@ run_when_ready() {
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V48_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
-# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
+run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25_VtxFindOff "comparisons/ar25"
 
@@ -62,7 +62,7 @@ run_when_ready() {
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
 
 # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR24 --v0 V49nano_AR25 --output-dir "comparisons/ar25"
-run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR25_VtxFindOff --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR25_VtxFindOff --v0 V49nano_AR25 --output-dir "comparisons/ar25"
 
 
 
