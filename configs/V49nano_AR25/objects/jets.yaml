@@ -133,18 +133,65 @@ L1puppiJetSC8:
       cuts:
         inclusive:
           - "abs({eta}) < 7"
+    pt230:
+      label: "offline pT > 230 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+        barrel:
+          - "{pt} > 146"
+        endcap:
+          - "{pt} > 140"
+        forwardHGC:
+          - "{pt} > 131"
+        forwardHF:
+          - "{pt} > 157"
+    pt200:
+      label: "offline pT > 200 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+        barrel:
+          - "{pt} > 124"
+        endcap:
+          - "{pt} > 120"
+        forwardHGC:
+          - "{pt} > 107"
+        forwardHF:
+          - "{pt} > 137"
+    pt230:
+      label: "offline pT > 230 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+        barrel:
+          - "{pt} > 146"
+        endcap:
+          - "{pt} > 140"
+        forwardHGC:
+          - "{pt} > 131"
+        forwardHF:
+          - "{pt} > 157"
+    mass20pt120:
+      label: "pT > 120 GeV; mass > 20 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{pt} > 120"
+          - "{mass} > 20"
+    mass10pt115:
+      label: "pT > 115 GeV; mass > 10 GeV"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+          - "{pt} > 115"
+          - "{mass} > 10"
     mass30:
       label: "mass > 30 GeV"
       cuts:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 30"
-    mass29:
-      label: "mass > 29 GeV"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
-          - "{mass} > 29"
     mass28:
       label: "mass > 28 GeV"
       cuts:
@@ -163,12 +210,6 @@ L1puppiJetSC8:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 27"
-    mass26:
-      label: "mass > 26 GeV"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
-          - "{mass} > 26"
     mass25:
       label: "mass > 25 GeV"
       cuts:
@@ -199,36 +240,19 @@ L1puppiJetSC8:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 18"
-    mass17:
-      label: "mass > 17 GeV"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
-          - "{mass} > 17"
-    mass16:
-      label: "mass > 16 GeV"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
-          - "{mass} > 16"
     mass15:
       label: "mass > 15 GeV"
       cuts:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 15"
+
     mass10:
       label: "mass > 10 GeV"
       cuts:
         inclusive:
           - "abs({eta}) < 7"
           - "{mass} > 10"
-    mass5:
-      label: "mass > 5 GeV"
-      cuts:
-        inclusive:
-          - "abs({eta}) < 7"
-          - "{mass} > 5"
 
 L1TrackJet:
   match_dR: 0.4
