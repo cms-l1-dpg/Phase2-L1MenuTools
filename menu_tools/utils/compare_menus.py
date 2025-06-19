@@ -1,6 +1,5 @@
 import argparse
-import os
-import sys
+import os, sys, re
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
@@ -41,6 +40,11 @@ def get_df_new_csv(fname):
 #         print(f"Saving table at: {filepath}")
 #     plt.close()
 
+# Function to strip the prefix like Vxxnano_
+def strip_prefix(s):
+    return re.sub(r"^V\d+nano_", "", s)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Compare L1T Phase2 menu rates.")
     parser.add_argument("--vOld", default="V45nano_noL1EG", help="Old version name (e.g., V45nano_noL1EG)")
@@ -58,11 +62,11 @@ def main():
     # Define input and output paths
     # Define labels
     if args.vNew == args.vOld:
-        label1 = args.vNew+"_"+menu_vNew
-        label2 = args.vOld+"_"+menu_vOld
+        label1 = strip_prefix(args.vNew)+"_"+menu_vNew
+        label2 = strip_prefix(args.vOld)+"_"+menu_vOld
     else:
-        label1 = args.vNew
-        label2 = args.vOld
+        label1 = strip_prefix(args.vNew)
+        label2 = strip_prefix(args.vOld)
     base_path = "outputs"
     input_files = {
         label2: f"{base_path}/{args.vOld}/rate_tables/{menu_vOld}_{args.vOld}.csv",
