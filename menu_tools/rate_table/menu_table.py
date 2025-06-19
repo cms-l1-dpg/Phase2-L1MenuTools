@@ -18,6 +18,21 @@ from menu_tools.utils import constants
 from menu_tools.utils import objects
 from menu_tools.utils import scalings
 
+from scipy.stats import beta, norm
+
+def get_eff_err(npass,ntot, alpha=1 - 0.68):
+    
+    x = npass
+    n = ntot
+    
+    lo_bound = beta.ppf(alpha / 2, x, n - x + 1)
+    eff_err_lo = x / n - np.nan_to_num(lo_bound, nan=0.0)
+    hi_bound = beta.ppf(1 - alpha / 2, x + 1, n - x)
+    eff_err_hi = np.nan_to_num(hi_bound, nan=1.0) - x / n
+
+    eff_err_avg = (abs(eff_err_lo) + abs(eff_err_hi))/2
+    
+    return eff_err_avg, eff_err_lo, eff_err_hi
 
 vector.register_awkward()
 
@@ -378,8 +393,11 @@ class MenuTable:
             # Compute seed values
             npass = ak.sum(mask)
             efficiency = npass / len(mask)
+            effErr, effErrLo, effErrHi = get_eff_err(npass, len(mask), alpha=1-0.68)
             rate = efficiency * constants.RATE_NORM_FACTOR
+            rateErr = effErr * constants.RATE_NORM_FACTOR
             table.append(
+                # {"seed": seed, "npass": npass, "efficiency": efficiency, "effErr": effErr, "rate": rate, "rateErr": rateErr}
                 {"seed": seed, "npass": npass, "efficiency": efficiency, "rate": rate}
             )
             # Modify total mask
@@ -388,8 +406,10 @@ class MenuTable:
         ## Total OR of all seeds
         npass = np.sum(all_seeds_or_mask)
         efficiency = npass / len(all_seeds_or_mask)
+        effErr, effErrLo, effErrHi = get_eff_err(npass, len(all_seeds_or_mask), alpha=1-0.68)
         rate = efficiency * constants.RATE_NORM_FACTOR
         table.append(
+            # {"seed": "Total", "npass": npass, "efficiency": efficiency, "effErr": effErr, "rate": rate, "rateErr": rateErr}
             {"seed": "Total", "npass": npass, "efficiency": efficiency, "rate": rate}
         )
         table.append(
@@ -397,7 +417,9 @@ class MenuTable:
                 "seed": "Total Event Number",
                 "npass": len(all_seeds_or_mask),
                 "efficiency": np.nan,
+                # "effErr": np.nan,
                 "rate": np.nan,
+                # "rateErr": np.nan
             }
         )
         self.table = table
@@ -431,4 +453,7 @@ class MenuTable:
                 f.write(f"{seed['seed']},")
                 f.write(f"{seed['npass']},")
                 f.write(f"{seed['efficiency']},")
+                # f.write(f"{seed['effErr']},")
                 f.write(f"{seed['rate']}\n")
+                # f.write(f"{seed['rate']},")
+                # f.write(f"{seed['rateErr']}\n")
