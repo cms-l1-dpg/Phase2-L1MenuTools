@@ -33,7 +33,7 @@ V49nano_AR25:
       Events:
         # gen
         GenJet: [pt, eta, phi, partonFlavour]
-        GenJetAK8: [pt, eta, phi]
+        GenJetAK8: [pt, eta, phi, mass]
         GenMET: "all"
         # # sums
         L1puppiMET: [pt, phi]
