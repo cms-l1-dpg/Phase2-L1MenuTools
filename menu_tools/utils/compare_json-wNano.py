@@ -57,7 +57,10 @@ def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
         jTot+=1
         for i, p1 in enumerate(plots):
             sfx = sfxs[i]
-            label = f"{sfx}, {p1['label']}"
+            label = None
+            if i == 0:
+                label = f"{p1['label']}"
+                # label = f"{strip_prefix(sfx)}, {p1['label']}"
 
             if ptype == "scalings":
                 axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[i],
@@ -108,21 +111,22 @@ def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
         color = f"C{jTot}"
         jTot+=1
         for i, p1 in enumerate(plots):
-            sfx = sfxs[i]
-            label = f"{sfx}, {p1['label']}"
+            sfx = sfxs[0]
+            label = f"{p1['label']}"
+            # label = f"{strip_prefix(sfx)}, {p1['label']}"
 
             if ptype == "scalings":
-                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[i],
-                            label=label, ls=lss[i], mfc="none" if i == 1 else color)
+                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[0],
+                            label=label, ls=lss[0], mfc=color)
             elif ptype == "rate":
-                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[i],
-                            label=label, ls=lss[i], mfc="none" if i == 1 else color)
+                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[0],
+                            label=label, ls=lss[0], mfc=color)
             elif ptype == "turnon":
-                p1["err_kwargs"]["marker"] = markers[i]
+                p1["err_kwargs"]["marker"] = markers[0]
                 p1["err_kwargs"]["xerr"] = None
 
                 axs[0].errorbar(p1["xbins"], p1["efficiency"], yerr=p1["efficiency_err"], 
-                            label=label, ls=lss[i], color=color, mfc="none" if i == 1 else color,
+                            label=label, ls=lss[0], color=color, mfc=color,
                             **(p1["err_kwargs"]))
 
     for j, key in enumerate(only2_keys):
@@ -131,25 +135,32 @@ def comp_nano_plots(nano_plot, menu_plot, sfxs=["v22", "v27"], ptype="turnon",
         color = f"C{jTot}"
         jTot+=1
         for i, p1 in enumerate(plots):
-            sfx = sfxs[i]
-            label = f"{sfx}, {p1['label']}"
+            sfx = sfxs[1]
+            label = f"{strip_prefix(sfx)}, {p1['label']}"
 
             if ptype == "scalings":
-                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[i],
-                            label=label, ls=lss[i], mfc="none" if i == 0 else color)
+                axs[0].plot(p1["xvals"], p1["yvals"], color=color, marker=markers[1],
+                            label=label, ls=lss[1], mfc="none")
             elif ptype == "rate":
-                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[i],
-                            label=label, ls=lss[i], mfc="none" if i == 0 else color)
+                axs[0].plot(p1["x_values"], p1["y_values"], color=color, marker=markers[1],
+                            label=label, ls=lss[1], mfc="none")
             elif ptype == "turnon":
-                p1["err_kwargs"]["marker"] = markers[i]
+                p1["err_kwargs"]["marker"] = markers[1]
                 p1["err_kwargs"]["xerr"] = None
 
                 axs[0].errorbar(p1["xbins"], p1["efficiency"], yerr=p1["efficiency_err"], 
-                                label=label, ls=lss[i], color=color, mfc="none" if i == 0 else color,
+                                label=label, ls=lss[1], color=color, mfc="none",
                                 **(p1["err_kwargs"]))
 
                 
-                
+    # add old version label
+    if ptype == "scalings":
+        axs[0].plot([], [], color="grey", marker=markers[1], label=f"{strip_prefix(sfxs[1])}", ls=lss[1], mfc="none")
+    elif ptype == "rate":
+        axs[0].plot([], [], color="grey", marker=markers[1], label=f"{strip_prefix(sfxs[1])}", ls=lss[1], mfc="none")
+    elif ptype == "turnon":
+        axs[0].errorbar([], [], yerr=[], label=f"{strip_prefix(sfxs[1])}", ls=lss[1], color="grey", mfc="none")
+
     # make axis stuff
     axs[0].legend(fontsize="x-small")
     axs[1].legend(fontsize="x-small")
