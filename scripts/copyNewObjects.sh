@@ -22,6 +22,8 @@ cp configs/$BASE/objects/jets.yaml configs/$VERSION/objects/.
 cp configs/$BASE/rate_plots/jets.yaml configs/$VERSION/rate_plots/.
 cp configs/$BASE/rate_table/step2_cfg.yml configs/$VERSION/rate_table/.
 cp configs/$BASE/rate_table/step2_menu_cfg.yml configs/$VERSION/rate_table/.
+cp configs/$BASE/rate_table/step2_newTJM_cfg.yml configs/$VERSION/rate_table/.
+cp configs/$BASE/rate_table/step2_newTJM_menu_cfg.yml configs/$VERSION/rate_table/.
 
 grep -rl "$BASE" configs/$VERSION/object_performance | xargs sed -i "s/$BASE/$VERSION/g"
 grep -rl "$BASE" configs/$VERSION/rate_plots | xargs sed -i "s/$BASE/$VERSION/g"
@@ -43,6 +45,7 @@ if [[ $RERUN == "TRUE" ]]; then
     object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml
     object_performance configs/$VERSION/object_performance/jets_ext_trigger.yaml
     object_performance configs/$VERSION/object_performance/met_ht_mht.yaml
+    # rate_table configs/$VERSION/rate_table/step2_newTJM_cfg.yml
     rate_table configs/$VERSION/rate_table/step2_cfg.yml
     rate_plots configs/$VERSION/rate_plots/jets.yaml
 fi
