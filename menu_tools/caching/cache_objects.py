@@ -379,7 +379,7 @@ def main():
                         dryrun=args.dry_run,
                     )
                     loader.load()
-    print(f"Cashing finished in {time.time() - start_time:.2f} s") 
+    print(f"Caching finished in {time.time() - start_time:.2f} s") 
 
 
 if __name__ == "__main__":
