@@ -21,9 +21,22 @@ run_when_ready() {
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V48_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
-run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25_VtxFindOff "comparisons/ar25"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxOnlyAssoc "comparisons/ar25"
+run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxBothOn "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25 V49nano_AR25_VtxBothOn "comparisons/ar25"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_VtxOnlyAssoc "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_VtxOnlyFind "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_VtxOnlyFind V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_preHCAL V49nano_151X_postHCAL "comparisons/hcalPR"
+
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/thirdTrain"
 # run_when_ready source scripts/compareVersions.sh V38nano_DT12x V49nano_AR24 "comparisons/thirdTrain"
