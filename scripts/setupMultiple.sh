@@ -2,6 +2,11 @@
 # source scripts/setupConfig.sh V46nano_L1EGupdate2 V47nano_L1EGupdate2
 
 # 151X versions
+source scripts/setupConfig.sh V49nano_AR25 V49nano_151X_preHCAL 151X_AllAR25_FindOn 151X_preHCAL
+source scripts/setupConfig.sh V49nano_AR25 V49nano_151X_postHCAL 151X_AllAR25_FindOn 151X_postHCAL
+
+
+# 151X versions
 # source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25 151pre3_L1EGupdate3 151X_AllAR25_FindOn
 # source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25_VtxFindOff 151pre3_L1EGupdate3 151X_AllAR25_FindOff
 # source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25_VtxOnlyAssoc 151pre3_L1EGupdate3 151X_AllAR25_FindOffAssocOn
