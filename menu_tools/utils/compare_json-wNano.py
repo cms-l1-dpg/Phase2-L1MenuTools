@@ -193,7 +193,7 @@ def main():
     parser = argparse.ArgumentParser(description="Compare JSON plots from two versions")
     parser.add_argument("--v0", required=True, help="First version to compare")
     parser.add_argument("--v1", required=True, help="Second version to compare")
-    parser.add_argument("--base-path", default="/eos/user/r/roward/www/L1T/Phase2/menu/Validation/NewMenuTools",
+    parser.add_argument("--base-path", default="outputs",
                         help="Base path for JSON files")
     parser.add_argument("--output-dir", default="comparisons", help="Output directory for plots")
     
