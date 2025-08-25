@@ -46,48 +46,74 @@ def strip_prefix(s):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compare L1T Phase2 menu rates.")
-    parser.add_argument("--vOld", default="V45nano_noL1EG", help="Old version name (e.g., V45nano_noL1EG)")
-    parser.add_argument("--vNew", default="V45nano_L1EGupdate1", help="New version name (e.g., V45nano_L1EGupdate1)")
+    parser = argparse.ArgumentParser(description="Compare L1T Phase2 menu rates from two or three versions.")
+    parser.add_argument("--v0", required=True, help="Reference version name (e.g., V45nano_L1EGupdate1)")
+    parser.add_argument("--v1", required=True, help="Second version to compare (e.g., V45nano_noL1EG)")
+    parser.add_argument("--v2", help="Optional third version to compare")
     parser.add_argument("--output-dir", default="comparisons", help="Output directory part (e.g., comparisons/bisecting)")
     parser.add_argument("--menu", default="v45_Step1Menu", help="Base menu name (default: v45_Step1Menu)")
-    parser.add_argument("--menu-vOld", default=None, help="Menu name for vOld (overrides --menu)")
-    parser.add_argument("--menu-vNew", default=None, help="Menu name for vNew (overrides --menu)")
+    parser.add_argument("--menu-v0", default=None, help="Menu name for v0 (overrides --menu)")
+    parser.add_argument("--menu-v1", default=None, help="Menu name for v1 (overrides --menu)")
+    parser.add_argument("--menu-v2", default=None, help="Menu name for v2 (overrides --menu)")
     args = parser.parse_args()
 
     # Set menu names
-    menu_vOld = args.menu_vOld if args.menu_vOld else args.menu
-    menu_vNew = args.menu_vNew if args.menu_vNew else args.menu
+    menu_v0 = args.menu_v0 if args.menu_v0 else args.menu
+    menu_v1 = args.menu_v1 if args.menu_v1 else args.menu
+    menu_v2 = args.menu_v2 if args.menu_v2 else args.menu
 
-    # Define input and output paths
+    # Collect all versions
+    versions = [args.v0, args.v1]
+    menus = [menu_v0, menu_v1]
+    if args.v2:
+        versions.append(args.v2)
+        menus.append(menu_v2)
+
     # Define labels
-    if args.vNew == args.vOld:
-        label1 = strip_prefix(args.vNew)+"_"+menu_vNew
-        label2 = strip_prefix(args.vOld)+"_"+menu_vOld
-    else:
-        label1 = strip_prefix(args.vNew)
-        label2 = strip_prefix(args.vOld)
+    labels = []
+    for i, (version, menu) in enumerate(zip(versions, menus)):
+        if len(set(versions)) == 1:  # All versions are the same
+            labels.append(f"{strip_prefix(version)}_{menu}")
+        elif len(set(menus)) == 1:  # All menus are the same
+            labels.append(strip_prefix(version))
+        else:  # Mixed case
+            labels.append(f"{strip_prefix(version)}_{menu}")
+
+    # Define input files
     base_path = "outputs"
-    input_files = {
-        label2: f"{base_path}/{args.vOld}/rate_tables/{menu_vOld}_{args.vOld}.csv",
-        label1: f"{base_path}/{args.vNew}/rate_tables/{menu_vNew}_{args.vNew}.csv",
-    }
+    input_files = {}
+    for label, version, menu in zip(labels, versions, menus):
+        input_files[label] = f"{base_path}/{version}/rate_tables/{menu}_{version}.csv"
+
+    # Set up output directory
     parent_dir = f"{base_path}/{args.output_dir}"
     if not os.path.exists(parent_dir):
         raise FileNotFoundError(f"Parent directory not found, please confirm: {parent_dir}")
-    output_dir = f"{base_path}/{args.output_dir}/{args.vNew}vs{args.vOld}/rate_tables"
+    
+    comparison_name = f"{args.v0}vs{args.v1}"
+    if args.v2:
+        comparison_name += f"vs{args.v2}"
+    output_dir = f"{base_path}/{args.output_dir}/{comparison_name}/rate_tables"
     os.makedirs(output_dir, exist_ok=True)
 
     # Check if input files exist
     for version, filepath in input_files.items():
         if not os.path.exists(filepath):
-            raise FileNotFoundError(f"Input CSV file not found: {filepath}")
+            print(f"Warning: Input CSV file not found: {filepath}")
+            if version in labels and args.v2 and version == labels[-1]:
+                print("Continuing without v2...")
+                # Remove v2 from processing
+                labels = labels[:-1]
+                versions = versions[:-1]
+                menus = menus[:-1]
+                input_files = {k: v for k, v in input_files.items() if k != version}
+            else:
+                raise FileNotFoundError(f"Required input CSV file not found: {filepath}")
 
     # Load dataframes
-    dfs = {
-        version: get_df_new_csv(filepath)
-        for version, filepath in input_files.items()
-    }
+    dfs = {}
+    for version, filepath in input_files.items():
+        dfs[version] = get_df_new_csv(filepath)
 
     # Add version column to dataframes
     for key, df in dfs.items():
