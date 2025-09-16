@@ -27,7 +27,7 @@ run_when_ready() {
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxOnlyAssoc "comparisons/ar25"
-run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxBothOn "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxBothOn "comparisons/ar25"
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25 V49nano_AR25_VtxBothOn "comparisons/ar25"
 
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
@@ -36,6 +36,14 @@ run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano
 # run_when_ready source scripts/compareVersions.sh V49nano_151pre3_VtxOnlyFind V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
 
 # run_when_ready source scripts/compareVersions.sh V49nano_151X_preHCAL V49nano_151X_postHCAL "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_noHCALStep V49nano_151X_rerunHCALStep "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_rerunHCALStep V49nano_151X_newHCALStep "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25 V49nano_151X_newHCALStep "comparisons/hcalPR"
+
+mkdir -p complogs/hcal
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v2 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/objects.log
+# python menu_tools/utils/compare_json-wNano.py --v2 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v0 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/objects_reverse.log
+python menu_tools/utils/compare_menus.py --v2 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v0 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/menus_reverse.log
 
 
 # run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/thirdTrain"

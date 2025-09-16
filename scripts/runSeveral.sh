@@ -15,8 +15,11 @@
 # VERSIONS=$1
 # VERSIONS="V49nano_AR25_VtxFindOff V49nano_AR25_VtxOnlyAssoc V49nano_AR25_VtxBothOn V49nano_151pre3_L1EGupdate4 V49nano_151pre3_VtxOnlyFind V49nano_151pre3_VtxOnlyAssoc V49nano_151pre3_DispVtx"
 # VERSIONS="V49nano_151pre3_VtxOnlyFind V49nano_151pre3_VtxOnlyAssoc V49nano_151pre3_DispVtx"
-VERSIONS="V49nano_151X_preHCAL V49nano_151X_postHCAL"
-REVISION="250625"
+# VERSIONS="V49nano_151X_preHCAL V49nano_151X_postHCAL"
+# VERSIONS="V49nano_151X_noHCALStep V49nano_151X_rerunHCALStep V49nano_151X_newHCALStep"
+# VERSIONS="V49nano_151pre4_P2GT"
+VERSIONS="V49nano_151pre4_P2GTupdate4"
+REVISION="250903"
 MAX_JOBS=2
 
 # run_when_ready() {

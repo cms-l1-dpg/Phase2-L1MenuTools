@@ -1,6 +1,6 @@
 VERSION=$1
 REVISION=$2
-MAX_JOBS=6
+MAX_JOBS=5
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do

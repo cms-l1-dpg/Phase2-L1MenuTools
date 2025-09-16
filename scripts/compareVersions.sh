@@ -25,8 +25,8 @@ else
     # run_when_ready python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --output-dir $OUTDIR
     # run_when_ready python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --menu v45_Step2Menu --output-dir $OUTDIR
     python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --output-dir $OUTDIR |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1.log 
-    python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --menu v45_Step2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step2.log 
-    python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --menu v45_Step1and2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1and2.log 
+    # python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --menu v45_Step2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step2.log 
+    # python menu_tools/utils/compare_menus.py --vOld $VOLD --vNew $VNEW --menu v45_Step1and2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1and2.log 
     python menu_tools/utils/compare_json-wNano.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_objects.log
     source menu_tools/utils/format_diff.sh $VOLD $VNEW $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_diff.log 
 fi
