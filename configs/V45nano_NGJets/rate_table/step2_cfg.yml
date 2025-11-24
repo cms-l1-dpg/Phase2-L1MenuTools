@@ -1,0 +1,4 @@
+version: "V45nano_NGJets"
+sample: "MinBias"
+menu_config: "configs/V45nano_NGJets/rate_table/step2_menu_cfg.yml"
+table_fname: "v45_Step2Menu"

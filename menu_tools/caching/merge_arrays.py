@@ -1,8 +1,13 @@
 import awkward as ak
+import argparse
 
-version = "V33nano"
-sample = "MinBias"
-# sample = "Hgg"
+parser = argparse.ArgumentParser(description="Merge parquet files for L1EG objects.")
+parser.add_argument("--version", type=str, required=True, default="V45nano_140PU", help="Version of the dataset")
+parser.add_argument("--sample", type=str, required=True, default="MinBias", help="Sample name (e.g., MinBias, Hgg)")
+args = parser.parse_args()
+version = args.version
+sample = args.sample
+
 pattern = f"cache/{version}/{version}_{sample}_%s.parquet"
 objects = ["L1EGbarrel", "L1EGendcap"]
 target_object = "L1EG"

@@ -38,9 +38,10 @@ class RatePlotter:
     _com = 14
     _outdir = "outputs/rate_plots/"
 
-    def __init__(self, cfg, data, offline_pt: bool):
+    def __init__(self, cfg, data, data_err, offline_pt: bool):
         self.cfg = cfg
         self.data = data
+        self.data_err = data_err
         self.offline_pt = offline_pt
 
         ## Overwrite outdir
@@ -83,9 +84,11 @@ class RatePlotter:
             if obj_specifier not in self.data.keys():
                 continue
             rate_values = self.data[obj_specifier][version]
+            rate_err = self.data_err[obj_specifier][version]
 
             xvals = list(rate_values.keys())
             yvals = list(rate_values.values())
+            yerrs = list(rate_err.values())
             label = f"{obj_instances[version].plot_label}"
             xlabel = rf"{self._online_offline} $p_T$ [GeV]"
 
@@ -96,15 +99,19 @@ class RatePlotter:
             plot_dict[obj_specifier] = {
                 "x_values": xvals,
                 "y_values": yvals,
+                "y_errors": yerrs,
                 "object": obj_instances[version].plot_label,
                 "label": label,
                 "version": version,
                 "xlabel": xlabel,
             }
+            print("yvals: ", yvals)
+            print("yerrs: ", yerrs)
 
-            ax.plot(
+            ax.errorbar(
                 xvals,
                 yvals,
+                yerr=yerrs,
                 marker="o",
                 label=label,
             )
@@ -144,16 +151,22 @@ class RatePlotter:
             xvalues = np.fromiter(rate_values[v1].keys(), dtype=float)
             v1_values = np.fromiter(rate_values[v1].values(), dtype=float)
             v2_values = np.fromiter(rate_values[v2].values(), dtype=float)
-            p = axs[0].plot(
+            y_err_v1 = np.fromiter(rate_err[obj_key][v1].values(), dtype=float)
+            y_err_v2 = np.fromiter(rate_err[obj_key][v2].values(), dtype=float)
+            y_err_ratio = y_err_v1 / abs(v2_values) + abs(v1_values / v2_values**2) * y_err_v2
+
+            p = axs[0].errorbar(
                 xvalues,
                 v1_values,
+                yerr=y_err_v1,
                 marker="o",
                 linestyle="solid",
                 label=f"{obj_key} @ {v1}",
             )
-            axs[0].plot(
+            axs[0].errorbar(
                 xvalues,
                 v2_values,
+                yerr=y_err_v2,
                 marker="o",
                 linestyle="dashed",
                 label=f"{obj_key} @ {v2}",
@@ -267,9 +280,10 @@ class RateComputer:
         cumsum = np.cumsum(
             np.histogram(max_pt_obj, bins=[-1] + list(thresholds) + [1e5])[0]
         )
+        err_cumsum = np.sqrt(cumsum) / cumsum
         rate = (cumsum[-1] - cumsum) / len(obj_mask) * constants.RATE_NORM_FACTOR
-
-        return dict(zip(thresholds, rate))
+        rate_err = (err_cumsum[-1] + err_cumsum) / len(obj_mask) * constants.RATE_NORM_FACTOR
+        return dict(zip(thresholds, rate)), dict(zip(thresholds, rate_err))
 
 
 class RatePlotCentral:
@@ -305,10 +319,12 @@ class RatePlotCentral:
         and called for this purpose.
         """
         rate_data: dict[str, dict] = {}
+        rate_err: dict[str, dict] = {}
 
         # Iterate over version(s)
         for version in plot_config.versions:
             rate_data[version] = {}
+            rate_err[version] = {}
             rate_computer = RateComputer(
                 obj_instances[version],
                 plot_config.sample,
@@ -316,9 +332,9 @@ class RatePlotCentral:
                 apply_offline_conversion,
             )
 
-            rate_data[version] = rate_computer.compute_rate(self.get_bins(plot_config), nObj = plot_config.nObjects)
+            rate_data[version], rate_err[version] = rate_computer.compute_rate(self.get_bins(plot_config), nObj = plot_config.nObjects)
 
-        return rate_data
+        return rate_data, rate_err
 
     def run(self, apply_offline_conversion: bool = False) -> None:
         """
@@ -336,6 +352,7 @@ class RatePlotCentral:
             )
             plot_config = RatePlotConfig(cfg_plot, plot_name)
             rate_plot_data = {}
+            rate_plot_err = {}
 
             if plot_config.nObjects > 1:
                 print(f"## Warning! Making rates for {plot_config.nObjects} objects!")
@@ -346,7 +363,7 @@ class RatePlotCentral:
                 obj_instances,
             ) in plot_config.test_object_instances.items():
                 try:
-                    rate_plot_data[obj_specifier] = self._compute_rates(
+                    rate_plot_data[obj_specifier], rate_plot_err[obj_specifier] = self._compute_rates(
                         plot_config,
                         obj_specifier,
                         obj_instances,
@@ -362,7 +379,7 @@ class RatePlotCentral:
                 continue
 
             # Plot Rate vs. Threshold after all data has been aggregated
-            plotter = RatePlotter(plot_config, rate_plot_data, apply_offline_conversion)
+            plotter = RatePlotter(plot_config, rate_plot_data, rate_plot_err, apply_offline_conversion)
             plotter.plot()
 
 
