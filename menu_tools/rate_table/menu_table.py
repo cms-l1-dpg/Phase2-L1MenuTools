@@ -45,8 +45,14 @@ class MenuTable:
     All the relevant information is dumped to a csv table.
     """
 
-    def __init__(self, config: dict):
-        self.config: MenuConfig = MenuConfig(config)
+    def __init__(self, config: dict, config_version: Optional[str] = None, override_version: Optional[str] = None):
+        self.config: MenuConfig = MenuConfig(config, config_version=config_version, override_version=override_version)
+        
+        print(f"INFO: Loading cached inputs from cache/{self.config.version}")
+        print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
+        print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
+        print(f"INFO: Loading scalings from outputs/{self.config.version}/object_performance/scalings")
+        
         self.arr_cache = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
@@ -101,7 +107,7 @@ class MenuTable:
             arr: Array of cached `object_name` object from sample specified in
             config
         """
-        obj = objects.Object(object_name, self.config.version)
+        obj = objects.Object(object_name, self.config.config_version_for_objects)
         fpath = os.path.join(
             "cache",
             self.config.version,
@@ -130,7 +136,7 @@ class MenuTable:
             and ("mass" not in object_name)
         ):
             print("adding scalings")
-            arr = scalings.add_offline_pt(arr, obj)
+            arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.version)
 
         if "idx" not in arr.fields:
             arr["idx"] = ak.local_index(arr)
@@ -179,7 +185,7 @@ class MenuTable:
                 raw_object_arrays[leg["obj"]] = self.arr_cache[leg["obj"]]
 
             # Prepare object ID mask
-            obj = objects.Object(leg["obj"], self.config.version)
+            obj = objects.Object(leg["obj"], self.config.config_version_for_objects)
             obj_mask = objects.compute_selection_mask_for_object_cuts(
                 obj, raw_object_arrays[leg["obj"]]
             )

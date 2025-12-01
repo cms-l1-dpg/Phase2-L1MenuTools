@@ -1,5 +1,6 @@
 import os
 import warnings
+from typing import Optional
 
 import awkward as ak
 import yaml
@@ -7,19 +8,21 @@ import yaml
 from menu_tools.utils.objects import Object
 
 
-def load_scaling_params(obj: Object, eta_range: str) -> tuple[float, float]:
+def load_scaling_params(obj: Object, eta_range: str, scaling_version: Optional[str] = None) -> tuple[float, float]:
     """Retrieves scalings for object+id from `outputs`
 
     obj: Object for which to retrive scaling parameters
     eta_range: specifier of the range for which scalings are to be retrieved
+    scaling_version: version to load scalings from (overrides obj.version)
 
     Returns:
         scaling_params: parameters computed in object_performance
         for the online-offline scaling
     """
+    version = scaling_version if scaling_version else obj.version
     fpath = os.path.join(
         "outputs",
-        obj.version,
+        version,
         "object_performance",
         "scalings",
         obj.get_scaling_object(eta_range) + ".yaml",
@@ -55,7 +58,7 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
     return pt_orig
 
 
-def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
+def add_offline_pt(arr: ak.Array, obj: Object, scaling_version: Optional[str] = None) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
     """
@@ -65,7 +68,7 @@ def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
     if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
-        slope, offset = load_scaling_params(obj, "inclusive")
+        slope, offset = load_scaling_params(obj, "inclusive", scaling_version)
         new_pt = new_pt + (pt_orig * slope + offset)
     else:
         # if multiple eta ranges are found, the "inclusive" range is skipped
@@ -73,7 +76,7 @@ def add_offline_pt(arr: ak.Array, obj: Object) -> ak.Array:
         for eta_range, eta_min_max in obj.eta_ranges.items():
             if eta_range == "inclusive":
                 continue
-            slope, offset = load_scaling_params(obj, eta_range)
+            slope, offset = load_scaling_params(obj, eta_range, scaling_version)
             eta_mask = (abs(arr.eta) >= eta_min_max[0]) & (
                 abs(arr.eta) < eta_min_max[1]
             )

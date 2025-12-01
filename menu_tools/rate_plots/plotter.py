@@ -240,7 +240,7 @@ class RateComputer:
 
         # Apply scalings if so configured
         if self.apply_offline_conversion:
-            arr = scalings.add_offline_pt(arr, self.object)
+            arr = scalings.add_offline_pt(arr, self.object, scaling_version=self.version)
         arr["pt"] = scalings.get_pt_branch(arr, str(self.object))
 
         return arr
@@ -278,9 +278,21 @@ class RatePlotCentral:
     (pt thresholds vs. rate).
     """
 
-    def __init__(self, cfg_plots_path: str):
+    def __init__(self, cfg_plots_path: str, override_version: str = None):
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
+        self.override_version = override_version
+        self.config_version = self._extract_version(cfg_plots_path)
+
+    def _extract_version(self, path: str) -> str:
+        parts = path.split(os.sep)
+        try:
+            idx = parts.index("configs")
+            if idx + 1 < len(parts):
+                return parts[idx + 1]
+        except ValueError:
+            pass
+        return "unknown_version"
 
     def get_bins(self, plot_config: RatePlotConfig) -> np.ndarray:
         """
@@ -327,6 +339,13 @@ class RatePlotCentral:
         at the configured thresholds and passes it to
         the RatePlotter for plotting.
         """
+        version = self.override_version if self.override_version else self.config_version
+        print(f"INFO: Loading cached inputs from cache/{version}")
+        print(f"INFO: Saving outputs to outputs/{version}/object_performance/rates")
+        print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
+        if apply_offline_conversion:
+             print(f"INFO: Loading scalings from outputs/{version}/object_performance/scalings")
+
         # Iterate over plots
         for plot_name, cfg_plot in self.cfg_plots.items():
             print(
@@ -334,7 +353,7 @@ class RatePlotCentral:
                 plot_name,
                 " Offline" if apply_offline_conversion else " Online",
             )
-            plot_config = RatePlotConfig(cfg_plot, plot_name)
+            plot_config = RatePlotConfig(cfg_plot, plot_name, config_version=self.config_version, override_version=self.override_version)
             rate_plot_data = {}
 
             if plot_config.nObjects > 1:
@@ -371,9 +390,12 @@ def main():
     parser.add_argument(
         "cfg_plots", help="Path of YAML file specifying the desired plots."
     )
+    parser.add_argument(
+        "--version", type=str, help="Override version for output/caching", default=None
+    )
     args = parser.parse_args()
 
-    plotter = RatePlotCentral(args.cfg_plots)
+    plotter = RatePlotCentral(args.cfg_plots, override_version=args.version)
     plotter.run(apply_offline_conversion=True)
     plotter.run()
 

@@ -1,10 +1,13 @@
 from menu_tools.utils.config import BasePlotConfig
 from menu_tools.utils.objects import Object
+from typing import Optional
 
 
 class RatePlotConfig(BasePlotConfig):
-    def __init__(self, cfg: dict, name: str):
+    def __init__(self, cfg: dict, name: str, config_version: Optional[str] = None, override_version: Optional[str] = None):
         super().__init__(cfg, name)
+        self._config_version = config_version
+        self._override_version = override_version
 
     @property
     def compare_versions(self) -> bool:
@@ -15,7 +18,16 @@ class RatePlotConfig(BasePlotConfig):
         return len(self.versions) == 2
 
     @property
+    def version(self) -> str:
+        if self._override_version:
+            return self._override_version
+        return super().version
+
+    @property
     def versions(self) -> list[str]:
+        if self._override_version:
+            return [self._override_version]
+            
         if "version" in self._cfg.keys():
             version = self._cfg["version"]
             if isinstance(version, str):
@@ -47,5 +59,11 @@ class RatePlotConfig(BasePlotConfig):
         for obj_key in self._cfg["test_objects"]:
             test_objects[obj_key] = {}
             for version in self.versions:
-                test_objects[obj_key][version] = Object(obj_key, version)
+                # Use config_version for object definition if override is active
+                # Otherwise use the version from the config
+                obj_version = version
+                if self._override_version and self._config_version:
+                    obj_version = self._config_version
+                    
+                test_objects[obj_key][version] = Object(obj_key, obj_version)
         return test_objects

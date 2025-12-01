@@ -84,9 +84,11 @@ class ArrayLoader:
 
 class TurnOnCollection:
     def __init__(
-        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None
+        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None, config_version: Optional[str] = None, override_version: Optional[str] = None
     ):
-        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name)
+        self._config_version = config_version
+        self._override_version = override_version
+        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name, config_version=config_version, override_version=override_version)
         self.version = self.cfg_plot.version
         self.threshold = threshold
         self.ak_arrays: dict[str, Any] = {}
@@ -103,8 +105,14 @@ class TurnOnCollection:
         obj_args = []
 
         test_objects = self.cfg_plot.test_objects
+        
+        # Determine correct version for object definition
+        obj_version = self.version
+        if self._override_version and self._config_version:
+             obj_version = self._config_version
+
         for obj_key, x_arg in test_objects.items():
-            obj = Object(obj_key, self.cfg_plot.version)
+            obj = Object(obj_key, obj_version)
             if "L1" in obj_key:
                 obj_args.append((obj, x_arg))
             else:

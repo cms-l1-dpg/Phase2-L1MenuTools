@@ -51,7 +51,8 @@ class Plotter:
 class EfficiencyPlotter(Plotter):
     def __init__(self, name, cfg, turnon_collection):
         self.plot_name = name
-        self.cfg = PerformancePlotConfig(cfg, name)
+        # Reuse the config from turnon_collection which has the correct version info
+        self.cfg = turnon_collection.cfg_plot
         self.turnon_collection = turnon_collection
         self.version = self.turnon_collection.version
         self.threshold = self.turnon_collection.threshold
@@ -97,9 +98,11 @@ class EfficiencyPlotter(Plotter):
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
                 continue
+            
+            # Use the version from the config (which respects overrides)
             obj = Object(
                 obj_key,
-                version=self.version,
+                version=self.cfg.version_for_objects,
             )
 
             xbins = self.turnon_collection.bins
@@ -166,7 +169,7 @@ class EfficiencyPlotter(Plotter):
 
             obj = Object(
                 obj_key,
-                version=self.version,
+                version=self.cfg.version_for_objects,
             )
 
             err_kwargs = {
@@ -216,7 +219,7 @@ class EfficiencyPlotter(Plotter):
 
             obj = Object(
                 obj_key,
-                version=self.version,
+                version=self.cfg.version_for_objects,
             )
 
             # yerr = np.sqrt(iso_vs_eff_hist) # TODO: Possibly introduce errors
@@ -316,9 +319,21 @@ class EfficiencyCentral:
     Class that orchestrates the plotting of
     """
 
-    def __init__(self, cfg_plots_path):
+    def __init__(self, cfg_plots_path: str, override_version: str = None):
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
+        self.override_version = override_version
+        self.config_version = self._extract_version(cfg_plots_path)
+
+    def _extract_version(self, path: str) -> str:
+        parts = path.split(os.sep)
+        try:
+            idx = parts.index("configs")
+            if idx + 1 < len(parts):
+                return parts[idx + 1]
+        except ValueError:
+            pass
+        return "unknown_version"
 
     def get_thresholds(self, cfg_plot: dict):
         """
@@ -341,10 +356,15 @@ class EfficiencyCentral:
         for it and passes it to the EfficiencyPlotter for
         plotting.
         """
+        version = self.override_version if self.override_version else self.config_version
+        print(f"INFO: Loading cached inputs from cache/{version}")
+        print(f"INFO: Saving outputs to outputs/{version}/object_performance")
+        print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
+
         for plot_name, cfg_plot in self.cfg_plots.items():
             for threshold in self.get_thresholds(cfg_plot):
                 print(f">>> Turn On {plot_name} ({threshold} GeV) <<<")
-                turnon_collection = TurnOnCollection(cfg_plot, threshold, plot_name)
+                turnon_collection = TurnOnCollection(cfg_plot, threshold, plot_name, config_version=self.config_version, override_version=self.override_version)
                 turnon_collection.create_hists()
 
                 plotter = EfficiencyPlotter(plot_name, cfg_plot, turnon_collection)
@@ -355,14 +375,14 @@ class ScalingPlotter(Plotter):
     def __init__(
         self,
         plot_name: str,
-        cfg_plot: dict,
+        plot_config: PerformancePlotConfig,
         scalings: dict,
         scaling_pct: float,
         version: str,
         params: dict[str, np.ndarray],
     ):
         self.plot_name = plot_name
-        self.cfg_plot = cfg_plot
+        self.plot_config = plot_config
         self.scalings = scalings
         self.params = params
         self.version = version
@@ -400,7 +420,8 @@ class ScalingPlotter(Plotter):
         _xlim_upper = 0
         _ylim_upper = 0
         for obj_key, points in self.scalings.items():
-            obj = Object(obj_key, self.version)
+            # Use version_for_objects from the plot config
+            obj = Object(obj_key, self.plot_config.version_for_objects)
             x_points = np.array(list(points.keys()))
             y_points = np.array(list(points.values()))
             pts = ax.plot(x_points, y_points, "o")
@@ -445,18 +466,30 @@ class ScalingPlotter(Plotter):
         ## save config
         with open(f"{plot_fname}.yaml", "w") as outfile:
             yaml.dump(
-                {self.plot_name: self.cfg_plot}, outfile, default_flow_style=False
+                {self.plot_name: self.plot_config.config_dict}, outfile, default_flow_style=False
             )
 
         plt.close()
 
 
 class ScalingCentral:
-    def __init__(self, cfg_plots_path: str) -> None:
+    def __init__(self, cfg_plots_path: str, override_version: str = None) -> None:
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
         with open("./configs/scaling_thresholds.yaml", "r") as f:
             self.scaling_thresholds = yaml.safe_load(f)
+        self.override_version = override_version
+        self.config_version = self._extract_version(cfg_plots_path)
+
+    def _extract_version(self, path: str) -> str:
+        parts = path.split(os.sep)
+        try:
+            idx = parts.index("configs")
+            if idx + 1 < len(parts):
+                return parts[idx + 1]
+        except ValueError:
+            pass
+        return "unknown_version"
 
     def _get_scaling_thresholds(self, cfg_plot, test_obj) -> list[int]:
         if str(test_obj) in self.scaling_thresholds:
@@ -491,9 +524,10 @@ class ScalingCentral:
         Retruns:
             None
         """
+        version = self.override_version if self.override_version else obj.version
         fpath = os.path.join(
             "outputs",
-            obj.version,
+            version,
             "object_performance",
             "scalings",
         )
@@ -514,8 +548,14 @@ class ScalingCentral:
             yaml.dump({"slope": float(a), "offset": float(b)}, f)
 
     def run(self):
+        version = self.override_version if self.override_version else self.config_version
+        print(f"INFO: Loading cached inputs from cache/{version}")
+        print(f"INFO: Saving outputs to outputs/{version}/object_performance")
+        print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
+        print(f"INFO: Saving scalings to outputs/{version}/object_performance/scalings")
+
         for plot_name, cfg_plot in self.cfg_plots.items():
-            plot_config = PerformancePlotConfig(cfg_plot, plot_name)
+            plot_config = PerformancePlotConfig(cfg_plot, plot_name, config_version=self.config_version, override_version=self.override_version)
             if not plot_config.compute_scalings:
                 continue
             print(f">>> Scalings {plot_name} <<<")
@@ -530,7 +570,7 @@ class ScalingCentral:
                 scalings[str(test_obj)] = {}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
                 for threshold in tqdm(thds, leave=False, desc="Thresholds"):
-                    turnon_collection = TurnOnCollection(cfg_plot, threshold)
+                    turnon_collection = TurnOnCollection(cfg_plot, threshold, config_version=self.config_version, override_version=self.override_version)
                     turnon_collection.create_hists()
                     scaling_pct = turnon_collection.cfg_plot.scaling_pct
                     method = turnon_collection.cfg_plot.scaling_method
@@ -550,7 +590,7 @@ class ScalingCentral:
 
             plotter = ScalingPlotter(
                 plot_name,
-                cfg_plot,
+                plot_config,
                 scalings,
                 scaling_pct,
                 turnon_collection.version,
@@ -568,14 +608,15 @@ def main():
         help="Path of YAML configuration file specifying the desired plots.",
     )
     parser.add_argument("-s", "--scalings_only", action="store_true")
+    parser.add_argument("--version", type=str, help="Override version for output/caching", default=None)
     args = parser.parse_args()
 
     for path_cfg_plot in args.cfg_plots:
         if not args.scalings_only:
-            plotter = EfficiencyCentral(path_cfg_plot)
+            plotter = EfficiencyCentral(path_cfg_plot, override_version=args.version)
             plotter.run()
 
-        scalings = ScalingCentral(path_cfg_plot)
+        scalings = ScalingCentral(path_cfg_plot, override_version=args.version)
         scalings.run()
 
 
