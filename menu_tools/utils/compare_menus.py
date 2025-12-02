@@ -147,62 +147,152 @@ def main():
     df_rate = df_all.pivot(index='Trigger', columns='version', values='rate')
     df_counts = df_all.pivot(index='Trigger', columns='version', values='counts')
 
-    # Calculate differences and ratios
-    df_rate["diff"] = df_rate[label1] - df_rate[label2]
-    df_rate["pull"] = (df_rate[label1] / df_rate[label2]) - 1
-    df_rate["ratio"] = df_rate[label1] / df_rate[label2]
-    df_counts["diff"] = df_counts[label1] - df_counts[label2]
+    # Calculate differences and ratios (v0 is reference)
+    label_v0 = labels[0]
+    label_v1 = labels[1]
+    
+    df_rate["diff_v1"] = df_rate[label_v0] - df_rate[label_v1]
+    df_rate["pull_v1"] = (df_rate[label_v0] / df_rate[label_v1]) - 1
+    df_rate["ratio_v1"] = df_rate[label_v0] / df_rate[label_v1]
+    df_counts["diff_v1"] = df_counts[label_v0] - df_counts[label_v1]
+    
+    if len(labels) > 2:  # v2 exists
+        label_v2 = labels[2]
+        df_rate["diff_v2"] = df_rate[label_v0] - df_rate[label_v2]
+        df_rate["pull_v2"] = (df_rate[label_v0] / df_rate[label_v2]) - 1
+        df_rate["ratio_v2"] = df_rate[label_v0] / df_rate[label_v2]
+        df_counts["diff_v2"] = df_counts[label_v0] - df_counts[label_v2]
 
     # Plot: Individual Rates (Via Rates < 1200 kHz)
     sel = df_all.rate < 1200
     fig, ax = plt.subplots(figsize=(6, 11))
-    df_all[sel].pivot(index='Seed', columns='version', values='rate').plot(kind='barh', ax=ax)
+    
+    # Create pivot for plotting with consistent colors and styles
+    df_plot = df_all[sel].pivot(index='Seed', columns='version', values='rate')
+    
+    # Use pandas built-in plotting which handles bar separation automatically
+    df_plot[labels].plot(kind='barh', ax=ax, fontsize=11)
+    
     ax.set_xlabel("Rate [kHz]")
     ax.grid()
     ax.set_xscale("log")
+    
+    # Construct filename
+    menu_parts = []
+    for menu, version in zip(menus, versions):
+        menu_parts.append(f"{menu}_{version}")
+    filename_base = "vs".join(menu_parts)
+    
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_individual.{ext}")
+        filepath = os.path.join(output_dir, f"{filename_base}_rate_individual.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
 
-    # Plot: Rates, Diff, and Pull - sorted by total
-    fig, axs = plt.subplots(1, 3, figsize=(10, 15), sharey=True, gridspec_kw={'width_ratios': [3, 1, 1]})
-    df_rate_sort = df_rate.sort_values(label1)
-    df_rate_sort[[label1, label2]].plot(kind='barh', ax=axs[0], fontsize=11)
+    # Plot: Rates, Diff, and Pull - sorted by total (v0)
+    n_panels = 3  # Rates, Diff (combined), Rel. Diff (combined)
+    fig, axs = plt.subplots(1, n_panels, figsize=(10, 15), sharey=True, 
+                           gridspec_kw={'width_ratios': [3, 1, 1]})
+    
+    df_rate_sort = df_rate.sort_values(label_v0)
+    
+    # Plot rates
+    df_rate_sort[labels].plot(kind='barh', ax=axs[0], fontsize=11)
     axs[0].grid()
     axs[0].set_xlabel("Rate [kHz]")
-    df_rate_sort[["diff"]].plot(kind='barh', ax=axs[1], legend=False, rot=45)
+    
+    # Plot: Rates, Diff, and Pull - sorted by total (v0)
+    n_panels = 3  # Rates, Diff (combined), Rel. Diff (combined)
+    fig, axs = plt.subplots(1, n_panels, figsize=(10, 15), sharey=True, 
+                           gridspec_kw={'width_ratios': [3, 1, 1]})
+    
+    df_rate_sort = df_rate.sort_values(label_v0)
+    
+    # Plot rates
+    df_rate_sort[labels].plot(kind='barh', ax=axs[0], fontsize=11)
+    axs[0].grid()
+    axs[0].set_xlabel("Rate [kHz]")
+    
+    # Plot combined differences - create dataframe for proper bar separation
+    diff_data = pd.DataFrame(index=df_rate_sort.index)
+    diff_data['v0-v1'] = df_rate_sort["diff_v1"]
+    if len(labels) > 2:
+        diff_data['v0-v2'] = df_rate_sort["diff_v2"]
+    diff_data.plot(kind='barh', ax=axs[1], color=['C1', 'C2'][:len(diff_data.columns)])
     axs[1].grid()
-    axs[1].set_xlabel(f"Diff [kHz]")
-    df_rate_sort[["pull"]].plot(kind='barh', ax=axs[2], legend=False, rot=45)
+    axs[1].set_xlabel("Diff [kHz]")
+    axs[1].get_legend().remove()
+    
+    # Plot combined relative differences (pulls)
+    pull_data = pd.DataFrame(index=df_rate_sort.index)
+    pull_data['v0-v1'] = df_rate_sort["pull_v1"]
+    if len(labels) > 2:
+        pull_data['v0-v2'] = df_rate_sort["pull_v2"]
+    pull_data.plot(kind='barh', ax=axs[2], color=['C1', 'C2'][:len(pull_data.columns)])
     axs[2].grid()
-    axs[2].set_xlabel(f"Pull")
+    axs[2].set_xlabel("Rel. Diff")
+    axs[2].get_legend().remove()
+    
     plt.subplots_adjust(wspace=0, hspace=0)
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_diff_pull_byTotal.{ext}")
+        filepath = os.path.join(output_dir, f"{filename_base}_rate_diff_pull_byTotal.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
 
-    # Plot: Rates, Diff, and Pull - sorted by diff
-    fig, axs = plt.subplots(1, 3, figsize=(10, 15), sharey=True, gridspec_kw={'width_ratios': [3, 1, 1]})
-    df_rate_sort = df_rate.sort_values("diff")
-    df_rate_sort[[label1, label2]].plot(kind='barh', ax=axs[0], fontsize=11)
+    # Plot: Rates, Diff, and Pull - sorted by diff (v1)
+    n_panels = 3  # Rates, Diff (combined), Rel. Diff (combined)
+    fig, axs = plt.subplots(1, n_panels, figsize=(10, 15), sharey=True, 
+                           gridspec_kw={'width_ratios': [3, 1, 1]})
+    
+    df_rate_sort = df_rate.sort_values("diff_v1")
+    
+    # Plot rates
+    df_rate_sort[labels].plot(kind='barh', ax=axs[0], fontsize=11)
     axs[0].grid()
     axs[0].set_xlabel("Rate [kHz]")
-    df_rate_sort[["diff"]].plot(kind='barh', ax=axs[1], legend=False, rot=45)
+    
+    # Plot combined differences - create dataframe for proper bar separation
+    diff_data = pd.DataFrame(index=df_rate_sort.index)
+    diff_data['v0-v1'] = df_rate_sort["diff_v1"]
+    if len(labels) > 2:
+        diff_data['v0-v2'] = df_rate_sort["diff_v2"]
+    diff_data.plot(kind='barh', ax=axs[1], color=['C1', 'C2'][:len(diff_data.columns)])
     axs[1].grid()
-    axs[1].set_xlabel(f"Diff [kHz]")
-    df_rate_sort[["pull"]].plot(kind='barh', ax=axs[2], legend=False, rot=45)
+    axs[1].set_xlabel("Diff [kHz]")
+    axs[1].get_legend().remove()
+    
+    # Plot combined relative differences (pulls)
+    pull_data = pd.DataFrame(index=df_rate_sort.index)
+    pull_data['v0-v1'] = df_rate_sort["pull_v1"]
+    if len(labels) > 2:
+        pull_data['v0-v2'] = df_rate_sort["pull_v2"]
+    pull_data.plot(kind='barh', ax=axs[2], color=['C1', 'C2'][:len(pull_data.columns)])
     axs[2].grid()
-    axs[2].set_xlabel(f"Pull")
+    axs[2].set_xlabel("Rel. Diff")
+    axs[2].get_legend().remove()
+    
     plt.subplots_adjust(wspace=0, hspace=0)
     for ext in ['png', 'pdf']:
-        filepath = os.path.join(output_dir, f"{menu_vNew}_{args.vNew}vs{menu_vOld}_{args.vOld}_rate_diff_pull.{ext}")
+        filepath = os.path.join(output_dir, f"{filename_base}_rate_diff_pull.{ext}")
         plt.savefig(filepath, bbox_inches='tight', dpi=300)
         print(f"Saving plot at: {filepath}")
     plt.close()
+
+    # Print summary statistics
+    print("\n=== SUMMARY ===")
+    print(f"Total triggers compared: {len(df_rate)}")
+    for i, label in enumerate(labels):
+        total_rate = df_rate[label].sum()
+        print(f"{label} total rate: {total_rate:.2f} kHz")
+    
+    if len(labels) > 1:
+        diff_v1 = df_rate["diff_v1"].sum()
+        print(f"Total rate difference (v0-v1): {diff_v1:.2f} kHz")
+        
+        if len(labels) > 2:
+            diff_v2 = df_rate["diff_v2"].sum()
+            print(f"Total rate difference (v0-v2): {diff_v2:.2f} kHz")
 
     # # Save tables as images
     # # Unsorted df_rate
