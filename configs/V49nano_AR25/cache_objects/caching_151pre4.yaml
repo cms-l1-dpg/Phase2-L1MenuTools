@@ -8,7 +8,7 @@ V49nano_AR25_151pre4:
         L1EGbarrel: "all" 
         L1EGendcap: "all" 
   DYLL_M50:
-    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151pre4/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_151pre4/*/hadd/*.root
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/151pre4_retry/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_151pre4_retry/*/hadd/*.root
     trees_branches:
       Events:
         GenPart: "all" 
