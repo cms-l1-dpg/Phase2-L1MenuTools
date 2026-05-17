@@ -1,29 +1,46 @@
-# OLDVERSION=V38nano_DT12x
-# NEWVERSION=V38nano_DT12x_Oct24
+#!/bin/bash
 OLDVERSION=$1
 NEWVERSION=$2
+MODE=${3:-1}   # 1=outputs (default), 2=cache, 3=both
 
-# HEADDIR=cache
-HEADDIR=outputs
+rename_version() {
+    local HEADDIR=$1
 
+    while IFS= read -r dir; do
+        newdir="${dir/$OLDVERSION/$NEWVERSION}"
+        echo "--- Renaming directory: $dir -> $newdir"
+        mv "$dir" "$newdir"
 
-if [ -d "$HEADDIR/$OLDVERSION" ]; then
-    mv $HEADDIR/$OLDVERSION $HEADDIR/$NEWVERSION
+	find -L "$newdir" -depth -name "*${OLDVERSION}*" -not -path "$newdir" | while IFS= read -r file; do
+	    dir=$(dirname "$file")
+	    base=$(basename "$file")
+	    newbase="${base//$OLDVERSION/$NEWVERSION}"
+	    echo "Renaming: $file -> $dir/$newbase"
+	    mv "$file" "$dir/$newbase"
+	done
 
-    cd $HEADDIR/$NEWVERSION
+        echo "Updating file contents in $newdir..."
+        grep -rl "$OLDVERSION" "$newdir" \
+            --exclude="*.parquet" \
+            --exclude="*.png" \
+            | xargs -r sed -i "s/$OLDVERSION/$NEWVERSION/g"
 
-    # Filenames
-    for file in $(find -name "*$OLDVERSION*"); do
-	echo Oldname: $file
-	echo Newname: ${file/$OLDVERSION/$NEWVERSION}
-	mv $file ${file/$OLDVERSION/$NEWVERSION}
-    done
+    done < <(find -L "$HEADDIR" -maxdepth 1 -type d -name "$OLDVERSION")
+}
 
-    echo "Files renamed, now checking in files"
-    # Text within files
-    grep -rl $OLDVERSION | xargs sed -i "s/$OLDVERSION/$NEWVERSION/g"
+run_for() {
+    local HEADDIR=$1
+    if find -L "$HEADDIR" -maxdepth 1 -type d -name "$OLDVERSION" | grep -q .; then
+        rename_version "$HEADDIR"
+    else
+        echo "ERROR: No directory named '$OLDVERSION' found under $HEADDIR, please check"
+    fi
+}
 
-    cd -
-else
-    echo "ERROR: Old version $HEADDIR/$OLDVERSION doesnt exist, please check"
+if [ "$MODE" -eq 1 ] || [ "$MODE" -eq 3 ]; then
+    run_for outputs
+fi
+
+if [ "$MODE" -eq 2 ] || [ "$MODE" -eq 3 ]; then
+    run_for cache
 fi
