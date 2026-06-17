@@ -1,12 +1,12 @@
 V49nano_AR25_161pre3:
-  # Hgg:
-  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/161pre3/v45/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V45_reL1wTT_161pre3/*/hadd/*.root
-  #   trees_branches:
-  #     Events:
-  #       GenPart: [pt, eta, phi, pdgId, statusFlags]
-  #       L1tkPhoton: "all" 
-  #       L1EGbarrel: "all" 
-  #       L1EGendcap: "all" 
+  Hgg:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/161pre3/v45/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V45_reL1wTT_161pre3/*/hadd/*.root
+    trees_branches:
+      Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        L1tkPhoton: "all" 
+        L1EGbarrel: "all" 
+        L1EGendcap: "all" 
   DYLL_M50:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/161pre3/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_161pre3/*/hadd/*.root
     trees_branches:
