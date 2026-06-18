@@ -1,4 +1,0 @@
-version: "V47nano_142pre1"
-sample: "MinBias"
-menu_config: "configs/V47nano_142pre1/rate_table/tau_only_menu.yml"
-table_fname: "tau_only_menu"
