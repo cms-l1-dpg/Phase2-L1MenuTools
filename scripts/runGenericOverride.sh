@@ -89,7 +89,8 @@ source scripts/swapToElectronScalings.sh $OVERRIDE_VERSION # Explicit scalings s
 
 run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml --version ${OVERRIDE_VERSION}
 run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml --version ${OVERRIDE_VERSION}
-run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION} # prepping to study step 2
+run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION}
+run_when_ready rate_table configs/$VERSION/rate_table/step1p5_cfg.yml --version ${OVERRIDE_VERSION}
 
 # === Object Rates === #
 
