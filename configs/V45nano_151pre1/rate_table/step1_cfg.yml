@@ -1,4 +1,0 @@
-version: "V45nano_151pre1"
-sample: "MinBias"
-menu_config: "configs/V45nano_151pre1/rate_table/step1_menu_cfg.yml"
-table_fname: "v45_Step1Menu"
