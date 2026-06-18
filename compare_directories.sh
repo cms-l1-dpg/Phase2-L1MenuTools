@@ -48,9 +48,18 @@ compare_configs() {
     local TOTAL_FILES_COMPARED=0
     local TOTAL_MISSING_FILES=0
 
+    # Track where differences occur
+    local DIFF_OBJECT_PERFORMANCE=0
+    local DIFF_RATE_PLOTS=0
+    local DIFF_OBJECTS=0
+    local DIFF_RATE_TABLE=0
+
     for subdir in "${SUBDIRS[@]}"; do
         echo "Checking directory: $subdir/"
         echo "----------------------------------------"
+        
+        local SUBDIR_DIFFS=0
+        local SUBDIR_MISSING=0
         
         local PRIMARY_SUBDIR="$PRIMARY_DIR/$subdir"
         local COMPARE_SUBDIR="$COMPARE_DIR/$subdir"
@@ -93,12 +102,14 @@ compare_configs() {
             if [[ ! -f "$PRIMARY_FILE" ]]; then
                 echo "  ⚠ FILE ONLY IN COMPARISON: $subdir/$file"
                 ((TOTAL_MISSING_FILES++))
+                ((SUBDIR_MISSING++))
                 continue
             fi
             
             if [[ ! -f "$COMPARE_FILE" ]]; then
                 echo "  ⚠ FILE ONLY IN PRIMARY: $subdir/$file"
                 ((TOTAL_MISSING_FILES++))
+                ((SUBDIR_MISSING++))
                 continue
             fi
             
@@ -134,6 +145,7 @@ compare_configs() {
                 echo "    git diff --no-index \"$PRIMARY_FILE\" \"$COMPARE_FILE\""
                 echo ""
                 ((TOTAL_DIFFERENCES++))
+                ((SUBDIR_DIFFS++))
             fi
             
             # Clean up temp files
@@ -141,6 +153,15 @@ compare_configs() {
             
         done <<< "$ALL_FILES"
         
+        if [[ $SUBDIR_DIFFS -gt 0 || $SUBDIR_MISSING -gt 0 ]]; then
+            case "$subdir" in
+                "object_performance") DIFF_OBJECT_PERFORMANCE=1 ;;
+                "rate_plots")         DIFF_RATE_PLOTS=1 ;;
+                "objects")            DIFF_OBJECTS=1 ;;
+                "rate_table")         DIFF_RATE_TABLE=1 ;;
+            esac
+        fi
+
         echo ""
     done
     
@@ -154,7 +175,11 @@ compare_configs() {
     echo "Files only in one directory:       $TOTAL_MISSING_FILES"
     echo ""
     
+    # Output machine-readable flags for caller
+    echo "FLAGS: PERF=$DIFF_OBJECT_PERFORMANCE PLOTS=$DIFF_RATE_PLOTS OBJ=$DIFF_OBJECTS TABLE=$DIFF_RATE_TABLE"
+
     if [[ $TOTAL_DIFFERENCES -eq 0 && $TOTAL_MISSING_FILES -eq 0 ]]; then
+
         echo "✓ SUCCESS: Directories are equivalent (ignoring version names and caching.yaml)"
         return 0
     else

@@ -211,8 +211,25 @@ compare_all_configs() {
                     local missing
                     missing=$(grep -E "^Files only in one directory:" <<< "$output" | awk -F: '{print $2}' | xargs)
 
-                    echo "✗ DIFFERENT: $D1  vs  $D2  (compared: ${compared:-?}, only-version: ${only_version:-?}, substantive: ${substantive:-?}, missing: ${missing:-?})"
-                    DIFF_LIST+=("$D1 vs $D2")
+                    # Check for plotting-only differences
+                    local flags
+                    flags=$(grep -E "^FLAGS:" <<< "$output")
+                    local diff_note=""
+                    if [[ -n "$flags" ]]; then
+                        local perf=$(echo "$flags" | grep -o 'PERF=[0-9]' | cut -d= -f2)
+                        local plots=$(echo "$flags" | grep -o 'PLOTS=[0-9]' | cut -d= -f2)
+                        local obj=$(echo "$flags" | grep -o 'OBJ=[0-9]' | cut -d= -f2)
+                        local table=$(echo "$flags" | grep -o 'TABLE=[0-9]' | cut -d= -f2)
+
+                        if [[ "$obj" == "0" && "$table" == "0" ]]; then
+                            if [[ "$perf" == "1" || "$plots" == "1" ]]; then
+                                diff_note=" [PLOTTING ONLY]"
+                            fi
+                        fi
+                    fi
+
+                    echo "✗ DIFFERENT: $D1  vs  $D2  (compared: ${compared:-?}, only-version: ${only_version:-?}, substantive: ${substantive:-?}, missing: ${missing:-?})$diff_note"
+                    DIFF_LIST+=("$D1 vs $D2$diff_note")
                     (( different_pairs++ ))
                 fi
             done
@@ -286,8 +303,25 @@ compare_all_configs() {
                         local missing
                         missing=$(grep -E "^Files only in one directory:" <<< "$output" | awk -F: '{print $2}' | xargs)
 
-                        echo "✗ DIFFERENT: $D1  vs  $D2  (compared: ${compared:-?}, only-version: ${only_version:-?}, substantive: ${substantive:-?}, missing: ${missing:-?})"
-                        DIFF_LIST+=("$D1 vs $D2")
+                        # Check for plotting-only differences
+                        local flags
+                        flags=$(grep -E "^FLAGS:" <<< "$output")
+                        local diff_note=""
+                        if [[ -n "$flags" ]]; then
+                            local perf=$(echo "$flags" | grep -o 'PERF=[0-9]' | cut -d= -f2)
+                            local plots=$(echo "$flags" | grep -o 'PLOTS=[0-9]' | cut -d= -f2)
+                            local obj=$(echo "$flags" | grep -o 'OBJ=[0-9]' | cut -d= -f2)
+                            local table=$(echo "$flags" | grep -o 'TABLE=[0-9]' | cut -d= -f2)
+
+                            if [[ "$obj" == "0" && "$table" == "0" ]]; then
+                                if [[ "$perf" == "1" || "$plots" == "1" ]]; then
+                                    diff_note=" [PLOTTING ONLY]"
+                                fi
+                            fi
+                        fi
+
+                        echo "✗ DIFFERENT: $D1  vs  $D2  (compared: ${compared:-?}, only-version: ${only_version:-?}, substantive: ${substantive:-?}, missing: ${missing:-?})$diff_note"
+                        DIFF_LIST+=("$D1 vs $D2$diff_note")
                         (( different_pairs++ ))
                     fi
                 done
