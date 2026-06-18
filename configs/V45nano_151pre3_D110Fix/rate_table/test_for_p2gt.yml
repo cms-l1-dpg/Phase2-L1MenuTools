@@ -1,4 +1,0 @@
-version: "V45nano_151pre3_D110Fix"
-sample: "TTtestP2GT"
-menu_config: "configs/V45nano_151pre3_D110Fix/rate_table/step1_menu_cfg.yml"
-table_fname: "v45_Step1Menu_TTtestP2GT_fixGeQ"

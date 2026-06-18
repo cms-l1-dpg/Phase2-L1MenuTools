@@ -1,4 +1,0 @@
-version: "V45nano_151pre3_D110Fix"
-sample: "MinBias"
-menu_config: "configs/V45nano_151pre3_D110Fix/rate_table/tau_only_menu.yml"
-table_fname: "tau_only_menu"
