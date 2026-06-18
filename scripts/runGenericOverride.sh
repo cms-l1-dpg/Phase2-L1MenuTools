@@ -21,7 +21,7 @@ mkdir -p logs/${VERSION}_${REVISION}
 echo "Running caching"
 
 (
-    cache_objects configs/$VERSION/caching_${OVERRIDE_SHORT}.yaml &> logs/${VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    cache_objects configs/$VERSION/cache_objects/caching_${OVERRIDE_SHORT}.yaml &> logs/${VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample Hgg &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample DYLL_M50 &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample MinBias &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
