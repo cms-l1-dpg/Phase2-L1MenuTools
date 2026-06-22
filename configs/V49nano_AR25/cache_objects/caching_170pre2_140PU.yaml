@@ -28,7 +28,7 @@ V49nano_AR25_170pre2_140PU:
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
   TT:
-    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2_retry/v45/TT_TuneCP5_14TeV_powheg-pythia8/TT_Spring24_140PU_V45_reL1wTT_170pre2_retry/*/hadd/*.root
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2/v45/TT_TuneCP5_14TeV_powheg-pythia8/TT_Spring24_140PU_V45_reL1wTT_170pre2/*/hadd/*.root
     trees_branches:
       Events:
         # gen
