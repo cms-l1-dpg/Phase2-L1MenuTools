@@ -1,0 +1,203 @@
+JetMatchingBarrelSC8_pTvsMass:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+        - "abs({mass}) > 75"
+  test_objects:
+    # L1puppiJetSC8:default:barrel: "pt"
+    L1puppiJetSC8:pt230:barrel: "pt"
+    L1puppiJetSC8:mass27:barrel: "pt"
+    L1puppiJetSC8:mass20pt120:barrel: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Fixed Rate Efficiency (50 kHz, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingEndcapSC8_pTvsMass:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+        - "abs({mass}) > 75"
+  test_objects:
+    # L1puppiJetSC8:default:endcap: "pt"
+    L1puppiJetSC8:pt230:endcap: "pt"
+    L1puppiJetSC8:mass27:endcap: "pt"
+    L1puppiJetSC8:mass20pt120:endcap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Fixed Rate Efficiency (50 kHz, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingForwardHGCSC8_pTvsMass:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 3.0"
+        - "abs({mass}) > 75"
+  test_objects:
+    # L1puppiJetSC8:default:forwardHGC: "pt"
+    L1puppiJetSC8:pt230:forwardHGC: "pt"
+    L1puppiJetSC8:mass27:forwardHGC: "pt"
+    L1puppiJetSC8:mass20pt120:forwardHGC: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Fixed Rate Efficiency (50 kHz, forwardHGC)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetMatchingForwardHFSC8_pTvsMass:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.0"
+      object:
+        - "abs({eta}) < 5.0"
+        - "abs({mass}) > 75"
+  test_objects:
+    # L1puppiJetSC8:default:forwardHF: "pt"
+    L1puppiJetSC8:pt230:forwardHF: "pt"
+    L1puppiJetSC8:mass27:forwardHF: "pt"
+    L1puppiJetSC8:mass20pt120:forwardHF: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Fixed Rate Efficiency (50 kHz, forwardHF)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+# JetMatchingBarrelSC8_Mass_pTvsMass:
+#   sample: TT
+#   version: V50nano
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "mass"
+#     label: "Gen AK8 Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) < 1.5"
+#       object:
+#         - "abs({eta}) < 2.4"
+#   test_objects:
+#     # L1puppiJetSC8:default:barrel: "mass"
+#     L1puppiJetSC8:pt230:barrel: "mass"
+#     L1puppiJetSC8:mass27:barrel: "mass"
+#     L1puppiJetSC8:mass20pt120:barrel: "mass"
+#   xlabel: "Gen. $m$ (GeV)"
+#   ylabel: "Fixed Rate Efficiency (50 kHz, barrel)"
+#   binning:
+#     min: 0
+#     max: 200
+#     step: 5
+
+# JetMatchingEndcapSC8_Mass_pTvsMass:
+#   sample: TT
+#   version: V50nano
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "mass"
+#     label: "Gen AK8 Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) > 1.5"
+#       object:
+#         - "abs({eta}) < 2.4"
+#   test_objects:
+#     # L1puppiJetSC8:default:endcap: "mass"
+#     L1puppiJetSC8:pt230:endcap: "mass"
+#     L1puppiJetSC8:mass27:endcap: "mass"
+#     L1puppiJetSC8:mass20pt120:endcap: "mass"
+#   xlabel: "Gen. $m$ (GeV)"
+#   ylabel: "Fixed Rate Efficiency (50 kHz, endcap)"
+#   binning:
+#     min: 0
+#     max: 200
+#     step: 5
+
+# JetMatchingForwardHGCSC8_Mass_pTvsMass:
+#   sample: TT
+#   version: V50nano
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "mass"
+#     label: "Gen AK8 Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) > 2.4"
+#       object:
+#         - "abs({eta}) < 3.0"
+#   test_objects:
+#     # L1puppiJetSC8:default:forwardHGC: "mass"
+#     L1puppiJetSC8:pt230:forwardHGC: "mass"
+#     L1puppiJetSC8:mass27:forwardHGC: "mass"
+#     L1puppiJetSC8:mass20pt120:forwardHGC: "mass"
+#   xlabel: "Gen. $m$ (GeV)"
+#   ylabel: "Fixed Rate Efficiency (50 kHz, forwardHGC)"
+#   binning:
+#     min: 0
+#     max: 200
+#     step: 5
+
+# JetMatchingForwardHFSC8_Mass_pTvsMass:
+#   sample: TT
+#   version: V50nano
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "mass"
+#     label: "Gen AK8 Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) > 3.0"
+#       object:
+#         - "abs({eta}) < 5.0"
+#   test_objects:
+#     # L1puppiJetSC8:default:forwardHF: "mass"
+#     L1puppiJetSC8:pt230:forwardHF: "mass"
+#     L1puppiJetSC8:mass27:forwardHF: "mass"
+#     L1puppiJetSC8:mass20pt120:forwardHF: "mass"
+#   xlabel: "Gen. $m$ (GeV)"
+#   ylabel: "Fixed Rate Efficiency (50 kHz, forwardHF)"
+#   binning:
+#     min: 0
+#     max: 200
+#     step: 5
