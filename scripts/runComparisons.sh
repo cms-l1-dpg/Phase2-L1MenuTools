@@ -7,6 +7,30 @@ run_when_ready() {
     "$@" &
 }
 
+# AR26 2nd train
+source scripts/compareVersions.sh V50nano_170pre2 V50nano_170pre2_140PU  "comparisons/ar26_secondtrain"
+source scripts/compareVersions.sh V50nano_170pre2_140PU V50nano_170pre2  "comparisons/ar26_secondtrain"
+# mkdir "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2_140PU V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre2_140PU  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre1 V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre1 V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+
+
+# MuonOMTF comparisons new developments
+# mkdir "comparisons/MuonOMTF" "complogs/MuonOMTF"
+# # python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1 --v1 V49nano_AR25_170pre1_MuonOMTF --v2 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects.log
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1 --v1 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects_1.log
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1_MuonOMTF --v1 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects_2.log
+# # source scripts/compareVersions.sh V49nano
+
+
+# AR26 1st train
+# NOTE: deleted the commands by accident!
+
 # E2ENNVtx Comparisons
 # source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtx  "comparisons/e2eNNVtx"
 # source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtxOff "comparisons/e2eNNVtx"
