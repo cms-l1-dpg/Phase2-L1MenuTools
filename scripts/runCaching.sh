@@ -1,4 +1,5 @@
-VERSION="V49nano_AR25"
+# VERSION="V49nano_AR25"
+VERSION="V50nano"
 OVERRIDE_SHORT="170pre2"
 # OVERRIDE_SHORT="170pre2_140PU"
 # OVERRIDE_SHORT="170pre1_MuonOMTFUpdate1"
@@ -16,3 +17,4 @@ python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample 
 python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample DYLL_M50 |& tee> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
 python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample MinBias |& tee> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
 python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToBB |& tee> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample HHTo4B |& tee> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
