@@ -1,4 +1,0 @@
-version: "V49nano_L1EGupdate3"
-sample: "MinBias"
-menu_config: "configs/V49nano_L1EGupdate3/rate_table/tau_only_menu.yml"
-table_fname: "tau_only_menu"

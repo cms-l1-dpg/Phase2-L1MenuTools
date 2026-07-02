@@ -1,4 +1,0 @@
-version: "V49nano_AR25_VtxBothOn"
-sample: "MinBias"
-menu_config: "configs/V49nano_AR25_VtxBothOn/rate_table/step1and2_menu_cfg.yml"
-table_fname: "v45_Step1and2Menu"

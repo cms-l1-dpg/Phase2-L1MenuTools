@@ -1,4 +1,0 @@
-version: "V49nano_L1EGupdate3"
-sample: "MinBias"
-menu_config: "configs/V49nano_L1EGupdate3/rate_table/step2_menu_cfg.yml"
-table_fname: "v45_Step2Menu"
