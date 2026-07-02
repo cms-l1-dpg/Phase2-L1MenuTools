@@ -1,4 +1,0 @@
-version: "V48nano_151pre3"
-sample: "TTtestP2GT"
-menu_config: "configs/V48nano_151pre3/rate_table/step1_menu_cfg.yml"
-table_fname: "v45_Step1Menu_TTtestP2GT_fixGeQ"
