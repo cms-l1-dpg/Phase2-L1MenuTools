@@ -17,7 +17,8 @@ compare_all_configs() {
     local CONFIGS_DIR="./configs"
     local EVERYTHING_MODE=false
     local DEFAULT_SKIP=true
-    local MIN_BASE=44   # apply to names like V<NUM>nano
+    local MIN_BASE=46   # apply to names like V<NUM>nano
+    local MAX_BASE=48   # apply to names like V<NUM>nano
     local USER_SKIP_PATTERNS=()
     local DEBUG=false
 
@@ -35,6 +36,10 @@ compare_all_configs() {
             --min-base)
                 shift
                 MIN_BASE="$1"
+                ;;
+            --max-base)
+                shift
+                MAX_BASE="$1"
                 ;;
             --no-default-skip)
                 DEFAULT_SKIP=false
@@ -126,6 +131,8 @@ compare_all_configs() {
             if [[ "$name" =~ ^V([0-9]+)nano(($|_).*)?$ ]]; then
                 local base_num="${BASH_REMATCH[1]}"
                 if (( base_num < MIN_BASE )); then
+                    continue
+                elif (( base_num > MAX_BASE )); then
                     continue
                 fi
             fi
