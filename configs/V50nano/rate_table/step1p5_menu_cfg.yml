@@ -79,7 +79,7 @@ L1_TripleTkMu_4_2p5_0_OS_Mass_Max12: # Total charge needs to be +/- 1 such that 
 # Run 3 Pure EG
 L1_SingleTkEle:
   cross_masks:
-    - (abs(leg1.eta) < 2.5)
+    - (abs(leg1.eta) < 2.5) # NOTE: object itself cut 
   leg1:
     threshold_cut: offline_pt >= 42.0
     obj: L1tkElectron:NoIso:inclusive
