@@ -147,8 +147,7 @@ L1_SingleEGEle:
     threshold_cut: offline_pt >= 51.0
     obj: L1EG:default:inclusive
 L1_DoubleEGEle:
-  cross_masks:
-    - leg1.deltaR(leg2) > 0.1
+  cross_masks: []
   leg1:
     threshold_cut: offline_pt >= 37.0
     obj: L1EG:default:inclusive
@@ -232,8 +231,8 @@ L1_HTSum:
 L1_METSum:
   cross_masks: []
   leg1:
-    # threshold_cut: offline_pt >= 90.0
-    threshold_cut: pt >= 90.0
+    threshold_cut: offline_pt >= 210.0
+    # threshold_cut: pt >= 90.0
     obj: L1puppiMET:default
 
 # Run 3 Cross Lepton
@@ -392,7 +391,8 @@ L1_TkMu_Jet_METSum:
     threshold_cut: offline_pt >= 148.0
     obj: L1puppiJetSC4:default
   leg4:
-    threshold_cut: pt >= 40 # was 120.0 offline
+    # threshold_cut: pt >= 40 # was 120.0 offline
+    threshold_cut: offline_pt >= 143 # was 120.0 offline
     obj: L1puppiMET:default
 L1_DoubleTkMu_METSum_HTSum:
   cross_masks:
@@ -409,7 +409,8 @@ L1_DoubleTkMu_METSum_HTSum:
     threshold_cut: offline_pt >= 5
     obj: L1gmtTkMuon:default
   leg4:
-    threshold_cut: pt >= 40 # was 120.0 offline
+    threshold_cut: offline_pt >= 143 # was 120.0 offline 
+    # threshold_cut: pt >= 40 # was 120.0 offline
     obj: L1puppiMET:default
   leg5:
     threshold_cut: offline_pt >= 109.0 
@@ -420,8 +421,7 @@ L1_DoubleTkMu_Jet:
     - (abs(leg3.z0-leg1.z0) < 1 & (leg3.deltaR(leg2) > 0))
     - (leg3.deltaR(leg2) < 1.6)
     - (leg3.deltaR(leg2) > 0)
-    - (leg4.deltaR(leg2) < 0.8)
-    - (leg4.deltaR(leg4) < 0.8)
+    - ((leg4.deltaR(leg2) < 0.8) | (leg4.deltaR(leg3) < 0.8)) # TODO: fix
     - abs(leg4.eta) < 2.5
   leg1:
     threshold_cut: null
@@ -514,6 +514,8 @@ L1_DoubleJet_IsoTau:
   cross_masks:
     - (leg1 + leg2).mass > 600
     - abs(leg3.eta) < 2.1
+    - (leg3.deltaR(leg1) > 0.5)
+    - (leg3.deltaR(leg2) > 0.5)
     # check what overlap removal means in dR 0.5
   leg1:
     threshold_cut: offline_pt >= 93.0
@@ -528,7 +530,8 @@ L1_DoubleJet_TkEleIso:
   cross_masks:
     - (leg1 + leg2).mass > 550
     - abs(leg3.eta) < 2.1
-    # check what overlap removal means in dR 0.2
+    # - ((abs(leg3.z0-leg1.z0) < 1)) # TODO check deltaZ cut
+    # - ((abs(leg3.z0-leg2.z0) < 1)) # TODO check deltaZ cut
   leg1:
     threshold_cut: offline_pt >= 93.0
     obj: L1puppiJetSC4:default
@@ -541,6 +544,8 @@ L1_DoubleJet_TkEleIso:
 L1_DoubleJet_TkMu:
   cross_masks:
     - (leg1 + leg2).mass > 700
+    # - ((abs(leg3.z0-leg1.z0) < 1)) # TODO check deltaZ cut
+    # - ((abs(leg3.z0-leg2.z0) < 1)) # TODO check deltaZ cut
   leg1:
     threshold_cut: offline_pt >= 133.0
     obj: L1puppiJetSC4:default
@@ -560,8 +565,8 @@ L1_DoubleJet_METSum:
     threshold_cut: offline_pt >= 83.0
     obj: L1puppiJetSC4:default
   leg3:
-    # threshold_cut: offline_pt >= 65.0
-    threshold_cut: pt >= 65.0
+    threshold_cut: offline_pt >= 176.0
+    # threshold_cut: pt >= 65.0
     obj: L1puppiMET:default
 
 # Run 3 Displaced
