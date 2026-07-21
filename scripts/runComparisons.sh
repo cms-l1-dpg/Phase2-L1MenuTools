@@ -7,10 +7,17 @@ run_when_ready() {
     "$@" &
 }
 
+# AR26 3rd train
+mkdir "comparisons/ar26_thirdtrain"
+source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre3  "comparisons/ar26_thirdtrain"
+source scripts/compareVersions.sh V49nano_AR25_170pre3 V49nano_AR25_170pre3_3rdTrain  "comparisons/ar26_thirdtrain"
+source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre3_3rdTrain  "comparisons/ar26_thirdtrain"
+
+
 # AR26 2nd train
 # source scripts/compareVersions.sh V50nano_170pre2 V50nano_170pre2_140PU  "comparisons/ar26_secondtrain"
 # source scripts/compareVersions.sh V50nano_170pre2_140PU V50nano_170pre2  "comparisons/ar26_secondtrain"
-source scripts/compareVersions.sh V49nano_AR25_170pre2 V50nano_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V50nano_170pre2  "comparisons/ar26_secondtrain"
 # mkdir "comparisons/ar26_secondtrain"
 # source scripts/compareVersions.sh V49nano_AR25_170pre2_140PU V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
 # source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre2_140PU  "comparisons/ar26_secondtrain"
