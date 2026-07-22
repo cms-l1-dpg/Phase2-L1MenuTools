@@ -1,0 +1,89 @@
+JetMatching_Eta_Pt30ToInf_genCJets:
+  sample: TT
+  version: V49nano_RelVal
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 30"
+        - "abs({partonFlavour}) == 4"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # L1puppiJetSC4NG:cjetnn: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (>30 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.25
+
+JetMatching_Eta_Pt30ToInf_genNotCJets:
+  sample: TT
+  version: V49nano_RelVal
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 30"
+        - "abs({partonFlavour}) != 4"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # L1puppiJetSC4NG:cjetnn: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (>30 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.25
+
+JetMatching_Pt_Pt30ToInf_genCJets:
+  sample: TT
+  version: V49nano_RelVal
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({partonFlavour}) == 4"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # L1puppiJetSC4NG:cjetnn: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency"
+  binning:
+    min: 30
+    max: 200
+    step: 10
+
+JetMatching_Pt_Pt30ToInf_genNotCJets:
+  sample: TT
+  version: V49nano_RelVal
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({partonFlavour}) != 4"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    # L1puppiJetSC4NG:cjetnn: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency"
+  binning:
+    min: 30
+    max: 200
+    step: 10
