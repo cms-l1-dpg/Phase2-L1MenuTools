@@ -22,6 +22,7 @@ echo "Running caching"
 
 (
     cache_objects configs/$VERSION/cache_objects/caching_${OVERRIDE_SHORT}.yaml &> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    # cache_objects configs/$VERSION/caching.yaml &> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample Hgg &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample DYLL_M50 &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample MinBias &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
@@ -44,7 +45,7 @@ run_when_ready object_performance configs/$VERSION/object_performance/photons_ma
 # Jets
 run_when_ready object_performance configs/$VERSION/object_performance/jets_matching.yaml --version ${OVERRIDE_VERSION}
 run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_eta.yaml --version ${OVERRIDE_VERSION}
-run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_wBTag.yaml --version ${OVERRIDE_VERSION}
+# run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_wBTag.yaml --version ${OVERRIDE_VERSION}
 
 # Muons
 run_when_ready object_performance configs/$VERSION/object_performance/muon_matching.yaml --version ${OVERRIDE_VERSION}
@@ -54,9 +55,9 @@ run_when_ready object_performance configs/$VERSION/object_performance/muon_match
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_matching.yaml --version ${OVERRIDE_VERSION}
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_matching_eta.yaml --version ${OVERRIDE_VERSION}
 
-# MuonsTF
-run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching.yaml --version ${OVERRIDE_VERSION}
-run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching_eta.yaml --version ${OVERRIDE_VERSION}
+# # MuonsTF
+# run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching.yaml --version ${OVERRIDE_VERSION}
+# run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching_eta.yaml --version ${OVERRIDE_VERSION}
 
 # Taus
 run_when_ready object_performance configs/$VERSION/object_performance/tau_matching.yaml --version ${OVERRIDE_VERSION}
@@ -88,9 +89,9 @@ source scripts/swapToElectronScalings.sh $OVERRIDE_VERSION # Explicit scalings s
 # === Menu Performance === #
 
 run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml --version ${OVERRIDE_VERSION}
-run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml --version ${OVERRIDE_VERSION}
-run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION}
-run_when_ready rate_table configs/$VERSION/rate_table/step1p5_cfg.yml --version ${OVERRIDE_VERSION}
+# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml --version ${OVERRIDE_VERSION}
+# run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION}
+# run_when_ready rate_table configs/$VERSION/rate_table/step1p5_cfg.yml --version ${OVERRIDE_VERSION}
 
 # === Object Rates === #
 
@@ -102,7 +103,7 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/met.yaml --version ${OVERR
 run_when_ready rate_plots configs/$VERSION/rate_plots/jets.yaml --version ${OVERRIDE_VERSION} # includes ext jets
 run_when_ready rate_plots configs/$VERSION/rate_plots/jets_sc8.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready rate_plots configs/$VERSION/rate_plots/taus.yaml --version ${OVERRIDE_VERSION}
-run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml --version ${OVERRIDE_VERSION}
+# run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml --version ${OVERRIDE_VERSION}
 run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml --version ${OVERRIDE_VERSION} # step 2
 
 # # === Print Configs (Menus) === #
