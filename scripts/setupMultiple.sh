@@ -13,7 +13,7 @@
 # source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate1 151pre4_P2GT_retry 151pre4_P2GTupdate1
 # source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate2 151pre4_P2GT_retry 151pre4_P2GTupdate2
 # source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate3 151pre4_P2GT_retry 151pre4_P2GTupdate3
-source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate4 151pre4_P2GT_retry 151pre4_P2GTupdate4
+# source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate4 151pre4_P2GT_retry 151pre4_P2GTupdate4
 
 # 151X versions
 # source scripts/setupConfig.sh V49nano_L1EGupdate3 V49nano_AR25 151pre3_L1EGupdate3 151X_AllAR25_FindOn
@@ -26,3 +26,6 @@ source scripts/setupConfig.sh V49nano_151pre4_P2GT V49nano_151pre4_P2GTupdate4 1
 # source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyFind 151pre3 151pre3_E2ENNVtxOnlyFind
 # source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_VtxOnlyAssoc 151pre3 151pre3_E2ENNVtxOnlyAssoc
 # source scripts/setupConfig.sh V49nano_151pre3 V49nano_151pre3_DispVtx 151pre3 151pre3_DispVtx
+
+# RelVals
+source scripts/setupConfig.sh V49nano_AR25 V49nano_RelVal 151X_AllAR25_FindOn 200pre1_RelVal
