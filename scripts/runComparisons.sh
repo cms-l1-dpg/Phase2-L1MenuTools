@@ -13,6 +13,10 @@ run_when_ready() {
 # source scripts/compareVersions.sh V49nano_AR25_170pre3 V49nano_RelVal  "comparisons/relVals"
 # source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_RelVal  "comparisons/relVals"
 source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShower  "comparisons/relVals"
+source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_RelValwL1  "comparisons/relVals"
+source scripts/compareVersions.sh V49nano_RelVal_RelValwL1 V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+source scripts/compareVersions.sh V49nano_RelVal_MuonShower V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
 
 
 # mkdir "comparisons/ar26_thirdtrain"
