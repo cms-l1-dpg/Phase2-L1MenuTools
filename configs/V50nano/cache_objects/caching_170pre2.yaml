@@ -3,6 +3,7 @@ V50nano_170pre2:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2/v45/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V45_reL1wTT_170pre2/*/hadd/*.root
     trees_branches:
       Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
         # PV
         L1PV: [z0]
         ## EG
@@ -41,6 +42,7 @@ V50nano_170pre2:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_170pre2/*/hadd/*.root
     trees_branches:
       Events:
+        GenPart: "all" 
         # PV
         L1PV: [z0]
         ## EG
@@ -79,6 +81,10 @@ V50nano_170pre2:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_170pre2/*/hadd/*.root
     trees_branches:
       Events:
+        # gen
+        GenJet: [pt, eta, phi, partonFlavour]
+        GenJetAK8: [pt, eta, phi, mass]
+        GenMET: "all"
         # PV
         L1PV: [z0]
         ## EG
@@ -117,6 +123,8 @@ V50nano_170pre2:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre2/v45/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V45_reL1wTT_170pre2/*/hadd/*.root
     trees_branches:
       Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        GenVisTau: "all" 
         # PV
         L1PV: [z0]
         ## EG
