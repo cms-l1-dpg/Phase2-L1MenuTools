@@ -1,0 +1,4 @@
+version: "V50nano"
+sample: "HHTo2B2Tau"
+menu_config: "configs/V50nano/rate_table/step1_menu_cfg.yml"
+table_fname: "v45_Step1Menu_HHTo2B2Tau"

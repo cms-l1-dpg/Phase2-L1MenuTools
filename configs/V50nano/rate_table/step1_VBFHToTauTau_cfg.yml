@@ -1,0 +1,4 @@
+version: "V50nano"
+sample: "VBFHToTauTau"
+menu_config: "configs/V50nano/rate_table/step1_menu_cfg.yml"
+table_fname: "v45_Step1Menu_VBFHToTauTau"
