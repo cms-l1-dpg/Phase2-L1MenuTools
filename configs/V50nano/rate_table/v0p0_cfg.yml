@@ -1,0 +1,4 @@
+version: "V50nano"
+sample: "MinBias"
+menu_config: "configs/V50nano/rate_table/v0p0_menu_cfg.yml"
+table_fname: "v45_V0p0Menu"
