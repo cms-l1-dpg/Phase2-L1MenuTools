@@ -1,0 +1,16 @@
+MET_scaleDemo:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenMET"
+    x_arg: "pt"
+    label: "Gen MET"
+  test_objects:
+    L1puppiMET:default: "pt"
+  thresholds: [90,103]
+  xlabel: "Gen. MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
+  binning:
+    min: 0
+    max: 500
+    step: 20
