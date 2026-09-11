@@ -1,0 +1,38 @@
+# part_e:
+#   label: "Gen Electron"
+#   eta_ranges:
+#     inclusive: [0, 7]
+#   ids:
+#     gen_electron_default:
+#       cuts:
+#         inclusive:
+#           - "{dr_0.3} < 0.15"
+GenPart:
+  label: "Gen Electron"
+  eta_ranges:
+    inclusive: [0, 7]
+  ids:
+    gen_electron_default:
+      cuts:
+        inclusive:
+          - "(({statusFlags}>>7)&1) == 1"
+
+
+L1EG:
+  match_dR: 0.2
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.479]
+    endcap: [1.479, 3.0]
+  label: "EG"
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3.0"
+    Iso:
+      label: "EG, Iso"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3.0"
+          - "{hwIso} == 1"

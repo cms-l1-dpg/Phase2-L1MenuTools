@@ -1,0 +1,57 @@
+ElectronsTriggerBarrel:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "part_e"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.8"
+  test_objects:
+    EG:default:barrel: "pt"
+    tkElectron:NoIso:barrel: "pt"
+    tkElectron:Iso:barrel: "pt"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5
+
+ElectronsTriggerEndcap:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "part_e"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.8"
+  test_objects:
+    EG:default:endcap: "pt"
+    tkElectron:NoIso:endcap: "pt"
+    tkElectron:Iso:endcap: "pt"
+  thresholds: [10, 20, 30, 40]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 1.5

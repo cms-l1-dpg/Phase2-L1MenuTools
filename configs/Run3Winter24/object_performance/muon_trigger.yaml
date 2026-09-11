@@ -1,0 +1,81 @@
+MuonsTrigger_Barrel:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    gmtMuon:default:barrel: "pt"
+    gmtTkMuon:default:barrel: "pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (barrel, L1 $p_T > 20$ GeV)"
+  thresholds: [20, 25]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  binning:
+    min: 0
+    max: 50
+    step: 1.5
+
+MuonsTrigger_Overlap:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    gmtMuon:default:overlap: "pt"
+    gmtTkMuon:default:overlap: "pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (overlap, L1 $p_T > 20$ GeV)"
+  thresholds: [20, 25]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  binning:
+    min: 0
+    max: 50
+    step: 1.5
+
+MuonsTrigger_Endcap:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "part_mu"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "{dr_0.3} < 0.15"
+      object:
+        - "abs({eta}) > 1.24"
+  test_objects:
+    gmtMuon:default:endcap: "pt"
+    gmtTkMuon:default:endcap: "pt"
+  xlabel: "Gen. pT (GeV)"
+  ylabel: "Trigger Efficiency (endcap, L1 $p_T > 20$ GeV)"
+  thresholds: [20, 25]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  binning:
+    min: 0
+    max: 50
+    step: 1.5

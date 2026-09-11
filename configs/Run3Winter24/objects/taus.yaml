@@ -1,0 +1,54 @@
+L1Tau:
+  label: "L1 Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+    iso:
+      label: "Iso L1Tau"
+      cuts:
+        inclusive:
+          - "{hwIso}>0"
+    iso34:
+      label: "Iso L1Tau, pt>34"
+      cuts:
+        inclusive:
+          - "{hwIso}>0"
+          - "{pt}>=34"
+
+GenVisTau:
+  match_dR: 0.3
+  label: "GenVisTau"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+Tau:
+  label: "Reco Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    medium:
+      label: "Medium Reco Tau"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{idDeepTau2018v2p5VSjet}>=5"
+          - "{idDeepTau2018v2p5VSe}>=2"
+          - "{idDeepTau2018v2p5VSmu}>=4"
