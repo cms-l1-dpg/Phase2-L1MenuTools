@@ -7,16 +7,26 @@ run_when_ready() {
     "$@" &
 }
 
-# AR26 3rd train
-# mkdir "comparisons/ar26_thirdtrain"
+# Geometry Comparisons
+# source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D127 "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D128 "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_200_D127 V49nano_RelVal_200_D128 "comparisons/relVals"
+python menu_tools/utils/compare_json-wNano.py --v0 V49nano_RelVal_200_D121 --v1 V49nano_RelVal_200_D127 --v2 V49nano_RelVal_200_D128 --output-dir "comparisons/relVals"  |& tee complogs/relVals/objects.log
+
+
+# # AR26 3rd train
+# # mkdir "comparisons/ar26_thirdtrain"
+# source scripts/compareVersions.sh V50nano_170pre2 V50nano_170pre2_140PU  "comparisons/ar26_thirdtrain"
+
+
 # mkdir "comparisons/relVals"
 # source scripts/compareVersions.sh V49nano_AR25_170pre3 V49nano_RelVal  "comparisons/relVals"
 # source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_RelVal  "comparisons/relVals"
-source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShower  "comparisons/relVals"
-source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
-source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_RelValwL1  "comparisons/relVals"
-source scripts/compareVersions.sh V49nano_RelVal_RelValwL1 V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
-source scripts/compareVersions.sh V49nano_RelVal_MuonShower V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShower  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_RelValwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_RelValwL1 V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_MuonShower V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
 
 
 # mkdir "comparisons/ar26_thirdtrain"

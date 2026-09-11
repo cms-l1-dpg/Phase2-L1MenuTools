@@ -3,6 +3,8 @@ REVISION=$2
 OVERRIDE_VERSION=$3
 OVERRIDE_SHORT=$4
 MAX_JOBS=6
+RELVAL=true
+
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -24,7 +26,11 @@ echo "Running caching"
     cache_objects configs/$VERSION/cache_objects/caching_${OVERRIDE_SHORT}.yaml &> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     # cache_objects configs/$VERSION/caching.yaml &> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample Hgg &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
-    python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample DYLL_M50 &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    if [[ $RELVAL == "true" ]]; then
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample ZEE &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    else
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample DYLL_M50 &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    fi
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample MinBias &>> logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
 ) &
 
@@ -45,7 +51,9 @@ run_when_ready object_performance configs/$VERSION/object_performance/photons_ma
 # Jets
 run_when_ready object_performance configs/$VERSION/object_performance/jets_matching.yaml --version ${OVERRIDE_VERSION}
 run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_eta.yaml --version ${OVERRIDE_VERSION}
-# run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_wBTag.yaml --version ${OVERRIDE_VERSION}
+if [[ $RELVAL == "false" ]]; then
+    run_when_ready object_performance configs/$VERSION/object_performance/jets_matching_wBTag.yaml --version ${OVERRIDE_VERSION}
+fi
 
 # Muons
 run_when_ready object_performance configs/$VERSION/object_performance/muon_matching.yaml --version ${OVERRIDE_VERSION}
@@ -55,9 +63,11 @@ run_when_ready object_performance configs/$VERSION/object_performance/muon_match
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_matching.yaml --version ${OVERRIDE_VERSION}
 run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_matching_eta.yaml --version ${OVERRIDE_VERSION}
 
-# # MuonsTF
-# run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching.yaml --version ${OVERRIDE_VERSION}
-# run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching_eta.yaml --version ${OVERRIDE_VERSION}
+if [[ $RELVAL == "false" ]]; then
+    # MuonsTF
+    run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching.yaml --version ${OVERRIDE_VERSION}
+    run_when_ready object_performance configs/$VERSION/object_performance/muonTF_matching_eta.yaml --version ${OVERRIDE_VERSION}
+fi
 
 # Taus
 run_when_ready object_performance configs/$VERSION/object_performance/tau_matching.yaml --version ${OVERRIDE_VERSION}
@@ -72,8 +82,14 @@ run_when_ready object_performance configs/$VERSION/object_performance/jets_trigg
 run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready object_performance configs/$VERSION/object_performance/jets_ext_trigger.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml --version ${OVERRIDE_VERSION} # includes step 2 disp muons
+# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_VLoose.yaml --version ${OVERRIDE_VERSION}
+# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Loose.yaml --version ${OVERRIDE_VERSION} 
+# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Medium.yaml --version ${OVERRIDE_VERSION}
+# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Tight.yaml --version ${OVERRIDE_VERSION} 
 # run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_trigger.yaml --version ${OVERRIDE_VERSION} # commented as it takes a long time
-run_when_ready object_performance configs/$VERSION/object_performance/muonTF_trigger.yaml --version ${OVERRIDE_VERSION}
+if [[ $RELVAL == "false" ]]; then
+    run_when_ready object_performance configs/$VERSION/object_performance/muonTF_trigger.yaml --version ${OVERRIDE_VERSION}
+fi
 run_when_ready object_performance configs/$VERSION/object_performance/tau_trigger.yaml --version ${OVERRIDE_VERSION}
 run_when_ready object_performance configs/$VERSION/object_performance/photons_trigger.yaml --version ${OVERRIDE_VERSION} # submit later so it's more likely to complete after electrons
 
@@ -89,9 +105,9 @@ source scripts/swapToElectronScalings.sh $OVERRIDE_VERSION # Explicit scalings s
 # === Menu Performance === #
 
 run_when_ready rate_table configs/$VERSION/rate_table/step1_cfg.yml --version ${OVERRIDE_VERSION}
-# run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml --version ${OVERRIDE_VERSION}
-# run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION}
-# run_when_ready rate_table configs/$VERSION/rate_table/step1p5_cfg.yml --version ${OVERRIDE_VERSION}
+run_when_ready rate_table configs/$VERSION/rate_table/step2_cfg.yml --version ${OVERRIDE_VERSION}
+run_when_ready rate_table configs/$VERSION/rate_table/step1and2_cfg.yml --version ${OVERRIDE_VERSION}
+run_when_ready rate_table configs/$VERSION/rate_table/step1p5_cfg.yml --version ${OVERRIDE_VERSION}
 
 # === Object Rates === #
 
