@@ -34,6 +34,16 @@ def main():
         ),
         default=None,
     )
+    parser.add_argument(
+        "--signal",
+        type=str,
+        help=(
+            "Override the sample from the config with a signal sample, to get "
+            "per-seed signal efficiencies instead of rates. The rate column is "
+            "dropped and output filenames get a `_<sample>` suffix."
+        ),
+        default=None,
+    )
     args = parser.parse_args()
 
     with open(args.config_file, "r") as f:
@@ -46,6 +56,7 @@ def main():
         config_version=config_version,
         override_version=args.version,
         override_scalings_version=args.scalings,
+        override_sample=args.signal,
     )
     menu_table.make_table()
     menu_table.print_table()

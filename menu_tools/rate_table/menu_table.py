@@ -51,18 +51,23 @@ class MenuTable:
         config_version: Optional[str] = None,
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
+        override_sample: Optional[str] = None,
     ):
         self.config: MenuConfig = MenuConfig(
             config,
             config_version=config_version,
             override_version=override_version,
             override_scalings_version=override_scalings_version,
+            override_sample=override_sample,
         )
 
         print(f"INFO: Loading cached inputs from cache/{self.config.version}")
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
         print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
         print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
+        print(f"INFO: Using sample {self.config.sample}")
+        if self.config.is_signal:
+            print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
         
         self.arr_cache = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
@@ -390,7 +395,7 @@ class MenuTable:
         print(df_counts)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}_pd.csv",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_pd.csv",
         )
         df_counts.to_csv(out_file)
 
@@ -411,12 +416,16 @@ class MenuTable:
             npass = ak.sum(mask)
             efficiency = npass / len(mask)
             effErr, effErrLo, effErrHi = get_eff_err(npass, len(mask), alpha=1-0.68)
-            rate = efficiency * constants.RATE_NORM_FACTOR
-            rateErr = effErr * constants.RATE_NORM_FACTOR
-            table.append(
-                # {"seed": seed, "npass": npass, "efficiency": efficiency, "effErr": effErr, "rate": rate, "rateErr": rateErr}
-                {"seed": seed, "npass": npass, "efficiency": efficiency, "rate": rate}
-            )
+            row: dict[str, Union[str, float]] = {
+                "seed": seed,
+                "npass": npass,
+                "efficiency": efficiency,
+                # "effErr": effErr,
+            }
+            if not self.config.is_signal:
+                row["rate"] = efficiency * constants.RATE_NORM_FACTOR
+                # row["rateErr"] = effErr * constants.RATE_NORM_FACTOR
+            table.append(row)
             # Modify total mask
             all_seeds_or_mask = all_seeds_or_mask | mask
 
@@ -424,21 +433,25 @@ class MenuTable:
         npass = np.sum(all_seeds_or_mask)
         efficiency = npass / len(all_seeds_or_mask)
         effErr, effErrLo, effErrHi = get_eff_err(npass, len(all_seeds_or_mask), alpha=1-0.68)
-        rate = efficiency * constants.RATE_NORM_FACTOR
-        table.append(
-            # {"seed": "Total", "npass": npass, "efficiency": efficiency, "effErr": effErr, "rate": rate, "rateErr": rateErr}
-            {"seed": "Total", "npass": npass, "efficiency": efficiency, "rate": rate}
-        )
-        table.append(
-            {
-                "seed": "Total Event Number",
-                "npass": len(all_seeds_or_mask),
-                "efficiency": np.nan,
-                # "effErr": np.nan,
-                "rate": np.nan,
-                # "rateErr": np.nan
-            }
-        )
+        total_row: dict[str, Union[str, float]] = {
+            "seed": "Total",
+            "npass": npass,
+            "efficiency": efficiency,
+            # "effErr": effErr,
+        }
+        nevts_row: dict[str, Union[str, float]] = {
+            "seed": "Total Event Number",
+            "npass": len(all_seeds_or_mask),
+            "efficiency": np.nan,
+            # "effErr": np.nan,
+        }
+        if not self.config.is_signal:
+            total_row["rate"] = efficiency * constants.RATE_NORM_FACTOR
+            # total_row["rateErr"] = effErr * constants.RATE_NORM_FACTOR
+            nevts_row["rate"] = np.nan
+            # nevts_row["rateErr"] = np.nan
+        table.append(total_row)
+        table.append(nevts_row)
         self.table = table
 
     def dump_masks(self) -> None:
@@ -448,7 +461,7 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_path = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}_masks.parquet",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
         ak.to_parquet(ak.zip(self._seed_masks), out_path, compression = "LZ4")
@@ -462,15 +475,10 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}.csv",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}.csv",
         )
+        columns = list(self.table[0].keys())
         with open(out_file, "w") as f:
-            f.write(",".join(self.table[0]) + "\n")
+            f.write(",".join(columns) + "\n")
             for seed in self.table:
-                f.write(f"{seed['seed']},")
-                f.write(f"{seed['npass']},")
-                f.write(f"{seed['efficiency']},")
-                # f.write(f"{seed['effErr']},")
-                f.write(f"{seed['rate']}\n")
-                # f.write(f"{seed['rate']},")
-                # f.write(f"{seed['rateErr']}\n")
+                f.write(",".join(str(seed[col]) for col in columns) + "\n")

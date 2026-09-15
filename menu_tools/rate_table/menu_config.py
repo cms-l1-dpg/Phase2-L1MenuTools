@@ -9,15 +9,37 @@ class MenuConfig:
         config_version: Optional[str] = None,
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
+        override_sample: Optional[str] = None,
     ) -> None:
         self._config = config
         self._config_version = config_version
         self._override_version = override_version
         self._override_scalings_version = override_scalings_version
+        self._override_sample = override_sample
 
     @property
     def sample(self) -> str:
+        if self._override_sample:
+            return self._override_sample
         return self._config["sample"]
+
+    @property
+    def is_signal(self) -> bool:
+        """True when the sample has been overridden with `--signal`.
+
+        In that case the table holds per-seed signal efficiencies and the
+        rate column is dropped, since the rate normalisation only applies
+        to the minimum bias sample.
+        """
+        return bool(self._override_sample)
+
+    @property
+    def sample_suffix(self) -> str:
+        """Tag appended to output filenames when `--signal` is used, so that
+        efficiency tables do not overwrite the nominal rate table."""
+        if self._override_sample:
+            return f"_{self._override_sample}"
+        return ""
 
     @property
     def menu_config(self) -> str:
