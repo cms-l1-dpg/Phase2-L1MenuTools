@@ -45,13 +45,24 @@ class MenuTable:
     All the relevant information is dumped to a csv table.
     """
 
-    def __init__(self, config: dict, config_version: Optional[str] = None, override_version: Optional[str] = None):
-        self.config: MenuConfig = MenuConfig(config, config_version=config_version, override_version=override_version)
-        
+    def __init__(
+        self,
+        config: dict,
+        config_version: Optional[str] = None,
+        override_version: Optional[str] = None,
+        override_scalings_version: Optional[str] = None,
+    ):
+        self.config: MenuConfig = MenuConfig(
+            config,
+            config_version=config_version,
+            override_version=override_version,
+            override_scalings_version=override_scalings_version,
+        )
+
         print(f"INFO: Loading cached inputs from cache/{self.config.version}")
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
         print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
-        print(f"INFO: Loading scalings from outputs/{self.config.version}/object_performance/scalings")
+        print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
         
         self.arr_cache = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
@@ -136,7 +147,7 @@ class MenuTable:
             and ("mass" not in object_name)
         ):
             print("adding scalings")
-            arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.version)
+            arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.scalings_version)
 
         if "idx" not in arr.fields:
             arr["idx"] = ak.local_index(arr)
@@ -379,7 +390,7 @@ class MenuTable:
         print(df_counts)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}_pd.csv",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}_pd.csv",
         )
         df_counts.to_csv(out_file)
 
@@ -437,7 +448,7 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_path = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}_masks.parquet",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
         ak.to_parquet(ak.zip(self._seed_masks), out_path, compression = "LZ4")
@@ -451,7 +462,7 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}.csv",
+            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}.csv",
         )
         with open(out_file, "w") as f:
             f.write(",".join(self.table[0]) + "\n")

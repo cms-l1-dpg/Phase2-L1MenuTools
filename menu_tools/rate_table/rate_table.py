@@ -24,6 +24,16 @@ def main():
         default="configs/V38nano/rate_table/v38_cfg.yml",
     )
     parser.add_argument("--version", type=str, help="Override version for output/caching", default=None)
+    parser.add_argument(
+        "--scalings",
+        type=str,
+        help=(
+            "Override version the online-to-offline scalings are loaded from. "
+            "Takes precedence over --version for the scalings only; output "
+            "filenames get a `_scalings_<version>` suffix."
+        ),
+        default=None,
+    )
     args = parser.parse_args()
 
     with open(args.config_file, "r") as f:
@@ -31,7 +41,12 @@ def main():
 
     config_version = _extract_version(args.config_file)
 
-    menu_table = MenuTable(menu_config_dict, config_version=config_version, override_version=args.version)
+    menu_table = MenuTable(
+        menu_config_dict,
+        config_version=config_version,
+        override_version=args.version,
+        override_scalings_version=args.scalings,
+    )
     menu_table.make_table()
     menu_table.print_table()
     menu_table.save_table()
