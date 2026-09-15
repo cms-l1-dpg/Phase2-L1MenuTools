@@ -62,7 +62,7 @@ JetTurnonForwardHGCSC8:
       event:
         - "abs({eta}) > 2.4"
       object:
-        - "abs({eta}) < 5"
+        - "abs({eta}) < 3.0"
   test_objects:
     L1puppiJetSC8:default:forwardHGC: "pt"
   thresholds: [150]
@@ -86,9 +86,9 @@ JetTurnonForwardHFSC8:
     label: "Gen Jets"
     cuts:
       event:
-        - "abs({eta}) > 2.4"
+        - "abs({eta}) > 3.0"
       object:
-        - "abs({eta}) < 5"
+        - "abs({eta}) < 5.0"
   test_objects:
     L1puppiJetSC8:default:forwardHF: "pt"
   thresholds: [150]
