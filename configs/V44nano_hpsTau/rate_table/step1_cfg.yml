@@ -1,4 +1,0 @@
-version: "V44nano_hpsTau"
-sample: "MinBias"
-menu_config: "configs/V44nano_hpsTau/rate_table/step1_menu_cfg.yml"
-table_fname: "v44_Step1Menu"
