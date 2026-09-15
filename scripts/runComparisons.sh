@@ -11,7 +11,9 @@ run_when_ready() {
 # source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D127 "comparisons/relVals"
 # source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D128 "comparisons/relVals"
 # source scripts/compareVersions.sh V49nano_RelVal_200_D127 V49nano_RelVal_200_D128 "comparisons/relVals"
-python menu_tools/utils/compare_json-wNano.py --v0 V49nano_RelVal_200_D121 --v1 V49nano_RelVal_200_D127 --v2 V49nano_RelVal_200_D128 --output-dir "comparisons/relVals"  |& tee complogs/relVals/objects.log
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_RelVal_200_D121 --v1 V49nano_RelVal_200_D127 --v2 V49nano_RelVal_200_D128 --output-dir "comparisons/relVals"  |& tee complogs/relVals/objects.log
+
+source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_200_D121_200PU "comparisons/relVals"
 
 
 # # AR26 3rd train
