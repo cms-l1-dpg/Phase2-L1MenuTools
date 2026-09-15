@@ -4,10 +4,32 @@ from typing import Optional
 
 
 class RatePlotConfig(BasePlotConfig):
-    def __init__(self, cfg: dict, name: str, config_version: Optional[str] = None, override_version: Optional[str] = None):
+    def __init__(
+        self,
+        cfg: dict,
+        name: str,
+        config_version: Optional[str] = None,
+        override_version: Optional[str] = None,
+        override_scalings_version: Optional[str] = None,
+    ):
         super().__init__(cfg, name)
         self._config_version = config_version
         self._override_version = override_version
+        self._override_scalings_version = override_scalings_version
+
+    @property
+    def scalings_version(self) -> Optional[str]:
+        """Version the online-to-offline scalings are loaded from, or None to
+        follow the version(s) of the plot (i.e. the existing behaviour)."""
+        return self._override_scalings_version
+
+    @property
+    def scalings_suffix(self) -> str:
+        """Tag appended to output filenames when `--scalings` is used, so that
+        plots made with alternative scalings do not overwrite the nominal ones."""
+        if self._override_scalings_version:
+            return f"_scalings_{self._override_scalings_version}"
+        return ""
 
     @property
     def compare_versions(self) -> bool:

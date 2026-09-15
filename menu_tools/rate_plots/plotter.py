@@ -54,6 +54,14 @@ class RatePlotter:
             return "Offline"
         return "Online"
 
+    @property
+    def _scalings_suffix(self):
+        """`_scalings_<version>` tag for the output filenames. Only applied to
+        the Offline pass, since the Online plots do not use scalings at all."""
+        if self.offline_pt:
+            return self.cfg.scalings_suffix
+        return ""
+
     def _style_plot(self, fig, ax0, ax1=None, legend_loc="upper right"):
         ax0.legend(loc=legend_loc, frameon=False)
         ax0.set_ylabel("Rate [kHz]")
@@ -114,7 +122,7 @@ class RatePlotter:
         # Save plot
         fname = os.path.join(
             self._outdir,
-            f"{version}_{self._online_offline}_{self.cfg.plot_name}",
+            f"{version}_{self._online_offline}_{self.cfg.plot_name}{self._scalings_suffix}",
         )
         print("Saving to ", fname)
         plt.savefig(fname + ".png")
@@ -170,7 +178,8 @@ class RatePlotter:
 
         self._style_plot(fig, axs[0], axs[1])
         fname = os.path.join(
-            self._outdir, f"{v1}-vs-{v2}_{self._online_offline}_{self.cfg.plot_name}"
+            self._outdir,
+            f"{v1}-vs-{v2}_{self._online_offline}_{self.cfg.plot_name}{self._scalings_suffix}",
         )
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf", bbox_inches="tight")
@@ -185,7 +194,12 @@ class RatePlotter:
             self._plot_single_version_rate_curves()
 
         # Dump plot conifg
-        with open(os.path.join(self._outdir, f"{self.cfg.plot_name}.yaml"), "w") as f:
+        with open(
+            os.path.join(
+                self._outdir, f"{self.cfg.plot_name}{self._scalings_suffix}.yaml"
+            ),
+            "w",
+        ) as f:
             yaml.dump(
                 {self.cfg.plot_name: self.cfg.config_dict}, f, default_flow_style=False
             )
@@ -198,11 +212,13 @@ class RateComputer:
         sample: str,
         version: str,
         apply_offline_conversion: bool,
+        scalings_version: str = None,
     ):
         self.object = obj
         self.sample = sample
         self.version = version
         self.apply_offline_conversion = apply_offline_conversion
+        self.scalings_version = scalings_version if scalings_version else version
         self.arrays = self._load_cached_arrays()
 
     def _transform_key(self, raw_key: str) -> str:
@@ -240,7 +256,9 @@ class RateComputer:
 
         # Apply scalings if so configured
         if self.apply_offline_conversion:
-            arr = scalings.add_offline_pt(arr, self.object, scaling_version=self.version)
+            arr = scalings.add_offline_pt(
+                arr, self.object, scaling_version=self.scalings_version
+            )
         arr["pt"] = scalings.get_pt_branch(arr, str(self.object))
 
         return arr
@@ -278,10 +296,16 @@ class RatePlotCentral:
     (pt thresholds vs. rate).
     """
 
-    def __init__(self, cfg_plots_path: str, override_version: str = None):
+    def __init__(
+        self,
+        cfg_plots_path: str,
+        override_version: str = None,
+        override_scalings_version: str = None,
+    ):
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
         self.override_version = override_version
+        self.override_scalings_version = override_scalings_version
         self.config_version = self._extract_version(cfg_plots_path)
 
     def _extract_version(self, path: str) -> str:
@@ -326,6 +350,7 @@ class RatePlotCentral:
                 plot_config.sample,
                 version,
                 apply_offline_conversion,
+                scalings_version=self.override_scalings_version,
             )
 
             rate_data[version] = rate_computer.compute_rate(self.get_bins(plot_config), nObj = plot_config.nObjects)
@@ -344,7 +369,8 @@ class RatePlotCentral:
         print(f"INFO: Saving outputs to outputs/{version}/object_performance/rates")
         print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
         if apply_offline_conversion:
-             print(f"INFO: Loading scalings from outputs/{version}/object_performance/scalings")
+             scalings_version = self.override_scalings_version if self.override_scalings_version else version
+             print(f"INFO: Loading scalings from outputs/{scalings_version}/object_performance/scalings")
 
         # Iterate over plots
         for plot_name, cfg_plot in self.cfg_plots.items():
@@ -353,7 +379,13 @@ class RatePlotCentral:
                 plot_name,
                 " Offline" if apply_offline_conversion else " Online",
             )
-            plot_config = RatePlotConfig(cfg_plot, plot_name, config_version=self.config_version, override_version=self.override_version)
+            plot_config = RatePlotConfig(
+                cfg_plot,
+                plot_name,
+                config_version=self.config_version,
+                override_version=self.override_version,
+                override_scalings_version=self.override_scalings_version,
+            )
             rate_plot_data = {}
 
             if plot_config.nObjects > 1:
@@ -393,9 +425,23 @@ def main():
     parser.add_argument(
         "--version", type=str, help="Override version for output/caching", default=None
     )
+    parser.add_argument(
+        "--scalings",
+        type=str,
+        help=(
+            "Override version the online-to-offline scalings are loaded from. "
+            "Takes precedence over --version for the scalings only; Offline "
+            "output filenames get a `_scalings_<version>` suffix."
+        ),
+        default=None,
+    )
     args = parser.parse_args()
 
-    plotter = RatePlotCentral(args.cfg_plots, override_version=args.version)
+    plotter = RatePlotCentral(
+        args.cfg_plots,
+        override_version=args.version,
+        override_scalings_version=args.scalings,
+    )
     plotter.run(apply_offline_conversion=True)
     plotter.run()
 
