@@ -1,4 +1,5 @@
 import argparse
+import sys
 import os
 import yaml
 
@@ -17,6 +18,10 @@ def _extract_version(path: str) -> str:
 
 
 def main():
+    # ensure log printouts are flushed per line for easier monitoring when output is piped, e.g via tee
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "config_file",
