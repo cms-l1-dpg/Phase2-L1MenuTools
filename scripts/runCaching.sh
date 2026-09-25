@@ -1,9 +1,12 @@
-VERSION="V49nano_RelVal"
-# VERSION="V50nano"
+# VERSION="V49nano_RelVal"
+VERSION="V50nano"
 # OVERRIDE_SHORT="170pre3_3rdTrain"
 # OVERRIDE_SHORT="170pre3"
+# OVERRIDE_SHORT="170pre5"
 # OVERRIDE_SHORT="170pre3_140PU"
-OVERRIDE_SHORT="200_D121_200PU"
+OVERRIDE_SHORT="170pre4_140PU"
+# OVERRIDE_SHORT="170pre5_140PU"
+# OVERRIDE_SHORT="200_D121_200PU"
 # OVERRIDE_SHORT="200_D127"
 # OVERRIDE_SHORT="200_D128"
 # OVERRIDE_SHORT="170pre2"
@@ -18,8 +21,10 @@ OVERRIDE_VERSION="${VERSION}_${OVERRIDE_SHORT}"
 # OVERRIDE_VERSION="${VERSION}" #_${OVERRIDE_SHORT}"
 REVISION=$(date +%y%m%d)
 
-FULLSIGNAL=false
-RELVAL=true
+FULLSIGNAL=true
+# RELVAL=true
+RELVAL=false
+PU200=false
 
 # echo "Running caching for ${VERSION} subversion ${OVERRIDE_VERSION} - Revision = ${REVISION}"
 echo "Running caching for ${VERSION} subversion ${OVERRIDE_VERSION} (short is ${OVERRIDE_SHORT}) - Revision = ${REVISION}"
@@ -38,8 +43,10 @@ python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample 
 if [[ $FULLSIGNAL == "true" ]]; then
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample TT |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
     python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToTauTau |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
-    python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToBB |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
-    python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToInv |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
-    python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample HHTo4B |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
-    python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample HHTo2B2Tau |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    if [[ $PU200 == "true" ]]; then
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToBB |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample VBFHToInv |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample HHTo4B |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+	python3 menu_tools/caching/merge_arrays.py --version $OVERRIDE_VERSION --sample HHTo2B2Tau |& tee logs/${OVERRIDE_VERSION}_${REVISION}/${OVERRIDE_VERSION}_caching.log
+    fi
 fi
