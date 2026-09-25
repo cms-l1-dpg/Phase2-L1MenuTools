@@ -1,3 +1,4 @@
+from functools import reduce
 from itertools import combinations
 import os
 from typing import Optional, Union
@@ -19,6 +20,13 @@ from menu_tools.utils import objects
 from menu_tools.utils import scalings
 
 from scipy.stats import beta, norm
+
+# Events per chunk when evaluating a seed. 0 restores whole-file behaviour.
+CHUNK_SIZE = int(os.environ.get("MENU_TABLE_CHUNK", "20000"))
+
+# 0: tqdm only. 1: the per-leg/per-seed prints. 2: also the table after each seed.
+VERBOSE = int(os.environ.get("MENU_TABLE_VERBOSE", "1"))
+
 
 def get_eff_err(npass,ntot, alpha=1 - 0.68):
     
@@ -68,8 +76,11 @@ class MenuTable:
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
             print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
-        
+        if CHUNK_SIZE > 0:
+            print(f"INFO: Evaluating seeds in chunks of {CHUNK_SIZE} events")
+
         self.arr_cache = {}
+        self._obj_mask_cache: dict[str, ak.Array] = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
         self._seed_masks: dict[str, np.ndarray] = {}
@@ -151,7 +162,8 @@ class MenuTable:
             and ("ExtTrackHT" not in object_name)
             and ("mass" not in object_name)
         ):
-            print("adding scalings")
+            if VERBOSE:
+                print("adding scalings")
             arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.scalings_version)
 
         if "idx" not in arr.fields:
@@ -166,8 +178,18 @@ class MenuTable:
         if "eta" in arr.fields:
             arr = ak.with_name(arr, "Momentum4D")
 
-        print("done loading")
+        if VERBOSE:
+            print("done loading")
         return arr
+
+    def _get_object_mask(self, object_name: str, arr: ak.Array) -> ak.Array:
+        """Object ID mask, memoised: it is requested once per leg but depends only on the object."""
+        if object_name not in self._obj_mask_cache:
+            obj = objects.Object(object_name, self.config.config_version_for_objects)
+            self._obj_mask_cache[object_name] = (
+                objects.compute_selection_mask_for_object_cuts(obj, arr)
+            )
+        return self._obj_mask_cache[object_name]
 
     def get_legs_arrays_for_seed(
         self, seed_legs: dict[str, dict[str, str]]
@@ -186,25 +208,32 @@ class MenuTable:
         """
         raw_object_arrays = {}
         masked_object_arrays = {}
+        # Legs repeating the same (object, threshold) are built once. Seed-scoped.
+        leg_array_cache: dict[tuple, ak.Array] = {}
 
         for leg_key, leg in seed_legs.items():
+            cache_key = (leg["obj"], leg["threshold_cut"])
+            if cache_key in leg_array_cache:
+                masked_object_arrays[leg_key] = leg_array_cache[cache_key]
+                continue
+
             # Load object array if not already loeaded
             if leg["obj"] not in raw_object_arrays:
-                print("Loading ", leg["obj"])
+                if VERBOSE:
+                    print("Loading ", leg["obj"])
 
                 if leg["obj"] not in self.arr_cache:
-                    print(f"Caching {leg['obj']}")
+                    if VERBOSE:
+                        print(f"Caching {leg['obj']}")
                     self.arr_cache[leg["obj"]] = self._load_cached_arrays(leg["obj"])
                 else:
-                    print(f"Using cached {leg['obj']}")
+                    if VERBOSE:
+                        print(f"Using cached {leg['obj']}")
                 # raw_object_arrays[leg["obj"]] = self._load_cached_arrays(leg["obj"])
                 raw_object_arrays[leg["obj"]] = self.arr_cache[leg["obj"]]
 
             # Prepare object ID mask
-            obj = objects.Object(leg["obj"], self.config.config_version_for_objects)
-            obj_mask = objects.compute_selection_mask_for_object_cuts(
-                obj, raw_object_arrays[leg["obj"]]
-            )
+            obj_mask = self._get_object_mask(leg["obj"], raw_object_arrays[leg["obj"]])
 
             leg_mask = obj_mask
             leg_array = raw_object_arrays[leg["obj"]]
@@ -223,9 +252,12 @@ class MenuTable:
 
             ## apply mask if regular (non-jagged) array, e.g. MET/HT etc
             if "var" in str(leg_array.type):
-                masked_object_arrays[leg_key] = leg_array[leg_mask]
+                masked = leg_array[leg_mask]
             else:
-                masked_object_arrays[leg_key] = ak.mask(leg_array, leg_mask)
+                masked = ak.mask(leg_array, leg_mask)
+
+            leg_array_cache[cache_key] = masked
+            masked_object_arrays[leg_key] = masked
 
         return masked_object_arrays
 
@@ -253,11 +285,8 @@ class MenuTable:
                     combined_arrays[leg1].idx != combined_arrays[leg2].idx
                 )
 
-        no_duplicates_mask = ak.from_numpy(
-            np.ones(len(combined_arrays), dtype=np.bool_)
-        )
-        for i, mask in enumerate(masks_remove_duplicates):
-            no_duplicates_mask = no_duplicates_mask & mask
+        # Reduce over the masks instead of seeding with an all-True array.
+        no_duplicates_mask = reduce(lambda a, b: a & b, masks_remove_duplicates)
 
         combined_arrays = combined_arrays[no_duplicates_mask]
         return combined_arrays
@@ -293,7 +322,33 @@ class MenuTable:
         assert isinstance(cross_seeds, list), "x-seeds value must be list!"
         return cross_seeds
 
-    def get_trigger_pass_mask(self, seed_name: str) -> ak.Array:
+    def _pass_mask_for_chunk(
+        self,
+        legs_arrays: dict[str, ak.Array],
+        seed_legs: dict,
+        cross_mask_strs: list,
+    ) -> ak.Array:
+        """Per-event pass mask for one slice of events.
+
+        Filtering the combinations after each cross mask is equivalent to ANDing
+        them all, but keeps only two combination-length booleans live at a time.
+        """
+        combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
+
+        ## add cross_conditions
+        for cross_mask_str in cross_mask_strs:
+            eval_str = re.sub(r"(leg\d)", r"combined_legs['\1']", cross_mask_str)
+            mask = ak.fill_none(eval(eval_str), False, axis=None)
+            combined_legs = combined_legs[mask]
+
+        # Cut on the individual object thresholds
+        # if "var" in str(combined_legs.type):
+        return ak.num(combined_legs, axis=-1) > 0
+        # else:
+        #     raise RuntimeError("This part of the code needs some work!")
+        #     # total_mask = total_mask & ~ak.is_none(_leg)
+
+    def get_trigger_pass_mask(self, seed_name: str) -> np.ndarray:
         """Computes number of events passing the `seed`.
 
         After loading the minbias sample and the menu definition,
@@ -301,28 +356,26 @@ class MenuTable:
         (together with cross-masks/seeds).
 
         Returns:
-            total_mask: boolean awkward array mask defining trigger `seed`
+            total_mask: boolean numpy array mask defining trigger `seed`
         """
-        print("==> ", seed_name)
-        total_mask = 1
+        if VERBOSE:
+            print("==> ", seed_name)
         seed_legs = self._filter_seed_legs(seed_name)
         legs_arrays = self.get_legs_arrays_for_seed(seed_legs)
-        combined_legs = self.get_combined_legs(legs_arrays, seed_legs)
-
-        # Cut on the individual object thresholds
-        # if "var" in str(combined_legs.type):
-        total_mask = total_mask & (ak.num(combined_legs, axis=-1) > 0)
-        # else:
-        #     raise RuntimeError("This part of the code needs some work!")
-        #     # total_mask = total_mask & ~ak.is_none(_leg)
-
-        ## add cross_conditions
         cross_mask_strs: list = self.trigger_seeds[seed_name]["cross_masks"]
-        if len(cross_mask_strs) > 0:
-            eval_str = "(" + ") & (".join(cross_mask_strs) + ")"
-            eval_str = re.sub(r"(leg\d)", r"combined_legs['\1']", eval_str)
-            cross_mask = eval(f"ak.any({eval_str}, axis=1)")
-            total_mask = total_mask & cross_mask
+
+        # Nothing below reduces across events, so per-chunk masks concatenate.
+        n_events = len(next(iter(legs_arrays.values())))
+        step = CHUNK_SIZE if CHUNK_SIZE > 0 else n_events
+
+        pieces = []
+        for lo in range(0, n_events, step):
+            chunk = {k: v[lo : lo + step] for k, v in legs_arrays.items()}
+            chunk_mask = self._pass_mask_for_chunk(chunk, seed_legs, cross_mask_strs)
+            chunk_mask = ak.fill_none(chunk_mask, False, axis=None)
+            pieces.append(ak.to_numpy(chunk_mask).astype(np.bool_))
+
+        total_mask = pieces[0] if len(pieces) == 1 else np.concatenate(pieces)
 
         ## Add cross-seeds
         cross_seeds = self._load_cross_seeds(seed_name)
@@ -330,7 +383,6 @@ class MenuTable:
             xseed_mask = self.get_trigger_pass_mask(self.trigger_seeds[xseed])
             total_mask = total_mask & xseed_mask
 
-        total_mask = ak.fill_none(total_mask, False)
         return total_mask
 
     def _prepare_masks(self) -> dict[str, np.ndarray]:
@@ -342,12 +394,22 @@ class MenuTable:
         """
         seed_masks: dict = {}
 
-        for seed_name in tqdm(self.trigger_seeds):
-            mask = self.get_trigger_pass_mask(seed_name)
-            seed_masks[seed_name] = mask.to_numpy()
+        pbar = tqdm(self.trigger_seeds)
+        for seed_name in pbar:
+            mask = np.asarray(self.get_trigger_pass_mask(seed_name))
+            seed_masks[seed_name] = mask
             self._seed_masks = seed_masks
-            self.make_table()
-            self.print_table()
+            if len(mask):
+                efficiency = mask.sum() / len(mask)
+                if self.config.is_signal:
+                    summary = f"eff {efficiency * 100:.3g}%"
+                else:
+                    summary = f"{efficiency * constants.RATE_NORM_FACTOR:.1f} kHz"
+                pbar.set_postfix_str(f"{seed_name}: {summary}")
+            # make_table rebuilds the whole table each call, so this is O(n_seeds^2).
+            if VERBOSE >= 2:
+                self.make_table()
+                self.print_table()
 
         # self.compute_tot_and_pure()
 
@@ -409,13 +471,17 @@ class MenuTable:
         print("Making table")
 
         table: list[dict[str, Union[str, float]]] = []
-        all_seeds_or_mask = ak.zeros_like(list(self._seed_masks.values())[0])
+        # Accumulate the OR in numpy rather than rebuilding an array per seed.
+        all_seeds_or_mask = np.zeros(
+            len(np.asarray(list(self._seed_masks.values())[0])), dtype=np.bool_
+        )
 
         for seed, mask in self._seed_masks.items():
+            mask = np.asarray(mask)
             # Compute seed values
-            npass = ak.sum(mask)
+            npass = np.sum(mask)
             efficiency = npass / len(mask)
-            effErr, effErrLo, effErrHi = get_eff_err(npass, len(mask), alpha=1-0.68)
+            # effErr, effErrLo, effErrHi = get_eff_err(npass, len(mask), alpha=1-0.68)
             row: dict[str, Union[str, float]] = {
                 "seed": seed,
                 "npass": npass,
@@ -427,12 +493,12 @@ class MenuTable:
                 # row["rateErr"] = effErr * constants.RATE_NORM_FACTOR
             table.append(row)
             # Modify total mask
-            all_seeds_or_mask = all_seeds_or_mask | mask
+            all_seeds_or_mask |= mask
 
         ## Total OR of all seeds
         npass = np.sum(all_seeds_or_mask)
         efficiency = npass / len(all_seeds_or_mask)
-        effErr, effErrLo, effErrHi = get_eff_err(npass, len(all_seeds_or_mask), alpha=1-0.68)
+        # effErr, effErrLo, effErrHi = get_eff_err(npass, len(all_seeds_or_mask), alpha=1-0.68)
         total_row: dict[str, Union[str, float]] = {
             "seed": "Total",
             "npass": npass,
@@ -464,7 +530,9 @@ class MenuTable:
             f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
-        ak.to_parquet(ak.zip(self._seed_masks), out_path, compression = "LZ4")
+        # Masks are held as bool; drop the astype for an 8x smaller file.
+        dumped = {k: np.asarray(v).astype(np.int64) for k, v in self._seed_masks.items()}
+        ak.to_parquet(ak.zip(dumped), out_path, compression = "LZ4")
 
     def save_table(self) -> None:
         """Function that saves to file the table produced by `make_table`."""
