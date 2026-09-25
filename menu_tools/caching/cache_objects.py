@@ -1,4 +1,5 @@
 import argparse
+import sys
 import glob
 import os
 import time
@@ -356,6 +357,10 @@ def parse_args():
 
 
 def main():
+    # stdout block-buffers when piped or redirected, so force a flush per line.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+
     start_time = time.time()
     args = parse_args()
     with open(args.cfg, "r") as f:

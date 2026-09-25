@@ -1,4 +1,5 @@
 import argparse
+import sys
 import os
 import json
 
@@ -418,6 +419,10 @@ class RatePlotCentral:
 
 
 def main():
+    # stdout block-buffers when piped or redirected, so force a flush per line.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots", help="Path of YAML file specifying the desired plots."

@@ -1,4 +1,5 @@
 import argparse
+import sys
 import json
 import os
 from typing import Any
@@ -603,6 +604,10 @@ class ScalingCentral:
 
 
 def main():
+    # stdout block-buffers when piped or redirected, so force a flush per line.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "cfg_plots",
