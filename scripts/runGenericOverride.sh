@@ -2,8 +2,8 @@ VERSION=$1
 REVISION=$2
 OVERRIDE_VERSION=$3
 OVERRIDE_SHORT=$4
-MAX_JOBS=6
-RELVAL=true
+MAX_JOBS=8
+RELVAL=false
 
 
 run_when_ready() {
@@ -82,9 +82,9 @@ run_when_ready object_performance configs/$VERSION/object_performance/jets_trigg
 run_when_ready object_performance configs/$VERSION/object_performance/jets_sc8_trigger.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready object_performance configs/$VERSION/object_performance/jets_ext_trigger.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml --version ${OVERRIDE_VERSION} # includes step 2 disp muons
-# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_VLoose.yaml --version ${OVERRIDE_VERSION}
+run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_VLoose.yaml --version ${OVERRIDE_VERSION}
 # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Loose.yaml --version ${OVERRIDE_VERSION} 
-# run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Medium.yaml --version ${OVERRIDE_VERSION}
+run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Medium.yaml --version ${OVERRIDE_VERSION}
 # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger_Tight.yaml --version ${OVERRIDE_VERSION} 
 # run_when_ready object_performance configs/$VERSION/object_performance/tkmuon_trigger.yaml --version ${OVERRIDE_VERSION} # commented as it takes a long time
 if [[ $RELVAL == "false" ]]; then
@@ -119,7 +119,7 @@ run_when_ready rate_plots configs/$VERSION/rate_plots/met.yaml --version ${OVERR
 run_when_ready rate_plots configs/$VERSION/rate_plots/jets.yaml --version ${OVERRIDE_VERSION} # includes ext jets
 run_when_ready rate_plots configs/$VERSION/rate_plots/jets_sc8.yaml --version ${OVERRIDE_VERSION} # step 2
 run_when_ready rate_plots configs/$VERSION/rate_plots/taus.yaml --version ${OVERRIDE_VERSION}
-# run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml --version ${OVERRIDE_VERSION}
+run_when_ready rate_plots configs/$VERSION/rate_plots/bjet.yaml --version ${OVERRIDE_VERSION}
 run_when_ready rate_plots configs/$VERSION/rate_plots/disp_muons.yaml --version ${OVERRIDE_VERSION} # step 2
 
 # # === Print Configs (Menus) === #
