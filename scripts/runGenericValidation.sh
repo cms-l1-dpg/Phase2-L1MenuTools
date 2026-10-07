@@ -28,15 +28,27 @@ if [[ ! -d cache/$VERSION ]]; then
 fi
 echo "Running plots and tables for $VERSION with configs/$CONFIGDIR - Revision = $REVISION"
 
+# Track our own PIDs and check them with `kill -0`. Counting $(jobs -p | wc -l) depends on when
+# bash drops finished jobs from its job table, which differs between bash versions: it can let one
+# job too many through, or keep counting finished jobs forever (a hang with MAX_JOBS=1).
+PIDS=()
+prune_pids() {
+    local alive=() p
+    for p in "${PIDS[@]}"; do kill -0 $p 2>/dev/null && alive+=($p); done
+    PIDS=("${alive[@]}")
+}
 run_when_ready() {
-    while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+    prune_pids
+    while [ ${#PIDS[@]} -ge $MAX_JOBS ]; do
         sleep 3
+        prune_pids
     done
     # Extract a meaningful identifier from the config path
     local filename=$(basename "$2")  # assumes config is 2nd argument
     local logname=${filename%.*}  # removes file extension
     echo Submitting $logname
     "$@" &> logs/${VERSION}_${REVISION}/${VERSION}_${logname}.log &
+    PIDS+=($!)
 }
 
 mkdir -p logs/${VERSION}_${REVISION}
@@ -145,4 +157,6 @@ if [[ $PERFORMANCE == "true" ]]; then
 
 fi
 
-echo "Plots and tables finished submitting!"
+echo "Plots and tables finished submitting, waiting for them to finish"
+wait  # so runSeveralValidation.sh only counts this version as done once its plots are
+echo "Plots and tables finished!"
