@@ -339,7 +339,7 @@ class TurnOnCollection:
 
         ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
 
-        for test_obj, _ in self.test_objects:
+        for test_obj, x_arg in self.test_objects:
             sel_threshold = self.numerators["test"][str(test_obj)] >= self.threshold
             numerator = self.numerators["ref"][str(test_obj)][sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
@@ -349,7 +349,12 @@ class TurnOnCollection:
             self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
             # Create Reference Numpy Histogram
-            if self.threshold >= 0:
+            if self.cfg_plot.matching_and_threshold:
+                # Combined matching + threshold efficiency: all reference
+                # objects enter the denominator (same field as numerator)
+                ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][x_arg])
+            elif self.threshold >= 0:
+                # Pure threshold efficiency: only matched reference objects
                 ref_obj = self.numerators["ref"][str(test_obj)]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
