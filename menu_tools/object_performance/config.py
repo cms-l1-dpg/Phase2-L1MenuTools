@@ -73,6 +73,20 @@ class PerformancePlotConfig(BasePlotConfig):
             return False
 
     @property
+    def matching_and_threshold(self) -> bool:
+        """Compute combined matching + threshold (trigger) efficiencies.
+
+        If set, the denominator of the efficiency contains *all* reference
+        objects (not only the ones matched to a test object), while the
+        numerator contains the reference objects matched to a test object
+        passing the threshold. Only effective for `match_test_to_ref: True`.
+        """
+        try:
+            return bool(self._cfg["matching_and_threshold"])
+        except KeyError:
+            return False
+
+    @property
     def reference_field(self):
         field = self._cfg["reference_object"]["x_arg"]
         return field.lower()
