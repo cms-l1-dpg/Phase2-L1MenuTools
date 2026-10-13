@@ -1,0 +1,23 @@
+TauRates_ID:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    - L1nnPuppiTau:default
+    - L1nnPuppiTau:noID
+  binning:
+    min: 10
+    max: 155
+    step: 5
+
+TauRatesByRegion_ID:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    - L1nnPuppiTau:default:barrel
+    - L1nnPuppiTau:default:endcap
+    - L1nnPuppiTau:noID:barrel
+    - L1nnPuppiTau:noID:endcap
+  binning:
+    min: 10
+    max: 155
+    step: 5
