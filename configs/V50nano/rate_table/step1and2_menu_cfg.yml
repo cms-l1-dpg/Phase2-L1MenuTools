@@ -509,7 +509,7 @@ L1_DoublePFJet8_dEtaMax_Mass:
 #     obj: L1puppiExtJetSC4:default
 L1_PFHTT_QuadJet_BTagNNScore:
   cross_masks:
-    - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 0.2
+    - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 0.90 # since NG v2.0, previously cut at 0.2
   leg1:
     threshold_cut: offline_pt >= 299.0
     obj: L1puppiJetSC4sums:HT
@@ -564,10 +564,18 @@ L1_DoubleDispMu:
 # # ##############################
 # # ### GTT
 # # ##############################
+# L1_W3pi_GTT:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: pt >= -99
+#     obj: L1TrackTripletWord:default
 L1_W3pi_GTT:
-  cross_masks: []
+  cross_masks:
+    - ((leg1.mass >= 60) & (leg1.mass <= 100))
+    - (leg1.trk2Pt >= 20)
+    - (leg1.trk3Pt >= 5)
   leg1:
-    threshold_cut: pt >= -99
+    threshold_cut: leg1.trk1Pt >= 24
     obj: L1TrackTripletWord:default
 # L1_TkDispHT:
 #   cross_masks: []

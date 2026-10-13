@@ -130,7 +130,18 @@ L1_DoubleTkEle:
   leg2:
     threshold_cut: offline_pt >= 15.0
     obj: L1tkElectron:NoIso:inclusive
-L1_DoubleTkPhoIso: # TODO see what the equivalent for loose iso is
+L1_DoubleTkPhoIso:
+  cross_masks:
+    - (abs(leg1.eta) < 2.5)
+    - (abs(leg2.eta) < 2.5)
+    # - abs(leg2.z0-leg1.z0) < 1
+  leg1:
+    threshold_cut: offline_pt >= 30.0
+    obj: L1tkPhoton:Iso:inclusive
+  leg2:
+    threshold_cut: offline_pt >= 15.0
+    obj: L1tkPhoton:Iso:inclusive
+L1_DoubleTkPhoIso_er1p5: # TODO see what the equivalent for loose iso is
   cross_masks:
     - (abs(leg1.eta) < 1.5)
     - (abs(leg2.eta) < 1.5)
@@ -141,6 +152,17 @@ L1_DoubleTkPhoIso: # TODO see what the equivalent for loose iso is
   leg2:
     threshold_cut: offline_pt >= 15.0
     obj: L1tkPhoton:Iso:inclusive
+L1_DoubleTkEleIso_er1p5:
+  cross_masks:
+    - (abs(leg1.eta) < 1.5)
+    - (abs(leg2.eta) < 1.5)
+    - abs(leg2.z0-leg1.z0) < 1
+  leg1:
+    threshold_cut: offline_pt >= 24.0
+    obj: L1tkElectron:Iso:inclusive
+  leg2:
+    threshold_cut: offline_pt >= 15.0
+    obj: L1tkElectron:Iso:inclusive
 L1_SingleEGEle:
   cross_masks: []
   leg1:
