@@ -13,6 +13,11 @@ L1nnPuppiTau:
           # - "{passLooseNN}==1"
           # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
           - "{chargedIso} > 0.22"
+    noID:
+      label: "NN Puppi Tau, no ID"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
     extended:
       cuts:
         inclusive:
@@ -20,6 +25,11 @@ L1nnPuppiTau:
           # - "{passLooseNN}==1"
           # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
           - "{chargedIso} > 0.22"
+    noIDExt:
+      label: "NN Puppi Tau, no ID"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
 
 L1hpsTau: # not in 151pre2
   label: "HPS Tau"
