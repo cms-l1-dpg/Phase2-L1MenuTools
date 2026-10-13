@@ -292,15 +292,19 @@ def comp_nano_plots(nano_plot, menu_plot, v2_plot=None, sfxs=["v22", "v27"], pty
                                 label=label, ls=":", color=color, mfc="none",
                                 **(p1["err_kwargs"]))
 
-    # Add legend entries for version styles (without markers, at the end)
+    # Add legend entries for version styles (open markers, at the end)
     if ptype == "turnon":
-        axs[0].errorbar([], [], yerr=[], label=f"{vlabels[1]}", ls="--", color="grey", mfc="none")
+        axs[0].errorbar([], [], yerr=[], label=f"{vlabels[1]}", ls="--", color="grey", mfc="none",
+                        marker=markers[min(1, len(markers)-1)], markersize=8)
         if v2_plot is not None and len(sfxs) > 2:
-            axs[0].errorbar([], [], yerr=[], label=f"{vlabels[2]}", ls=":", color="grey", mfc="none")
+            axs[0].errorbar([], [], yerr=[], label=f"{vlabels[2]}", ls=":", color="grey", mfc="none",
+                            marker=markers[min(1, len(markers)-1)], markersize=8)
     else:
-        axs[0].plot([], [], color="grey", label=f"{vlabels[1]}", ls="--")
+        axs[0].plot([], [], color="grey", label=f"{vlabels[1]}", ls="--", mfc="none",
+                    marker=markers[min(1, len(markers)-1)])
         if v2_plot is not None and len(sfxs) > 2:
-            axs[0].plot([], [], color="grey", label=f"{vlabels[2]}", ls=":")
+            axs[0].plot([], [], color="grey", label=f"{vlabels[2]}", ls=":", mfc="none",
+                        marker=markers[min(1, len(markers)-1)])
 
     # make axis stuff
     axs[0].legend(fontsize="x-small")
@@ -391,7 +395,7 @@ def main():
         
         f = comp_nano_plots(plot1, plot2, v2_plot, sfxs=sfxs, 
                        lss=["-", "--"],
-                       markers=[".", "o"],
+                       markers=["o", "o"],
                        ptype=ptype,
                        plot_name=os.path.basename(v0_json))
 
