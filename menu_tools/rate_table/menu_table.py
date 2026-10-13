@@ -19,7 +19,7 @@ from menu_tools.utils import constants
 from menu_tools.utils import objects
 from menu_tools.utils import scalings
 
-from scipy.stats import beta, norm
+from scipy.stats import beta
 
 # Events per chunk when evaluating a seed. 0 restores whole-file behaviour.
 CHUNK_SIZE = int(os.environ.get("MENU_TABLE_CHUNK", "20000"))
@@ -28,19 +28,21 @@ CHUNK_SIZE = int(os.environ.get("MENU_TABLE_CHUNK", "20000"))
 VERBOSE = int(os.environ.get("MENU_TABLE_VERBOSE", "1"))
 
 
-def get_eff_err(npass,ntot, alpha=1 - 0.68):
-    
-    x = npass
-    n = ntot
-    
-    lo_bound = beta.ppf(alpha / 2, x, n - x + 1)
-    eff_err_lo = x / n - np.nan_to_num(lo_bound, nan=0.0)
-    hi_bound = beta.ppf(1 - alpha / 2, x + 1, n - x)
-    eff_err_hi = np.nan_to_num(hi_bound, nan=1.0) - x / n
+def get_eff_err(npass: int, ntot: int, cl: float = 0.68) -> tuple[float, float, float]:
+    """Clopper-Pearson (exact binomial) uncertainty on npass / ntot.
 
-    eff_err_avg = (abs(eff_err_lo) + abs(eff_err_hi))/2
-    
-    return eff_err_avg, eff_err_lo, eff_err_hi
+    Returns (symmetrised, lower, upper) errors as positive distances from the
+    central value. The interval is asymmetric near 0 and 1, where it matters.
+    """
+    alpha = 1 - cl
+    eff = npass / ntot
+    # beta.ppf returns nan at the boundaries (npass == 0 or npass == ntot)
+    lo_bound = np.nan_to_num(beta.ppf(alpha / 2, npass, ntot - npass + 1), nan=0.0)
+    hi_bound = np.nan_to_num(beta.ppf(1 - alpha / 2, npass + 1, ntot - npass), nan=1.0)
+    err_lo = eff - lo_bound
+    err_hi = hi_bound - eff
+    return (err_lo + err_hi) / 2, err_lo, err_hi
+
 
 vector.register_awkward()
 
@@ -437,7 +439,16 @@ class MenuTable:
         print("=====TABLE=====")
         print("===============")
         df_table = pd.DataFrame(self.table)
-        print(df_table)
+        # Keep the screen view narrow: one symmetrised +/- column; the csv
+        # keeps the asymmetric Lo/Hi errors.
+        value, prefix = (
+            ("efficiency", "eff") if self.config.is_signal else ("rate", "rate")
+        )
+        err_cols = ["effErrLo", "effErrHi", "rateErrLo", "rateErrHi"]
+        df_table[f"+-{value}"] = (
+            df_table[f"{prefix}ErrLo"] + df_table[f"{prefix}ErrHi"]
+        ) / 2
+        print(df_table.drop(columns=err_cols, errors="ignore"))
 
     def compute_tot_and_pure(self) -> pd.DataFrame:
         df_masks = ak.to_dataframe(self._seed_masks)
@@ -477,6 +488,27 @@ class MenuTable:
 
         return df_counts
 
+    def _make_row(
+        self, seed: str, npass: int, ntot: int
+    ) -> dict[str, Union[str, float]]:
+        """One table row: counts, efficiency and (for minbias) rate, each with
+        asymmetric Clopper-Pearson statistical errors."""
+        efficiency = npass / ntot
+        _, err_lo, err_hi = get_eff_err(npass, ntot)
+        row: dict[str, Union[str, float]] = {
+            "seed": seed,
+            "npass": npass,
+            "efficiency": efficiency,
+            "effErrLo": err_lo,
+            "effErrHi": err_hi,
+        }
+        if not self.config.is_signal:
+            norm = constants.RATE_NORM_FACTOR
+            row["rate"] = efficiency * norm
+            row["rateErrLo"] = err_lo * norm
+            row["rateErrHi"] = err_hi * norm
+        return row
+
     def make_table(self) -> None:
         """
         Function that prints to screen the rates table.
@@ -492,45 +524,18 @@ class MenuTable:
 
         for seed, mask in self._seed_masks.items():
             mask = np.asarray(mask)
-            # Compute seed values
-            npass = np.sum(mask)
-            efficiency = npass / len(mask)
-            # effErr, effErrLo, effErrHi = get_eff_err(npass, len(mask), alpha=1-0.68)
-            row: dict[str, Union[str, float]] = {
-                "seed": seed,
-                "npass": npass,
-                "efficiency": efficiency,
-                # "effErr": effErr,
-            }
-            if not self.config.is_signal:
-                row["rate"] = efficiency * constants.RATE_NORM_FACTOR
-                # row["rateErr"] = effErr * constants.RATE_NORM_FACTOR
-            table.append(row)
-            # Modify total mask
+            table.append(self._make_row(seed, int(np.sum(mask)), len(mask)))
             all_seeds_or_mask |= mask
 
-        ## Total OR of all seeds
-        npass = np.sum(all_seeds_or_mask)
-        efficiency = npass / len(all_seeds_or_mask)
-        # effErr, effErrLo, effErrHi = get_eff_err(npass, len(all_seeds_or_mask), alpha=1-0.68)
-        total_row: dict[str, Union[str, float]] = {
-            "seed": "Total",
-            "npass": npass,
-            "efficiency": efficiency,
-            # "effErr": effErr,
-        }
-        nevts_row: dict[str, Union[str, float]] = {
-            "seed": "Total Event Number",
-            "npass": len(all_seeds_or_mask),
-            "efficiency": np.nan,
-            # "effErr": np.nan,
-        }
-        if not self.config.is_signal:
-            total_row["rate"] = efficiency * constants.RATE_NORM_FACTOR
-            # total_row["rateErr"] = effErr * constants.RATE_NORM_FACTOR
-            nevts_row["rate"] = np.nan
-            # nevts_row["rateErr"] = np.nan
-        table.append(total_row)
+        # Total OR of all seeds
+        table.append(
+            self._make_row(
+                "Total", int(np.sum(all_seeds_or_mask)), len(all_seeds_or_mask)
+            )
+        )
+        nevts_row: dict[str, Union[str, float]] = {k: np.nan for k in table[0].keys()}
+        nevts_row["seed"] = "Total Event Number"
+        nevts_row["npass"] = len(all_seeds_or_mask)
         table.append(nevts_row)
         self.table = table
 
