@@ -15,10 +15,20 @@ run_when_ready() {
 
 # source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_200_D121_200PU "comparisons/relVals"
 
-mkdir "comparisons/tauID"
-run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170X1004_Corr  "comparisons/tauID"
-run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr V50nano_170X1004_Corr_140PU  "comparisons/tauID"
-run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr_140PU V50nano_170X1004_Corr  "comparisons/tauID"
+mkdir "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre5_Muon V50nano_170pre5_MuonUpdate1  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre6  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170X1004 V50nano_170X1006  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170X1006 V50nano_170pre6  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre6 V50nano_170pre6_PhiFix  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170X1006 V50nano_170pre6  "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre6_140PU V50nano_170pre6  "comparisons/ar26_followups"
+
+
+# mkdir "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170X1004_Corr  "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr V50nano_170X1004_Corr_140PU  "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr_140PU V50nano_170X1004_Corr  "comparisons/tauID"
 # run_when_ready source scripts/compareVersions.sh V49nano_AR25 V50nano_170X1004_Corr  "comparisons/tauID"
 
 
