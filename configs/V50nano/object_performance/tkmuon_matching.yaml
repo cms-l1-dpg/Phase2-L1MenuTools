@@ -14,7 +14,7 @@ TkMuonsMatchingBarrel:
         - "abs({eta}) < 0.83"
   test_objects:
     # L1gmtMuon:default:barrel: "pt"
-    L1gmtTkMuon:default:barrel: "pt"
+    L1gmtTkMuon:Dynamic:barrel: "pt"
     L1gmtTkMuon:VLoose:barrel: "pt"
     L1gmtTkMuon:Loose:barrel: "pt"
     L1gmtTkMuon:Medium:barrel: "pt"
@@ -43,7 +43,7 @@ TkMuonsMatchingOverlap:
         - "abs({eta}) < 1.24"
   test_objects:
     # L1gmtMuon:default:overlap: "pt"
-    L1gmtTkMuon:default:overlap: "pt"
+    L1gmtTkMuon:Dynamic:overlap: "pt"
     L1gmtTkMuon:VLoose:overlap: "pt"
     L1gmtTkMuon:Loose:overlap: "pt"
     L1gmtTkMuon:Medium:overlap: "pt"
@@ -72,7 +72,7 @@ TkMuonsMatchingEndcap:
         - "abs({eta}) < 2.4"
   test_objects:
     # L1gmtMuon:default:endcap: "pt"
-    L1gmtTkMuon:default:endcap: "pt"
+    L1gmtTkMuon:Dynamic:endcap: "pt"
     L1gmtTkMuon:VLoose:endcap: "pt"
     L1gmtTkMuon:Loose:endcap: "pt"
     L1gmtTkMuon:Medium:endcap: "pt"

@@ -33,6 +33,11 @@ L1gmtTkMuon:
       cuts:
         inclusive:
           - "({hwQual}>>3)&1 == 1"
+    Dynamic:
+      label: "TkMuon, Dynamic ID"
+      cuts:
+        inclusive:
+          - "(({hwQual}>>1)&1 == 1) | (({pt} > 8) & (({hwQual}>>0)&1 == 1))" # Loose (bit 2) for pt < 8 VLoose (bit 1) for pt > 8
 
 L1gmtMuon:
   label: "Muon"

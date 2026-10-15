@@ -2,7 +2,7 @@ gmtTkMuonByID:
   sample: MinBias
   version: V50nano
   test_objects:
-    - L1gmtTkMuon:default
+    - L1gmtTkMuon:Dynamic
     - L1gmtTkMuon:VLoose
     - L1gmtTkMuon:Loose
     - L1gmtTkMuon:Medium
@@ -16,7 +16,7 @@ gmtTkMuonByID_barrel:
   sample: MinBias
   version: V50nano
   test_objects:
-    - L1gmtTkMuon:default:barrel
+    - L1gmtTkMuon:Dynamic:barrel
     - L1gmtTkMuon:VLoose:barrel
     - L1gmtTkMuon:Loose:barrel
     - L1gmtTkMuon:Medium:barrel
@@ -30,7 +30,7 @@ gmtTkMuonByID_overlap:
   sample: MinBias
   version: V50nano
   test_objects:
-    - L1gmtTkMuon:default:overlap
+    - L1gmtTkMuon:Dynamic:overlap
     - L1gmtTkMuon:VLoose:overlap
     - L1gmtTkMuon:Loose:overlap
     - L1gmtTkMuon:Medium:overlap
@@ -44,7 +44,7 @@ gmtTkMuonByID_endcap:
   sample: MinBias
   version: V50nano
   test_objects:
-    - L1gmtTkMuon:default:endcap
+    - L1gmtTkMuon:Dynamic:endcap
     - L1gmtTkMuon:VLoose:endcap
     - L1gmtTkMuon:Loose:endcap
     - L1gmtTkMuon:Medium:endcap
