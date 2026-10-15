@@ -1,9 +1,11 @@
 import argparse
+import copy
 import sys
 import os
 import yaml
 
 from menu_tools.rate_table.menu_table import MenuTable
+from menu_tools.utils.versions import add_version_argument, get_versions, run_per_version
 
 
 def _extract_version(path: str) -> str:
@@ -28,7 +30,7 @@ def main():
         help="Path to the menu config file, e.g. `configs/V29/rate_table/v29_cfg.yml`",
         default="configs/V38nano/rate_table/v38_cfg.yml",
     )
-    parser.add_argument("--version", type=str, help="Override version for output/caching", default=None)
+    add_version_argument(parser)
     parser.add_argument(
         "--scalings",
         type=str,
@@ -56,17 +58,20 @@ def main():
 
     config_version = _extract_version(args.config_file)
 
-    menu_table = MenuTable(
-        menu_config_dict,
-        config_version=config_version,
-        override_version=args.version,
-        override_scalings_version=args.scalings,
-        override_sample=args.signal,
-    )
-    menu_table.make_table()
-    menu_table.print_table()
-    menu_table.save_table()
-    menu_table.dump_masks()
+    def run(version):
+        menu_table = MenuTable(
+            copy.deepcopy(menu_config_dict),  # each version starts from the config as read
+            config_version=config_version,
+            override_version=version,
+            override_scalings_version=args.scalings,
+            override_sample=args.signal,
+        )
+        menu_table.make_table()
+        menu_table.print_table()
+        menu_table.save_table()
+        menu_table.dump_masks()
+
+    run_per_version(get_versions(parser, args), run)
 
     # menu_table.compute_tot_and_pure()
 

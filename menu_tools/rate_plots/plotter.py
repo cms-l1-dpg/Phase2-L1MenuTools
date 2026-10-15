@@ -15,6 +15,7 @@ from menu_tools.utils import objects
 from menu_tools.utils import scalings
 from menu_tools.utils.objects import Object
 from menu_tools.rate_plots.config import RatePlotConfig
+from menu_tools.utils.versions import add_version_argument, get_versions, run_per_version
 
 colors = [
     "#3f90da",
@@ -432,9 +433,7 @@ def main():
     parser.add_argument(
         "cfg_plots", help="Path of YAML file specifying the desired plots."
     )
-    parser.add_argument(
-        "--version", type=str, help="Override version for output/caching", default=None
-    )
+    add_version_argument(parser)
     parser.add_argument(
         "--scalings",
         type=str,
@@ -447,13 +446,16 @@ def main():
     )
     args = parser.parse_args()
 
-    plotter = RatePlotCentral(
-        args.cfg_plots,
-        override_version=args.version,
-        override_scalings_version=args.scalings,
-    )
-    plotter.run(apply_offline_conversion=True)
-    plotter.run()
+    def run(version):
+        plotter = RatePlotCentral(
+            args.cfg_plots,
+            override_version=version,
+            override_scalings_version=args.scalings,
+        )
+        plotter.run(apply_offline_conversion=True)
+        plotter.run()
+
+    run_per_version(get_versions(parser, args), run)
 
 
 if __name__ == "__main__":

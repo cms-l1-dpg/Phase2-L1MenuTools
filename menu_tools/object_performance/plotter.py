@@ -18,6 +18,7 @@ from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.versions import add_version_argument, get_versions, run_per_version
 
 
 colors = [
@@ -615,16 +616,19 @@ def main():
         help="Path of YAML configuration file specifying the desired plots.",
     )
     parser.add_argument("-s", "--scalings_only", action="store_true")
-    parser.add_argument("--version", type=str, help="Override version for output/caching", default=None)
+    add_version_argument(parser)
     args = parser.parse_args()
 
-    for path_cfg_plot in args.cfg_plots:
-        if not args.scalings_only:
-            plotter = EfficiencyCentral(path_cfg_plot, override_version=args.version)
-            plotter.run()
+    def run(version):
+        for path_cfg_plot in args.cfg_plots:
+            if not args.scalings_only:
+                plotter = EfficiencyCentral(path_cfg_plot, override_version=version)
+                plotter.run()
 
-        scalings = ScalingCentral(path_cfg_plot, override_version=args.version)
-        scalings.run()
+            scalings = ScalingCentral(path_cfg_plot, override_version=version)
+            scalings.run()
+
+    run_per_version(get_versions(parser, args), run)
 
 
 if __name__ == "__main__":
