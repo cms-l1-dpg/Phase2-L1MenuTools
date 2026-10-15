@@ -3,6 +3,8 @@ VNEW=$2
 OUTDIR=${3:-"comparisons"}
 
 MAX_JOBS=4
+PERFORMANCE=true
+MENU=true
 
 run_when_ready() {
     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
@@ -24,12 +26,16 @@ else
     # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR
     # run_when_ready python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR
     # run_when_ready python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step2Menu --output-dir $OUTDIR
-    python menu_tools/utils/compare_json-wNano.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_objects.log
-    python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1.log 
-    python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step2.log 
-    python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step1and2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1and2.log 
-    python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step1p5Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1p5.log 
-    python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_V0p0Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_v0p0.log 
+    if [[ $PERFORMANCE == "true" ]]; then
+	python menu_tools/utils/compare_json-wNano.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_objects.log
+    fi
+    if [[ $MENU == "true" ]]; then
+	python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --output-dir $OUTDIR |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1.log 
+	python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step2.log 
+	python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step1and2Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1and2.log 
+	python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_Step1p5Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_step1p5.log 
+	python menu_tools/utils/compare_menus.py --v1 $VOLD --v0 $VNEW --menu v45_V0p0Menu --output-dir $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_v0p0.log
+    fi
     # source menu_tools/utils/format_diff.sh $VOLD $VNEW $OUTDIR  |& tee complogs/${VNEW}vs${VOLD}/${VNEW}vs${VOLD}_diff.log 
 fi
 
