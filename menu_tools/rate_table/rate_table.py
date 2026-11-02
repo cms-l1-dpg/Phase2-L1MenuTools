@@ -51,6 +51,15 @@ def main():
         ),
         default=None,
     )
+    parser.add_argument(
+        "--truncated",
+        action="store_true",
+        help=(
+            "Round the scalings to two decimals, as in the P2GT emulator menus, "
+            "so that both apply identical thresholds. Output filenames get a "
+            "`_truncated` suffix."
+        ),
+    )
     args = parser.parse_args()
 
     with open(args.config_file, "r") as f:
@@ -65,6 +74,7 @@ def main():
             override_version=version,
             override_scalings_version=args.scalings,
             override_sample=args.signal,
+            truncated=args.truncated,
         )
         menu_table.make_table()
         menu_table.print_table()

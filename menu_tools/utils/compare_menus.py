@@ -25,6 +25,8 @@ import pandas as pd
 from matplotlib.container import BarContainer
 from matplotlib.ticker import NullLocator
 
+from menu_tools.rate_table.menu_config import scalings_suffix
+
 # Set up plotting style
 plt.style.use(hep.style.CMS)
 plt.rcParams["figure.facecolor"] = "white"
@@ -273,6 +275,17 @@ def main():
         "made with `rate_table --signal SAMPLE`",
     )
     parser.add_argument(
+        "--scalings",
+        default=None,
+        metavar="VERSION",
+        help="Read the tables made with `rate_table --scalings VERSION`",
+    )
+    parser.add_argument(
+        "--truncated",
+        action="store_true",
+        help="Read the tables made with `rate_table --truncated`",
+    )
+    parser.add_argument(
         "--uncertainties",
         action="store_true",
         help="Show statistical uncertainties (needs tables with error columns; "
@@ -286,7 +299,8 @@ def main():
     args = parser.parse_args()
 
     qty = Quantity(signal=args.signal is not None)
-    sample_suffix = f"_{args.signal}" if args.signal else ""
+    name_suffix = scalings_suffix(args.scalings, args.truncated)
+    name_suffix += f"_{args.signal}" if args.signal else ""
 
     # Set menu names
     menu_v0 = args.menu_v0 if args.menu_v0 else args.menu
@@ -325,7 +339,7 @@ def main():
     input_files = {}
     for label, version, menu, csv in zip(labels, versions, menus, csv_overrides):
         default = (
-            f"{base_path}/{version}/rate_tables/{menu}_{version}{sample_suffix}.csv"
+            f"{base_path}/{version}/rate_tables/{menu}_{version}{name_suffix}.csv"
         )
         input_files[label] = csv if csv else default
 
@@ -430,7 +444,7 @@ def main():
     filename_base = "vs".join(
         f"{menu}_{version}" for menu, version in zip(menus, versions)
     )
-    filename_base += sample_suffix
+    filename_base += name_suffix
     n_ver = len(labels)
 
     # Plot: totals

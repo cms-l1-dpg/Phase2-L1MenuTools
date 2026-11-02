@@ -50,3 +50,8 @@
   rate_table <path_to_config>
   rate_table_tex <path_to_config>
   ```
+
+  `rate_table --truncated` rounds the scalings to two decimals, as the P2GT
+  emulator menus do, so that both apply identical thresholds. Its outputs get a
+  `_truncated` suffix, which `rate_table_tex` and `compare_menus` pick up with
+  the same option.

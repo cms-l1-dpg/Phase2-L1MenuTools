@@ -62,6 +62,7 @@ class MenuTable:
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
+        truncated: bool = False,
     ):
         self.config: MenuConfig = MenuConfig(
             config,
@@ -69,12 +70,18 @@ class MenuTable:
             override_version=override_version,
             override_scalings_version=override_scalings_version,
             override_sample=override_sample,
+            truncated=truncated,
         )
 
         print(f"INFO: Loading cached inputs from cache/{self.config.version}")
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
         print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
         print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
+        if self.config.scalings_decimals is not None:
+            print(
+                f"INFO: Rounding scalings to {self.config.scalings_decimals} "
+                "decimals, as in the P2GT menus"
+            )
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
             print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
@@ -166,7 +173,12 @@ class MenuTable:
         ):
             if VERBOSE:
                 print("adding scalings")
-            arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.scalings_version)
+            arr = scalings.add_offline_pt(
+                arr,
+                obj,
+                scaling_version=self.config.scalings_version,
+                decimals=self.config.scalings_decimals,
+            )
 
         if "idx" not in arr.fields:
             arr["idx"] = ak.local_index(arr)

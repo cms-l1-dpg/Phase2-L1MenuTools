@@ -894,6 +894,7 @@ def _load_inputs(args) -> tuple[MenuConfig, dict, str]:
         override_version=args.version,
         override_scalings_version=getattr(args, "scalings", None),
         override_sample=getattr(args, "signal", None),
+        truncated=getattr(args, "truncated", False),
     )
     with open(config.menu_config) as f:
         menu = yaml.safe_load(f)
@@ -949,6 +950,7 @@ def resolve_rate_csvs(
             override_version=config.version + suffix,
             override_scalings_version=config._override_scalings_version,
             override_sample=config._override_sample,
+            truncated=config._truncated,
         )
         path = csv_path_for(other)
         if not os.path.exists(path):
@@ -1048,6 +1050,8 @@ def main() -> None:
                      help="render without any CSV (rates shown as --), e.g. to check a new layout")
     inp.add_argument("--scalings", help="same as for rate_table, to pick up the matching CSV")
     inp.add_argument("--signal", help="same as for rate_table, to pick up the matching CSV")
+    inp.add_argument("--truncated", action="store_true",
+                     help="same as for rate_table, to pick up the matching CSV")
 
     new = parser.add_argument_group("new menu")
     new.add_argument("--init", action="store_true",
