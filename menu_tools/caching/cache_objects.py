@@ -1,4 +1,5 @@
 import argparse
+import fnmatch
 import sys
 import glob
 import os
@@ -31,9 +32,17 @@ class ObjectCacher:
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
-        # Get Branches
+        # Get Branches: a list, "all", or a glob on the field names, e.g. "*_final"
         if not isinstance(branches, list):
             self._branches = utils.get_branches(self._ntuple_path, tree, obj)
+            if branches != "all":
+                self._branches = [
+                    b for b in self._branches if fnmatch.fnmatchcase(b, branches)
+                ]
+                if not self._branches:
+                    raise ValueError(
+                        f"No `{obj}` branches match `{branches}` in {self._ntuple_path}"
+                    )
         else:
             self._branches = branches
         self.cache_out_path = f"cache/{version}/"
