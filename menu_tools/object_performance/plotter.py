@@ -300,8 +300,71 @@ class EfficiencyPlotter(Plotter):
             os.path.join(self._outdir_distributions, f"{plot_fname}.pdf"),
             bbox_inches="tight",
         )
+        self._save_raw_counts_json(
+            os.path.join(self._outdir_distributions, f"{plot_fname}.json")
+        )
+
+        # Save config
+        with open(
+            os.path.join(self._outdir_distributions, f"{plot_fname}.yaml"), "w"
+        ) as f:
+            yaml.dump(
+                {self.plot_name: self.cfg.config_dict}, f, default_flow_style=False
+            )
 
         plt.close()
+
+    def _save_raw_counts_json(self, file_name):
+        """
+        Saves the histograms behind the raw counts plot, so they can be
+        compared and replotted without rerunning, as _save_json does for the
+        turn-on curves. Each test object has its counts and, under
+        "ref:<object>", the counts of the reference object it was matched to.
+        Errors are sqrt(N).
+        """
+        edges = self.turnon_collection.bins
+        centers = 0.5 * (edges[1:] + edges[:-1])
+        try:
+            ref_label = self.cfg.reference_label
+        except KeyError:
+            ref_label = "reference object"
+
+        plot: dict[str, Any] = {
+            "xlabel": self.cfg.xlabel,
+            "ylabel": "Counts",
+            "watermark": f"{self.version}_{self.plot_name}_{self.threshold}_dist",
+        }
+
+        for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
+            if obj_key == "ref":
+                continue
+            obj = Object(obj_key, version=self.version)
+            counts = np.asarray(gen_hist_trig[0])
+            plot[obj_key] = {
+                "label": obj.plot_label,
+                "counts": counts.tolist(),
+                "counts_err": np.sqrt(counts).tolist(),
+                "xbins": centers.tolist(),
+                "bin_edges": np.asarray(edges).tolist(),
+                "reference": False,
+            }
+
+            ref_hist = self.turnon_collection.hists["ref"].get(obj_key)
+            if ref_hist is None:
+                continue
+            ref_counts = np.asarray(ref_hist[0])
+            plot[f"ref:{obj_key}"] = {
+                "label": f"{ref_label} (reference for {obj.plot_label})",
+                "counts": ref_counts.tolist(),
+                "counts_err": np.sqrt(ref_counts).tolist(),
+                "xbins": centers.tolist(),
+                "bin_edges": np.asarray(edges).tolist(),
+                "reference": True,
+                "test_object": obj_key,
+            }
+
+        with open(file_name, "w") as outfile:
+            outfile.write(json.dumps(plot, indent=4))
 
     def plot(self):
         self._make_output_dirs(self.version)
