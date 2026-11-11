@@ -16,6 +16,7 @@ variables:
   # when starting a pipeline to validate a different compatible menu Nano.
   JET_NANO_GLOB: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
   MPLBACKEND: "Agg"
+  LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PYTHONUNBUFFERED: "1"
 
@@ -30,9 +31,12 @@ default:
       - .cache/pip/
 
   before_script:
-    - dnf install -q -y python3.11 python3.11-pip
-    - python3.11 -m pip install --upgrade pip
-    - python3.11 -m pip install --editable .
+    # GitLab runs the container as an unprivileged user. Use the Python 3.11
+    # installation from the mounted CERN LCG view to create a local environment.
+    - source "${LCG_VIEW}/setup.sh"
+    - python3.11 -m venv .venv
+    - source .venv/bin/activate
+    - python -m pip install --editable .
 
 cache_menu_objects:
   stage: cache

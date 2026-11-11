@@ -26,9 +26,10 @@ jobs are required.
 
 By default the cache job uses the merged public V44nano TT sample configured
 in `.gitlab-ci.yml`. It runs in CERN's `al8-cms` image, which exposes the
-runner's EOS mount, and installs Python 3.11 as required by MenuTools. To process
-another compatible menu Nano, start a pipeline with `JET_NANO_GLOB` set to one
-mounted file or a filesystem glob, for example:
+runner's EOS mount. The unprivileged job creates a virtual environment using
+Python 3.11 from the mounted CERN LCG view, then installs MenuTools and its
+dependencies there. To process another compatible menu Nano, start a pipeline
+with `JET_NANO_GLOB` set to one mounted file or a filesystem glob, for example:
 
 ```text
 /eos/cms/store/group/example/menu_nano.root
