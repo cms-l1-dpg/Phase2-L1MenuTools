@@ -28,8 +28,9 @@ By default the cache job uses the merged public V44nano TT sample configured
 in `.gitlab-ci.yml`. It reads that file through CERN's internal EOS XRootD
 endpoint using the job's Kerberos ticket. The job runs in CERN's `al8-cms`
 image and creates a virtual environment using Python 3.11 from the mounted CERN
-LCG view, then installs MenuTools and its
-dependencies there. To process another compatible menu Nano, start a pipeline
+LCG view. It then isolates that environment from the LCG Python packages and
+installs the versions pinned by MenuTools; the cache job also installs the
+XRootD Python binding. To process another compatible menu Nano, start a pipeline
 with `JET_NANO_GLOB` set to one remote ROOT URL, one local file, or a local
 filesystem glob, for example:
 

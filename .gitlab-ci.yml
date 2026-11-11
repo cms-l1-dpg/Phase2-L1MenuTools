@@ -36,6 +36,7 @@ default:
     - source "${LCG_VIEW}/setup.sh"
     - python3.11 -m venv .venv
     - source .venv/bin/activate
+    - unset PYTHONPATH
     - python -m pip install --editable .
 
 cache_menu_objects:
@@ -51,7 +52,11 @@ cache_menu_objects:
     - source "${LCG_VIEW}/setup.sh"
     - python3.11 -m venv .venv
     - source .venv/bin/activate
-    - python -m pip install --editable .
+    # Keep the LCG runtime libraries, but do not import its Python packages over
+    # the versions pinned and installed by MenuTools.
+    - unset PYTHONPATH
+    - python -m pip install --editable . "xrootd==6.2.1"
+    - python -c "import pyarrow; assert pyarrow.Codec.is_available('zstd'); print(pyarrow.__file__)"
     - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
     - |
       if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
