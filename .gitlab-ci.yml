@@ -1,8 +1,3 @@
-include:
-  - project: cms-cactus/ops/auto-devops
-    ref: 0.4.1
-    file: templates/upload-eos.yml
-
 workflow:
   rules:
     # Support GitHub pull requests through GitLab's external-repository
@@ -22,7 +17,7 @@ variables:
   # paths when starting a pipeline with different compatible menu Nanos.
   JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
   TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT/*/0000/*.root"
-  PUBLISH_EOS_BASE: "/eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools"
+  PUBLISH_EOS_BASE: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -125,7 +120,6 @@ tau_trigger_turnons:
     - object_performance configs/V44nano/object_performance/tau_trigger.yaml
 
 publish_plots:
-  extends: .auto_devops_upload_eos_template
   image: gitlab-registry.cern.ch/cms-cactus/ops/auto-devops/eos:tag-0.4.10
   stage: publish
   needs:
@@ -140,6 +134,7 @@ publish_plots:
     - job: tau_trigger_turnons
       artifacts: true
   variables:
+    EOS_MGM_URL: "root://eoscms.cern.ch"
     LOCAL_FOLDER: "${CI_PROJECT_DIR}/outputs/V44nano"
     CERNBOX_FOLDER: "${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}/V44nano"
   # Publication is optional and must be requested after the plots are ready.
@@ -154,5 +149,27 @@ publish_plots:
         "pipeline=${CI_PIPELINE_URL}" \
         "jet_input=${JET_NANO_GLOB}" \
         "tau_input=${TAU_NANO_GLOB}" \
+        "eos_endpoint=${EOS_MGM_URL}" \
         "eos_destination=${CERNBOX_FOLDER}" \
         > outputs/V44nano/CI_PROVENANCE.txt
+
+  script:
+    # eos-sync in this image hardcodes EOSUSER; use the EOS client directly
+    # so that the group-area destination is handled by EOSCMS.
+    - |
+      set -euo pipefail
+      if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
+        echo "Configure masked AUTO_DEVOPS_CERNBOX_USER and AUTO_DEVOPS_CERNBOX_PASS CI/CD variables."
+        exit 1
+      fi
+      printf '%s\n' "${AUTO_DEVOPS_CERNBOX_PASS}" | kinit "${AUTO_DEVOPS_CERNBOX_USER}@CERN.CH"
+      trap 'kdestroy' EXIT
+      echo "Publishing plots to ${EOS_MGM_URL}${CERNBOX_FOLDER}/"
+      cd "${LOCAL_FOLDER}"
+      eos mkdir -p "${CERNBOX_FOLDER}"
+      find . -type f -print0 | while IFS= read -r -d '' file; do
+        relative_path="${file#./}"
+        destination="${CERNBOX_FOLDER}/${relative_path}"
+        eos mkdir -p "$(dirname "${destination}")"
+        eos cp "${file}" "${destination}"
+      done

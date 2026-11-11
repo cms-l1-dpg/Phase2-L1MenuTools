@@ -30,14 +30,16 @@ job downloads all five artifacts and copies their combined `V44nano` output,
 together with CI provenance, to a unique EOS directory under:
 
 ```text
-/eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools/<branch>/pipeline-<id>/
+/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools/<branch>/pipeline-<id>/
 ```
 
 The pipeline ID prevents one run from overwriting another. The publish job uses
-CERN's pinned Auto DevOps EOS template and dedicated image. Its `eos-sync` helper
-authenticates with Kerberos and copies the files individually through the EOS
-client. Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under
-another writable EOS directory. Additional object-performance jobs can reuse
+CERN's pinned Auto DevOps EOS image, authenticates with Kerberos, and copies
+files individually with the EOS client. It sets `EOS_MGM_URL` to
+`root://eoscms.cern.ch` for this group area. The image's `eos-sync` helper
+hardcodes EOSUSER, so the job uses explicit `eos mkdir` and `eos cp` commands.
+Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under another
+writable EOS directory; also override `EOS_MGM_URL` if changing EOS instances. Additional object-performance jobs can reuse
 the cache through the same `needs` dependency when their required branches are
 added to the caching configuration; add their artifact to
 `publish_plots.needs` when it
