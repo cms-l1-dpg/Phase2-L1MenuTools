@@ -25,13 +25,13 @@ from **Build > Pipelines > Run pipeline**. Both jobs are manual. First start
 jobs are required.
 
 By default the cache job uses the merged public V44nano TT sample configured
-in `.gitlab-ci.yml`. The Kubernetes runner does not mount `/eos`, so the job
-stages this file through XRootD before caching it. To process another compatible
-menu Nano, start a pipeline with `JET_NANO_SOURCE` set to its XRootD URL, for
-example:
+in `.gitlab-ci.yml`. It runs in CERN's `al8-cms` image, which exposes the
+runner's EOS mount, and installs Python 3.11 as required by MenuTools. To process
+another compatible menu Nano, start a pipeline with `JET_NANO_GLOB` set to one
+mounted file or a filesystem glob, for example:
 
 ```text
-root://eoscms.cern.ch//eos/cms/store/group/example/menu_nano.root
+/eos/cms/store/group/example/menu_nano.root
 ```
 
 The input must contain the `Events` tree and the branches listed in
