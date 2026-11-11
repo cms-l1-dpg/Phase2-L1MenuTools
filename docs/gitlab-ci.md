@@ -33,9 +33,11 @@ together with CI provenance, to a unique EOS directory under:
 /eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools/<branch>/pipeline-<id>/
 ```
 
-The pipeline ID prevents one run from overwriting another. Override
-`PUBLISH_EOS_BASE` when starting a pipeline to publish under another writable
-EOS directory. Additional object-performance jobs can reuse the cache through
+The pipeline ID prevents one run from overwriting another. The publish job uses
+the runner's mounted `/eos` filesystem after obtaining its Kerberos ticket.
+Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under another
+writable EOS directory. Additional object-performance jobs can reuse the cache
+through
 the same `needs` dependency when their required branches are added to the
 caching configuration; add their artifact to `publish_plots.needs` when it
 should also be published.

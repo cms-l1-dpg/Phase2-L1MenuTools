@@ -157,7 +157,8 @@ publish_plots:
         "tau_input=${TAU_NANO_GLOB}" \
         "eos_destination=${PUBLISH_EOS_DIR}" \
         > outputs/V44nano/CI_PROVENANCE.txt
-    - xrdfs root://eosuser.cern.ch mkdir -p "${PUBLISH_EOS_DIR}"
-    - xrdcp --force --recursive --nopbar outputs/V44nano "root://eosuser.cern.ch/${PUBLISH_EOS_DIR}/"
-    - xrdfs root://eosuser.cern.ch ls -R "${PUBLISH_EOS_DIR}"
+    - test -d /eos/user
+    - mkdir -p "${PUBLISH_EOS_DIR}/V44nano"
+    - cp -R outputs/V44nano/. "${PUBLISH_EOS_DIR}/V44nano/"
+    - find "${PUBLISH_EOS_DIR}" -type f -print
     - echo "Published plots to ${PUBLISH_EOS_DIR}"
