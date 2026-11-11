@@ -137,6 +137,11 @@ publish_plots:
   allow_failure: true
 
   before_script:
+    - source "${LCG_VIEW}/setup.sh"
+    - python3.11 -m venv .venv
+    - source .venv/bin/activate
+    - unset PYTHONPATH
+    - python -m pip install "xrootd==6.2.1"
     - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
     - |
       if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
@@ -157,8 +162,5 @@ publish_plots:
         "tau_input=${TAU_NANO_GLOB}" \
         "eos_destination=${PUBLISH_EOS_DIR}" \
         > outputs/V44nano/CI_PROVENANCE.txt
-    - test -d /eos/user
-    - mkdir -p "${PUBLISH_EOS_DIR}/V44nano"
-    - cp -R outputs/V44nano/. "${PUBLISH_EOS_DIR}/V44nano/"
-    - find "${PUBLISH_EOS_DIR}" -type f -print
-    - echo "Published plots to ${PUBLISH_EOS_DIR}"
+    - .venv/bin/python ci/publish_to_eos.py outputs/V44nano "${PUBLISH_EOS_DIR}/V44nano"
+    - echo "Published plots to root://eosuser.cern.ch/${PUBLISH_EOS_DIR}"
