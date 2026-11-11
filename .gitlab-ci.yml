@@ -10,12 +10,14 @@ workflow:
 stages:
   - cache
   - object-performance
+  - publish
 
 variables:
   # These public group-area samples are the V44nano baseline. Override the
   # paths when starting a pipeline with different compatible menu Nanos.
   JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
   TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT/*/0000/*.root"
+  PUBLISH_EOS_BASE: "/eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -118,3 +120,44 @@ tau_trigger_turnons:
   extends: .object_performance
   script:
     - object_performance configs/V44nano/object_performance/tau_trigger.yaml
+
+publish_plots:
+  stage: publish
+  needs:
+    - job: jet_matching_efficiency
+      artifacts: true
+    - job: jet_trigger_turnons
+      artifacts: true
+    - job: event_sum_turnons
+      artifacts: true
+    - job: tau_matching_efficiency
+      artifacts: true
+    - job: tau_trigger_turnons
+      artifacts: true
+  allow_failure: false
+
+  before_script:
+    - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+    - |
+      if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
+        echo "Configure masked AUTO_DEVOPS_CERNBOX_USER and AUTO_DEVOPS_CERNBOX_PASS CI/CD variables."
+        exit 1
+      fi
+    - printf '%s\n' "${AUTO_DEVOPS_CERNBOX_PASS}" | kinit "${AUTO_DEVOPS_CERNBOX_USER}@CERN.CH"
+    - klist
+
+  script:
+    - export PUBLISH_EOS_DIR="${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}"
+    - |
+      printf '%s\n' \
+        "project=${CI_PROJECT_PATH}" \
+        "commit=${CI_COMMIT_SHA}" \
+        "pipeline=${CI_PIPELINE_URL}" \
+        "jet_input=${JET_NANO_GLOB}" \
+        "tau_input=${TAU_NANO_GLOB}" \
+        "eos_destination=${PUBLISH_EOS_DIR}" \
+        > outputs/V44nano/CI_PROVENANCE.txt
+    - xrdfs root://eosuser.cern.ch mkdir -p "${PUBLISH_EOS_DIR}"
+    - xrdcp --force --recursive --nopbar outputs/V44nano "root://eosuser.cern.ch/${PUBLISH_EOS_DIR}/"
+    - xrdfs root://eosuser.cern.ch ls -R "${PUBLISH_EOS_DIR}"
+    - echo "Published plots to ${PUBLISH_EOS_DIR}"

@@ -20,15 +20,26 @@ artifact:
 - `tau_trigger_turnons`: PUPPI and calorimeter tau trigger turn-ons.
 
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
-an artifact. Additional object-performance jobs can reuse the cache through the
-same `needs` dependency when their required branches are added to the caching
-configuration.
+an artifact. The final `publish_plots` job downloads all five artifacts and
+copies their combined `V44nano` output, together with CI provenance, to a unique
+EOS directory under:
+
+```text
+/eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools/<branch>/pipeline-<id>/
+```
+
+The pipeline ID prevents one run from overwriting another. Override
+`PUBLISH_EOS_BASE` when starting a pipeline to publish under another writable
+EOS directory. Additional object-performance jobs can reuse the cache through
+the same `needs` dependency when their required branches are added to the
+caching configuration; add their artifact to `publish_plots.needs` when it
+should also be published.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
 from **Build > Pipelines > Run pipeline**. Start the manual
-`cache_menu_objects` job; after it succeeds, all dependent plotting jobs start
-automatically.
+`cache_menu_objects` job; after it succeeds, all dependent plotting jobs and
+then the final publication job run automatically.
 
 By default the cache job uses the public V44nano TT and VBF tau samples
 configured in `.gitlab-ci.yml`. It reads them through CERN's internal EOS XRootD
@@ -51,7 +62,8 @@ V44nano table names and object definitions.
 The cache job needs two masked GitLab CI/CD variables, using a CERN account that
 can read the inputs: `AUTO_DEVOPS_CERNBOX_USER` (without `@CERN.CH`) and
 `AUTO_DEVOPS_CERNBOX_PASS`. These are the same variable names used by the
-calibration CI. The plotting jobs do not use these credentials.
+calibration CI. The plotting jobs do not use these credentials. The account
+must also have write permission on `PUBLISH_EOS_BASE` for publication.
 
 The Parquet cache and plot artifacts are retained for 14 days. The repository
 ignores the local `cache` directory; it must remain ordinary job-local storage
