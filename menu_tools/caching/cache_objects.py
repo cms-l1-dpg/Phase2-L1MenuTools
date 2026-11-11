@@ -59,7 +59,7 @@ class ObjectCacher:
 
         with open(self._cfg_file, "r") as f:
             cfg = yaml.safe_load(f)[self._version][self._sample]
-        return cfg["ntuple_path"]
+        return os.path.expandvars(cfg["ntuple_path"])
 
     def _p4_sum(self, array, axis=-1):
         """
@@ -257,6 +257,10 @@ class ObjectCacher:
     @utils.timer("Loading objects files")
     def _concat_array_from_ntuples(self):
         fnames = glob.glob(self._ntuple_path)[:]
+        if not fnames:
+            raise FileNotFoundError(
+                f"No ROOT files match configured input: {self._ntuple_path}"
+            )
 
         ## Nano
         if self._tree == "Events":
