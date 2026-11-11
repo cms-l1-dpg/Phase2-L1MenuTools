@@ -361,6 +361,7 @@ class ScalingPlotter(Plotter):
         scaling_pct: float,
         version: str,
         params: dict[str, np.ndarray],
+        pu_value: int = 200,
     ):
         self.plot_name = plot_name
         self.cfg_plot = cfg_plot
@@ -368,6 +369,7 @@ class ScalingPlotter(Plotter):
         self.params = params
         self.version = version
         self.scaling_pct = scaling_pct
+        self.pu_value = pu_value
 
     def _params_to_func_str(self, obj_key: str):
         a = round(self.params[obj_key][0], 3)
