@@ -14,7 +14,7 @@ stages:
 variables:
   # This public group-area sample is the V44nano baseline. Override the path
   # when starting a pipeline to validate a different compatible menu Nano.
-  JET_NANO_GLOB: "root://cms-xrd-global.cern.ch//store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
+  JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -45,9 +45,25 @@ cache_menu_objects:
   allow_failure: false
   timeout: 2h
 
+  before_script:
+    # Repeat the common Python setup because this job also needs an authenticated
+    # CERN EOS session; object-performance jobs only consume artifacts.
+    - source "${LCG_VIEW}/setup.sh"
+    - python3.11 -m venv .venv
+    - source .venv/bin/activate
+    - python -m pip install --editable .
+    - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
+    - |
+      if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
+        echo "Configure masked AUTO_DEVOPS_CERNBOX_USER and AUTO_DEVOPS_CERNBOX_PASS CI/CD variables."
+        exit 1
+      fi
+    - printf '%s\n' "${AUTO_DEVOPS_CERNBOX_PASS}" | kinit "${AUTO_DEVOPS_CERNBOX_USER}@CERN.CH"
+    - klist
+
   script:
-    # Read the public Nano through the CMS global XRootD redirector. Local
-    # filesystem paths and globs remain supported for interactive use.
+    # Read through CERN's internal EOS endpoint. Local filesystem paths and
+    # globs remain supported for interactive use.
     - echo "Reading menu Nano input from ${JET_NANO_GLOB}"
     - cache_objects configs/ci/jets_caching.yaml
     - find cache/V44nano -type f -print
