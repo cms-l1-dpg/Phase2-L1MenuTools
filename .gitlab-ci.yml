@@ -12,9 +12,10 @@ stages:
   - object-performance
 
 variables:
-  # This public group-area sample is the V44nano baseline. Override the path
-  # when starting a pipeline to validate a different compatible menu Nano.
+  # These public group-area samples are the V44nano baseline. Override the
+  # paths when starting a pipeline with different compatible menu Nanos.
   JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
+  TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT/*/0000/*.root"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -55,7 +56,7 @@ cache_menu_objects:
     # Keep the LCG runtime libraries, but do not import its Python packages over
     # the versions pinned and installed by MenuTools.
     - unset PYTHONPATH
-    - python -m pip install --editable . "xrootd==6.2.1"
+    - python -m pip install --editable . "xrootd==6.2.1" "fsspec-xrootd==0.2.4"
     - python -c "import pyarrow; assert pyarrow.Codec.is_available('zstd'); print(pyarrow.__file__)"
     - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
     - |
@@ -69,8 +70,9 @@ cache_menu_objects:
   script:
     # Read through CERN's internal EOS endpoint. Local filesystem paths and
     # globs remain supported for interactive use.
-    - echo "Reading menu Nano input from ${JET_NANO_GLOB}"
-    - cache_objects configs/ci/jets_caching.yaml
+    - echo "Reading jet and event-sum input from ${JET_NANO_GLOB}"
+    - echo "Reading tau input from ${TAU_NANO_GLOB}"
+    - cache_objects configs/ci/pf_performance_caching.yaml
     - find cache/V44nano -type f -print
 
   # Object-performance jobs in the next stage reuse this columnar cache.
@@ -79,19 +81,40 @@ cache_menu_objects:
     paths:
       - cache/V44nano/
 
-jet_matching_efficiency:
+.object_performance:
   stage: object-performance
   needs:
     - job: cache_menu_objects
       artifacts: true
   allow_failure: false
-
-  script:
-    - object_performance configs/V44nano/object_performance/jets_matching.yaml
-    - find outputs/V44nano/object_performance -type f -print
-
   artifacts:
     when: always
     expire_in: 14 days
     paths:
       - outputs/V44nano/object_performance/
+
+jet_matching_efficiency:
+  extends: .object_performance
+  script:
+    - object_performance configs/V44nano/object_performance/jets_matching.yaml
+
+jet_trigger_turnons:
+  extends: .object_performance
+  script:
+    - object_performance configs/V44nano/object_performance/jets_trigger.yaml
+    - object_performance configs/V44nano/object_performance/jets_sc8_trigger.yaml
+
+event_sum_turnons:
+  extends: .object_performance
+  script:
+    - object_performance configs/V44nano/object_performance/met_ht_mht.yaml
+
+tau_matching_efficiency:
+  extends: .object_performance
+  script:
+    - object_performance configs/V44nano/object_performance/tau_matching.yaml
+
+tau_trigger_turnons:
+  extends: .object_performance
+  script:
+    - object_performance configs/V44nano/object_performance/tau_trigger.yaml

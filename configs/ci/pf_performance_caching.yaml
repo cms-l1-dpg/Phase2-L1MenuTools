@@ -1,0 +1,32 @@
+V44nano:
+  TT:
+    # Each CI variable can name one remote ROOT file, one local ROOT file, or a
+    # local/remote filesystem glob.
+    ntuple_path: ${JET_NANO_GLOB}
+    trees_branches:
+      Events:
+        GenJet: [pt, eta, phi]
+        GenJetAK8: [pt, eta, phi]
+        GenMET: [pt]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        L1TrackJet: [pt, eta, phi]
+        L1puppiMET: [pt]
+        L1puppiMLMET: [pt]
+        # Retain phi so the cacher creates the HT/MHT sum-type index.
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+
+  VBFHToTauTau:
+    ntuple_path: ${TAU_NANO_GLOB}
+    trees_branches:
+      Events:
+        GenVisTau: [pt, eta, phi]
+        L1nnPuppiTau: [pt, eta, phi, chargedIso]
+        L1hpsTau: [pt, eta, phi]
+        L1caloTau: [pt, eta, phi]
+        L1nnCaloTau: [pt, eta, phi, hwQual]
