@@ -34,12 +34,13 @@ together with CI provenance, to a unique EOS directory under:
 ```
 
 The pipeline ID prevents one run from overwriting another. The publish job uses
-the XRootD Python client with its Kerberos ticket, independently of the runner's
-mounted `/eos` identity. Override `PUBLISH_EOS_BASE` when starting a pipeline to
-publish under another writable EOS directory. Additional object-performance
-jobs can reuse the cache through the same `needs` dependency when their required
-branches are added to the
-caching configuration; add their artifact to `publish_plots.needs` when it
+CERN's pinned Auto DevOps EOS template and dedicated image. Its `eos-sync` helper
+authenticates with Kerberos and copies the files individually through the EOS
+client. Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under
+another writable EOS directory. Additional object-performance jobs can reuse
+the cache through the same `needs` dependency when their required branches are
+added to the caching configuration; add their artifact to
+`publish_plots.needs` when it
 should also be published.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using

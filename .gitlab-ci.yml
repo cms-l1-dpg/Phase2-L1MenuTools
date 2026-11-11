@@ -1,3 +1,8 @@
+include:
+  - project: cms-cactus/ops/auto-devops
+    ref: 0.4.1
+    file: templates/upload-eos.yml
+
 workflow:
   rules:
     # Support GitHub pull requests through GitLab's external-repository
@@ -120,6 +125,8 @@ tau_trigger_turnons:
     - object_performance configs/V44nano/object_performance/tau_trigger.yaml
 
 publish_plots:
+  extends: .auto_devops_upload_eos_template
+  image: gitlab-registry.cern.ch/cms-cactus/ops/auto-devops/eos:tag-0.4.10
   stage: publish
   needs:
     - job: jet_matching_efficiency
@@ -132,27 +139,14 @@ publish_plots:
       artifacts: true
     - job: tau_trigger_turnons
       artifacts: true
+  variables:
+    LOCAL_FOLDER: "${CI_PROJECT_DIR}/outputs/V44nano"
+    CERNBOX_FOLDER: "${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}/V44nano"
   # Publication is optional and must be requested after the plots are ready.
   when: manual
   allow_failure: true
 
   before_script:
-    - source "${LCG_VIEW}/setup.sh"
-    - python3.11 -m venv .venv
-    - source .venv/bin/activate
-    - unset PYTHONPATH
-    - python -m pip install "xrootd==6.2.1"
-    - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
-    - |
-      if [[ -z "${AUTO_DEVOPS_CERNBOX_USER:-}" || -z "${AUTO_DEVOPS_CERNBOX_PASS:-}" ]]; then
-        echo "Configure masked AUTO_DEVOPS_CERNBOX_USER and AUTO_DEVOPS_CERNBOX_PASS CI/CD variables."
-        exit 1
-      fi
-    - printf '%s\n' "${AUTO_DEVOPS_CERNBOX_PASS}" | kinit "${AUTO_DEVOPS_CERNBOX_USER}@CERN.CH"
-    - klist
-
-  script:
-    - export PUBLISH_EOS_DIR="${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}"
     - |
       printf '%s\n' \
         "project=${CI_PROJECT_PATH}" \
@@ -160,7 +154,5 @@ publish_plots:
         "pipeline=${CI_PIPELINE_URL}" \
         "jet_input=${JET_NANO_GLOB}" \
         "tau_input=${TAU_NANO_GLOB}" \
-        "eos_destination=${PUBLISH_EOS_DIR}" \
+        "eos_destination=${CERNBOX_FOLDER}" \
         > outputs/V44nano/CI_PROVENANCE.txt
-    - .venv/bin/python ci/publish_to_eos.py outputs/V44nano "${PUBLISH_EOS_DIR}/V44nano"
-    - echo "Published plots to root://eosuser.cern.ch/${PUBLISH_EOS_DIR}"
