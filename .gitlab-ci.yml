@@ -40,6 +40,10 @@ jet_matching_efficiency:
 
   script:
     - echo "Reading jet Nano input from ${JET_NANO_GLOB}"
+    # The repository cache path is a convenience symlink to a user-managed EOS
+    # area. Replace it with job-local storage, which is writable by the runner.
+    - rm cache
+    - mkdir cache
     - cache_objects configs/ci/jets_caching.yaml
     - object_performance configs/V44nano/object_performance/jets_matching.yaml
     - find outputs/V44nano/object_performance -type f -print
