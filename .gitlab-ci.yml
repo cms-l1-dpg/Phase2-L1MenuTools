@@ -14,7 +14,7 @@ stages:
 variables:
   # This public group-area sample is the V44nano baseline. Override the path
   # when starting a pipeline to validate a different compatible menu Nano.
-  JET_NANO_GLOB: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
+  JET_NANO_GLOB: "root://cms-xrd-global.cern.ch//store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -46,8 +46,8 @@ cache_menu_objects:
   timeout: 2h
 
   script:
-    # This CERN CMS image exposes the runner's EOS mount. The caching tool can
-    # therefore retain its normal local filesystem glob interface.
+    # Read the public Nano through the CMS global XRootD redirector. Local
+    # filesystem paths and globs remain supported for interactive use.
     - echo "Reading menu Nano input from ${JET_NANO_GLOB}"
     - cache_objects configs/ci/jets_caching.yaml
     - find cache/V44nano -type f -print

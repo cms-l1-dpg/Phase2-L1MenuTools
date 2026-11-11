@@ -25,14 +25,15 @@ from **Build > Pipelines > Run pipeline**. Both jobs are manual. First start
 jobs are required.
 
 By default the cache job uses the merged public V44nano TT sample configured
-in `.gitlab-ci.yml`. It runs in CERN's `al8-cms` image, which exposes the
-runner's EOS mount. The unprivileged job creates a virtual environment using
-Python 3.11 from the mounted CERN LCG view, then installs MenuTools and its
+in `.gitlab-ci.yml`. It reads that public file through the CMS global XRootD
+redirector. The job runs in CERN's `al8-cms` image and creates a virtual
+environment using Python 3.11 from the mounted CERN LCG view, then installs MenuTools and its
 dependencies there. To process another compatible menu Nano, start a pipeline
-with `JET_NANO_GLOB` set to one mounted file or a filesystem glob, for example:
+with `JET_NANO_GLOB` set to one remote ROOT URL, one local file, or a local
+filesystem glob, for example:
 
 ```text
-/eos/cms/store/group/example/menu_nano.root
+root://cms-xrd-global.cern.ch//store/group/example/menu_nano.root
 ```
 
 The input must contain the `Events` tree and the branches listed in

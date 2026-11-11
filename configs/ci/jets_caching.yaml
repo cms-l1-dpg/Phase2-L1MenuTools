@@ -1,7 +1,7 @@
 V44nano:
   TT:
-    # Set JET_NANO_GLOB in GitLab or in the local shell. It can name one ROOT
-    # file or a filesystem glob containing several files.
+    # Set JET_NANO_GLOB in GitLab or in the local shell. It can name one remote
+    # ROOT file, one local ROOT file, or a local filesystem glob.
     ntuple_path: ${JET_NANO_GLOB}
     trees_branches:
       Events:

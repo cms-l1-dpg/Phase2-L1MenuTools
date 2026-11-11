@@ -256,7 +256,11 @@ class ObjectCacher:
 
     @utils.timer("Loading objects files")
     def _concat_array_from_ntuples(self):
-        fnames = glob.glob(self._ntuple_path)[:]
+        if self._ntuple_path.startswith(("root://", "http://", "https://")):
+            fnames = [self._ntuple_path]
+        else:
+            fnames = glob.glob(self._ntuple_path)[:]
+
         if not fnames:
             raise FileNotFoundError(
                 f"No ROOT files match configured input: {self._ntuple_path}"
