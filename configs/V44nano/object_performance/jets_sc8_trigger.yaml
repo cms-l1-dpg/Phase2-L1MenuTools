@@ -1,3 +1,4 @@
+# Scaling extraction is omitted in CI; only the configured turn-ons are produced.
 JetTurnonBarrelSC8:
   version: V44nano
   sample: TT
@@ -14,9 +15,6 @@ JetTurnonBarrelSC8:
   test_objects:
     L1puppiJetSC8:default:barrel: "pt"
   thresholds: [150]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
   binning:
@@ -40,9 +38,6 @@ JetTurnonEndcapSC8:
   test_objects:
     L1puppiJetSC8:default:endcap: "pt"
   thresholds: [150]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
   binning:
@@ -66,9 +61,6 @@ JetTurnonForwardSC8:
   test_objects:
     L1puppiJetSC8:default:forward: "pt"
   thresholds: [150]
-  scalings:
-    method: "naive"
-    threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
   binning:

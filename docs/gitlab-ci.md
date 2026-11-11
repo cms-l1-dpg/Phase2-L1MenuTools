@@ -20,6 +20,10 @@ artifact:
 - `tau_matching_efficiency`: PUPPI and calorimeter tau matching efficiency.
 - `tau_trigger_turnons`: PUPPI and calorimeter tau trigger turn-ons.
 
+These CI configurations produce only their explicitly listed turn-on thresholds.
+Scaling extraction is disabled because it processes a larger threshold grid and is
+not needed for this validation milestone.
+
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
 an artifact. Once they have all succeeded, the optional manual `publish_plots`
 job downloads all five artifacts and copies their combined `V44nano` output,
