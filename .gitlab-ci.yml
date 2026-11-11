@@ -84,7 +84,6 @@ jet_matching_efficiency:
   needs:
     - job: cache_menu_objects
       artifacts: true
-  when: manual
   allow_failure: false
 
   script:

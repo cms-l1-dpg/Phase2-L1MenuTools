@@ -20,9 +20,9 @@ Nano tables or branches.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
-from **Build > Pipelines > Run pipeline**. Both jobs are manual. First start
-`cache_menu_objects`; after it succeeds, start whichever object-performance
-jobs are required.
+from **Build > Pipelines > Run pipeline**. Start the manual
+`cache_menu_objects` job; after it succeeds, the dependent object-performance
+jobs start automatically using its artifacts.
 
 By default the cache job uses the merged public V44nano TT sample configured
 in `.gitlab-ci.yml`. It reads that file through CERN's internal EOS XRootD
