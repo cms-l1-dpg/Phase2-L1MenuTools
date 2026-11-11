@@ -3,7 +3,8 @@
 The initial menu-validation pipeline separates Nano caching from plotting so
 that several `object_performance` jobs can reuse the same selected columns.
 
-The manual `cache_menu_objects` job reads the TT and VBF $H\to\tau\tau$ menu
+The `cache_menu_objects` job starts automatically and reads the TT and VBF
+$H\to\tau\tau$ menu
 Nanos, caches only the columns listed in
 `configs/ci/pf_performance_caching.yaml`, and uploads `cache/V44nano` as an
 artifact. It supports a single local or remote ROOT file and local or remote
@@ -20,9 +21,9 @@ artifact:
 - `tau_trigger_turnons`: PUPPI and calorimeter tau trigger turn-ons.
 
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
-an artifact. The final `publish_plots` job downloads all five artifacts and
-copies their combined `V44nano` output, together with CI provenance, to a unique
-EOS directory under:
+an artifact. Once they have all succeeded, the optional manual `publish_plots`
+job downloads all five artifacts and copies their combined `V44nano` output,
+together with CI provenance, to a unique EOS directory under:
 
 ```text
 /eos/user/e/ejclemen/TPV/L1TSteamHackathon/MenuTools/<branch>/pipeline-<id>/
@@ -37,9 +38,10 @@ should also be published.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
-from **Build > Pipelines > Run pipeline**. Start the manual
-`cache_menu_objects` job; after it succeeds, all dependent plotting jobs and
-then the final publication job run automatically.
+from **Build > Pipelines > Run pipeline**. Creating the pipeline starts the
+cache job immediately, and all dependent plotting jobs follow automatically.
+Trigger `publish_plots` manually when the complete plot set should be copied to
+EOS; leaving it untriggered does not make the pipeline fail.
 
 By default the cache job uses the public V44nano TT and VBF tau samples
 configured in `.gitlab-ci.yml`. It reads them through CERN's internal EOS XRootD

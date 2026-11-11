@@ -44,8 +44,6 @@ default:
 
 cache_menu_objects:
   stage: cache
-  # Reading all selected Nano branches is expensive, so start this job explicitly.
-  when: manual
   allow_failure: false
   timeout: 2h
 
@@ -134,7 +132,9 @@ publish_plots:
       artifacts: true
     - job: tau_trigger_turnons
       artifacts: true
-  allow_failure: false
+  # Publication is optional and must be requested after the plots are ready.
+  when: manual
+  allow_failure: true
 
   before_script:
     - source /cvmfs/grid.cern.ch/etc/profile.d/setup-cvmfs-ui.sh
