@@ -12,9 +12,10 @@ stages:
   - object-performance
 
 variables:
-  # This public group-area sample is the V44nano baseline. Override the variable
-  # when starting a pipeline to validate a different compatible menu Nano.
-  JET_NANO_GLOB: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/*/0000/*.root"
+  # This public group-area sample is the V44nano baseline. Override the source
+  # URL when starting a pipeline to validate a different compatible menu Nano.
+  JET_NANO_SOURCE: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
+  JET_NANO_GLOB: "$CI_PROJECT_DIR/inputs/*.root"
   MPLBACKEND: "Agg"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PYTHONUNBUFFERED: "1"
@@ -38,9 +39,15 @@ cache_menu_objects:
   # Reading all selected Nano branches is expensive, so start this job explicitly.
   when: manual
   allow_failure: false
+  timeout: 2h
 
   script:
-    - echo "Reading menu Nano input from ${JET_NANO_GLOB}"
+    # The Kubernetes runner does not expose /eos as a filesystem mount. Stage the
+    # selected Nano through XRootD, then use the normal local-file cache interface.
+    - source /cvmfs/grid.cern.ch/alma9-ui-test/etc/profile.d/setup-alma9-test.sh
+    - mkdir -p inputs
+    - echo "Staging menu Nano from ${JET_NANO_SOURCE}"
+    - xrdcp --force --nopbar "${JET_NANO_SOURCE}" inputs/menu_nano.root
     - cache_objects configs/ci/jets_caching.yaml
     - find cache/V44nano -type f -print
 
