@@ -8,7 +8,8 @@ workflow:
     - when: never
 
 stages:
-  - jet-performance
+  - cache
+  - object-performance
 
 variables:
   # This public group-area sample is the V44nano baseline. Override the variable
@@ -18,16 +19,10 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PYTHONUNBUFFERED: "1"
 
-jet_matching_efficiency:
-  stage: jet-performance
+default:
   image: python:3.11-slim
   tags: [k8s-cvmfs]
   interruptible: true
-
-  # One manual action runs both the Nano-to-Parquet caching and plotting steps.
-  # Keeping them in one job avoids transferring large Parquet files as artifacts.
-  when: manual
-  allow_failure: false
 
   cache:
     key: "python-3.11-${CI_PROJECT_NAME}"
@@ -38,13 +33,32 @@ jet_matching_efficiency:
     - python -m pip install --upgrade pip
     - python -m pip install --editable .
 
+cache_menu_objects:
+  stage: cache
+  # Reading all selected Nano branches is expensive, so start this job explicitly.
+  when: manual
+  allow_failure: false
+
   script:
-    - echo "Reading jet Nano input from ${JET_NANO_GLOB}"
-    # The repository cache path is a convenience symlink to a user-managed EOS
-    # area. Replace it with job-local storage, which is writable by the runner.
-    - rm cache
-    - mkdir cache
+    - echo "Reading menu Nano input from ${JET_NANO_GLOB}"
     - cache_objects configs/ci/jets_caching.yaml
+    - find cache/V44nano -type f -print
+
+  # Object-performance jobs in the next stage reuse this columnar cache.
+  artifacts:
+    expire_in: 14 days
+    paths:
+      - cache/V44nano/
+
+jet_matching_efficiency:
+  stage: object-performance
+  needs:
+    - job: cache_menu_objects
+      artifacts: true
+  when: manual
+  allow_failure: false
+
+  script:
     - object_performance configs/V44nano/object_performance/jets_matching.yaml
     - find outputs/V44nano/object_performance -type f -print
 

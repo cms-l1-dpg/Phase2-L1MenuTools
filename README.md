@@ -37,3 +37,10 @@
   rate_plots <path_to_config>
   rate_table <path_to_config>
   ```
+
+## GitLab CI
+
+The initial GitLab workflow caches the jet objects from a standard menu Nano
+and produces the existing jet matching-efficiency plots. See
+[`docs/gitlab-ci.md`](docs/gitlab-ci.md) for the input variable, artifacts and
+local equivalent commands.
