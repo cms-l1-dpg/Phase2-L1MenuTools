@@ -92,6 +92,7 @@ class TurnOnCollection:
         self.ak_arrays: dict[str, Any] = {}
         self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
         self.hists: dict[str, Any] = {"ref": {}}
+        self._prepared = False
 
     @property
     def test_objects(self) -> list[tuple[Object, str]]:
@@ -368,14 +369,23 @@ class TurnOnCollection:
         self._apply_reference_cuts()
         self._apply_reference_trafo()
 
-    def create_hists(self):
+    def prepare(self) -> None:
+        """Load, select, and match arrays independently of the L1 threshold."""
+        if self._prepared:
+            return
+
         self._load_arrays()
         self._apply_cuts()
+        if self.cfg_plot.matching:
+            self._match_test_to_ref()
+        self._prepared = True
+
+    def create_hists(self):
+        self.prepare()
+        self.hists = {"ref": {}}
         if not self.cfg_plot.matching:
             self._skim_to_hists()
+        elif self.cfg_plot.iso_vs_eff_plot:
+            self._skim_to_hists_dR_matched_Iso()
         else:
-            self._match_test_to_ref()
-            if self.cfg_plot.iso_vs_eff_plot:
-                self._skim_to_hists_dR_matched_Iso()
-            else:
-                self._skim_to_hists_dR_matched()
+            self._skim_to_hists_dR_matched()

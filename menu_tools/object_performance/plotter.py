@@ -343,9 +343,11 @@ class EfficiencyCentral:
         plotting.
         """
         for plot_name, cfg_plot in self.cfg_plots.items():
-            for threshold in self.get_thresholds(cfg_plot):
+            thresholds = self.get_thresholds(cfg_plot)
+            turnon_collection = TurnOnCollection(cfg_plot, thresholds[0], plot_name)
+            for threshold in thresholds:
                 print(f">>> Turn On {plot_name} ({threshold} GeV) <<<")
-                turnon_collection = TurnOnCollection(cfg_plot, threshold, plot_name)
+                turnon_collection.threshold = threshold
                 turnon_collection.create_hists()
 
                 plotter = EfficiencyPlotter(plot_name, cfg_plot, turnon_collection)
@@ -525,6 +527,7 @@ class ScalingCentral:
 
             scalings = {}
             scaling_function_params = {}
+            turnon_collection = TurnOnCollection(cfg_plot, 0, plot_name)
 
             pbar = tqdm(total=len(plot_config.test_object_instances), desc="Objects")
             for test_obj in plot_config.test_object_instances:
@@ -533,7 +536,7 @@ class ScalingCentral:
                 scalings[str(test_obj)] = {}
                 thds = self._get_scaling_thresholds(cfg_plot, test_obj)
                 for threshold in tqdm(thds, leave=False, desc="Thresholds"):
-                    turnon_collection = TurnOnCollection(cfg_plot, threshold)
+                    turnon_collection.threshold = threshold
                     turnon_collection.create_hists()
                     scaling_pct = turnon_collection.cfg_plot.scaling_pct
                     method = turnon_collection.cfg_plot.scaling_method
