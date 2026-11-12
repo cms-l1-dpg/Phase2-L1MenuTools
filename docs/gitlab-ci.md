@@ -1,25 +1,29 @@
 # GitLab CI object-performance workflow
 
 The menu-validation pipeline separates Nano caching from plotting so several
-`object_performance` jobs can reuse the same selected columns. It runs matching
-efficiency and trigger turn-on plots only; no rate jobs are included.
+jobs can reuse the same selected columns. It runs matching efficiencies, trigger
+turn-ons, and per-object rate curves. A combined menu rate table is not part of
+this workflow.
 
 ## Sample-specific caches
 
-Four cache jobs start independently:
+Five cache jobs start independently:
 
 - `cache_jet_objects`: TT input for jets, MET, HT, and MHT.
 - `cache_tau_objects`: VBF $H\to\tau\tau$ input for taus.
 - `cache_dy_objects`: DY input shared by electrons and muons.
 - `cache_photon_objects`: $H\to\gamma\gamma$ input for photons.
+- `cache_minbias_objects`: unbiased 200-PU input shared by all rate plots.
 
 Each job caches only its sample and uploads its part of `cache/V50nano_170` as
-an artifact. DY and photon caching also runs the standard barrel/endcap L1 EG
-merge required by the V50 object definitions.
+an artifact. DY, photon, and MinBias caching also run the standard
+barrel/endcap L1 EG merge required by the V50 object definitions.
 
-The input variables are `JET_NANO_GLOB`, `TAU_NANO_GLOB`, `DY_NANO_GLOB`, and
-`PHOTON_NANO_GLOB`. Each can contain one local or remote ROOT file or a local or
-remote filesystem glob. Public V50-compatible samples are the defaults.
+The input variables are `JET_NANO_GLOB`, `TAU_NANO_GLOB`, `DY_NANO_GLOB`,
+`PHOTON_NANO_GLOB`, and `MINBIAS_NANO_GLOB`. Each can contain one local or
+remote ROOT file or a local or remote filesystem glob. Public V50-compatible
+samples are the defaults. Absolute rates require the MinBias sample; signal
+samples are used only for efficiencies and online-to-offline scalings.
 
 A sample is optional. If its variable is empty or its glob matches no files, its
 cache job exits successfully without an availability marker, and the dependent
@@ -50,12 +54,33 @@ not part of this initial CI set.
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
 an artifact. Scaling YAML files are prefixed with the CI job name before upload,
 so electron and photon L1 EG scalings cannot overwrite one another when artifacts
-are combined. Cache and plotting jobs are allowed to fail at pipeline level: the
+are combined. Cache, plotting, and rate jobs are allowed to fail at pipeline level: the
 failed job remains visible as a warning, while independent samples continue and
 the pipeline can complete. Artifacts use `when: always`, so partial output from a
 failed plot job is retained as well.
 
-The optional manual `publish_plots` job waits for all plotting jobs, downloads
+## Rate plots
+
+One MinBias cache feeds five independent jobs:
+
+- `jet_rates` for seeded-cone, calorimeter, tracker, and wide-cone jets.
+- `event_sum_rates` for PUPPI/track MET, HT, and MHT.
+- `tau_rates`, `eg_rates`, and `muon_rates`.
+
+Each job writes online-threshold rate curves. It also restores the canonical
+scaling YAML names from the corresponding turn-on artifact and writes
+offline-threshold curves for objects with an available scaling. Missing signal
+inputs therefore remove only the affected offline curves; a readable MinBias
+input is sufficient for the online curves. For the shared `L1EG` collection,
+the EG rate job deliberately gives the electron-derived scaling precedence over
+the photon-derived scaling.
+
+Rates use the repository convention of 2760 colliding bunches and an 11,246 Hz
+revolution frequency, or about 31.04 MHz before the measured MinBias acceptance.
+The MinBias Nano must represent the same release, configuration, and pileup
+scenario as the objects being compared.
+
+The optional manual `publish_plots` job waits for all analysis jobs, downloads
 whatever artifacts they produced, and copies the combined `V50nano_170` output,
 together with CI provenance, to a unique EOS directory under:
 
@@ -74,8 +99,9 @@ override `EOS_MGM_URL` if changing EOS instances.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
-from **Build > Pipelines > Run pipeline**. Creating the pipeline starts all four
-cache jobs immediately, and their dependent plotting jobs follow automatically.
+from **Build > Pipelines > Run pipeline**. Creating the pipeline starts all five
+cache jobs immediately, and their dependent plotting and rate jobs follow
+automatically.
 Trigger `publish_plots` manually when the available plot set should be copied to
 EOS; leaving it untriggered does not make the pipeline fail.
 
@@ -133,4 +159,15 @@ cache_objects configs/ci/pf_performance_caching.yaml --sample Hgg
 python menu_tools/caching/merge_arrays.py --version V50nano_170 --sample Hgg
 object_performance configs/V50nano/object_performance/photons_matching.yaml --version V50nano_170
 object_performance configs/V50nano/object_performance/photons_trigger.yaml --version V50nano_170
+
+export MINBIAS_NANO_GLOB='/absolute/path/to/minbias_menu_nano.root'
+cache_objects configs/ci/pf_performance_caching.yaml --sample MinBias
+python menu_tools/caching/merge_arrays.py --version V50nano_170 --sample MinBias
+rate_plots configs/V50nano/rate_plots/jets.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/jets_sc8.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/met.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/ht.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/taus.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/eg.yaml --version V50nano_170
+rate_plots configs/V50nano/rate_plots/muons.yaml --version V50nano_170
 ```

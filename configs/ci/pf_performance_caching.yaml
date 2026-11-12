@@ -1,4 +1,32 @@
 V50nano_170:
+  MinBias:
+    # One unbiased sample supplies every per-object rate plot. Keep only the
+    # fields used by those configurations.
+    ntuple_path: ${MINBIAS_NANO_GLOB}
+    trees_branches:
+      Events:
+        L1EGbarrel: [pt, eta, phi, eleId, saId]
+        L1EGendcap: [pt, eta, phi, eleId, saId]
+        L1tkElectron: [pt, eta, phi, eleId, relIso]
+        L1tkPhoton: [pt, eta, phi, phoId, relIso]
+        L1gmtMuon: [pt, eta, phi, hwQual]
+        L1gmtTkMuon: [pt, eta, phi, hwQual]
+        L1nnPuppiTau: [pt, eta, phi, chargedIso]
+        L1caloTau: [pt, eta, phi]
+        L1nnCaloTau: [pt, eta, phi, hwQual]
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1caloJet: [pt, eta, phi]
+        L1TrackJet: [pt, eta, phi]
+        L1puppiMET: [pt]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1ExtTrackHT: [ht]
+
   Hgg:
     # Each CI variable can name one remote ROOT file, one local ROOT file, or a
     # local/remote filesystem glob.
