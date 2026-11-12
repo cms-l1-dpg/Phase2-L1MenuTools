@@ -6,12 +6,12 @@ import os
 import time
 
 import awkward as ak
-import fsspec
 from tqdm import tqdm
 import uproot
 import vector
 import yaml
 
+from menu_tools.caching.input_files import resolve_input_files
 from menu_tools.utils import utils
 
 
@@ -268,17 +268,7 @@ class ObjectCacher:
 
     @utils.timer("Loading objects files")
     def _concat_array_from_ntuples(self):
-        if self._ntuple_path.startswith(("root://", "http://", "https://")):
-            if glob.has_magic(self._ntuple_path):
-                filesystem, path = fsspec.core.url_to_fs(self._ntuple_path)
-                fnames = [
-                    filesystem.unstrip_protocol(match)
-                    for match in sorted(filesystem.glob(path))
-                ]
-            else:
-                fnames = [self._ntuple_path]
-        else:
-            fnames = glob.glob(self._ntuple_path)[:]
+        fnames = resolve_input_files(self._ntuple_path)
 
         if not fnames:
             raise FileNotFoundError(
@@ -387,6 +377,12 @@ def parse_args():
         action="store_true",
         help="Only do print-out of objects and branches to be loaded.",
     )
+    parser.add_argument(
+        "--sample",
+        dest="samples",
+        action="append",
+        help="Cache only this sample. May be specified more than once.",
+    )
     args = parser.parse_args()
     return args
 
@@ -400,9 +396,22 @@ def main():
     args = parse_args()
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
+
+    requested_samples = set(args.samples or [])
+    available_samples = {
+        sample for samples in cfg.values() for sample in samples.keys()
+    }
+    unknown_samples = requested_samples - available_samples
+    if unknown_samples:
+        raise ValueError(
+            "Unknown sample(s) for " f"{args.cfg}: {', '.join(sorted(unknown_samples))}"
+        )
+
     for version, samples in cfg.items():
         print("Processing: version", version)
         for sample, sample_cfg in samples.items():
+            if requested_samples and sample not in requested_samples:
+                continue
             print("\tSample:", sample)
             for tree, object_branches in sample_cfg["trees_branches"].items():
                 if tree == "ntuple_path":

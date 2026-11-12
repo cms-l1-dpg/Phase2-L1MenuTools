@@ -1,7 +1,27 @@
 V50nano_170:
-  TT:
+  Hgg:
     # Each CI variable can name one remote ROOT file, one local ROOT file, or a
     # local/remote filesystem glob.
+    ntuple_path: ${PHOTON_NANO_GLOB}
+    trees_branches:
+      Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        L1EGbarrel: [pt, eta, phi, eleId, saId]
+        L1EGendcap: [pt, eta, phi, eleId, saId]
+        L1tkPhoton: [pt, eta, phi, phoId, relIso]
+
+  DYLL_M50:
+    ntuple_path: ${DY_NANO_GLOB}
+    trees_branches:
+      Events:
+        GenPart: [pt, eta, phi, pdgId, statusFlags]
+        L1EGbarrel: [pt, eta, phi, eleId, saId]
+        L1EGendcap: [pt, eta, phi, eleId, saId]
+        L1tkElectron: [pt, eta, phi, eleId, relIso]
+        L1gmtMuon: [pt, eta, phi, hwQual]
+        L1gmtTkMuon: [pt, eta, phi, hwQual]
+
+  TT:
     ntuple_path: ${JET_NANO_GLOB}
     trees_branches:
       Events:

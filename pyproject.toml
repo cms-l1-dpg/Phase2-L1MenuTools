@@ -45,6 +45,7 @@ pytest = "7.4.3"
 
 [tool.poetry.scripts]
 cache_objects = "menu_tools.caching.cache_objects:main"
+check_input_files = "menu_tools.caching.input_files:main"
 object_performance = "menu_tools.object_performance.plotter:main"
 rate_plots = "menu_tools.rate_plots.plotter:main"
 rate_table = "menu_tools.rate_table.rate_table:main"

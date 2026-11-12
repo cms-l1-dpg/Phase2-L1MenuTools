@@ -13,10 +13,13 @@ stages:
   - publish
 
 variables:
-  # These public group-area samples follow the V50nano_170 baseline. Override the
-  # paths when starting a pipeline with different compatible menu Nanos.
+  # These public group-area samples follow the V50nano_170 baseline. Override a
+  # path when starting a pipeline, or set it to an empty string to skip that
+  # sample and its dependent plots.
   JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
   TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
+  DY_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
+  PHOTON_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
   PUBLISH_EOS_BASE: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
@@ -42,19 +45,18 @@ default:
     - unset PYTHONPATH
     - python -m pip install --editable .
 
-cache_menu_objects:
+.cache_sample:
   stage: cache
   allow_failure: false
   timeout: 2h
 
   before_script:
-    # Repeat the common Python setup because this job also needs an authenticated
-    # CERN EOS session; object-performance jobs only consume artifacts.
+    # Cache jobs also need an authenticated CERN EOS session.
     - source "${LCG_VIEW}/setup.sh"
     - python3.11 -m venv .venv
     - source .venv/bin/activate
-    # Keep the LCG runtime libraries, but do not import its Python packages over
-    # the versions pinned and installed by MenuTools.
+    # Keep the LCG runtime libraries, but use the Python packages installed in
+    # this job's virtual environment.
     - unset PYTHONPATH
     - python -m pip install --editable . "xrootd==6.2.1" "fsspec-xrootd==0.2.4"
     - python -c "import pyarrow; assert pyarrow.Codec.is_available('zstd'); print(pyarrow.__file__)"
@@ -68,25 +70,81 @@ cache_menu_objects:
     - klist
 
   script:
-    # Read through CERN's internal EOS endpoint. Local filesystem paths and
-    # globs remain supported for interactive use.
-    - echo "Reading jet and event-sum input from ${JET_NANO_GLOB}"
-    - echo "Reading tau input from ${TAU_NANO_GLOB}"
-    - cache_objects configs/ci/pf_performance_caching.yaml
-    - find cache/V50nano_170 -type f -print
+    - |
+      set -euo pipefail
+      mkdir -p cache/V50nano_170
+      configured_input="${!INPUT_VARIABLE:-}"
+      echo "Checking ${SAMPLE_NAME} input from ${configured_input:-<empty>}"
 
-  # Object-performance jobs in the next stage reuse this columnar cache.
+      set +e
+      check_input_files "${configured_input}"
+      input_status=$?
+      set -e
+
+      if [[ ${input_status} -eq 3 ]]; then
+        echo "No ${SAMPLE_NAME} Nano is available; its plots will be skipped."
+        exit 0
+      elif [[ ${input_status} -ne 0 ]]; then
+        echo "Failed while checking the ${SAMPLE_NAME} Nano."
+        exit "${input_status}"
+      fi
+
+      cache_objects configs/ci/pf_performance_caching.yaml --sample "${SAMPLE_NAME}"
+      if [[ "${MERGE_EG}" == "true" ]]; then
+        python menu_tools/caching/merge_arrays.py \
+          --version V50nano_170 --sample "${SAMPLE_NAME}"
+      fi
+      touch "cache/V50nano_170/.${SAMPLE_NAME}.available"
+      find cache/V50nano_170 -type f -print
+
   artifacts:
+    when: always
     expire_in: 14 days
     paths:
       - cache/V50nano_170/
 
+cache_jet_objects:
+  extends: .cache_sample
+  variables:
+    SAMPLE_NAME: "TT"
+    INPUT_VARIABLE: "JET_NANO_GLOB"
+    MERGE_EG: "false"
+
+cache_tau_objects:
+  extends: .cache_sample
+  variables:
+    SAMPLE_NAME: "VBFHToTauTau"
+    INPUT_VARIABLE: "TAU_NANO_GLOB"
+    MERGE_EG: "false"
+
+cache_dy_objects:
+  extends: .cache_sample
+  variables:
+    SAMPLE_NAME: "DYLL_M50"
+    INPUT_VARIABLE: "DY_NANO_GLOB"
+    MERGE_EG: "true"
+
+cache_photon_objects:
+  extends: .cache_sample
+  variables:
+    SAMPLE_NAME: "Hgg"
+    INPUT_VARIABLE: "PHOTON_NANO_GLOB"
+    MERGE_EG: "true"
+
 .object_performance:
   stage: object-performance
-  needs:
-    - job: cache_menu_objects
-      artifacts: true
   allow_failure: false
+  # Scaling payload names are object-based. Prefix them before upload so plots
+  # for different samples cannot overwrite one another in the publish job.
+  after_script:
+    - |
+      scaling_dir=outputs/V50nano_170/object_performance/scalings
+      if [[ -d "${scaling_dir}" ]]; then
+        find "${scaling_dir}" -maxdepth 1 -type f -name '*.yaml' -print0 | \
+          while IFS= read -r -d '' file; do
+            mv "${file}" "${scaling_dir}/${CI_JOB_NAME}_$(basename "${file}")"
+          done
+      fi
   artifacts:
     when: always
     expire_in: 14 days
@@ -95,29 +153,114 @@ cache_menu_objects:
 
 jet_matching_efficiency:
   extends: .object_performance
+  needs:
+    - job: cache_jet_objects
+      artifacts: true
   script:
-    - object_performance configs/V50nano/object_performance/jets_matching.yaml --version V50nano_170
+    - |
+      test -f cache/V50nano_170/.TT.available || { echo "Skipping: no TT Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/jets_matching.yaml --version V50nano_170
 
 jet_trigger_turnons:
   extends: .object_performance
+  needs:
+    - job: cache_jet_objects
+      artifacts: true
   script:
-    - object_performance configs/V50nano/object_performance/jets_trigger.yaml --version V50nano_170
-    - object_performance configs/V50nano/object_performance/jets_sc8_trigger.yaml --version V50nano_170
+    - |
+      test -f cache/V50nano_170/.TT.available || { echo "Skipping: no TT Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/jets_trigger.yaml --version V50nano_170
+      object_performance configs/V50nano/object_performance/jets_sc8_trigger.yaml --version V50nano_170
 
 event_sum_turnons:
   extends: .object_performance
+  needs:
+    - job: cache_jet_objects
+      artifacts: true
   script:
-    - object_performance configs/V50nano/object_performance/met_ht_mht.yaml --version V50nano_170
+    - |
+      test -f cache/V50nano_170/.TT.available || { echo "Skipping: no TT Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/met_ht_mht.yaml --version V50nano_170
 
 tau_matching_efficiency:
   extends: .object_performance
+  needs:
+    - job: cache_tau_objects
+      artifacts: true
   script:
-    - object_performance configs/V50nano/object_performance/tau_matching.yaml --version V50nano_170
+    - |
+      test -f cache/V50nano_170/.VBFHToTauTau.available || { echo "Skipping: no VBF tau Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/tau_matching.yaml --version V50nano_170
 
 tau_trigger_turnons:
   extends: .object_performance
+  needs:
+    - job: cache_tau_objects
+      artifacts: true
   script:
-    - object_performance configs/V50nano/object_performance/tau_trigger.yaml --version V50nano_170
+    - |
+      test -f cache/V50nano_170/.VBFHToTauTau.available || { echo "Skipping: no VBF tau Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/tau_trigger.yaml --version V50nano_170
+
+electron_matching_efficiency:
+  extends: .object_performance
+  needs:
+    - job: cache_dy_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.DYLL_M50.available || { echo "Skipping: no DY Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/electron_matching.yaml --version V50nano_170
+
+electron_trigger_turnons:
+  extends: .object_performance
+  needs:
+    - job: cache_dy_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.DYLL_M50.available || { echo "Skipping: no DY Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/electron_trigger.yaml --version V50nano_170
+
+muon_matching_efficiency:
+  extends: .object_performance
+  needs:
+    - job: cache_dy_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.DYLL_M50.available || { echo "Skipping: no DY Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/muon_matching.yaml --version V50nano_170
+
+muon_trigger_turnons:
+  extends: .object_performance
+  needs:
+    - job: cache_dy_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.DYLL_M50.available || { echo "Skipping: no DY Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/muon_trigger.yaml --version V50nano_170
+
+photon_matching_efficiency:
+  extends: .object_performance
+  needs:
+    - job: cache_photon_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.Hgg.available || { echo "Skipping: no Hgg Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/photons_matching.yaml --version V50nano_170
+
+photon_trigger_turnons:
+  extends: .object_performance
+  needs:
+    - job: cache_photon_objects
+      artifacts: true
+  script:
+    - |
+      test -f cache/V50nano_170/.Hgg.available || { echo "Skipping: no Hgg Nano."; exit 0; }
+      object_performance configs/V50nano/object_performance/photons_trigger.yaml --version V50nano_170
 
 publish_plots:
   image: gitlab-registry.cern.ch/cms-cactus/ops/auto-devops/eos:tag-0.4.10
@@ -133,6 +276,18 @@ publish_plots:
       artifacts: true
     - job: tau_trigger_turnons
       artifacts: true
+    - job: electron_matching_efficiency
+      artifacts: true
+    - job: electron_trigger_turnons
+      artifacts: true
+    - job: muon_matching_efficiency
+      artifacts: true
+    - job: muon_trigger_turnons
+      artifacts: true
+    - job: photon_matching_efficiency
+      artifacts: true
+    - job: photon_trigger_turnons
+      artifacts: true
   variables:
     EOS_MGM_URL: "root://eoscms.cern.ch"
     LOCAL_FOLDER: "${CI_PROJECT_DIR}/outputs/V50nano_170"
@@ -143,12 +298,15 @@ publish_plots:
 
   before_script:
     - |
+      mkdir -p outputs/V50nano_170
       printf '%s\n' \
         "project=${CI_PROJECT_PATH}" \
         "commit=${CI_COMMIT_SHA}" \
         "pipeline=${CI_PIPELINE_URL}" \
         "jet_input=${JET_NANO_GLOB}" \
         "tau_input=${TAU_NANO_GLOB}" \
+        "dy_input=${DY_NANO_GLOB}" \
+        "photon_input=${PHOTON_NANO_GLOB}" \
         "eos_endpoint=${EOS_MGM_URL}" \
         "eos_destination=${CERNBOX_FOLDER}" \
         > outputs/V50nano_170/CI_PROVENANCE.txt

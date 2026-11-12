@@ -70,6 +70,7 @@
 ## GitLab CI
 
 The GitLab workflow caches selected objects from configurable menu Nanos and
-produces the V50 jet, event-sum, and tau performance plots. See
+produces V50 jet, event-sum, tau, electron, muon, and photon performance
+plots. See
 [`docs/gitlab-ci.md`](docs/gitlab-ci.md) for inputs, artifacts, publication, and
 equivalent local commands.

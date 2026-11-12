@@ -1,33 +1,58 @@
-# GitLab CI PF object-performance workflow
+# GitLab CI object-performance workflow
 
-The initial menu-validation pipeline separates Nano caching from plotting so
-that several `object_performance` jobs can reuse the same selected columns.
+The menu-validation pipeline separates Nano caching from plotting so several
+`object_performance` jobs can reuse the same selected columns. It runs matching
+efficiency and trigger turn-on plots only; no rate jobs are included.
 
-The `cache_menu_objects` job starts automatically and reads the TT and VBF
-$H\to\tau\tau$ menu
-Nanos, caches only the columns listed in
-`configs/ci/pf_performance_caching.yaml`, and uploads `cache/V50nano_170` as an
-artifact. It supports a single local or remote ROOT file and local or remote
-filesystem globs.
+## Sample-specific caches
 
-After the cache succeeds, these jobs start automatically and download its
-artifact:
+Four cache jobs start independently:
 
-- `jet_matching_efficiency`: standard and large-radius jet matching efficiency.
-- `jet_trigger_turnons`: standard and large-radius jet trigger turn-ons.
-- `event_sum_turnons`: PUPPI MET, HT, and MHT trigger turn-ons, with track-only
-  sums retained as controls where the existing configuration includes them.
-- `tau_matching_efficiency`: PUPPI and calorimeter tau matching efficiency.
-- `tau_trigger_turnons`: PUPPI and calorimeter tau trigger turn-ons.
+- `cache_jet_objects`: TT input for jets, MET, HT, and MHT.
+- `cache_tau_objects`: VBF $H\to\tau\tau$ input for taus.
+- `cache_dy_objects`: DY input shared by electrons and muons.
+- `cache_photon_objects`: $H\to\gamma\gamma$ input for photons.
+
+Each job caches only its sample and uploads its part of `cache/V50nano_170` as
+an artifact. DY and photon caching also runs the standard barrel/endcap L1 EG
+merge required by the V50 object definitions.
+
+The input variables are `JET_NANO_GLOB`, `TAU_NANO_GLOB`, `DY_NANO_GLOB`, and
+`PHOTON_NANO_GLOB`. Each can contain one local or remote ROOT file or a local or
+remote filesystem glob. Public V50-compatible samples are the defaults.
+
+A sample is optional. If its variable is empty or its glob matches no files, its
+cache job exits successfully without an availability marker, and the dependent
+plotting jobs report that they were skipped. This supports pipelines containing,
+for example, only a new VBF tau Nano. Once a file matches, access failures,
+missing branches, and processing failures remain job failures rather than being
+silently skipped. Set unused variables to an empty string when starting a
+pipeline if their public defaults should not be processed.
+
+## Plotting jobs
+
+Once the relevant cache succeeds, the following jobs start automatically:
+
+- `jet_matching_efficiency` and `jet_trigger_turnons`.
+- `event_sum_turnons` for PUPPI MET, HT, and MHT, with track-only controls where
+  the upstream configuration includes them.
+- `tau_matching_efficiency` and `tau_trigger_turnons`.
+- `electron_matching_efficiency` and `electron_trigger_turnons`.
+- `muon_matching_efficiency` and `muon_trigger_turnons`.
+- `photon_matching_efficiency` and `photon_trigger_turnons`.
 
 The jobs use the upstream V50 object-performance configurations, including their
 configured scaling extraction. The `dev_ar26` implementation prepares and
-matches each object collection once, then reuses it across thresholds.
+matches each object collection once, then reuses it across thresholds. Specialist
+eta, isolation, purity, muon track-finder, and ID-comparison configurations are
+not part of this initial CI set.
 
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
-an artifact. Once they have all succeeded, the optional manual `publish_plots`
-job downloads all five artifacts and copies their combined `V50nano_170` output,
-together with CI provenance, to a unique EOS directory under:
+an artifact. Scaling YAML files are prefixed with the CI job name before upload,
+so electron and photon L1 EG scalings cannot overwrite one another when artifacts
+are combined. The optional manual `publish_plots` job downloads all plot artifacts
+and copies their combined `V50nano_170` output, together with CI provenance, to
+a unique EOS directory under:
 
 ```text
 /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools/<branch>/pipeline-<id>/
@@ -36,63 +61,70 @@ together with CI provenance, to a unique EOS directory under:
 The pipeline ID prevents one run from overwriting another. The publish job uses
 CERN's pinned Auto DevOps EOS image, authenticates with Kerberos, and copies
 files individually with the EOS client. It sets `EOS_MGM_URL` to
-`root://eoscms.cern.ch` for this group area. The image's `eos-sync` helper
-hardcodes EOSUSER, so the job uses explicit `eos mkdir` and `eos cp` commands.
-Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under another
-writable EOS directory; also override `EOS_MGM_URL` if changing EOS instances.
-Additional object-performance jobs can reuse the cache through the same `needs`
-dependency when their required branches are added to the caching configuration;
-add their artifact to `publish_plots.needs` when it should also be published.
+`root://eoscms.cern.ch` for this group area. Override `PUBLISH_EOS_BASE` when
+starting a pipeline to publish under another writable EOS directory; also
+override `EOS_MGM_URL` if changing EOS instances.
+
+## Running the pipeline
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
-from **Build > Pipelines > Run pipeline**. Creating the pipeline starts the
-cache job immediately, and all dependent plotting jobs follow automatically.
-Trigger `publish_plots` manually when the complete plot set should be copied to
+from **Build > Pipelines > Run pipeline**. Creating the pipeline starts all four
+cache jobs immediately, and their dependent plotting jobs follow automatically.
+Trigger `publish_plots` manually when the available plot set should be copied to
 EOS; leaving it untriggered does not make the pipeline fail.
 
-By default the cache job uses the public CMSSW 17_0_0 TT and VBF tau samples
-referenced by the upstream `V50nano_170` caching configuration and configured in
-`.gitlab-ci.yml`. It reads them through CERN's internal EOS XRootD
-endpoint using the job's Kerberos ticket. The job runs in CERN's `al8-cms`
-image and creates a virtual environment using Python 3.11 from the mounted CERN
-LCG view. It then isolates that environment from the LCG Python packages and
-installs the versions pinned by MenuTools plus the XRootD Python bindings.
-
-To process other compatible menu Nanos, start a pipeline with `JET_NANO_GLOB`
-and `TAU_NANO_GLOB` set to remote ROOT URLs or filesystem globs, for example:
-
-```text
-root://eoscms.cern.ch//eos/cms/store/group/example/*.root
-```
+The cache jobs read CERN EOS through its internal XRootD endpoint using a
+Kerberos ticket. They run in CERN's `al8-cms` image, create a Python 3.11 virtual
+environment from the mounted LCG view, and install MenuTools plus the XRootD
+Python bindings.
 
 The inputs must contain the `Events` tree and the branches listed in
 `configs/ci/pf_performance_caching.yaml`. The current configuration uses the
 V50nano object definitions and records outputs under the `V50nano_170` label.
 
-The cache job needs two masked GitLab CI/CD variables, using a CERN account that
+The cache jobs need two masked GitLab CI/CD variables using a CERN account that
 can read the inputs: `AUTO_DEVOPS_CERNBOX_USER` (without `@CERN.CH`) and
-`AUTO_DEVOPS_CERNBOX_PASS`. These are the same variable names used by the
-calibration CI. The plotting jobs do not use these credentials. The account
-must also have write permission on `PUBLISH_EOS_BASE` for publication.
+`AUTO_DEVOPS_CERNBOX_PASS`. The plotting jobs do not use these credentials. The
+account must also have write permission on `PUBLISH_EOS_BASE` for publication.
 
-The Parquet cache and plot artifacts are retained for 14 days. The repository
+The Parquet caches and plot artifacts are retained for 14 days. The repository
 ignores the local `cache` directory; it must remain ordinary job-local storage
 rather than a link to a user-owned area.
 
-The same commands can be run locally with Python 3.11 and suitable input paths:
+## Equivalent local commands
+
+The same processing can be run locally with Python 3.11 and suitable input
+paths. Select only the samples that are available:
 
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e . xrootd fsspec-xrootd
+
 export JET_NANO_GLOB='/absolute/path/to/tt_menu_nano.root'
-export TAU_NANO_GLOB='/absolute/path/to/tau_menu_nano.root'
-cache_objects configs/ci/pf_performance_caching.yaml
+cache_objects configs/ci/pf_performance_caching.yaml --sample TT
 object_performance configs/V50nano/object_performance/jets_matching.yaml --version V50nano_170
 object_performance configs/V50nano/object_performance/jets_trigger.yaml --version V50nano_170
 object_performance configs/V50nano/object_performance/jets_sc8_trigger.yaml --version V50nano_170
 object_performance configs/V50nano/object_performance/met_ht_mht.yaml --version V50nano_170
+
+export TAU_NANO_GLOB='/absolute/path/to/vbf_tau_menu_nano.root'
+cache_objects configs/ci/pf_performance_caching.yaml --sample VBFHToTauTau
 object_performance configs/V50nano/object_performance/tau_matching.yaml --version V50nano_170
 object_performance configs/V50nano/object_performance/tau_trigger.yaml --version V50nano_170
+
+export DY_NANO_GLOB='/absolute/path/to/dy_menu_nano.root'
+cache_objects configs/ci/pf_performance_caching.yaml --sample DYLL_M50
+python menu_tools/caching/merge_arrays.py --version V50nano_170 --sample DYLL_M50
+object_performance configs/V50nano/object_performance/electron_matching.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/electron_trigger.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/muon_matching.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/muon_trigger.yaml --version V50nano_170
+
+export PHOTON_NANO_GLOB='/absolute/path/to/hgg_menu_nano.root'
+cache_objects configs/ci/pf_performance_caching.yaml --sample Hgg
+python menu_tools/caching/merge_arrays.py --version V50nano_170 --sample Hgg
+object_performance configs/V50nano/object_performance/photons_matching.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/photons_trigger.yaml --version V50nano_170
 ```
