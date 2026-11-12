@@ -25,21 +25,22 @@ from menu_tools.object_performance.resolution_collection import (
     make_edges,
 )
 from menu_tools.utils import utils
-from menu_tools.utils.objects import Object
+from menu_tools.utils.objects import Object, trigger_level
 from menu_tools.utils.plotting import add_watermark
 
 
 # Event-level sums (MET, HT): the pT response is the ratio of the sums.
+# "{lvl}" is the trigger level of the test objects (L1, HLT or L1/HLT).
 EVENT_LEVEL_PT_LABELS = (
-    r"L1 / ref",
-    r"Median L1 / ref",
-    r"$\sigma_{eff}$(L1 / ref) / median",
+    r"{lvl} / ref",
+    r"Median {lvl} / ref",
+    r"$\sigma_{{eff}}$({lvl} / ref) / median",
 )
 
 RESPONSE_LABELS = {
-    "pt": (r"$p_T^{L1} / p_T^{ref}$", r"Median $p_T^{L1} / p_T^{ref}$", r"$\sigma_{eff}(p_T^{L1} / p_T^{ref})$ / median"),
-    "eta": (r"$\eta^{L1} - \eta^{ref}$", r"Median $\Delta\eta$", r"$\sigma_{eff}(\Delta\eta)$"),
-    "phi": (r"$\phi^{L1} - \phi^{ref}$", r"Median $\Delta\phi$ (rad)", r"$\sigma_{eff}(\Delta\phi)$ (rad)"),
+    "pt": (r"$p_T^{{{lvl}}} / p_T^{{ref}}$", r"Median $p_T^{{{lvl}}} / p_T^{{ref}}$", r"$\sigma_{{eff}}(p_T^{{{lvl}}} / p_T^{{ref}})$ / median"),
+    "eta": (r"$\eta^{{{lvl}}} - \eta^{{ref}}$", r"Median $\Delta\eta$", r"$\sigma_{{eff}}(\Delta\eta)$"),
+    "phi": (r"$\phi^{{{lvl}}} - \phi^{{ref}}$", r"Median $\Delta\phi$ (rad)", r"$\sigma_{{eff}}(\Delta\phi)$ (rad)"),
 }
 
 
@@ -61,9 +62,12 @@ class ResolutionPlotter(Plotter):
         return os.path.join("outputs", self.version, "object_performance", "resolution")
 
     def _response_labels(self, var: str) -> tuple[str, str, str]:
+        lvl = trigger_level(self.cfg.test_objects.keys())
         if var == "pt" and self.collection.event_level:
-            return EVENT_LEVEL_PT_LABELS
-        return RESPONSE_LABELS[var]
+            labels = EVENT_LEVEL_PT_LABELS
+        else:
+            labels = RESPONSE_LABELS[var]
+        return tuple(x.format(lvl=lvl) for x in labels)
 
     def _label(self, obj_key: str) -> str:
         return Object(obj_key, version=self.cfg.version_for_objects).plot_label

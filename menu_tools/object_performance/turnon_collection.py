@@ -8,7 +8,7 @@ import vector
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import constants
 from menu_tools.utils import utils
-from menu_tools.utils.objects import Object
+from menu_tools.utils.objects import CUT_FIELD_RE, Object, is_hlt_object, is_trigger_object
 
 
 vector.register_awkward()
@@ -56,7 +56,9 @@ class ArrayLoader:
         )
         array = ak.from_parquet(fname)
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
-        if self.cfg_plot.reference_trafo and not obj.startswith("L1"):
+        # Reference objects of trafo plots (HT/MHT from gen jets) are kept unzipped;
+        # trigger objects (L1* and hlt*) are zipped into records.
+        if self.cfg_plot.reference_trafo and not (obj.startswith("L1") or is_hlt_object(obj)):
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
@@ -118,7 +120,9 @@ class TurnOnCollection:
 
         for obj_key, x_arg in test_objects.items():
             obj = Object(obj_key, obj_version)
-            if "L1" in obj_key:
+            # Nano trigger objects (L1*, hlt*) keep the field name as configured;
+            # the lower-casing is for old menu-ntuple objects.
+            if is_trigger_object(obj_key):
                 obj_args.append((obj, x_arg))
             else:
                 obj_args.append((obj, x_arg.lower()))
@@ -250,7 +254,7 @@ class TurnOnCollection:
 
     def _apply_list_of_reference_cuts(self, cut_list):
         for cut in cut_list:
-            cut = re.sub(r"{([^&|]*)}", r"self.ak_arrays['ref']['\1']", cut)
+            cut = re.sub(CUT_FIELD_RE, r"self.ak_arrays['ref']['\1']", cut)
             sel = eval(cut)
             self.ak_arrays["ref"] = self.ak_arrays["ref"][sel]
         if not isinstance(
@@ -296,7 +300,7 @@ class TurnOnCollection:
             ) in test_obj.cuts.items():  # TODO: use the version from utils
                 for cut in range_cuts:
                     cut = re.sub(
-                        r"{([^&|]*)}", r"self.ak_arrays[str(test_obj)]['\1']", cut
+                        CUT_FIELD_RE, r"self.ak_arrays[str(test_obj)]['\1']", cut
                     )
                     eta_sel = (
                         abs(self.ak_arrays[str(test_obj)]["eta"])
