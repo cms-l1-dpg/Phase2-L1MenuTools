@@ -1,0 +1,81 @@
+# Decay-mode split of hlt_tau_l1seed.yaml (`split_by`, see docs/object-performance.md).
+# Same plots as hlt_tau_l1seed.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
+# curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
+# GenVisTau_status (CMSSW GenVisTauProducer, JetMCTagUtils::genTauDecayMode): 0 = 1-prong,
+# 1 = 1-prong + 1 pi0, 2 = 1-prong + 2 pi0, 10 = 3-prong, 11 = 3-prong + 1 pi0, 15 = other
+# (other: neutral hadrons, >= 3 pi0, 3-prong + >= 2 pi0, 5-prong, ...; ~6% of the taus).
+# Generated from hlt_tau_l1seed.yaml; keep in sync.
+
+HLTTauL1Seed_DoubleTau35_Barrel_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event:
+      - abs({eta}) < 1.5
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:barrel: pt
+  l1_seed:
+    object: L1nnPuppiTau:default
+    threshold:
+      barrel: 37.9
+      endcap: 30.1
+    match_dR: 0.3
+    label: NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52
+  thresholds:
+  - 35
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Efficiency, barrel (HLT $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 150
+    step: 6
+  split_by: &split_dm
+    field: status            # GenVisTau_status: generator decay mode
+    name: ""                 # files: <plot>_<test object>_<thr>_<version>, <plot>_fractions_...
+    categories:              # status 15 (other) is only in the inclusive curve
+      "1-prong": [0]
+      "1-prong + $\\pi^0$s": [1, 2]
+      "3-prong": [10]
+      "3-prong + $\\pi^0$": [11]
+    summary_range: [80, 150]   # integrated eff. in fractions JSON
+
+HLTTauL1Seed_DoubleTau35_Endcap_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event:
+      - abs({eta}) > 1.5
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:endcap: pt
+  l1_seed:
+    object: L1nnPuppiTau:default
+    threshold:
+      barrel: 37.9
+      endcap: 30.1
+    match_dR: 0.3
+    label: NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52
+  thresholds:
+  - 35
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Efficiency, endcap (HLT $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 150
+    step: 6
+  split_by: *split_dm
