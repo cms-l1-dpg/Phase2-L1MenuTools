@@ -110,6 +110,28 @@
   `configs/V50nano/object_performance/*_trigger_wMatching.yaml`
   (and `configs/V43nano/object_performance/` for the older version).
 
+  **Efficiency vs eta (or any other variable) with a pT threshold.** By default the threshold
+  is applied to the test objects' `x_arg`, i.e. the plotted variable. Set
+  `threshold_field: "pt"` to apply it to the test pT instead, while plotting vs the reference
+  `x_arg` (all `x_arg`s set to `"eta"`); restrict the reference pT to the plateau with an event cut:
+
+  ```yaml
+  HLTMuonsTrigger_Eta_Pt30ToInf_wMatching:
+    match_test_to_ref: True
+    matching_and_threshold: True
+    threshold_field: "pt"
+    reference_object:
+      object: "GenPart"
+      x_arg: "eta"
+      cuts:
+        event: ["{pt} > 30", ...]
+    test_objects:
+      hltMuon:default: "eta"
+    thresholds: [24]
+  ```
+
+  Examples: `configs/V50nano/object_performance/hlt_*_eta.yaml`.
+
 ## Response and resolution
 
   A plot entry with a `resolution:` block produces pT, eta and phi response / resolution plots
