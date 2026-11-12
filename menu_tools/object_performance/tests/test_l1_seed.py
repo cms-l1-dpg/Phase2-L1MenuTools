@@ -129,9 +129,9 @@ def test_l1_seed_without_matching_and_threshold():
 
 
 def test_l1_seed_apply_to_and_labels():
-    coll, hlt = _collection({**SEED, "apply_to": ["hltMuon:default"], "label": "L1 seed"})
+    coll, hlt = _collection({**SEED, "apply_to": ["hltMuon:default"], "label": "my seed"})
     assert coll.l1_seeded_test_objects == [hlt]
-    assert coll.curve_label(L1SEED_KEY) == "L1 seed"
+    assert coll.curve_label(L1SEED_KEY) == "L1 seed: my seed"
     assert coll.curve_label(hlt + L1SEED_SUFFIX).endswith("$\\wedge$ L1 seed")
     with pytest.raises(ValueError, match="apply_to"):
         _collection({**SEED, "apply_to": ["hltMuon:default:barrel"]})
