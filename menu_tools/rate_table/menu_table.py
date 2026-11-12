@@ -139,6 +139,7 @@ class MenuTable:
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
         allow_missing_scalings: Optional[bool] = None,
+        truncated: bool = False,
     ):
         self.config: MenuConfig = MenuConfig(
             config,
@@ -147,6 +148,7 @@ class MenuTable:
             override_scalings_version=override_scalings_version,
             override_sample=override_sample,
             allow_missing_scalings=allow_missing_scalings,
+            truncated=truncated,
         )
 
         print(
@@ -162,6 +164,11 @@ class MenuTable:
             "INFO: Loading scalings from "
             f"outputs/{self.config.scalings_version}/object_performance/scalings"
         )
+        if self.config.scalings_decimals is not None:
+            print(
+                f"INFO: Rounding scalings to {self.config.scalings_decimals} "
+                "decimals, as in the P2GT menus"
+            )
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
             print(
@@ -262,6 +269,7 @@ class MenuTable:
                 obj,
                 scaling_version=self.config.scalings_version,
                 allow_missing=self.config.allow_missing_scalings,
+                decimals=self.config.scalings_decimals,
             )
 
         if "idx" not in arr.fields:
