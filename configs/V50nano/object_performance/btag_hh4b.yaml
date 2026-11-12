@@ -1,0 +1,36 @@
+# b-tagging efficiency and mis-identification rates of L1 and HLT jets in HH -> 4b, with the
+# settings and working points of btag_tt.yaml (see the comments there).
+# Run on an L1+HLT cache: object_performance <this file> --version V50nano_170pre6HLT
+
+BTagHHTo4B:
+  sample: HHTo4B
+  version: V50nano
+  test_objects:
+    L1puppiJetSC4NG:default: "pt"
+    hltAK4PuppiJetCorr:default: "pt"
+  btag:
+    discriminants:
+      L1puppiJetSC4NG:default: "{bTagScore}"
+      hltAK4PuppiJetCorr:default:
+        "prob(b)": "{DeepFlavour_prob_b}"
+        "b+bb+lepb": "{DeepFlavour_prob_b} + {DeepFlavour_prob_bb} + {DeepFlavour_prob_lepb}"
+    working_points:
+      L1puppiJetSC4NG:default: [bTagLight10, bTagLight1, bjetnn]
+      hltAK4PuppiJetCorr:default:
+        [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagDeepFlavour0p935, bTagLight10, bTagLight1]
+    match_dR: 0.2
+    pu_dR: 0.4
+    max_abs_eta: 2.4
+    min_pt: 30
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      genpt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      eta: {min: -2.4, max: 2.4, step: 0.3}
+      abseta: {min: 0, max: 2.4, step: 0.2}
+      pu: {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    roc:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      against: [light, c, pu]
+    summary:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      eta_regions: {inclusive: [0, 2.4], barrel: [0, 1.5]}
