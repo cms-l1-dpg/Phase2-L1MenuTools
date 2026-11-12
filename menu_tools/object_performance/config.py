@@ -95,6 +95,45 @@ class PerformancePlotConfig(BasePlotConfig):
         return field.lower() if field else None
 
     @property
+    def l1_seed(self) -> Optional[dict[str, Any]]:
+        """Optional L1 seed requirement for HLT test objects (combined L1 x HLT efficiency).
+
+        Normalised form of the `l1_seed` block (see docs/object-performance.md):
+            {"objects": [{"object": str, "threshold": float | {region: float},
+                          "match_dR": float | None}, ...],   # OR of these L1 conditions
+             "apply_to": list[str] | None,                   # None: all hlt* test objects
+             "label": str | None}
+        The single-object shorthand (`object` / `threshold` / `match_dR` at the top level of
+        the block) is converted to a one-element `objects` list. None if no `l1_seed` is set.
+        """
+        block = self._cfg.get("l1_seed")
+        if not block:
+            return None
+        if "objects" in block:
+            if any(k in block for k in ("object", "threshold", "match_dR")):
+                raise ValueError(
+                    f"l1_seed of {self.plot_name}: give either `objects` or `object`/`threshold`"
+                )
+            objects = block["objects"]
+        else:
+            objects = [{k: block[k] for k in ("object", "threshold", "match_dR") if k in block}]
+        norm = []
+        for o in objects:
+            if "object" not in o or "threshold" not in o:
+                raise ValueError(
+                    f"l1_seed of {self.plot_name}: each seed object needs `object` and `threshold`"
+                )
+            if o["object"].count(":") < 1:
+                raise ValueError(f"l1_seed of {self.plot_name}: misconfigured obj:id key {o['object']}")
+            norm.append(
+                {"object": o["object"], "threshold": o["threshold"], "match_dR": o.get("match_dR")}
+            )
+        apply_to = block.get("apply_to")
+        if isinstance(apply_to, str):
+            apply_to = [apply_to]
+        return {"objects": norm, "apply_to": apply_to, "label": block.get("label")}
+
+    @property
     def reference_field(self):
         field = self._cfg["reference_object"]["x_arg"]
         return field.lower()
