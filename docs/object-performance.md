@@ -22,6 +22,7 @@
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
   * [Combined L1 x HLT object efficiency (`l1_seed`)](#combined-l1-x-hlt-object-efficiency-l1_seed)
+  * [Split by reference categories (`split_by`)](#split-by-reference-categories-split_by)
 * [Response and resolution](#response-and-resolution)
 * [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
 * [Purity, fake rate and multiplicity](#purity-fake-rate-and-multiplicity)
@@ -221,6 +222,65 @@
   Configs: `configs/V50nano/object_performance/hlt_{muon,electron,tau,jets}_l1seed.yaml` (V50nano_170pre6HLT).
   Tests: `menu_tools/object_performance/tests/test_l1_seed.py`.
 
+### Split by reference categories (`split_by`)
+
+  The optional `split_by` block splits matched efficiencies (and resolutions, next section) by
+  categories of a field of the reference object, e.g. the generator decay mode of the visible gen
+  tau. It works for matching efficiencies, turn-ons (also with `matching_and_threshold` and
+  `threshold_field`, e.g. efficiency vs eta) and the `l1_seed` curves. Example
+  (`configs/V50nano/object_performance/hlt_tau_matching_dm.yaml`):
+
+  ```yaml
+  HLTTausMatchingBarrel_DM:
+    sample: HHTo2B2Tau
+    version: V50nano
+    match_test_to_ref: True
+    reference_object: {object: "GenVisTau", x_arg: "pt", ...}
+    test_objects:
+      hltHpsPFTau:default: "pt"
+      L1nnPuppiTau:default: "pt"
+    split_by:
+      field: status                 # reference field (name without the `GenVisTau_` prefix)
+      categories:                   # legend label -> values of the field (disjoint)
+        "1-prong": [0]
+        "1-prong + $\\pi^0$s": [1, 2]
+        "3-prong": [10]
+        "3-prong + $\\pi^0$": [11]
+      # name: DM                    # file-name tag, default `by_<field>`; "" for none
+      # layout: per_object          # per_object (default) or per_category
+      # summary_range: [40, 150]    # x range of the integrated efficiencies (default: binning)
+    ...
+  ```
+
+  Each category is the same efficiency restricted to the reference objects of that category, in the
+  numerator and the denominator (for `matching_and_threshold` all reference objects of the category,
+  for pure threshold efficiencies the matched ones). Reference objects in no category ("other") are
+  only in the inclusive curve. The usual (inclusive) plot, JSON and distributions are unchanged.
+  In addition, in `outputs/<version>/object_performance/turnons/` (`<tag>` = `_<name>`):
+
+  * `<plot><tag>_<curve>_<threshold>_<version>.{png,pdf,json}` (`layout: per_object`): one plot per
+    curve (test object, `L1seed`, `<test obj>+L1seed`; `:` written as `-`, `+` as `_`), with the
+    inclusive curve (black, "All") and one curve per category; the legend gives each category's
+    share of the denominator. With `layout: per_category`: `<plot><tag>_<category>_...`, one plot
+    per category with all curves.
+  * `<plot><tag>_fractions_<threshold>_<version>.json`: the category table: `reference` (counts and
+    fractions of all reference objects after the reference cuts, including `other`), and per curve
+    and category (`inclusive`, the categories, `other`): `n_den`, `n_num`, `fraction` of the
+    denominator, and the `efficiency` with Clopper-Pearson `err` integrated over `summary_range`.
+
+  The per-plot JSONs have the usual structure (keys `inclusive` and the category names, or the curve
+  keys for `per_category`). Only for matched turn-ons (`match_test_to_ref: True`), not for
+  `iso_vs_efficiency` or `trafo` references. Without `split_by` nothing changes.
+
+  **Tau decay modes.** `GenVisTau_status` is the generator decay mode of the visible tau
+  (`GenVisTauProducer`, `JetMCTagUtils::genTauDecayMode`, stored as `reco::PFTau::hadronicDecayMode`):
+  0 = 1-prong, 1 = 1-prong + 1 π0, 2 = 1-prong + 2 π0, 10 = 3-prong, 11 = 3-prong + 1 π0,
+  15 = other (neutral hadrons such as K0, ≥ 3 π0, 3-prong + ≥ 2 π0, 5-prong). In HH → bbττ
+  (V50nano_170pre6HLT, gen vis. pT > 20 GeV, |η| < 2.1): 14.6% / 39.5% / 15.4% / 16.1% / 8.0% / 6.3%.
+  Configs: `configs/V50nano/object_performance/{hlt_tau,tau}_*_dm.yaml` (generated from the
+  configs without `_dm`; plot names + `_DM`, no scalings). Tests:
+  `menu_tools/object_performance/tests/test_split_by.py`.
+
 ## Response and resolution
 
   A plot entry with a `resolution:` block produces pT, eta and phi response / resolution plots
@@ -280,6 +340,16 @@
   * `<plot>_<var>_vs_<vs>_dist_<version>.{png,pdf}`: response distributions (unit area, overflow in
     the edge bins) in every bin of `<vs>`, all test objects overlaid, for the variables in `response_binning`;
   * `<plot>_<version>.yaml`: the plot config.
+
+  With [`split_by`](#split-by-reference-categories-split_by) (matched pairs only), in addition:
+
+  * `<plot><tag>_<test obj>_<var>_vs_<vs>_<version>.{png,pdf,json}`: per test object, median and
+    resolution of all pairs (black) and per category;
+  * `<plot><tag>_<var>_dist_<version>.{png,pdf}`: for the variables in `response_binning`, the response
+    distributions per category, integrated over all pairs, one panel per test object;
+  * `<plot><tag>_fractions_<version>.json`: per test object, the matched pairs per category
+    (`pairs`: counts and fractions) and the summary (median, 16/84% quantiles, resolution, ...) of each
+    response for `inclusive`, every category and `other`.
 
 ## L1 seed and HLT path efficiencies
 
