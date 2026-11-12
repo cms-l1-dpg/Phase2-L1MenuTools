@@ -1,0 +1,96 @@
+# Combined L1 x HLT object efficiency for single jets, ttbar: hltAK4PuppiJetCorr (HLT JEC applied)
+# pT > X AND the gen jet matched to an L1 seeded-cone PUPPI jet (SC4) passing the L1 threshold.
+# `l1_seed`: docs/object-performance.md.
+#
+# P2GT menu step1_2024 (CMSSW_17_0_0_pre6), l1tGTsc4Jet: CL2JetsSC4 with |eta| < 2.4, regions
+# barrel |eta| < 1.5 < endcap. Online threshold = (offline - offset) / slope with the GT scalings
+# (l1tGTObject_scalings.py, CL2JetsSC4: barrel 16.51 / 1.36, endcap 10.1 / 1.59), min. 25 GeV.
+#   pSinglePuppiJet230 (seed of HLT_AK4PFPuppiJet520): barrel 157.0, endcap 138.3 GeV
+#     (menu-tools v0p0 scalings, outputs/V50nano_regscal: 166.7 / 128.4; the GT values are used).
+#     Check against the GT emulator bit (L1puppiJetSC4 with pT > these, |eta| < 2.4), per event,
+#     500k TT events: identical decision. (With pT >= instead of >, 292 events differ: jets at
+#     exactly 157.0 GeV; the GT cuts hwPt > floor(thr / LSB).)
+#   Illustrations at lower thresholds (statistics in TT), with offline L1 thresholds of existing
+#   single-leg seed thresholds (no single-jet seed exists there):
+#     HLT 100 with L1 offline  70 (leading leg of pQuadJet70_55_40_40): 39.3 / 37.7 GeV
+#     HLT 200 with L1 offline 112 (leg of pDoublePuppiJet112_112):      70.2 / 64.1 GeV
+# HLT_AK4PFPuppiJet520 cuts |eta| < 5 (hltAK4PuppiJetCorr:extended); the L1 seed and the
+# reference (leading gen jet) are restricted to |eta| < 2.4.
+
+HLTJetL1Seed_PFPuppiJet520:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "pt"
+  l1_seed:
+    object: "L1puppiJetSC4:default"
+    threshold: {barrel: 157.0, endcap: 138.3}   # pSinglePuppiJet230, |eta| < 2.4
+    label: "pSinglePuppiJet230 (SC4 jet)"
+  thresholds: [520]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 1000
+    step: 25
+
+HLTJetL1Seed_Jet200_L1Jet112:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "pt"
+  l1_seed:
+    object: "L1puppiJetSC4:default"
+    threshold: {barrel: 70.2, endcap: 64.1}   # offline 112, |eta| < 2.4
+    label: "SC4 jet, offline 112 GeV"
+  thresholds: [200]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+HLTJetL1Seed_Jet100_L1Jet70:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "pt"
+  l1_seed:
+    object: "L1puppiJetSC4:default"
+    threshold: {barrel: 39.3, endcap: 37.7}   # offline 70, |eta| < 2.4
+    label: "SC4 jet, offline 70 GeV"
+  thresholds: [100]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 300
+    step: 5

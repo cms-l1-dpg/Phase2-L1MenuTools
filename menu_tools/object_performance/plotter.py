@@ -97,6 +97,13 @@ class EfficiencyPlotter(Plotter):
         fig.tight_layout()
         add_watermark(ax, watermark)
 
+    def _extra_style(self, obj_key: str) -> dict:
+        """Marker style of an extra (`l1_seed`) curve; empty for the configured test
+        objects.
+        """
+        extra = getattr(self.turnon_collection, "extra_curves", {})
+        return extra.get(obj_key, {}).get("style", {})
+
     def _save_json(self, file_name):
         plot = {}
         plot["xlabel"] = self.cfg.xlabel
@@ -107,11 +114,9 @@ class EfficiencyPlotter(Plotter):
             if obj_key == "ref":
                 continue
 
-            # Use the version from the config (which respects overrides)
-            obj = Object(
-                obj_key,
-                version=self.cfg.version_for_objects,
-            )
+            # Label from the object config (version from the config, which respects
+            # overrides), or of an extra `l1_seed` curve
+            label = self.turnon_collection.curve_label(obj_key)
 
             xbins = self.turnon_collection.bins
             xbins = 0.5 * (xbins[1:] + xbins[:-1])
@@ -137,7 +142,7 @@ class EfficiencyPlotter(Plotter):
             efficiency = efficiency.tolist()
 
             plot[obj_key] = {}
-            plot[obj_key]["label"] = obj.plot_label
+            plot[obj_key]["label"] = label
             plot[obj_key]["efficiency"] = efficiency
             plot[obj_key]["efficiency_err"] = yerr
             plot[obj_key]["xbins"] = xbins
@@ -146,6 +151,7 @@ class EfficiencyPlotter(Plotter):
                 "capsize": 3,
                 "marker": "o",
                 "markersize": 8,
+                **self._extra_style(obj_key),
             }
 
         with open(f"{file_name}", "w") as outfile:
@@ -175,19 +181,19 @@ class EfficiencyPlotter(Plotter):
                 continue
             efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
 
-            obj = Object(
-                obj_key,
-                version=self.cfg.version_for_objects,
-            )
-
             err_kwargs = {
                 # "xerr": self.turnon_collection.xerr(obj_key),
                 "capsize": 3,
                 "marker": "o",
                 "markersize": 8,
+                **self._extra_style(obj_key),
             }
             ax.errorbar(
-                xbins, efficiency, yerr=yerr, label=obj.plot_label, **err_kwargs
+                xbins,
+                efficiency,
+                yerr=yerr,
+                label=self.turnon_collection.curve_label(obj_key),
+                **err_kwargs,
             )
 
         self._style_plot(fig, ax)
