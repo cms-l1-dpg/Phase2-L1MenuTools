@@ -183,9 +183,12 @@ class TurnOnCollection:
                 self.numerators["ref"][str(test_obj)] = ref_test["ref"][x_arg][pass_dR][
                     pt_max
                 ][:, :, 0]
-            self.numerators["test"][str(test_obj)] = ref_test["test"][x_arg][pass_dR][
-                pt_max
-            ][:, :, 0]
+            # The threshold is applied to `threshold_field` (default: x_arg),
+            # e.g. pt while the efficiency is plotted vs the reference eta.
+            test_field = self.cfg_plot.threshold_field or x_arg
+            self.numerators["test"][str(test_obj)] = ref_test["test"][test_field][
+                pass_dR
+            ][pt_max][:, :, 0]
             # Full matched (ref, test) records, e.g. for resolution studies
             # (ResolutionCollection sets `keep_matched_records`). Same selection
             # as the numerators: shape [event][ref], None where nothing matched.
@@ -339,7 +342,8 @@ class TurnOnCollection:
             ref_field = trafo
 
         for test_obj, x_arg in self.test_objects:
-            sel = self.ak_arrays[str(test_obj)][x_arg] > self.threshold
+            test_field = self.cfg_plot.threshold_field or x_arg
+            sel = self.ak_arrays[str(test_obj)][test_field] > self.threshold
             if (self.ak_arrays["ref"].ndim == 1) and (sel.ndim == 2):
                 sel = sel[:, 0]
             ak_array = self._flatten_array(self.ak_arrays["ref"][ref_field][sel])

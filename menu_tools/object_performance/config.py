@@ -93,6 +93,14 @@ class PerformancePlotConfig(BasePlotConfig):
             return False
 
     @property
+    def threshold_field(self) -> Optional[str]:
+        """Test-object field the threshold is applied to, if it differs from
+        the plotted x_arg (e.g. `threshold_field: "pt"` with x_arg "eta" for a
+        trigger efficiency vs eta). Default: None, i.e. the test x_arg."""
+        field = self._cfg.get("threshold_field")
+        return field.lower() if field else None
+
+    @property
     def reference_field(self):
         field = self._cfg["reference_object"]["x_arg"]
         return field.lower()

@@ -1,4 +1,4 @@
-# HLT AK4 PUPPI jets (hltAK4PuppiJet) vs the L1 seeded-cone PUPPI jets, ttbar.
+# HLT AK4 PUPPI jets with the HLT JEC (hltAK4PuppiJetCorr, menu_tools/caching/make_hlt_jets_corr.py) vs the L1 seeded-cone PUPPI jets, ttbar.
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLTJetTurnonBarrel_wMatching:
@@ -16,15 +16,15 @@ HLTJetTurnonBarrel_wMatching:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    hltAK4PuppiJet:default:barrel: "pt"
+    hltAK4PuppiJetCorr:default:barrel: "pt"
     L1puppiJetSC4:default:barrel: "pt"
-  thresholds: [100, 200, 300]
+  thresholds: [30, 50, 100, 200, 300]
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching + Trigger Efficiency (barrel, $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 500
-    step: 10
+    step: 5
 
 HLTJetTurnonEndcap_wMatching:
   sample: TT
@@ -41,15 +41,15 @@ HLTJetTurnonEndcap_wMatching:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    hltAK4PuppiJet:default:endcap: "pt"
+    hltAK4PuppiJetCorr:default:endcap: "pt"
     L1puppiJetSC4:default:endcap: "pt"
-  thresholds: [100, 200, 300]
+  thresholds: [30, 50, 100, 200, 300]
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching + Trigger Efficiency (endcap, $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 500
-    step: 10
+    step: 5
 
 HLTJetTurnonForward_wMatching:
   sample: TT
@@ -66,12 +66,12 @@ HLTJetTurnonForward_wMatching:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended:forwardHF: "pt"
+    hltAK4PuppiJetCorr:extended:forwardHF: "pt"
     L1puppiExtJetSC4:default:forwardHF: "pt"
-  thresholds: [100, 200, 300]
+  thresholds: [30, 50, 100, 200, 300]
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching + Trigger Efficiency (forwardHF, $p_T > <threshold>$ GeV)"
   binning:
     min: 0
     max: 500
-    step: 10
+    step: 5

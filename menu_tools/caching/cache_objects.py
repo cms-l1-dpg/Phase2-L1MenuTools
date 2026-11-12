@@ -72,6 +72,37 @@ def chunk_suffix(job):
     return f"_chunk{job:05d}"
 
 
+# Transient EOS FUSE read errors (EIO) hit a few of ~100 parallel condor jobs; retry a
+# file a few times before giving up (the pieces read from a failed attempt are dropped).
+READ_RETRIES = 4
+READ_RETRY_WAIT_S = 30
+
+
+def read_file_with_retries(fname, tree, loaders):
+    """Open `fname` and add its `tree` to each loader (ObjectCacher), retrying on
+    OSError.
+    """
+    for attempt in range(1, READ_RETRIES + 1):
+        n_pieces = [{k: len(v) for k, v in ld._pieces.items()} for ld in loaders]
+        try:
+            with uproot.open(fname) as f:
+                tree_obj = f[tree]
+                for ld in loaders:
+                    ld._add_file(tree_obj)
+            return
+        except OSError as err:
+            for ld, n in zip(loaders, n_pieces):
+                for k, v in ld._pieces.items():
+                    del v[n[k] :]
+            if attempt == READ_RETRIES:
+                raise
+            print(
+                f"{fname}: {err!r}, retry {attempt}/{READ_RETRIES - 1} in "
+                f"{READ_RETRY_WAIT_S} s"
+            )
+            time.sleep(READ_RETRY_WAIT_S * attempt)
+
+
 class ObjectCacher:
     def __init__(
         self,
@@ -403,8 +434,7 @@ class ObjectCacher:
     def _concat_array_from_ntuples(self):
         self._begin()
         for fname in tqdm(self._input_files):
-            with uproot.open(fname) as f:
-                self._add_file(f[self._tree])
+            read_file_with_retries(fname, self._tree, [self])
         self._finish()
 
     def _cache_file_exists(self):
@@ -482,10 +512,7 @@ def load_file_major(loaders):
     for ld in loaders:
         ld._begin()
     for fname in tqdm(fnames):
-        with uproot.open(fname) as f:
-            tree_obj = f[tree]
-            for ld in loaders:
-                ld._add_file(tree_obj)
+        read_file_with_retries(fname, tree, loaders)
     for ld in loaders:
         ld._finish()
         ld._save_array_to_parquet()

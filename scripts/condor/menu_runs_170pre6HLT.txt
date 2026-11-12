@@ -1,0 +1,14 @@
+hltbits rate_table configs/V50nano/rate_table/hlt_bits_cfg.yml --version V50nano_170pre6HLT
+l1bits rate_table configs/V50nano/rate_table/l1_bits_cfg.yml --version V50nano_170pre6HLT
+v0p0 rate_table configs/V50nano/rate_table/v0p0_cfg.yml --version V50nano_170pre6HLT --scalings V50nano_regscal
+hltpaths python3 -m menu_tools.rate_table.hlt_paths configs/V50nano/rate_table/hlt_paths.yml --version V50nano_170pre6HLT --sample MinBias DYLL_M50 TT HHTo2B2Tau HHTo4B
+patheff_mu object_performance configs/V50nano/object_performance/path_eff_muons.yaml --version V50nano_170pre6HLT
+patheff_el object_performance configs/V50nano/object_performance/path_eff_electrons.yaml --version V50nano_170pre6HLT
+patheff_tau object_performance configs/V50nano/object_performance/path_eff_taus.yaml --version V50nano_170pre6HLT
+patheff_jet object_performance configs/V50nano/object_performance/path_eff_jets_sums.yaml --version V50nano_170pre6HLT
+pur_mu object_performance configs/V50nano/object_performance/hlt_muon_purity.yaml --version V50nano_170pre6HLT
+pur_el object_performance configs/V50nano/object_performance/hlt_electron_purity.yaml --version V50nano_170pre6HLT
+pur_tau object_performance configs/V50nano/object_performance/hlt_tau_purity.yaml --version V50nano_170pre6HLT
+pur_jet object_performance configs/V50nano/object_performance/hlt_jets_purity.yaml --version V50nano_170pre6HLT
+ht_trig object_performance configs/V50nano/object_performance/hlt_ht_trigger.yaml --version V50nano_170pre6HLT
+ht_res object_performance configs/V50nano/object_performance/hlt_ht_resolution.yaml --version V50nano_170pre6HLT

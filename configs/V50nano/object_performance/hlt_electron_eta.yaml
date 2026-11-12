@@ -1,0 +1,58 @@
+# HLT electrons (no ID / approx. WPTight / WP70) vs L1 tkIsoElectron: efficiency vs gen eta (DY).
+# Endcap HLT ids are only the track-based part (see hlt.yaml). Trigger blocks: threshold on the test pT (threshold_field).
+
+HLTElectronsMatching_Eta_Pt40ToInf:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "{pt} > 40"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltElectron:default: "eta"
+    hltElectron:WPTight: "eta"
+    hltElectron:WP70: "eta"
+    L1tkElectron:Iso: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (gen $p_T$ > 40 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.1
+
+HLTElectronsTrigger_Eta_Pt40ToInf_wMatching:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "{pt} > 40"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltElectron:WPTight: "eta"
+    hltElectron:WP70: "eta"
+    L1tkElectron:Iso: "eta"
+  thresholds: [32]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen $p_T$ > 40 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.1

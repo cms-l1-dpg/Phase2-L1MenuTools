@@ -1,5 +1,9 @@
-# HLT PUPPI HT / MHT (hltPuppiJetSums: from hltAK4PuppiJet pt > 30, |eta| < 2.4, menu_tools/caching/make_hlt_sums.py)
-# vs the L1 seeded-cone PUPPI sums, ttbar.
+# HLT PUPPI HT / MHT vs the L1 seeded-cone PUPPI sums, ttbar.
+#   hltPuppiJetCorrSums: HT and MHT from the JEC-corrected HLT jets with the HLT menu definitions
+#     (HT: pT > 30, |eta| < 2.4, pT sum, as HLT_PFPuppiHT1070; MHT: E_T > 30, |eta| < 5),
+#     menu_tools/caching/make_hlt_jets_corr.py.
+#   hltPFPuppiHT: nano value (sumEt of hltPFPuppiMHT: corrected jets E_T > 30, |eta| < 5), for comparison.
+#   hltPuppiJetSums: from the uncorrected nano jets (make_hlt_sums.py), for comparison.
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLT_HTResolution:
@@ -15,6 +19,8 @@ HLT_HTResolution:
         - "abs({eta}) < 2.4"
         - "{pt} > 30"
   test_objects:
+    hltPFPuppiHT:default: "pt"
+    hltPuppiJetCorrSums:HT: "pt"
     hltPuppiJetSums:HT: "pt"
     L1puppiJetSC4sums:HT: "pt"
   resolution:
