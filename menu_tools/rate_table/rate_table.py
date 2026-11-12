@@ -8,6 +8,7 @@ from menu_tools.rate_table.menu_table import MenuTable
 from menu_tools.utils.versions import (
     add_version_argument,
     get_versions,
+    parse_args,
     run_per_version,
 )
 
@@ -56,7 +57,16 @@ def main():
         ),
         default=None,
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--truncated",
+        action="store_true",
+        help=(
+            "Round the scalings to two decimals, as in the P2GT emulator menus, "
+            "so that both apply identical thresholds. Output filenames get a "
+            "`_truncated` suffix."
+        ),
+    )
+    args = parse_args(parser)
 
     with open(args.config_file, "r") as f:
         menu_config_dict = yaml.safe_load(f)
@@ -72,6 +82,7 @@ def main():
             override_version=version,
             override_scalings_version=args.scalings,
             override_sample=args.signal,
+            truncated=args.truncated,
         )
         menu_table.make_table()
         menu_table.print_table()
