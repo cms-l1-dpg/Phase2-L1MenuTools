@@ -1,96 +1,62 @@
-Purity_Tau_Barrel:
+# Purity of L1 taus (VBF H -> tautau; `purity:` block, see docs/object-performance.md#purity-fake-rate-and-multiplicity):
+# fraction of ALL L1 taus passing the ID / eta cuts with a visible gen hadronic tau (GenVisTau)
+# within the object's match_dR (nnPuppiTau 0.1, caloTau 0.3). Leptonic tau decays and jets count
+# as fakes. Fake rates: tau_fakerate.yaml.
+# Replaces the earlier turn-on based Purity_Tau_* entries (leading L1 nnPuppiTau as the reference and
+# GenVisTau as the test object: leading tau only, and L1caloTau as a second "test" object, which
+# gave an L1-L1 overlap fraction rather than the caloTau purity).
+
+TausPurity:
   sample: VBFHToTauTau
   version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1nnPuppiTau"
-    x_arg: "pt"
-    label: "L1nnPuppiTau"
-    cuts:
-      event:
-        - "{passLooseNN} == 1"
-        - "abs({eta}) < 1.5"
-      object:
-        - "abs({eta}) < 2.4"
   test_objects:
-    GenVisTau:default: "pt"
+    L1nnPuppiTau:default: "pt"
+    L1nnPuppiTau:noID: "pt"
     L1caloTau:default: "pt"
-  xlabel: "L1 nnPuppiTau $p_T$ (GeV)"
-  ylabel: "Purity (Barrel)"
-  binning:
-    min: 0
-    max: 100
-    step: 3
+    L1nnCaloTau:default: "pt"
+  purity:
+    mode: purity
+    reference_gen: &gen_tau
+      object: GenVisTau
+      label: "gen vis. $\\tau_h$"
+    vs:
+      pt: &pt_tau {edges: [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]}
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    thresholds: [30, 50]
 
-Purity_Tau_Endcap:
+TausPurityBarrel:
   sample: VBFHToTauTau
   version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1nnPuppiTau"
-    x_arg: "pt"
-    label: "L1nnPuppiTau"
-    cuts:
-      event:
-        - "{passLooseNN} == 1"
-        - "abs({eta}) > 1.5"
-      object:
-        - "abs({eta}) < 2.4"
   test_objects:
-    GenVisTau:default: "pt"
+    L1nnPuppiTau:default:barrel: "pt"
+    L1caloTau:default:barrel: "pt"
+    L1nnCaloTau:default:barrel: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_tau
+    vs: {pt: *pt_tau}
+
+TausPurityEndcap:
+  sample: VBFHToTauTau
+  version: V50nano
+  test_objects:
+    L1nnPuppiTau:default:endcap: "pt"
+    L1caloTau:default:endcap: "pt"
+    L1nnCaloTau:default:endcap: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_tau
+    vs: {pt: *pt_tau}
+
+TausPurityLeading:
+  sample: VBFHToTauTau
+  version: V50nano
+  test_objects:
+    L1nnPuppiTau:default: "pt"
     L1caloTau:default: "pt"
-  xlabel: "L1 nnPuppiTau $p_T$ (GeV)"
-  ylabel: "Purity (Barrel)"
-  binning:
-    min: 0
-    max: 100
-    step: 3
-
-Purity_Tau_Eta_Pt40:
-  sample: VBFHToTauTau
-  version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1nnPuppiTau"
-    x_arg: "eta"
-    label: "L1nnPuppiTau"
-    cuts:
-      event:
-        - "{passLooseNN} == 1"
-        - "{pt} > 40"
-      object:
-        - "abs({eta}) < 2.4"
-  test_objects:
-    GenVisTau:default: "eta"
-    L1caloTau:default: "eta"
-  xlabel: "L1 nnPuppiTau $\\eta$"
-  ylabel: "Purity (L1 $p_T$ > 40 GeV)"
-  binning:
-    min: -2.5
-    max: 2.5
-    step: 0.1
-
-Purity_Tau_Eta_Pt100:
-  sample: VBFHToTauTau
-  version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1nnPuppiTau"
-    x_arg: "eta"
-    label: "L1nnPuppiTau"
-    cuts:
-      event:
-        - "{passLooseNN} == 1"
-        - "{pt} > 100"
-      object:
-        - "abs({eta}) < 2.4"
-  test_objects:
-    GenVisTau:default: "eta"
-    L1caloTau:default: "eta"
-  xlabel: "L1 nnPuppiTau $\\eta$"
-  ylabel: "Purity (L1 $p_T$ > 100 GeV)"
-  binning:
-    min: -2.5
-    max: 2.5
-    step: 0.1
-
+  purity:
+    mode: purity
+    leading_only: true
+    reference_gen: *gen_tau
+    vs: {pt: *pt_tau}
