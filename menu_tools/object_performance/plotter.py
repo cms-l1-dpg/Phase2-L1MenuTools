@@ -1,6 +1,7 @@
 import argparse
 import sys
 import json
+import textwrap
 import os
 from typing import Any, Optional
 import warnings
@@ -428,7 +429,10 @@ class EfficiencyPlotter(Plotter):
                     label, efficiency, yerr, coll.xerr(key), style
                 )
             self._style_plot(fig, ax)
-            ax.get_legend().set_title(title)
+            # Long titles (e.g. the l1_seed label) are wrapped, mathtext kept intact
+            if len(title) > 36 and "$" not in title:
+                title = textwrap.fill(title, 36)
+            ax.legend(loc="best", frameon=False, title=title, title_fontsize=18)
             ax.set_ylim(0, 1.1)
             fname = os.path.join(
                 self._outdir_turnons,
