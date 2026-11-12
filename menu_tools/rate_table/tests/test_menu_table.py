@@ -117,7 +117,8 @@ def test_wrap_event_records_matches_python_lists():
     new = mt.wrap_event_records(arr)
     assert str(new.type) == str(ref.type)
     assert "var" in str(new.type)
-    assert ak.array_equal(new, ref)
+    # ak.array_equal needs awkward >= 2.6; the project pins 2.5.2
+    assert new.to_list() == ref.to_list()
 
 
 def test_missing_scalings_fallback():
