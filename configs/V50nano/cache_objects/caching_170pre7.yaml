@@ -204,6 +204,8 @@ V50nano_170pre7:
         L1TrackJet: [pt, eta, phi]
         L1TrackTripletWord: "all"
         L1ExtTrackHT: [ht]
+        ## P2GT decisions
+        L1: "*_final"
   VBFHToBB:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170pre7/v45/VBFHToBB_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoBB_Spring24_200PU_V45_reL1wTT_170pre7/*/hadd/*.root
     trees_branches:
