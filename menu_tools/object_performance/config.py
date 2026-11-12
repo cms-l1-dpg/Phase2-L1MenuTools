@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from menu_tools.object_performance.split import SplitConfig
 from menu_tools.utils.config import BasePlotConfig
 from menu_tools.utils.objects import Object
 
@@ -152,6 +153,16 @@ class PerformancePlotConfig(BasePlotConfig):
         if isinstance(apply_to, str):
             apply_to = [apply_to]
         return {"objects": norm, "apply_to": apply_to, "label": block.get("label")}
+
+    @property
+    def split_by(self) -> Optional[SplitConfig]:
+        """Optional `split_by` block: efficiencies (and resolutions) split by
+        categories of a reference field (see `menu_tools.object_performance.split`).
+        None if not set."""
+        block = self._cfg.get("split_by")
+        if not block:
+            return None
+        return SplitConfig(block, self.plot_name)
 
     @property
     def reference_field(self):

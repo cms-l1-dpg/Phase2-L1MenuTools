@@ -15,6 +15,12 @@ from tqdm import tqdm
 
 from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.object_performance.config import PerformancePlotConfig
+from menu_tools.object_performance.split import (
+    OTHER,
+    category_counts,
+    integrated_efficiency,
+    safe_name,
+)
 from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object, is_hlt_object, trigger_level
@@ -108,11 +114,46 @@ class EfficiencyPlotter(Plotter):
         extra = getattr(self.turnon_collection, "extra_curves", {})
         return extra.get(obj_key, {}).get("style", {})
 
+    def _json_header(self, suffix: str = "") -> dict[str, Any]:
+        return {
+            "xlabel": self.cfg.xlabel,
+            "ylabel": self.cfg.ylabel.replace("<threshold>", str(self.threshold)),
+            "watermark": f"{self.version}_{self.plot_name}{suffix}_{self.threshold}",
+        }
+
+    def _curve_json(
+        self,
+        label: str,
+        efficiency: np.ndarray,
+        yerr: np.ndarray,
+        xerr: np.ndarray,
+        style: dict,
+    ) -> dict[str, Any]:
+        """JSON entry of one efficiency curve (bins with a finite efficiency)."""
+        xbins = self.turnon_collection.bins
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
+        yerr = np.array(
+            [yerr[0][~np.isnan(efficiency)], yerr[1][~np.isnan(efficiency)]]
+        )
+        xerr = xerr[np.isfinite(efficiency)]
+        xbins = xbins[np.isfinite(efficiency)]
+        efficiency = efficiency[np.isfinite(efficiency)]
+        return {
+            "label": label,
+            "efficiency": efficiency.tolist(),
+            "efficiency_err": yerr.tolist(),
+            "xbins": xbins.tolist(),
+            "err_kwargs": {
+                "xerr": xerr.tolist(),
+                "capsize": 3,
+                "marker": "o",
+                "markersize": 8,
+                **style,
+            },
+        }
+
     def _save_json(self, file_name):
-        plot = {}
-        plot["xlabel"] = self.cfg.xlabel
-        plot["ylabel"] = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
-        plot["watermark"] = f"{self.version}_{self.plot_name}_" f"{self.threshold}"
+        plot = self._json_header()
 
         for obj_key, gen_hist_trig in self.turnon_collection.hists.items():
             if obj_key == "ref":
@@ -122,9 +163,6 @@ class EfficiencyPlotter(Plotter):
             # overrides), or of an extra `l1_seed` curve
             label = self.turnon_collection.curve_label(obj_key)
 
-            xbins = self.turnon_collection.bins
-            xbins = 0.5 * (xbins[1:] + xbins[:-1])
-
             if self.cfg.iso_vs_eff_plot:
                 efficiency = self._get_iso_vs_eff_hist(gen_hist_trig[0])
                 yerr = np.zeros((2, len(efficiency)))
@@ -133,30 +171,9 @@ class EfficiencyPlotter(Plotter):
                 efficiency, yerr = self.turnon_collection.get_efficiency(obj_key)
                 xerr = self.turnon_collection.xerr(obj_key)
 
-            yerr = np.array(
-                [yerr[0][~np.isnan(efficiency)], yerr[1][~np.isnan(efficiency)]]
+            plot[obj_key] = self._curve_json(
+                label, efficiency, yerr, xerr, self._extra_style(obj_key)
             )
-            xerr = xerr[np.isfinite(efficiency)]
-            xbins = xbins[np.isfinite(efficiency)]
-            efficiency = efficiency[np.isfinite(efficiency)]
-
-            xerr = xerr.tolist()
-            yerr = yerr.tolist()
-            xbins = xbins.tolist()
-            efficiency = efficiency.tolist()
-
-            plot[obj_key] = {}
-            plot[obj_key]["label"] = label
-            plot[obj_key]["efficiency"] = efficiency
-            plot[obj_key]["efficiency_err"] = yerr
-            plot[obj_key]["xbins"] = xbins
-            plot[obj_key]["err_kwargs"] = {
-                "xerr": xerr,
-                "capsize": 3,
-                "marker": "o",
-                "markersize": 8,
-                **self._extra_style(obj_key),
-            }
 
         with open(f"{file_name}", "w") as outfile:
             outfile.write(json.dumps(plot, indent=4))
@@ -323,6 +340,114 @@ class EfficiencyPlotter(Plotter):
 
         plt.close()
 
+    # ------------------------------------------------------------------------------------------
+    # `split_by` (split.py)
+    # ------------------------------------------------------------------------------------------
+    def _split_plots(
+        self,
+    ) -> list[tuple[str, str, list[tuple[str, str, dict, str, dict]]]]:
+        """The split plots: (file suffix, legend title, curves); a curve is (JSON key,
+        label, hists, key in hists, style)."""
+        coll = self.turnon_collection
+        split = self.cfg.split_by
+        keys = [k for k in coll.hists if k != "ref"]
+        plots = []
+        if split.layout == "per_object":
+            for key in keys:
+                n_all = coll.hists["ref"][key][0].sum()
+                curves = [("inclusive", "All", coll.hists, key, {"color": "k"})]
+                for i, (cat, hists) in enumerate(coll.split_hists.items()):
+                    frac = hists["ref"][key][0].sum() / n_all if n_all else 0.0
+                    curves.append(
+                        (cat, f"{cat} ({frac:.0%})", hists, key, {"color": f"C{i}"})
+                    )
+                plots.append((safe_name(key), coll.curve_label(key), curves))
+        else:
+            for cat, hists in coll.split_hists.items():
+                curves = [
+                    (key, coll.curve_label(key), hists, key, self._extra_style(key))
+                    for key in keys
+                ]
+                plots.append((safe_name(cat), cat, curves))
+        return plots
+
+    def _split_fractions(self) -> dict[str, Any]:
+        """Category table of the split: the composition of all reference objects (after
+        the reference cuts), and per curve the denominators / numerators and integrated
+        efficiencies per category (in `summary_range`, default the whole binning)."""
+        coll = self.turnon_collection
+        split = self.cfg.split_by
+        bins = coll.bins
+        out: dict[str, Any] = {
+            **self._json_header(split.tag),
+            "field": split.field,
+            "categories": split.categories,
+            "summary_range": list(split.summary_range or (bins[0], bins[-1])),
+            "reference": category_counts(coll.split_ref_values, split),
+            "curves": {},
+        }
+        for key in [k for k in coll.hists if k != "ref"]:
+            entry: dict[str, Any] = {"label": coll.curve_label(key)}
+            groups = [("inclusive", coll.hists)] + list(coll.split_hists.items())
+            for name, hists in groups:
+                entry[name] = integrated_efficiency(
+                    hists[key][0], hists["ref"][key][0], bins, split.summary_range
+                )
+            n_den = entry["inclusive"]["n_den"]
+            n_cat = sum(entry[c]["n_den"] for c in coll.split_hists)
+            entry[OTHER] = {"n_den": n_den - n_cat}
+            for name, _ in groups:
+                entry[name]["fraction"] = (
+                    entry[name]["n_den"] / n_den if n_den else None
+                )
+            out["curves"][key] = entry
+        return out
+
+    @utils.ignore_warnings
+    def _plot_split(self) -> None:
+        split = self.cfg.split_by
+        coll = self.turnon_collection
+        xbins = coll.bins
+        xbins = 0.5 * (xbins[1:] + xbins[:-1])
+        for suffix, title, curves in self._split_plots():
+            fig, ax = self._create_new_plot()
+            plot = self._json_header(f"{split.tag}_{suffix}")
+            for json_key, label, hists, key, style in curves:
+                efficiency, yerr = coll.get_efficiency(key, hists)
+                ax.errorbar(
+                    xbins,
+                    efficiency,
+                    yerr=yerr,
+                    label=label,
+                    capsize=3,
+                    marker="o",
+                    markersize=8,
+                    **style,
+                )
+                plot[json_key] = self._curve_json(
+                    label, efficiency, yerr, coll.xerr(key), style
+                )
+            self._style_plot(fig, ax)
+            ax.get_legend().set_title(title)
+            ax.set_ylim(0, 1.1)
+            fname = os.path.join(
+                self._outdir_turnons,
+                f"{self.plot_name}{split.tag}_{suffix}_{self.threshold}_"
+                f"{self.version}",
+            )
+            plt.savefig(f"{fname}.png", bbox_inches="tight")
+            plt.savefig(f"{fname}.pdf", bbox_inches="tight")
+            with open(f"{fname}.json", "w") as f:
+                f.write(json.dumps(plot, indent=4))
+            plt.close(fig)
+
+        fname = os.path.join(
+            self._outdir_turnons,
+            f"{self.plot_name}{split.tag}_fractions_{self.threshold}_{self.version}",
+        )
+        with open(f"{fname}.json", "w") as f:
+            f.write(json.dumps(self._split_fractions(), indent=4))
+
     def plot(self):
         self._make_output_dirs(self.version)
         if self.cfg.iso_vs_eff_plot:
@@ -330,6 +455,8 @@ class EfficiencyPlotter(Plotter):
         else:
             self._plot_efficiency_curve()
             self._plot_raw_counts()
+            if self.cfg.split_by is not None:
+                self._plot_split()
 
 
 class EfficiencyCentral:
