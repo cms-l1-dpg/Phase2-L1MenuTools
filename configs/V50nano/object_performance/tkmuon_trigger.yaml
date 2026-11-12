@@ -4,7 +4,7 @@ TkMuonsTrigger_Barrel:
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
-    x_arg: "eta"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -36,7 +36,7 @@ TkMuonsTrigger_Overlap:
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
-    x_arg: "eta"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -69,7 +69,7 @@ TkMuonsTrigger_Endcap:
   match_test_to_ref: True
   reference_object:
     object: "GenPart"
-    x_arg: "eta"
+    x_arg: "pt"
     label: "Gen Muons"
     cuts:
       event:
@@ -77,6 +77,7 @@ TkMuonsTrigger_Endcap:
         - "abs({pdgId}) == 13"
       object:
         - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
   test_objects:
     # L1gmtMuon:default:endcap: "pt"
     L1gmtTkMuon:Dynamic:endcap: "pt"
