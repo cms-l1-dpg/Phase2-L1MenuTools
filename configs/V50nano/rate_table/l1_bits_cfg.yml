@@ -1,0 +1,4 @@
+version: "V50nano_170pre6HLT"
+sample: "MinBias"
+menu_config: "configs/V50nano/rate_table/l1_bits_menu_cfg.yml"
+table_fname: "l1_bits"

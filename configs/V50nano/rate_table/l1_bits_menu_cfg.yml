@@ -1,0 +1,204 @@
+# One seed per P2GT emulator seed (L1_p*_final), from the per-event bit record `L1` of the L1+HLT nanos
+# (CMSSW_17_0_0_pre6 re-emulation, process HLTX; objects in configs/V50nano/objects/hlt_bits.yaml).
+# The `_final` decisions (after prescale/veto) of the GT emulator.
+# Generated from the branch list of the nanos; rates come with counts and Garwood 68% intervals.
+L1_pDoubleEGEle37_24_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleEGEle37_24_final
+L1_pDoubleIsoTkPho22_12_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleIsoTkPho22_12_final
+L1_pDoublePuppiJet112_112_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoublePuppiJet112_112_final
+L1_pDoublePuppiJet160_35_mass620_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoublePuppiJet160_35_mass620_final
+L1_pDoublePuppiTau52_52_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoublePuppiTau52_52_final
+L1_pDoubleTkEle25_12_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkEle25_12_final
+L1_pDoubleTkElePuppiHT_8_8_390_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkElePuppiHT_8_8_390_final
+L1_pDoubleTkMuPuppiHT_3_3_300_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuPuppiHT_3_3_300_final
+L1_pDoubleTkMuPuppiJetPuppiMet_3_3_60_130_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuPuppiJetPuppiMet_3_3_60_130_final
+L1_pDoubleTkMuon15_7_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuon15_7_final
+L1_pDoubleTkMuonTkEle5_5_9_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuonTkEle5_5_9_final
+L1_pDoubleTkMuon_4_4_OS_Dr1p2_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuon_4_4_OS_Dr1p2_final
+L1_pDoubleTkMuon_4p5_4p5_OS_Er2_Mass7to18_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuon_4p5_4p5_OS_Er2_Mass7to18_final
+L1_pDoubleTkMuon_OS_Er1p5_Dr1p4_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pDoubleTkMuon_OS_Er1p5_Dr1p4_final
+L1_pIsoTkEleEGEle22_12_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pIsoTkEleEGEle22_12_final
+L1_pNNPuppiTauPuppiMet_55_190_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pNNPuppiTauPuppiMet_55_190_final
+L1_pPuppiHT400_pQuadJet70_55_40_40_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiHT400_pQuadJet70_55_40_40_final
+L1_pPuppiHT450_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiHT450_final
+L1_pPuppiMET200_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiMET200_final
+L1_pPuppiMHT140_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiMHT140_final
+L1_pPuppiTauTkIsoEle45_22_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiTauTkIsoEle45_22_final
+L1_pPuppiTauTkMuon42_18_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pPuppiTauTkMuon42_18_final
+L1_pSingleEGEle51_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSingleEGEle51_final
+L1_pSingleIsoTkEle28_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSingleIsoTkEle28_final
+L1_pSingleIsoTkPho36_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSingleIsoTkPho36_final
+L1_pSinglePuppiJet230_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSinglePuppiJet230_final
+L1_pSingleTkEle36_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSingleTkEle36_final
+L1_pSingleTkMuon22_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pSingleTkMuon22_final
+L1_pTkEleIsoPuppiHT_26_190_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkEleIsoPuppiHT_26_190_final
+L1_pTkElePuppiJet_28_40_MinDR_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkElePuppiJet_28_40_MinDR_final
+L1_pTkEleTkMuon10_20_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkEleTkMuon10_20_final
+L1_pTkMuPuppiJetPuppiMet_3_110_120_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuPuppiJetPuppiMet_3_110_120_final
+L1_pTkMuTriPuppiJet_12_40_dRMax_DoubleJet_dEtaMax_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuTriPuppiJet_12_40_dRMax_DoubleJet_dEtaMax_final
+L1_pTkMuonDoubleTkEle6_17_17_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuonDoubleTkEle6_17_17_final
+L1_pTkMuonPuppiHT6_320_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuonPuppiHT6_320_final
+L1_pTkMuonTkEle7_23_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuonTkEle7_23_final
+L1_pTkMuonTkIsoEle7_20_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTkMuonTkIsoEle7_20_final
+L1_pTripleTkMuon5_3_3_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTripleTkMuon5_3_3_final
+L1_pTripleTkMuon_5_3_0_DoubleTkMuon_5_3_OS_MassTo9_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTripleTkMuon_5_3_0_DoubleTkMuon_5_3_OS_MassTo9_final
+L1_pTripleTkMuon_5_3p5_2p5_OS_Mass5to17_final:
+  cross_masks: []
+  leg1:
+    obj: L1:default
+    threshold_cut: leg1.pTripleTkMuon_5_3p5_2p5_OS_Mass5to17_final
