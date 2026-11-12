@@ -89,7 +89,7 @@
   ```yaml
   ElectronsTriggerBarrel_wMatching:
     sample: DYLL_M50
-    version: V43nano
+    version: V50nano
     match_test_to_ref: True
     matching_and_threshold: True
     ...
@@ -98,5 +98,9 @@
 
   The plateau of these curves corresponds to the matching efficiency.
   Since they generally do not reach 100%, no `scalings` should be configured
-  for such plots. Examples can be found in
-  `configs/V43nano/object_performance/*_trigger_wMatching.yaml`.
+  for such plots. The denominator is filled with the reference object's
+  `x_arg`, the numerator with the reference field named by the test objects'
+  `x_arg`, so the two must be the same (an error is raised otherwise).
+  Examples can be found in
+  `configs/V50nano/object_performance/*_trigger_wMatching.yaml`
+  (and `configs/V43nano/object_performance/` for the older version).
