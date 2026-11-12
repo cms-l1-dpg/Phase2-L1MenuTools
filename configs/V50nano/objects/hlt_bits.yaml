@@ -1,0 +1,17 @@
+# Per-event trigger decision records of the L1+HLT nanos (cached as `HLT` and `L1`).
+# Each is one record per event with one bool field per path/seed; in the rate table the
+# record prefix is stripped from the field names (`HLT_IsoMu24_FromL1TkMuon` ->
+# `IsoMu24_FromL1TkMuon`, `L1_pSingleTkMuon22_final` -> `pSingleTkMuon22_final`), e.g.
+#   leg1: {obj: "HLT:default", threshold_cut: "leg1.IsoMu24_FromL1TkMuon"}
+# No pt, so no scalings. `bit_record: true` keeps field names containing "qual" as they are.
+HLT:
+  label: "HLT path decisions"
+  bit_record: true
+  ids:
+    default: {}
+
+L1:
+  label: "L1 (P2GT emulator) seed decisions"
+  bit_record: true
+  ids:
+    default: {}
