@@ -252,7 +252,7 @@ class RateComputer:
         from the cached parquet file.
         """
         fpath = os.path.join(
-            "cache",
+            constants.CACHE_DIR,
             self.version,
             f"{self.version}_{self.sample}_{self.object.nano_obj_name}.parquet",
         )
@@ -372,7 +372,7 @@ class RatePlotCentral:
         the RatePlotter for plotting.
         """
         version = self.override_version if self.override_version else self.config_version
-        print(f"INFO: Loading cached inputs from cache/{version}")
+        print(f"INFO: Loading cached inputs from {constants.CACHE_DIR}/{version}")
         print(f"INFO: Saving outputs to outputs/{version}/object_performance/rates")
         print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
         if apply_offline_conversion:

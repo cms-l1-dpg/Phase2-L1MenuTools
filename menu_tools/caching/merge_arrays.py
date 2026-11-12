@@ -2,6 +2,8 @@ import awkward as ak
 import argparse
 import os
 
+from menu_tools.utils import constants
+
 # Set up argument parser
 parser = argparse.ArgumentParser(description='Merge parquet files with custom version and sample')
 parser.add_argument('--version', type=str, default="V45nano", help='Version to use')
@@ -10,7 +12,7 @@ args = parser.parse_args()
 
 version = args.version
 sample = args.sample
-pattern = f"cache/{version}/{version}_{sample}_%s.parquet"
+pattern = f"{constants.CACHE_DIR}/{version}/{version}_{sample}_%s.parquet"
 objects = ["L1EGbarrel", "L1EGendcap"]
 target_object = "L1EG"
 target_file = pattern % target_object

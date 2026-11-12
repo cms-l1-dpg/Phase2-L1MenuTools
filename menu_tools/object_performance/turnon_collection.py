@@ -6,6 +6,7 @@ import numpy as np
 import vector
 
 from menu_tools.object_performance.config import PerformancePlotConfig
+from menu_tools.utils import constants
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object
 
@@ -48,7 +49,7 @@ class ArrayLoader:
         in self._transform_key().
         """
         fname = (
-            f"cache/{self.cfg_plot.version}/"
+            f"{constants.CACHE_DIR}/{self.cfg_plot.version}/"
             f"{self.cfg_plot.version}_"
             f"{self.cfg_plot.sample}_"
             f"{obj}.parquet"

@@ -71,7 +71,7 @@ class MenuTable:
             override_sample=override_sample,
         )
 
-        print(f"INFO: Loading cached inputs from cache/{self.config.version}")
+        print(f"INFO: Loading cached inputs from {constants.CACHE_DIR}/{self.config.version}")
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
         print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
         print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
@@ -138,7 +138,7 @@ class MenuTable:
         """
         obj = objects.Object(object_name, self.config.config_version_for_objects)
         fpath = os.path.join(
-            "cache",
+            constants.CACHE_DIR,
             self.config.version,
             f"{self.config.version}_{self.config.sample}_{obj.nano_obj_name}.parquet",
         )

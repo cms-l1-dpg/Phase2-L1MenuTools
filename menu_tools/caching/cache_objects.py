@@ -10,6 +10,7 @@ import uproot
 import vector
 import yaml
 
+from menu_tools.utils import constants
 from menu_tools.utils import utils
 
 
@@ -36,7 +37,7 @@ class ObjectCacher:
             self._branches = utils.get_branches(self._ntuple_path, tree, obj)
         else:
             self._branches = branches
-        self.cache_out_path = f"cache/{version}/"
+        self.cache_out_path = os.path.join(constants.CACHE_DIR, version) + "/"
         os.makedirs(self.cache_out_path, exist_ok=True)
 
     @property
