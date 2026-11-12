@@ -1,0 +1,77 @@
+# Purity and fake rates of L1 photons (H -> gamma gamma; `purity:` block, see
+# docs/object-performance.md#purity-fake-rate-and-multiplicity).
+# Gen photons: last copy, prompt (the Higgs photons and prompt FSR; not pi0 photons).
+
+PhotonsPurity:
+  sample: Hgg
+  version: V50nano
+  test_objects:
+    L1tkPhoton:NoIso: "pt"
+    L1tkPhoton:Iso: "pt"
+    L1EG:default: "pt"
+  purity:
+    mode: purity
+    reference_gen: &gen_g
+      object: GenPart
+      label: "prompt gen $\\gamma$"
+      cuts:
+        - "abs({pdgId}) == 22"
+        - "(({statusFlags}>>13)&1) == 1"
+        - "(({statusFlags}>>0)&1) == 1"
+    vs:
+      pt: &pt_g {edges: [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150]}
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    thresholds: [10, 30]
+
+PhotonsPurityBarrel:
+  sample: Hgg
+  version: V50nano
+  test_objects:
+    L1tkPhoton:NoIso:barrel: "pt"
+    L1tkPhoton:Iso:barrel: "pt"
+    L1EG:default:barrel: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_g
+    vs: {pt: *pt_g}
+
+PhotonsPurityEndcap:
+  sample: Hgg
+  version: V50nano
+  test_objects:
+    L1tkPhoton:NoIso:endcap: "pt"
+    L1tkPhoton:Iso:endcap: "pt"
+    L1EG:default:endcap: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_g
+    vs: {pt: *pt_g}
+
+PhotonsFakeRate:
+  sample: Hgg
+  version: V50nano
+  test_objects:
+    L1tkPhoton:NoIso: "pt"
+    L1tkPhoton:Iso: "pt"
+  purity:
+    mode: fake_rate
+    reference_gen: *gen_g
+    vs:
+      pu: *pu_bins
+      threshold: &thr_g {min: 0, max: 60, step: 2}
+    thresholds: [10, 20, 30]
+
+PhotonsMultiplicityMinBias:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    L1tkPhoton:NoIso: "pt"
+    L1tkPhoton:Iso: "pt"
+  purity:
+    mode: multiplicity
+    vs:
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: *pu_bins
+      threshold: *thr_g
+    thresholds: [10, 20, 30]
