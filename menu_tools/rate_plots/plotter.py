@@ -1,10 +1,12 @@
 import argparse
 import sys
 import os
+from typing import Optional
 import json
 
 import awkward as ak
 import matplotlib as mpl
+from cycler import cycler
 import matplotlib.pyplot as plt
 import mplhep as hep
 import numpy as np
@@ -34,7 +36,7 @@ colors = [
     "#717581",
     "#92dadd",
 ]
-mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=colors)
+mpl.rcParams["axes.prop_cycle"] = cycler(color=colors)
 plt.style.use(hep.style.CMS)
 
 
@@ -129,7 +131,8 @@ class RatePlotter:
         # Save plot
         fname = os.path.join(
             self._outdir,
-            f"{version}_{self._online_offline}_{self.cfg.plot_name}{self._scalings_suffix}",
+            f"{version}_{self._online_offline}_{self.cfg.plot_name}"
+            f"{self._scalings_suffix}",
         )
         print("Saving to ", fname)
         plt.savefig(fname + ".png")
@@ -186,7 +189,8 @@ class RatePlotter:
         self._style_plot(fig, axs[0], axs[1])
         fname = os.path.join(
             self._outdir,
-            f"{v1}-vs-{v2}_{self._online_offline}_{self.cfg.plot_name}{self._scalings_suffix}",
+            f"{v1}-vs-{v2}_{self._online_offline}_{self.cfg.plot_name}"
+            f"{self._scalings_suffix}",
         )
         plt.savefig(fname + ".png")
         plt.savefig(fname + ".pdf", bbox_inches="tight")
@@ -219,7 +223,7 @@ class RateComputer:
         sample: str,
         version: str,
         apply_offline_conversion: bool,
-        scalings_version: str = None,
+        scalings_version: Optional[str] = None,
     ):
         self.object = obj
         self.sample = sample
@@ -275,7 +279,7 @@ class RateComputer:
 
         return arr
 
-    def compute_rate(self, thresholds: np.ndarray, nObj = 1) -> dict:
+    def compute_rate(self, thresholds: np.ndarray, nObj=1) -> dict:
         """Computes rate at threholds after application of all object cuts.
 
         threshold: pt threshold for which to compute rate
@@ -291,7 +295,9 @@ class RateComputer:
 
         if (max_pt_obj := self.arrays[obj_mask][pt_field]).ndim > 1:
             # max_pt_obj = ak.max(max_pt_obj, axis=1)
-            max_pt_obj = max_pt_obj[ak.argsort(max_pt_obj, axis=1, ascending=False)][:,nObj-1:]
+            max_pt_obj = max_pt_obj[ak.argsort(max_pt_obj, axis=1, ascending=False)][
+                :, nObj - 1 :
+            ]
             max_pt_obj = ak.fill_none(ak.firsts(max_pt_obj), -1)
 
         cumsum = np.cumsum(
@@ -311,8 +317,8 @@ class RatePlotCentral:
     def __init__(
         self,
         cfg_plots_path: str,
-        override_version: str = None,
-        override_scalings_version: str = None,
+        override_version: Optional[str] = None,
+        override_scalings_version: Optional[str] = None,
     ):
         with open(cfg_plots_path, "r") as f:
             self.cfg_plots = yaml.safe_load(f)
@@ -365,7 +371,9 @@ class RatePlotCentral:
                 scalings_version=self.override_scalings_version,
             )
 
-            rate_data[version] = rate_computer.compute_rate(self.get_bins(plot_config), nObj = plot_config.nObjects)
+            rate_data[version] = rate_computer.compute_rate(
+                self.get_bins(plot_config), nObj=plot_config.nObjects
+            )
 
         return rate_data
 
@@ -376,13 +384,24 @@ class RatePlotCentral:
         at the configured thresholds and passes it to
         the RatePlotter for plotting.
         """
-        version = self.override_version if self.override_version else self.config_version
+        version = (
+            self.override_version if self.override_version else self.config_version
+        )
         print(f"INFO: Loading cached inputs from cache/{version}")
         print(f"INFO: Saving outputs to outputs/{version}/object_performance/rates")
-        print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
+        print(
+            f"INFO: Loading object configs from configs/{self.config_version}/objects"
+        )
         if apply_offline_conversion:
-             scalings_version = self.override_scalings_version if self.override_scalings_version else version
-             print(f"INFO: Loading scalings from outputs/{scalings_version}/object_performance/scalings")
+            scalings_version = (
+                self.override_scalings_version
+                if self.override_scalings_version
+                else version
+            )
+            print(
+                "INFO: Loading scalings from "
+                f"outputs/{scalings_version}/object_performance/scalings"
+            )
 
         # Iterate over plots
         for plot_name, cfg_plot in self.cfg_plots.items():

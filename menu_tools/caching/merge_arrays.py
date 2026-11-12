@@ -3,9 +3,11 @@ import argparse
 import os
 
 # Set up argument parser
-parser = argparse.ArgumentParser(description='Merge parquet files with custom version and sample')
-parser.add_argument('--version', type=str, default="V45nano", help='Version to use')
-parser.add_argument('--sample', type=str, default="Hgg", help='Sample to use')
+parser = argparse.ArgumentParser(
+    description="Merge parquet files with custom version and sample"
+)
+parser.add_argument("--version", type=str, default="V45nano", help="Version to use")
+parser.add_argument("--sample", type=str, default="Hgg", help="Sample to use")
 args = parser.parse_args()
 
 version = args.version

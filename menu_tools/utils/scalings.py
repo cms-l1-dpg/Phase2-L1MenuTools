@@ -85,9 +85,7 @@ def add_offline_pt(
     if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
-        slope, offset = load_scaling_params(
-            obj, "inclusive", scaling_version, decimals
-        )
+        slope, offset = load_scaling_params(obj, "inclusive", scaling_version, decimals)
         new_pt = new_pt + (pt_orig * slope + offset)
     else:
         # if multiple eta ranges are found, the "inclusive" range is skipped
