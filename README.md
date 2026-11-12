@@ -49,9 +49,20 @@
   rate_plots <path_to_config>
   rate_table <path_to_config>
   rate_table_tex <path_to_config>
+  p2gt_compare --version <version> --menu <table_fname> --p2gt <P2GT menu>
+  p2gt_scalings --version <version>
   ```
 
   `rate_table --truncated` rounds the scalings to two decimals, as the P2GT
   emulator menus do, so that both apply identical thresholds. Its outputs get a
   `_truncated` suffix, which `rate_table_tex` and `compare_menus` pick up with
   the same option.
+
+  `p2gt_compare --version <version> --menu <table_fname> --p2gt <P2GT menu>`
+  compares the `rate_table` results of a menu with the P2GT emulator decisions,
+  which `cache_objects` caches from an `L1: "*_final"` entry in the MinBias
+  section of the caching config (see the module docstring).
+
+  `p2gt_scalings --version <version>` writes the scalings of a version in the format
+  of the P2GT emulator menus; with `--cmssw <CMSSW_BASE>/src` straight into the menu
+  folders, after checking that the menus find every scalings key they use.
