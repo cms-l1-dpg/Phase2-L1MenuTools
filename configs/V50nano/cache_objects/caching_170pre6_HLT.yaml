@@ -1,0 +1,335 @@
+# Spring24 PU200 L1+HLT nanos (CMSSW_17_0_0_pre6, own production).
+# MinBias (12.5k files) is cached in chunks on HTCondor (scripts/condor/caching_170pre6HLT_minbias.sub,
+# cache_objects --files-per-job N --job I) and merged with menu_tools/caching/merge_chunks.py.
+# After caching: make_hlt_sums.py (hltPuppiJetSums) and merge_arrays.py (L1EG) per sample.
+# No YAML anchors: each sample has its own lists.
+V50nano_170pre6HLT:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/DYToLL_M-50_TuneCP5_14TeV-pythia8/P2Nano_L1HLT_noSel_v1/*/0000/p2nano_*.root
+    trees_branches:
+      Events:
+        # gen
+        GenPart: "all"
+        GenMET: "all"
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
+        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
+        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/tt2l2nu_pu200/p2nano_*.root
+    trees_branches:
+      Events:
+        # gen
+        GenPart: "all"
+        GenJet: "all"
+        GenJetAK8: "all"
+        GenMET: "all"
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
+        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
+        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
+  HHTo2B2Tau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/P2Nano_L1HLT_noSel_v1/*/0000/p2nano_*.root
+    trees_branches:
+      Events:
+        # gen
+        GenPart: "all"
+        GenJet: "all"
+        GenJetAK8: "all"
+        GenMET: "all"
+        GenVisTau: "all"
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
+        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
+        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
+  HHTo4B:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-amcatnlo-pythia8/P2Nano_L1HLT_noSel_v1/*/0000/p2nano_*.root
+    trees_branches:
+      Events:
+        # gen
+        GenPart: "all"
+        GenJet: "all"
+        GenJetAK8: "all"
+        GenMET: "all"
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
+        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
+        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
+  MinBias:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/minbias_pu200/p2nano_*.root
+    trees_branches:
+      Events:
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
+        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
+        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
