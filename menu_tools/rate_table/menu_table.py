@@ -75,8 +75,14 @@ class MenuTable:
 
         print(f"INFO: Loading cached inputs from cache/{self.config.version}")
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
-        print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
-        print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
+        print(
+            "INFO: Loading object configs from "
+            f"configs/{self.config.config_version_for_objects}/objects"
+        )
+        print(
+            "INFO: Loading scalings from "
+            f"outputs/{self.config.scalings_version}/object_performance/scalings"
+        )
         if self.config.scalings_decimals is not None:
             print(
                 f"INFO: Rounding scalings to {self.config.scalings_decimals} "
@@ -84,11 +90,14 @@ class MenuTable:
             )
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
-            print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
+            print(
+                "INFO: Signal sample requested; table holds efficiencies, rate column "
+                "dropped"
+            )
         if CHUNK_SIZE > 0:
             print(f"INFO: Evaluating seeds in chunks of {CHUNK_SIZE} events")
 
-        self.arr_cache = {}
+        self.arr_cache: dict = {}
         self._obj_mask_cache: dict[str, ak.Array] = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
@@ -197,12 +206,15 @@ class MenuTable:
         return arr
 
     def _get_object_mask(self, object_name: str, arr: ak.Array) -> ak.Array:
-        """Object ID mask, memoised: it is requested once per leg but depends only on the object."""
+        """Object ID mask, memoised.
+
+        It is requested once per leg but depends only on the object.
+        """
         if object_name not in self._obj_mask_cache:
             obj = objects.Object(object_name, self.config.config_version_for_objects)
-            self._obj_mask_cache[object_name] = (
-                objects.compute_selection_mask_for_object_cuts(obj, arr)
-            )
+            self._obj_mask_cache[
+                object_name
+            ] = objects.compute_selection_mask_for_object_cuts(obj, arr)
         return self._obj_mask_cache[object_name]
 
     def get_legs_arrays_for_seed(
@@ -494,7 +506,8 @@ class MenuTable:
         print(df_counts)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_pd.csv",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}_pd.csv",
         )
         df_counts.to_csv(out_file)
 
@@ -558,12 +571,15 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_path = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
         # Masks are held as bool; drop the astype for an 8x smaller file.
-        dumped = {k: np.asarray(v).astype(np.int64) for k, v in self._seed_masks.items()}
-        ak.to_parquet(ak.zip(dumped), out_path, compression = "LZ4")
+        dumped = {
+            k: np.asarray(v).astype(np.int64) for k, v in self._seed_masks.items()
+        }
+        ak.to_parquet(ak.zip(dumped), out_path, compression="LZ4")
 
     def save_table(self) -> None:
         """Function that saves to file the table produced by `make_table`."""
@@ -574,7 +590,8 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}.csv",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}.csv",
         )
         columns = list(self.table[0].keys())
         with open(out_file, "w") as f:

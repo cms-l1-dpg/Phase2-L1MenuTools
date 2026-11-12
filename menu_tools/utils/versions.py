@@ -4,8 +4,8 @@
 
     object_performance cfg1.yaml cfg2.yaml --version V50nano_170pre{6,5}{,_140PU}
 
-(braces unquoted, so that bash expands them). The list ends at the next option (`--scalings`
-etc.) or at the end of the command. Config files (`.yaml`/`.yml`) may come
+(braces unquoted, so that bash expands them). The list ends at the next option
+(`--scalings` etc.) or at the end of the command. Config files (`.yaml`/`.yml`) may come
 before or after `--version`: `parse_args` moves them out of the version list.
 """
 
@@ -61,17 +61,22 @@ def parse_args(
 def get_versions(
     parser: argparse.ArgumentParser, args: argparse.Namespace
 ) -> list[Optional[str]]:
-    """The versions to run, `[None]` (= the config's own version) if --version wasn't given."""
+    """The versions to run.
+
+    `[None]` (= the config's own version) if --version wasn't given.
+    """
     if not args.version:
         return [None]
     configs = [v for v in args.version if v.endswith((".yaml", ".yml"))]
     if configs:
         parser.error(
-            f"--version got config file(s) {configs}: put the config files before --version"
+            f"--version got config file(s) {configs}: put the config files before "
+            "--version"
         )
     if any("{" in v or "}" in v for v in args.version):
         parser.error(
-            f"--version got unexpanded braces in {args.version}: leave them unquoted so bash expands them"
+            f"--version got unexpanded braces in {args.version}: leave them unquoted "
+            "so bash expands them"
         )
     return args.version
 
@@ -81,7 +86,8 @@ def run_per_version(
 ) -> None:
     """Calls `run(version)` for each version.
 
-    A single version runs exactly as before (an error ends the command with its traceback).
+    A single version runs exactly as before (an error ends the command with its
+    traceback).
     With several, a failing version is reported and the rest still run; the command then
     exits non-zero listing the failures.
     """
@@ -100,6 +106,7 @@ def run_per_version(
             failed.append(version)
     if failed:
         raise SystemExit(
-            f"Failed for {len(failed)}/{len(versions)} versions: {' '.join(failed)}"
+            f"Failed for {len(failed)}/{len(versions)} versions: "
+            f"{' '.join(map(str, failed))}"
         )
     print(f"=== done for all {len(versions)} versions ===")

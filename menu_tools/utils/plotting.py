@@ -1,6 +1,8 @@
 import re
+from typing import cast
 
 import matplotlib.axes
+import matplotlib.figure
 import matplotlib.text
 
 
@@ -20,7 +22,7 @@ def add_watermark(
     Call this after `fig.tight_layout()`, since the available width depends
     on where the axes end up.
     """
-    fig = ax.figure
+    fig = cast(matplotlib.figure.Figure, ax.figure)
     wm = ax.text(
         0,
         -0.07,
@@ -33,7 +35,7 @@ def add_watermark(
     )
     wm.set_in_layout(False)
 
-    renderer = fig.canvas.get_renderer()
+    renderer = fig.canvas.get_renderer()  # type: ignore[attr-defined]
     ax_left = ax.get_window_extent(renderer).x0
     pad = 0.02 * fig.bbox.width
     # The watermark shares a row with the right-aligned x-axis label, so it

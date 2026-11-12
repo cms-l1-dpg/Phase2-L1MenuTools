@@ -25,7 +25,8 @@ def _extract_version(path: str) -> str:
 
 
 def main():
-    # ensure log printouts are flushed per line for easier monitoring when output is piped, e.g via tee
+    # ensure log printouts are flushed per line for easier monitoring when output is
+    # piped, e.g via tee
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(line_buffering=True)
 
@@ -74,7 +75,9 @@ def main():
 
     def run(version):
         menu_table = MenuTable(
-            copy.deepcopy(menu_config_dict),  # each version starts from the config as read
+            copy.deepcopy(
+                menu_config_dict
+            ),  # each version starts from the config as read
             config_version=config_version,
             override_version=version,
             override_scalings_version=args.scalings,
