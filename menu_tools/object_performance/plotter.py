@@ -374,8 +374,8 @@ class EfficiencyCentral:
         )
 
         for plot_name, cfg_plot in self.cfg_plots.items():
-            if "resolution" in cfg_plot:
-                continue  # handled by resolution_plotter.ResolutionCentral
+            if "resolution" in cfg_plot or "path_efficiency" in cfg_plot:
+                continue  # handled by ResolutionCentral / PathEfficiencyCentral
             # The previous plotter also holds the old collection; release both
             # before building the next, so two plots' arrays are never held at once.
             turnon_collection = plotter = None
@@ -683,6 +683,14 @@ def main():
                 )
 
                 ResolutionCentral(path_cfg_plot, override_version=version).run()
+
+                # Plot entries with a `path_efficiency:` block (L1 seed / HLT path
+                # efficiencies)
+                from menu_tools.object_performance.path_efficiency import (
+                    PathEfficiencyCentral,
+                )
+
+                PathEfficiencyCentral(path_cfg_plot, override_version=version).run()
 
     run_per_version(get_versions(parser, args), run)
 
