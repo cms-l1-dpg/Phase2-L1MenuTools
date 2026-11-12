@@ -7,6 +7,43 @@ import yaml
 
 import awkward as ak
 
+# `{field}` placeholders in cut strings. A field name contains no braces (and no
+# `&`/`|`), so two fields in one expression without an operator in between, e.g.
+# "{ecalIso} < 9 + 0.02*{pt}", are still replaced separately.
+CUT_FIELD_RE = r"{([^{}&|]*)}"
+
+
+def is_hlt_object(obj_name: str) -> bool:
+    """True for HLT objects: nano collections named `hlt*` (hltMuon,
+    hltElectron, ...).
+    """
+    return obj_name.split(":")[0].startswith("hlt")
+
+
+def is_trigger_object(obj_name: str) -> bool:
+    """True for trigger (test) objects, L1 or HLT, as opposed to gen/reference objects.
+
+    L1 objects are recognised by "L1" in the name (nano L1* collections).
+    """
+    return ("L1" in obj_name) or is_hlt_object(obj_name)
+
+
+def trigger_level(obj_names) -> str:
+    """Trigger level of a set of objects for axis labels.
+
+    "L1", "HLT", or "L1/HLT" if mixed.
+
+    Objects that are not HLT objects count as L1 (the default of all existing plots).
+    """
+    if isinstance(obj_names, str):
+        obj_names = [obj_names]
+    levels = {"HLT" if is_hlt_object(str(x)) else "L1" for x in obj_names}
+    if levels == {"HLT"}:
+        return "HLT"
+    if levels == {"L1", "HLT"}:
+        return "L1/HLT"
+    return "L1"
+
 
 @functools.lru_cache(maxsize=None)
 def _load_object_configs(version: str) -> dict:
@@ -136,7 +173,15 @@ class Object:
 
     @property
     def plot_label(self) -> str:
-        return self._object_params["label"]
+        """Legend label from the object config.
+
+        L1 objects get an "L1 " prefix (unless the label already starts with "L1"), so
+        that L1 and HLT objects can be told apart.
+        """
+        label = self._object_params["label"]
+        if self.nano_obj_name.startswith("L1") and not label.startswith("L1"):
+            label = "L1 " + label
+        return label
 
     def get_scaling_object(self, eta_range: str) -> str:
         """
@@ -199,7 +244,7 @@ def compute_selection_mask_for_object_cuts(obj: Object, ak_array: ak.Array) -> a
         # Initialize temporary mask (for rangei) with True everywhere
         _sel = ak.ones_like(ak_array[ak_array.fields[0]]) > 0
         for cut in range_cuts:
-            cut = re.sub(r"{([^&|]*)}", r"ak_array['\1']", cut)
+            cut = re.sub(CUT_FIELD_RE, r"ak_array['\1']", cut)
             eta_sel = (abs(ak_array["eta"]) >= obj.eta_ranges[range_i][0]) & (
                 abs(ak_array["eta"]) < obj.eta_ranges[range_i][1]
             )

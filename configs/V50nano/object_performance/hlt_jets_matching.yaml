@@ -1,0 +1,71 @@
+# HLT AK4 PUPPI jets (hltAK4PuppiJet) vs the L1 seeded-cone PUPPI jets, ttbar.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTJetMatchingBarrel:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJet:default: "pt"
+    L1puppiJetSC4:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+HLTJetMatchingEndcap:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJet:default: "pt"
+    L1puppiJetSC4:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+HLTJetMatchingForward:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.0"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJet:extended: "pt"
+    L1puppiExtJetSC4:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (forwardHF)"
+  binning:
+    min: 0
+    max: 500
+    step: 10

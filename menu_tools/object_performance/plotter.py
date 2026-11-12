@@ -17,7 +17,7 @@ from menu_tools.object_performance.turnon_collection import TurnOnCollection
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.utils import utils
-from menu_tools.utils.objects import Object
+from menu_tools.utils.objects import Object, is_hlt_object, trigger_level
 from menu_tools.utils.plotting import add_watermark
 from menu_tools.utils.versions import (
     add_version_argument,
@@ -465,7 +465,7 @@ class ScalingPlotter(Plotter):
             _ylim_upper = max(_ylim_upper, np.max(y_points) * 1.1)
 
         ax.legend(loc="lower right")
-        ax.set_xlabel("L1 threshold [GeV]")
+        ax.set_xlabel(f"{trigger_level(self.scalings.keys())} threshold [GeV]")
         ax.set_ylabel(f"{int(self.scaling_pct * 100)}% Location (gen, GeV)")
         watermark = f"{self.version}_{self.plot_name}"
         fig.tight_layout()
@@ -519,23 +519,34 @@ class ScalingCentral:
     def _get_scaling_thresholds(self, cfg_plot, test_obj) -> list[int]:
         if str(test_obj) in self.scaling_thresholds:
             return self.scaling_thresholds[str(test_obj)]
+        group = self._get_scaling_group(cfg_plot)
+        # HLT objects use the `HLT<group>` thresholds (e.g. HLTMuon) if configured
+        if is_hlt_object(str(test_obj)) and f"HLT{group}" in self.scaling_thresholds:
+            return self.scaling_thresholds[f"HLT{group}"]
+        return self.scaling_thresholds[group]
+
+    @staticmethod
+    def _get_scaling_group(cfg_plot) -> str:
+        """Object group (key of configs/scaling_thresholds.yaml) from the test object
+        names.
+        """
         if any("Muon" in x for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["Muon"]
+            return "Muon"
         if any(
             any([y in x for x in cfg_plot["test_objects"]])
             for y in ["Ele", "EG", "Photon"]
         ):
-            return self.scaling_thresholds["EG"]
+            return "EG"
         if any("MHT" in x for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["MHT"]
+            return "MHT"
         if any("MET" in x for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["MET"]
+            return "MET"
         if any(("HT" in x) and ("MHT" not in x) for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["HT"]
+            return "HT"
         if any("Tau" in x for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["Tau"]
+            return "Tau"
         if any("Jet" in x for x in cfg_plot["test_objects"]):
-            return self.scaling_thresholds["Jet"]
+            return "Jet"
         raise RuntimeError("Failed to find thresholds in cfg_scaling_thresholds!")
 
     def _write_scalings_to_file(

@@ -2,7 +2,9 @@
   
   The object performance tools allow the user to produce
   matching efficiency, turn-on curves, and scaling plots for
-  the various L1 objects.
+  the various L1 objects, and for the Phase-2 HLT objects of the L1+HLT nanos
+  (`configs/V50nano/object_performance/hlt_*.yaml`, objects in `configs/V50nano/objects/hlt.yaml`;
+  see [objects](objects.md#hlt-objects)).
   The definition of each object to be tested is detailed in
   this [TWiki page](https://twiki.cern.ch/twiki/bin/view/CMS/PhaseIIL1TriggerMenuTools).
 
