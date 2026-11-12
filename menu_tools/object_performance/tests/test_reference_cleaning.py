@@ -227,3 +227,24 @@ def test_ht_reference(cache):
     np.testing.assert_allclose(
         ak.to_numpy(coll.ak_arrays["ref"]["HT"]), [150, 80, 90, 40, 70, 90]
     )
+
+
+# --- scalings restricted to a subset of the test objects -----------------------------
+
+
+def test_scaling_objects(cache):
+    cfg = _cfg(PROMPT_LEPTONS)
+    cfg["test_objects"]["L1puppiJetSC4:default:barrel"] = "pt"
+    cfg["scalings"] = {"method": "naive", "threshold": 0.9}
+    all_objs = [str(o) for o in PerformancePlotConfig(cfg).scaling_object_instances]
+    assert len(all_objs) == 2
+    cfg["scalings"]["objects"] = ["L1puppiJetSC4:default:barrel"]
+    sel = PerformancePlotConfig(cfg).scaling_object_instances
+    assert [str(o) for o in sel] == ["L1puppiJetSC4:default:barrel"]
+    cfg["scalings"]["objects"] = ["L1puppiJetSC4:default:endcap"]
+    with pytest.raises(ValueError):
+        PerformancePlotConfig(cfg).scaling_object_instances
+    # selection by config key, also when str(obj) differs from it (":inclusive")
+    cfg["test_objects"] = {"L1puppiJetSC4:default": "pt"}
+    cfg["scalings"]["objects"] = ["L1puppiJetSC4:default"]
+    assert len(PerformancePlotConfig(cfg).scaling_object_instances) == 1

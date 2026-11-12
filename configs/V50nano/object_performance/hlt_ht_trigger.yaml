@@ -34,6 +34,8 @@ HLT_HT_90perc:
     L1puppiJetSC4sums:HT: "pt"
   thresholds: [300, 500]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltPuppiJetCorrSums:HT", "hltPFPuppiHT:default"]
     method: "naive"
     threshold: 0.9
   xlabel: "Gen. HT (GeV)"
@@ -62,6 +64,8 @@ HLT_MHT_50perc:
     L1puppiJetSC4sums:MHT: "pt"
   thresholds: [100, 140]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltPuppiJetCorrSums:MHT", "hltPuppiJetSums:MHT"]
     method: "naive"
     threshold: 0.5
   xlabel: "Gen. MHT30 (GeV)"

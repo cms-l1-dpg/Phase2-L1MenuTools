@@ -623,7 +623,7 @@ class ScalingCentral:
             # only the final histogramming depends on the threshold.
             thds_by_obj = {
                 str(test_obj): self._get_scaling_thresholds(cfg_plot, test_obj)
-                for test_obj in plot_config.test_object_instances
+                for test_obj in plot_config.scaling_object_instances
             }
             all_thds = list(
                 dict.fromkeys(t for thds in thds_by_obj.values() for t in thds)
@@ -641,7 +641,7 @@ class ScalingCentral:
             results = {}
             for threshold in tqdm(all_thds, leave=False, desc="Thresholds"):
                 turnon_collection.set_threshold(threshold)
-                for test_obj in plot_config.test_object_instances:
+                for test_obj in plot_config.scaling_object_instances:
                     if threshold in thds_by_obj[str(test_obj)]:
                         results[
                             str(test_obj), threshold
@@ -649,7 +649,7 @@ class ScalingCentral:
                             turnon_collection, test_obj, scaling_pct, method
                         )
 
-            for test_obj in plot_config.test_object_instances:
+            for test_obj in plot_config.scaling_object_instances:
                 print(str(test_obj))
                 scalings[str(test_obj)] = {
                     t: results[str(test_obj), t] for t in thds_by_obj[str(test_obj)]

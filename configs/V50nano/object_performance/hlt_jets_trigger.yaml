@@ -29,6 +29,8 @@ HLTJetTurnonBarrel:
     L1puppiJetSC4:default:barrel: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:default:barrel"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
@@ -57,6 +59,8 @@ HLTJetTurnonEndcap:
     L1puppiJetSC4:default:endcap: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:default:endcap"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
@@ -85,6 +89,8 @@ HLTJetTurnonForward:
     L1puppiExtJetSC4:default:forwardHF: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:extended:forwardHF"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"

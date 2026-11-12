@@ -274,7 +274,20 @@
   paths), and the L1 `jets_{matching,matching_eta,trigger,trigger_wMatching,resolution}`
   (AK4 references). Not applied to the purity configs (a trigger jet built from a prompt
   electron is not a pileup jet), to the GenJetAK8 references, and to the L1 HT / MHT
-  configs (`met_ht_mht`, `met_resolution`), whose offline scalings would change.
+  configs (`met_ht_mht`, `met_resolution`), whose offline scalings would change. The L1
+  PUPPI jets and sums contain the prompt leptons, so the uncleaned reference is the
+  consistent one for L1 HT / MHT (report, section 7).
+
+  Scalings are written for every test object of a plot unless `scalings: objects:` lists a
+  subset (config keys). The cleaned HLT jet / HT / MHT plots use it to keep their L1
+  comparison curves out of the scaling files, which come from the L1 configs:
+
+  ```yaml
+  scalings:
+    objects: ["hltPuppiJetCorrSums:HT", "hltPFPuppiHT:default"]
+    method: "naive"
+    threshold: 0.9
+  ```
 
 ## Response and resolution
 
