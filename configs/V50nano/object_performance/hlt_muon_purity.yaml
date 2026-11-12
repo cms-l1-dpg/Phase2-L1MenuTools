@@ -1,0 +1,53 @@
+# Purity and fake rates of HLT muons vs the L1 tkMuon (`purity:` block, see
+# docs/object-performance.md#purity-fake-rate-and-multiplicity). Run on an L1+HLT cache
+# (--version V50nano_170pre6HLT / V50nano_dev170pre6HLT). hltMuon is stored only in events with an
+# L1 tkMuon (HLT muons are L1-tkMuon seeded), so missing events count as having no HLT muon.
+# Gen muons: last copy, prompt or from a prompt tau decay.
+
+HLTMuonsPurity:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  purity:
+    mode: purity
+    reference_gen: &gen_mu
+      object: GenPart
+      label: "prompt gen $\\mu$"
+      cuts:
+        - "abs({pdgId}) == 13"
+        - "(({statusFlags}>>13)&1) == 1"
+        - "((({statusFlags}>>0)&1) == 1) | ((({statusFlags}>>3)&1) == 1)"
+    vs:
+      pt: {edges: [0, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100]}
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    thresholds: [5, 24]
+
+HLTMuonsFakeRate:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  purity:
+    mode: fake_rate
+    reference_gen: *gen_mu
+    vs:
+      pu: *pu_bins
+      threshold: &thr_mu {min: 0, max: 40, step: 1}
+    thresholds: [5, 24]
+
+HLTMuonsMultiplicityMinBias:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  purity:
+    mode: multiplicity
+    vs:
+      pu: *pu_bins
+      threshold: *thr_mu
+    thresholds: [5, 24]
