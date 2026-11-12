@@ -169,7 +169,12 @@ class Object:
 
     @property
     def plot_label(self) -> str:
-        return self._object_params["label"]
+        """Legend label from the object config; L1 objects get an "L1 " prefix (unless the
+        label already starts with "L1"), so that L1 and HLT objects can be told apart."""
+        label = self._object_params["label"]
+        if self.nano_obj_name.startswith("L1") and not label.startswith("L1"):
+            label = "L1 " + label
+        return label
 
     def get_scaling_object(self, eta_range: str) -> str:
         """
