@@ -1,0 +1,77 @@
+# HLT muons (hltMuon, L3 without isolation) vs the L1 tkMuon, DY -> ll.
+# hltMuon exists only in events with an L1 tkMuon: HLT efficiency includes the L1 tkMuon reco.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTMuonsMatchingBarrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+HLTMuonsMatchingOverlap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (overlap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+HLTMuonsMatchingEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

@@ -1,0 +1,59 @@
+# HLT electrons (hltElectron: no ID, approximate WPTight / WP70 of Ele32 / Ele26) vs the L1 tkElectron, DY -> ll.
+# Endcap: only the track-based part of the HLT ids (HGCAL shower-shape / H/E / iso not in the nano), see hlt.yaml.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTElectronsMatchingBarrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltElectron:default: "pt"
+    hltElectron:WPTight: "pt"
+    hltElectron:WP70: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+HLTElectronsMatchingEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltElectron:default: "pt"
+    hltElectron:WPTight: "pt"
+    hltElectron:WP70: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
