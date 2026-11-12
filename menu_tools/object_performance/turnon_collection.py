@@ -13,6 +13,11 @@ from menu_tools.utils.objects import CUT_FIELD_RE, Object, is_hlt_object, is_tri
 
 vector.register_awkward()
 
+# Keys of the extra curves of the `l1_seed` option (in `TurnOnCollection.hists` and the JSON):
+# the L1 seed alone, and each seeded HLT test object combined with the seed.
+L1SEED_KEY = "L1seed"
+L1SEED_SUFFIX = "+L1seed"
+
 
 class ArrayLoader:
     def __init__(self, turnon_collection, cfg_plot: PerformancePlotConfig):
@@ -101,6 +106,12 @@ class TurnOnCollection:
         self.ak_arrays: dict[str, Any] = {}
         self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
         self.hists: dict[str, Any] = {"ref": {}}
+        # Curves that are not a configured test object (`l1_seed`): key -> {"label", "style"}
+        self.extra_curves: dict[str, dict[str, Any]] = {}
+        # `l1_seed`: per reference object ([event][ref]), matched to an L1 seed object passing
+        # the L1 threshold / matched to an L1 seed object at all
+        self.l1_seed_pass = None
+        self.l1_seed_matched = None
 
     @property
     def test_objects(self) -> list[tuple[Object, str]]:
@@ -286,35 +297,33 @@ class TurnOnCollection:
         ref_event_cuts = self.cfg_plot.reference_event_cuts
         self._apply_list_of_reference_cuts(ref_event_cuts)
 
+    def _apply_object_cuts(self, obj: Object, key: str) -> None:
+        """Applies the configured cuts of `obj` to `self.ak_arrays[key]`."""
+        if not obj.cuts:
+            return
+        ## add dummy eta
+        if "eta" not in self.ak_arrays[key].fields:
+            self.ak_arrays[key]["eta"] = 0
+        for (
+            range_i,
+            range_cuts,
+        ) in obj.cuts.items():  # TODO: use the version from utils
+            for cut in range_cuts:
+                cut = re.sub(CUT_FIELD_RE, r"self.ak_arrays[key]['\1']", cut)
+                eta_sel = (
+                    abs(self.ak_arrays[key]["eta"]) >= obj.eta_ranges[range_i][0]
+                ) & (abs(self.ak_arrays[key]["eta"]) < obj.eta_ranges[range_i][1])
+
+                sel = eval(cut) + ~eta_sel
+                self.ak_arrays[key] = self.ak_arrays[key][sel]
+
     def _apply_test_obj_cuts(self):
         """Applies configured cuts on all configured test objects.
 
         Should be applied before any matching.
         """
         for test_obj, _ in self.test_objects:
-            if not test_obj.cuts:
-                continue
-            ## add dummy eta
-            if "eta" not in self.ak_arrays[str(test_obj)].fields:
-                self.ak_arrays[str(test_obj)]["eta"] = 0
-            for (
-                range_i,
-                range_cuts,
-            ) in test_obj.cuts.items():  # TODO: use the version from utils
-                for cut in range_cuts:
-                    cut = re.sub(
-                        CUT_FIELD_RE, r"self.ak_arrays[str(test_obj)]['\1']", cut
-                    )
-                    eta_sel = (
-                        abs(self.ak_arrays[str(test_obj)]["eta"])
-                        >= test_obj.eta_ranges[range_i][0]
-                    ) & (
-                        abs(self.ak_arrays[str(test_obj)]["eta"])
-                        < test_obj.eta_ranges[range_i][1]
-                    )
-
-                    sel = eval(cut) + ~eta_sel
-                    self.ak_arrays[str(test_obj)] = self.ak_arrays[str(test_obj)][sel]
+            self._apply_object_cuts(test_obj, str(test_obj))
 
     def _skim_to_hists(self) -> None:
         """
@@ -377,6 +386,9 @@ class TurnOnCollection:
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
             self.hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
 
+        if self.cfg_plot.l1_seed is not None:
+            self._skim_l1_seed_hists(ref_all)
+
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, _ in self.test_objects:
             numerator = self.numerators["test"][str(test_obj)]
@@ -385,6 +397,156 @@ class TurnOnCollection:
 
             # Create Test Object(s) Numpy Histogram
             self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
+
+    # ------------------------------------------------------------------------------------------
+    # `l1_seed`: combined L1 x HLT efficiency (docs/object-performance.md)
+    # ------------------------------------------------------------------------------------------
+    @property
+    def l1_seed_objects(self) -> list[tuple[Object, Any, float]]:
+        """(L1 object, online pT threshold, match_dR) of each OR-ed L1 seed condition."""
+        seed = self.cfg_plot.l1_seed
+        if seed is None:
+            return []
+        out = []
+        for o in seed["objects"]:
+            obj = Object(o["object"], self.cfg_plot.version_for_objects)
+            thr = o["threshold"]
+            if isinstance(thr, dict):
+                unknown = set(thr) - set(obj.eta_ranges)
+                if unknown:
+                    raise ValueError(
+                        f"l1_seed: threshold regions {sorted(unknown)} are not eta ranges of {obj}"
+                    )
+            match_dR = o["match_dR"] if o["match_dR"] is not None else obj.match_dR
+            out.append((obj, thr, match_dR))
+        return out
+
+    @property
+    def l1_seeded_test_objects(self) -> list[str]:
+        """Keys (str(Object)) of the test objects that get the L1 seed requirement."""
+        seed = self.cfg_plot.l1_seed
+        if seed is None:
+            return []
+        names = [str(obj) for obj, _ in self.test_objects]
+        if seed["apply_to"] is None:
+            return [n for n in names if is_hlt_object(n)]
+        keys = [str(Object(k, self.cfg_plot.version_for_objects)) for k in seed["apply_to"]]
+        for k in keys:
+            if k not in names:
+                raise ValueError(f"l1_seed: apply_to object {k} is not a test object")
+        return keys
+
+    @staticmethod
+    def _l1_seed_key(i: int, obj: Object) -> str:
+        return f"{L1SEED_KEY}{i}:{obj}"
+
+    @staticmethod
+    def _l1_threshold_mask(obj: Object, arr, threshold):
+        """L1 objects with pT > threshold (strictly, as the P2GT emulator: hwPt > floor(thr / LSB),
+        identical to pt > thr for pT in units of the LSB). A {region: threshold} dict uses the
+        eta ranges of the L1 object's config (|eta| in [low, high)); objects outside the listed
+        regions fail."""
+        pt = arr["pt"]
+        if not isinstance(threshold, dict):
+            return pt > float(threshold)
+        abs_eta = abs(arr["eta"])
+        passed = ak.zeros_like(pt, dtype=bool)
+        for region, thr in threshold.items():
+            low, high = obj.eta_ranges[region]
+            passed = passed | ((abs_eta >= low) & (abs_eta < high) & (pt > float(thr)))
+        return passed
+
+    def _load_l1_seed_arrays(self) -> None:
+        loader = ArrayLoader(self, self.cfg_plot)
+        for i, (obj, _, _) in enumerate(self.l1_seed_objects):
+            self.ak_arrays[self._l1_seed_key(i, obj)] = loader._load_array_from_parquet(
+                obj.nano_obj_name
+            )
+
+    def _apply_l1_seed_cuts(self) -> None:
+        for i, (obj, _, _) in enumerate(self.l1_seed_objects):
+            self._apply_object_cuts(obj, self._l1_seed_key(i, obj))
+
+    def _match_l1_seed_to_ref(self) -> None:
+        """Per reference object: is an L1 seed object within match_dR that passes the L1 threshold
+        (`l1_seed_pass`), and is any L1 seed object within match_dR (`l1_seed_matched`)?
+
+        `any` L1 object passing within dR: for a single threshold this is the same as taking the
+        highest-pT L1 object within dR (as `_match_test_to_ref`) and cutting on it. The seed
+        conditions of `l1_seed.objects` are OR-ed. Needs the reference cuts applied before.
+        """
+        ref = self.ak_arrays["ref"]
+        passed = matched = None
+        for i, (obj, thr, match_dR) in enumerate(self.l1_seed_objects):
+            key = self._l1_seed_key(i, obj)
+            l1 = self.ak_arrays[key]
+            l1 = ak.with_name(
+                ak.with_field(l1, self._l1_threshold_mask(obj, l1, thr), "l1seed_pass"),
+                "Momentum4D",
+            )
+            pairs = ak.cartesian({"ref": ref, "l1": l1}, nested=True)
+            r, t = ak.unzip(pairs)
+            in_dR = t.deltaR(r) < match_dR
+            p = ak.fill_none(ak.any(in_dR & t["l1seed_pass"], axis=-1), False)
+            m = ak.fill_none(ak.any(in_dR, axis=-1), False)
+            passed = p if passed is None else (passed | p)
+            matched = m if matched is None else (matched | m)
+            del self.ak_arrays[key]  # not needed anymore
+        self.l1_seed_pass = passed
+        self.l1_seed_matched = matched
+
+    def _l1_seed_label(self) -> str:
+        seed = self.cfg_plot.l1_seed
+        if seed["label"]:
+            return seed["label"]
+        parts = []
+        for obj, thr, _ in self.l1_seed_objects:
+            if isinstance(thr, dict):
+                thr_str = " / ".join(f"{v:g}" for v in thr.values()) + " (" + "/".join(thr) + ")"
+            else:
+                thr_str = f"{float(thr):g}"
+            parts.append(f"{obj.plot_label} > {thr_str} GeV")
+        return " OR ".join(parts)
+
+    def _skim_l1_seed_hists(self, ref_all) -> None:
+        """Histograms of the `l1_seed` curves (see docs/object-performance.md):
+        `L1seed`: reference objects matched to an L1 seed object passing the L1 threshold
+        (independent of the HLT threshold); `<hlt test object>+L1seed`: reference objects
+        passing the HLT test object's numerator AND the L1 seed requirement, with the HLT test
+        object's denominator."""
+        seed_label = self._l1_seed_label()
+        ref_vals = self.ak_arrays["ref"][self.cfg_plot.reference_field]
+
+        def _hist(arr):
+            arr = self._remove_inner_nones_zeros(arr)
+            return np.histogram(self._flatten_array(arr, ak_to_np=True), bins=self.bins)
+
+        self.hists[L1SEED_KEY] = _hist(ref_vals[self.l1_seed_pass])
+        if self.threshold >= 0 and not self.cfg_plot.matching_and_threshold:
+            self.hists["ref"][L1SEED_KEY] = _hist(ref_vals[self.l1_seed_matched])
+        else:
+            self.hists["ref"][L1SEED_KEY] = np.histogram(
+                self._flatten_array(ref_all, ak_to_np=True), bins=self.bins
+            )
+        self.extra_curves[L1SEED_KEY] = {"label": f"L1 seed: {seed_label}", "style": {"marker": "s"}}
+
+        labels = {str(obj): obj.plot_label for obj, _ in self.test_objects}
+        for key in self.l1_seeded_test_objects:
+            sel_hlt = ak.fill_none(self.numerators["test"][key] >= self.threshold, False)
+            numerator = self.numerators["ref"][key][sel_hlt & self.l1_seed_pass]
+            self.hists[key + L1SEED_SUFFIX] = _hist(numerator)
+            self.hists["ref"][key + L1SEED_SUFFIX] = self.hists["ref"][key]
+            self.extra_curves[key + L1SEED_SUFFIX] = {
+                "label": f"{labels[key]} $\\wedge$ L1 seed",
+                "style": {"marker": "^", "markerfacecolor": "none", "markersize": 10},
+            }
+
+    def curve_label(self, key: str) -> str:
+        """Legend label of a curve in `hists`: the object's plot label, or the label of an extra
+        (`l1_seed`) curve."""
+        if key in self.extra_curves:
+            return self.extra_curves[key]["label"]
+        return Object(key, version=self.cfg_plot.version_for_objects).plot_label
 
     def xerr(self, obj: Object):
         ref_vals = self.hists["ref"][str(obj)][0]
@@ -428,6 +590,12 @@ class TurnOnCollection:
     def create_hists(self):
         self._load_arrays()
         self._apply_cuts()
+        if self.cfg_plot.l1_seed is not None:
+            if not self.cfg_plot.matching or self.cfg_plot.iso_vs_eff_plot:
+                raise ValueError("l1_seed needs match_test_to_ref: True (and no iso_vs_efficiency)")
+            self._load_l1_seed_arrays()
+            self._apply_l1_seed_cuts()
+            self._match_l1_seed_to_ref()
         if self.cfg_plot.matching:
             self._match_test_to_ref()
         self._skim()
