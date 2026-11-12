@@ -8,12 +8,20 @@
 #   condor_submit scripts/condor/caching_170pre6HLT_minbias.sub first=0 last=0          # one test chunk
 # Then: scripts/condor/caching_170pre6HLT_post.sub (merge, hltPuppiJetSums, L1EG).
 checkout       = $ENV(PWD)
+# extra cache_objects arguments and a log-name tag, e.g. to add one object to existing chunks:
+#   condor_submit <this>.sub extra="--objects hltPFPuppiHT" logtag=_HT
+if ! defined extra
+  extra =
+endif
+if ! defined logtag
+  logtag =
+endif
 logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
 fpj            = 125
 executable     = $(checkout)/scripts/condor/menu_job.sh
-arguments      = $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLT.yaml --samples MinBias --files-per-job $(fpj) --job $(job)
-output         = $(logdir)/cache170pre6HLT_MinBias.$(job).out
-error          = $(logdir)/cache170pre6HLT_MinBias.$(job).err
+arguments      = $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLT.yaml --samples MinBias --files-per-job $(fpj) --job $(job) $(extra)
+output         = $(logdir)/cache170pre6HLT_MinBias$(logtag).$(job).out
+error          = $(logdir)/cache170pre6HLT_MinBias$(logtag).$(job).err
 log            = $(logdir)/cache170pre6HLT.log
 request_cpus   = 1
 request_memory = 2000

@@ -14,9 +14,11 @@ HT = scalar sum of jet pt, MHT = |vector sum of jet pT|, MHT phi = phi of minus 
 over hltAK4PuppiJet with pt > 30 GeV and |eta| < 2.4 (defaults, as in the Phase-2 HLT
 PFPuppiHT / PFPuppiMHT paths; the jet pt is the nano hltAK4PuppiJet_pt as stored).
 
-The nano's own hltPFPuppiMET / hltPFPuppiHT (pt only) are NOT used and not cached:
-hltPFPuppiMET looks broken (~450 GeV in minimum bias) and the hltPFPuppiHT definition is
-unclear.
+The nano jets are uncorrected (~0.8 x gen pT), so this HT is ~0.77 x gen HT. The HLT HT object
+is therefore the nano's hltPFPuppiHT (cached directly, one value per event, objects config
+`hltPFPuppiHT:default`: corrected jets pT > 30, |eta| < 5, E_T sum); the HT here is kept for
+comparison and MHT (no corrected MHT in the nano) is taken from here. hltPFPuppiMET (type-1
+PUPPI sumEt) is not cached.
 
 Usage (after caching hltAK4PuppiJet, and after merge_chunks.py for chunked samples):
     python3 menu_tools/caching/make_hlt_sums.py --version V50nano_170pre6HLT --sample MinBias

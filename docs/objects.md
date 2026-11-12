@@ -46,8 +46,8 @@ The cuts listed under an eta range apply only to objects in that range.
 ## HLT objects
 
 The Phase-2 HLT collections of the L1+HLT nanos (`hltMuon`, `hltElectron`, `hltPhoton`,
-`hltAK4PuppiJet`, `hltHpsPFTau`, and the `hltPuppiJetSums` HT/MHT built by
-`menu_tools/caching/make_hlt_sums.py`) are defined in `configs/V50nano/objects/hlt.yaml`, with ids
+`hltAK4PuppiJet`, `hltHpsPFTau`, the HLT HT `hltPFPuppiHT`, and the `hltPuppiJetSums` HT/MHT
+built by `menu_tools/caching/make_hlt_sums.py`) are defined in `configs/V50nano/objects/hlt.yaml`, with ids
 that approximate the HLT menu selections (`HLTrigger/Configuration/python/HLT_75e33`, e.g.
 `hltElectron:WPTight` for `HLT_Ele32_WPTight_Unseeded`, `hltHpsPFTau:MediumDeepTau` for
 `HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1`). The yaml comments give the HLT filter behind every
@@ -55,3 +55,12 @@ cut and what the nano cannot reproduce (e.g. the HGCAL e/gamma variables in the 
 are labelled "(approx.)". Objects whose name starts with `hlt` are treated as trigger objects like
 the `L1*` ones (axis labels say "HLT"; scaling thresholds from the `HLT<group>` entries of
 `configs/scaling_thresholds.yaml`). Plot configs: `configs/V50nano/object_performance/hlt_*.yaml`.
+
+HLT energy sums: `hltPFPuppiHT:default` is the nano's `hltPFPuppiHT_pt`, one value per event
+(used like `L1puppiMET:default`). It is the sumEt of `hltPFPuppiMHT` (`HLTHtMhtProducer`), i.e.
+the HT of JEC-corrected PUPPI jets with pT > 30 GeV and |eta| < 5, summing E_T: the only
+corrected HLT HT in the nano, but not exactly the HT that `HLT_PFPuppiHT1070` cuts on (|eta| < 2.4,
+pT sum). The nano jets `hltAK4PuppiJet` are uncorrected (pT ~0.8 x gen), so `hltPuppiJetSums`
+(pT > 30, |eta| < 2.4) gives MHT (`hltPuppiJetSums:MHT`, no corrected MHT in the nano) and an
+uncorrected-jet HT (`hltPuppiJetSums:HT`, ~0.77 x gen HT) kept for comparison. `hltPFPuppiMET` (the
+type-1 PUPPI sumEt) is not cached.
