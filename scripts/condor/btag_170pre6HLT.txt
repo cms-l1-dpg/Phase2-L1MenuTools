@@ -1,6 +1,2 @@
-# b-tag efficiency / mis-id plots (`btag:` block) on the L1+HLT cache, one job per line
-# "<tag> <command> [args...]", run with scripts/condor/menu_job.sh in the submitting checkout:
-#   condor_submit scripts/condor/menu_runs.sub joblist=scripts/condor/btag_170pre6HLT.txt
-# TT (500k events): ~3.5 GB, ~5 min. HHTo4B (50k) also runs locally in ~1 min.
 btag_tt object_performance configs/V50nano/object_performance/btag_tt.yaml --version V50nano_170pre6HLT
 btag_hh4b object_performance configs/V50nano/object_performance/btag_hh4b.yaml --version V50nano_170pre6HLT
