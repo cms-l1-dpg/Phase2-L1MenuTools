@@ -1,0 +1,27 @@
+# Chunked caching of the V50nano_170pre6HLT MinBias sample (12,511 files x 160 events):
+# 101 jobs of 125 files (sorted file order), ~6 min and < 1 GB each (local test: 2.6 s/file,
+# 280 MB for 20 files). Output: $MENU_TOOLS_CACHE/V50nano_170pre6HLT/chunks/.
+# Submit from the checkout to run (code is taken from $(checkout) = submit dir), with the
+# EOS submit pool:
+#   export _myschedd_POOL=eossubmit _condor_CONDOR_HOST="tweetybird04.cern.ch, tweetybird03.cern.ch"
+#   condor_submit scripts/condor/caching_170pre6HLT_minbias.sub            # all chunks
+#   condor_submit scripts/condor/caching_170pre6HLT_minbias.sub first=0 last=0          # one test chunk
+# Then: scripts/condor/caching_170pre6HLT_post.sub (merge, hltPuppiJetSums, L1EG).
+checkout       = $ENV(PWD)
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+fpj            = 125
+executable     = $(checkout)/scripts/condor/menu_job.sh
+arguments      = $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLT.yaml --samples MinBias --files-per-job $(fpj) --job $(job)
+output         = $(logdir)/cache170pre6HLT_MinBias.$(job).out
+error          = $(logdir)/cache170pre6HLT_MinBias.$(job).err
+log            = $(logdir)/cache170pre6HLT.log
+request_cpus   = 1
+request_memory = 2000
++JobFlavour    = "microcentury"
+if ! defined first
+  first = 0
+endif
+if ! defined last
+  last = 100
+endif
+queue job from seq $(first) $(last) |

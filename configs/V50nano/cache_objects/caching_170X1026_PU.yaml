@@ -1,0 +1,28 @@
+# Pileup (nTrueInt, nPU) for the full-stat L1 cache V50nano_170X1026 (made by roward from
+# the v45 nanos below; read-only, hence a separate version V50nano_170X1026PU).
+# Each file is row-aligned with the V50nano_170X1026 objects of the same sample (checked
+# with L1PV_z0, all events for TT, first/last 20 for the others).
+# TT: the original glob TT_Spring24_200PU_V45_reL1wTT_170X1026/*/hadd/*.root now also
+# matches the 261029_102944_old task (156k events), which is NOT in the V50nano_170X1026
+# cache (117k rows = 261031_184342 only), so the path is pinned to that task.
+V50nano_170X1026PU:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170X1026/v45/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_Spring24_200PU_V45_reL1wTT_170X1026/*/hadd/*.root
+    trees_branches:
+      Events:
+        Pileup: [nTrueInt, nPU]
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170X1026/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_170X1026/261031_184342/hadd/*.root
+    trees_branches:
+      Events:
+        Pileup: [nTrueInt, nPU]
+  Hgg:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170X1026/v45/GluGluHToGG_M-125_TuneCP5_14TeV-powheg-pythia8/Hto2gg_Spring24_200PU_V45_reL1wTT_170X1026/*/hadd/*.root
+    trees_branches:
+      Events:
+        Pileup: [nTrueInt, nPU]
+  VBFHToTauTau:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170X1026/v45/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V45_reL1wTT_170X1026/*/hadd/*.root
+    trees_branches:
+      Events:
+        Pileup: [nTrueInt, nPU]
