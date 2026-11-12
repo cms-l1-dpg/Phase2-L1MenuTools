@@ -329,9 +329,18 @@ class TurnOnCollection:
     def _skim_to_hists_dR_matched(self):
         ref_field = self.cfg_plot.reference_field
 
-        ref_obj = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
+        # All reference objects (matching efficiency denominator)
+        ref_all = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
 
-        for test_obj, _ in self.test_objects:
+        for test_obj, x_arg in self.test_objects:
+            if self.cfg_plot.matching_and_threshold and x_arg.lower() != ref_field:
+                # The numerator is filled with the reference field named by the
+                # test object's x_arg, the denominator with reference_field:
+                # they must agree for the efficiency to make sense.
+                raise ValueError(
+                    f"matching_and_threshold: test object {test_obj} x_arg "
+                    f"'{x_arg}' differs from the reference x_arg '{ref_field}'"
+                )
             sel_threshold = self.numerators["test"][str(test_obj)] >= self.threshold
             numerator = self.numerators["ref"][str(test_obj)][sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
@@ -341,9 +350,14 @@ class TurnOnCollection:
             self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
             # Create Reference Numpy Histogram
-            if self.threshold >= 0:
+            if self.threshold >= 0 and not self.cfg_plot.matching_and_threshold:
+                # Pure threshold efficiency: only matched reference objects
                 ref_obj = self.numerators["ref"][str(test_obj)]
                 ref_obj = self._remove_inner_nones_zeros(ref_obj)
+            else:
+                # Matching efficiency (no threshold) or combined matching +
+                # threshold efficiency: all reference objects
+                ref_obj = ref_all
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
             self.hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
 

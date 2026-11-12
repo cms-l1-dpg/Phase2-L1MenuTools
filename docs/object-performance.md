@@ -18,6 +18,7 @@
 * [Caching the NTuple trees](#caching-the-ntuple-trees)
 * [Efficiency and Scalings](#efficiency-and-scalings)
   * [Reference config files](#reference-config-files)
+  * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
 
 ## Caching the NTuple trees
 
@@ -70,3 +71,36 @@
   * `turnons`: plots of the matching efficiencies and L1 turn-on efficiency curves.
 
   * `scalings`: plots of the scalings, i.e. position of the turnon point (often 95% location) as a function of different threshold cuts on L1 objects.
+
+### Matching + threshold (trigger) efficiencies
+
+  For configurations with `match_test_to_ref: True` the efficiency definition
+  depends on the threshold:
+
+  * no `thresholds` given (matching efficiency):
+    `N(ref matched to test) / N(ref)`
+  * `thresholds` given (turn-on / threshold efficiency):
+    `N(ref matched to test with L1 pT >= threshold) / N(ref matched to test)`
+
+  To obtain the combined *matching + threshold* (trigger) efficiency, i.e.
+  `N(ref matched to test with L1 pT >= threshold) / N(ref)`,
+  add `matching_and_threshold: True` to the plot configuration:
+
+  ```yaml
+  ElectronsTriggerBarrel_wMatching:
+    sample: DYLL_M50
+    version: V50nano
+    match_test_to_ref: True
+    matching_and_threshold: True
+    ...
+    thresholds: [10, 20, 30, 40]
+  ```
+
+  The plateau of these curves corresponds to the matching efficiency.
+  Since they generally do not reach 100%, no `scalings` should be configured
+  for such plots. The denominator is filled with the reference object's
+  `x_arg`, the numerator with the reference field named by the test objects'
+  `x_arg`, so the two must be the same (an error is raised otherwise).
+  Examples can be found in
+  `configs/V50nano/object_performance/*_trigger_wMatching.yaml`
+  (and `configs/V43nano/object_performance/` for the older version).
