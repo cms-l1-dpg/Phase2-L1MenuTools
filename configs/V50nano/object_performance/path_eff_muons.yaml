@@ -1,0 +1,70 @@
+# L1 seed / HLT path efficiencies vs gen muon pT (menu_tools/object_performance/path_efficiency.py).
+# Reference: leading (rank 2: subleading) hard-process gen muon with |eta| < 2.4. The muon
+# selection is in the `object` cuts, so the leading *muon* is taken (in the *_trigger.yaml
+# turn-ons the pdgId cut is an `event` cut on the leading GenPart).
+IsoMu24PathEff:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen muon, $|\\eta| < 2.4$"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pSingleTkMuon22_final]
+    HLT: [HLT_IsoMu24_FromL1TkMuon]
+    curves: [L1, HLT, L1_and_HLT, HLT_given_L1]
+    plateau_min: 30
+  xlabel: "Leading gen muon $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 5, 10, 15, 18, 20, 22, 24, 26, 28, 30, 32, 35, 40, 45, 50, 60, 80, 100]
+
+Mu50PathEff:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen muon, $|\\eta| < 2.4$"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pSingleTkMuon22_final]
+    HLT: [HLT_Mu50_FromL1TkMuon]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 60
+  xlabel: "Leading gen muon $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 10, 20, 30, 40, 45, 50, 55, 60, 70, 80, 100, 150]
+
+DoubleMu37_27PathEff:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen muons, $|\\eta| < 2.4$"
+    rank: 2
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pDoubleTkMuon15_7_final]
+    HLT: [HLT_Mu37_Mu27_FromL1TkMuon]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 35
+  xlabel: "Subleading gen muon $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80]

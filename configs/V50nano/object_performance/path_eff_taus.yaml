@@ -1,0 +1,22 @@
+# Di-tau L1 seed / HLT path efficiency vs the subleading visible gen tau pT (path_efficiency.py).
+# Reference: GenVisTau with |eta| < 2.1 (the HLT paths are eta2p1), x = 2nd-highest pT.
+DoubleDeepTau35PathEff:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen visible taus, $|\\eta| < 2.1$"
+    rank: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+  path_efficiency:
+    L1: [L1_pDoublePuppiTau52_52_final]
+    HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 80
+  xlabel: "Subleading gen visible tau $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]

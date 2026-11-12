@@ -1,0 +1,49 @@
+# L1 seed / HLT path efficiencies vs leading gen electron pT (path_efficiency.py).
+# Reference: leading hard-process gen electron with |eta| < 2.4 (selection in the `object` cuts).
+Ele32WPTightPathEff:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen electron, $|\\eta| < 2.4$"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final, L1_pSingleEGEle51_final]
+    HLT: [HLT_Ele32_WPTight_L1Seeded]
+    labels:
+      L1: "L1: SingleTkEle36 OR SingleIsoTkEle28 OR SingleEGEle51"
+    curves: [L1, HLT, L1_and_HLT, HLT_given_L1]
+    plateau_min: 40
+  xlabel: "Leading gen electron $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 10, 20, 25, 28, 30, 32, 34, 36, 38, 40, 45, 50, 60, 80, 100]
+
+Ele115PathEff:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen electron, $|\\eta| < 2.4$"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final, L1_pSingleEGEle51_final]
+    HLT: [HLT_Ele115_NonIso_L1Seeded]
+    labels:
+      L1: "L1: SingleTkEle36 OR SingleIsoTkEle28 OR SingleEGEle51"
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 130
+  xlabel: "Leading gen electron $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 20, 40, 60, 80, 100, 110, 120, 130, 150, 200, 300]
