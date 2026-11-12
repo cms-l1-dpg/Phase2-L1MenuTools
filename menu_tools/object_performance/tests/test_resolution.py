@@ -100,7 +100,10 @@ CFG = {
     "test_objects": {"L1gmtMuon:dR0p6": "pt"},
     "resolution": {
         "variables": ["pt", "eta", "phi"],
-        "vs": {"pt": {"edges": [10, 40, 70, 100]}, "pu": {"min": 160, "max": 240, "step": 40}},
+        "vs": {
+            "pt": {"edges": [10, 40, 70, 100]},
+            "pu": {"min": 160, "max": 240, "step": 40},
+        },
         "min_entries": 50,
     },
 }

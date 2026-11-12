@@ -8,7 +8,9 @@ import yaml
 from menu_tools.utils.objects import Object
 
 
-def load_scaling_params(obj: Object, eta_range: str, scaling_version: Optional[str] = None) -> tuple[float, float]:
+def load_scaling_params(
+    obj: Object, eta_range: str, scaling_version: Optional[str] = None
+) -> tuple[float, float]:
     """Retrieves scalings for object+id from `outputs`
 
     obj: Object for which to retrive scaling parameters
@@ -58,7 +60,9 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
     return pt_orig
 
 
-def add_offline_pt(arr: ak.Array, obj: Object, scaling_version: Optional[str] = None) -> ak.Array:
+def add_offline_pt(
+    arr: ak.Array, obj: Object, scaling_version: Optional[str] = None
+) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
     """

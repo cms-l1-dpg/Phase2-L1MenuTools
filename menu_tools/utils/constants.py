@@ -1,8 +1,8 @@
+import os as _os
+
 N_BUNCHES = 2760
 REVOLUTION_FREQUENCY = 11246
 RATE_NORM_FACTOR = N_BUNCHES * REVOLUTION_FREQUENCY / 1000  # in kHz
-
-import os as _os
 
 # Directory holding the parquet caches (cache/<version>/...). Override with the
 # environment variable MENU_TOOLS_CACHE, e.g. to write into a different area

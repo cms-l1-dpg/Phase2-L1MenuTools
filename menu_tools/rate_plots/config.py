@@ -49,7 +49,7 @@ class RatePlotConfig(BasePlotConfig):
     def versions(self) -> list[str]:
         if self._override_version:
             return [self._override_version]
-            
+
         if "version" in self._cfg.keys():
             version = self._cfg["version"]
             if isinstance(version, str):
@@ -86,6 +86,6 @@ class RatePlotConfig(BasePlotConfig):
                 obj_version = version
                 if self._override_version and self._config_version:
                     obj_version = self._config_version
-                    
+
                 test_objects[obj_key][version] = Object(obj_key, obj_version)
         return test_objects
