@@ -1,0 +1,151 @@
+# Combined L1 x HLT object efficiency of HLT_Ele32_WPTight (L1Seeded / Unseeded), DY -> ll:
+# hltElectron:WPTight (approx., see configs/V50nano/objects/hlt.yaml) pT > 32 AND the gen electron
+# matched to an L1 object passing one of the path's L1 seeds. `l1_seed`: docs/object-performance.md.
+# Reference: leading hard-process gen electron with |eta| < 2.4 (`object` cuts, as in
+# path_eff_electrons.yaml), barrel / endcap by its |eta| (`event` cut).
+#
+# L1 seeds of HLT_Ele32_WPTight_* (configs/V50nano/rate_table/hlt_paths.yml): OR of
+# L1_pSingleIsoTkEle28, L1_pSingleTkEle36, L1_pSingleEGEle51. P2GT menu step1_2024
+# (CMSSW_17_0_0_pre6), online threshold = (offline - offset) / slope with the GT scalings
+# (l1tGTObject_scalings.py), regions barrel |eta| < 1.479 < endcap < 2.4:
+#   pSingleIsoTkEle28: CL2Electrons Iso (eleId, relIso < 0.13 / 0.28) = L1tkElectron:Iso,
+#     barrel (28 - 3.58) / 1.17 = 20.9, endcap (28 - 2.05) / 1.24 = 20.9 GeV
+#   pSingleTkEle36: CL2Electrons NoIso (eleId) = L1tkElectron:NoIso,
+#     barrel (36 - 3.7) / 1.18 = 27.4, endcap (36 - 2.6) / 1.25 = 26.7 GeV
+#   pSingleEGEle51: CL2Photons qual 0b0100 = L1tkPhoton:NoIso (phoId) with the L1EG scalings,
+#     barrel (51 - 4.91) / 1.15 = 40.1, endcap (51 - 2.37) / 1.24 = 39.2 GeV
+#   (menu-tools v0p0 scalings, outputs/V50nano_regscal: IsoTkEle28 -> 22.8 / 22.2 GeV, i.e. the
+#   v0p0 scalings are not the ones of the GT emulator for electrons; the GT values are used.)
+#   Check against the GT emulator bits, per event, 200k DY events: IsoTkEle28 48186 vs 48187
+#   (1 event differs), TkEle36 and EGEle51 identical.
+
+HLTEle32L1Seed_Barrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+      event:
+        - "abs({eta}) < 1.5"
+  test_objects:
+    hltElectron:WPTight:barrel: "pt"
+  l1_seed:
+    label: "IsoTkEle28 OR TkEle36 OR EGEle51"
+    objects:
+      - object: "L1tkElectron:Iso"
+        threshold: {barrel: 20.9, endcap: 20.9}   # pSingleIsoTkEle28
+      - object: "L1tkElectron:NoIso"
+        threshold: {barrel: 27.4, endcap: 26.7}   # pSingleTkEle36
+      - object: "L1tkPhoton:NoIso"
+        threshold: {barrel: 40.1, endcap: 39.2}   # pSingleEGEle51
+  thresholds: [32]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, barrel (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+HLTEle32L1Seed_Endcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+      event:
+        - "abs({eta}) > 1.5"
+  test_objects:
+    hltElectron:WPTight:endcap: "pt"
+  l1_seed:
+    label: "IsoTkEle28 OR TkEle36 OR EGEle51"
+    objects:
+      - object: "L1tkElectron:Iso"
+        threshold: {barrel: 20.9, endcap: 20.9}   # pSingleIsoTkEle28
+      - object: "L1tkElectron:NoIso"
+        threshold: {barrel: 27.4, endcap: 26.7}   # pSingleTkEle36
+      - object: "L1tkPhoton:NoIso"
+        threshold: {barrel: 40.1, endcap: 39.2}   # pSingleEGEle51
+  thresholds: [32]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, endcap (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+# The IsoTkEle28 seed alone
+HLTEle32L1Seed_IsoTkEle28_Barrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+      event:
+        - "abs({eta}) < 1.5"
+  test_objects:
+    hltElectron:WPTight:barrel: "pt"
+  l1_seed:
+    object: "L1tkElectron:Iso"
+    threshold: {barrel: 20.9, endcap: 20.9}   # pSingleIsoTkEle28
+    label: "pSingleIsoTkEle28 (TkIsoElectron)"
+  thresholds: [32]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, barrel (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+HLTEle32L1Seed_IsoTkEle28_Endcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 2.4"
+      event:
+        - "abs({eta}) > 1.5"
+  test_objects:
+    hltElectron:WPTight:endcap: "pt"
+  l1_seed:
+    object: "L1tkElectron:Iso"
+    threshold: {barrel: 20.9, endcap: 20.9}   # pSingleIsoTkEle28
+    label: "pSingleIsoTkEle28 (TkIsoElectron)"
+  thresholds: [32]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, endcap (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
