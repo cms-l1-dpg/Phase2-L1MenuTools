@@ -55,6 +55,9 @@ cut and what the nano cannot reproduce (e.g. the HGCAL e/gamma variables in the 
 are labelled "(approx.)". Objects whose name starts with `hlt` are treated as trigger objects like
 the `L1*` ones (axis labels say "HLT"; scaling thresholds from the `HLT<group>` entries of
 `configs/scaling_thresholds.yaml`). Plot configs: `configs/V50nano/object_performance/hlt_*.yaml`.
+The L1 seed of an HLT path can be required on the same gen object with the `l1_seed` option
+(combined L1 x HLT object efficiency, [object-performance](object-performance.md#combined-l1-x-hlt-object-efficiency-l1_seed),
+configs `hlt_*_l1seed.yaml`).
 
 ### HLT jet energy corrections
 

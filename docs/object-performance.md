@@ -21,6 +21,7 @@
 * [Efficiency and Scalings](#efficiency-and-scalings)
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
+  * [Combined L1 x HLT object efficiency (`l1_seed`)](#combined-l1-x-hlt-object-efficiency-l1_seed)
 * [Response and resolution](#response-and-resolution)
 * [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
 * [Purity, fake rate and multiplicity](#purity-fake-rate-and-multiplicity)
@@ -131,6 +132,93 @@
   ```
 
   Examples: `configs/V50nano/object_performance/hlt_*_eta.yaml`.
+
+### Combined L1 x HLT object efficiency (`l1_seed`)
+
+  The optional `l1_seed` block of a matched turn-on adds the L1 seed requirement to HLT test objects:
+  a reference object counts in the combined numerator only if it is matched to the HLT object passing
+  the HLT threshold **and** to an L1 seed object passing the L1 threshold. This is the object-level
+  analogue of the path efficiency (`path_efficiency`, next section). Example
+  (`configs/V50nano/object_performance/hlt_muon_l1seed.yaml`):
+
+  ```yaml
+  HLTMuonL1Seed_IsoMu24:
+    sample: DYLL_M50
+    version: V50nano
+    match_test_to_ref: True
+    matching_and_threshold: True          # denominator: all reference objects
+    reference_object:
+      object: "GenPart"
+      x_arg: "pt"
+      cuts:
+        object: ["(({statusFlags}>>7)&1) == 1", "abs({pdgId}) == 13", "abs({eta}) < 2.4"]
+    test_objects:
+      hltMuon:default: "pt"
+    l1_seed:
+      object: "L1gmtTkMuon:VLoose"        # L1 object (id / eta range as for test objects)
+      threshold: {barrel: 20.2, overlap: 20.3, endcap: 20.3}   # L1 *online* pT, or one number
+      # match_dR: 0.1                     # default: the L1 object's match_dR
+      # apply_to: [hltMuon:default]       # default: all hlt* test objects
+      # label: "pSingleTkMuon22"          # legend; default: L1 object label and thresholds
+    thresholds: [24]                      # HLT thresholds, as usual
+    ...
+  ```
+
+  Several L1 conditions are OR-ed with `objects` (e.g. the seeds of `HLT_Ele32_WPTight`,
+  `hlt_electron_l1seed.yaml`):
+
+  ```yaml
+    l1_seed:
+      label: "IsoTkEle28 OR TkEle36 OR EGEle51"
+      objects:
+        - {object: "L1tkElectron:Iso",   threshold: {barrel: 20.9, endcap: 20.9}}
+        - {object: "L1tkElectron:NoIso", threshold: {barrel: 27.4, endcap: 26.7}}
+        - {object: "L1tkPhoton:NoIso",   threshold: {barrel: 40.1, endcap: 39.2}, match_dR: 0.15}
+  ```
+
+  **L1 requirement.** Per reference object: some L1 seed object (after its id cuts) within `match_dR`
+  with pT **>** threshold (strictly, as the P2GT emulator, which cuts hwPt > floor(thr / LSB); for pT
+  in units of the LSB this is the same as pt > thr). Taking *any* passing L1 object within `match_dR`
+  is, for a single threshold, the same as taking the highest-pT L1 object within `match_dR` (as for the
+  test objects) and cutting on it. The threshold is a number or a `{region: threshold}` map over the
+  `eta_ranges` of the L1 object's config (|eta| in [low, high)); L1 objects outside the listed regions
+  never pass. The thresholds are **online** (nano) pT values: for a GT seed take the offline threshold
+  of the seed and invert the GT scalings, online = (offline - offset) / slope, with the scalings of the
+  P2GT menu (`L1Trigger/Configuration/python/Phase2GTMenus/SeedDefinitions/step1_2024/l1tGTObject_scalings.py`
+  in CMSSW_17_0_0_pre6, rounded to 0.1 GeV as in `get_object_thrs`). These are not always the menu-tools
+  v0p0 scalings (e.g. IsoTkEle28: 20.9 GeV with the GT scalings, 22.8 / 22.2 GeV with v0p0). The
+  values in the `hlt_*_l1seed.yaml` configs reproduce the GT emulator bits event by event (single-object
+  seeds; for pDoublePuppiTau52_52 with both legs and dR > 0.5), see the comments in the configs.
+
+  **Curves** (in the plot and the JSON, next to the configured test objects):
+
+  | key | numerator | denominator |
+  |---|---|---|
+  | `<test obj>` (e.g. `hltMuon:default:inclusive`) | unchanged: matched to the HLT object with pT ≥ HLT threshold | unchanged |
+  | `L1seed` | matched to an L1 seed object passing the L1 threshold (does not depend on the HLT threshold) | all reference objects (`matching_and_threshold: True` or no threshold); otherwise the reference objects matched to an L1 seed object of any pT |
+  | `<test obj>+L1seed` (e.g. `hltMuon:default:inclusive+L1seed`) | `<test obj>` numerator AND the L1 requirement on the same reference object | that of `<test obj>` |
+
+  Legend labels: `L1 seed: <label>` and `<HLT label> ∧ L1 seed`; markers: squares for the seed, open
+  triangles for the combination. The JSON entries have the usual structure (`label`, `efficiency`,
+  `efficiency_err`, `xbins`, `err_kwargs`). Without `l1_seed` nothing changes. Use
+  `matching_and_threshold: True`: with it, the three curves share the denominator (all reference
+  objects) and L1 ∧ HLT ≤ min(L1, HLT) in every bin. `threshold_field` works as for the test objects
+  (the L1 threshold is always on the L1 pT).
+
+  **Limitations.**
+  * Multi-object seeds are applied per object (one leg): e.g. for `L1_pDoublePuppiTau52_52`
+    (`hlt_tau_l1seed.yaml`) the reference tau must be matched to an L1 tau passing one leg; the other leg
+    and the seed's dR / dz / mass conditions are not required. Use `path_efficiency` for the full
+    path. Cross seeds (e.g. muon + tau) can only be given by the leg of the plotted object.
+  * Event-level effects are not included: the HLT bit can fire on another object of the event (e.g. the
+    other muon in DY), and HLT selections that are not in the nano (isolation of IsoMu24, HGCAL e/gamma
+    variables) are missing or approximate in the HLT test objects.
+  * Some HLT collections are stored only in events with an L1 seed (`hltMuon`: L1 tkMuon,
+    `hltHpsPFTau`: L1 tau seed), so their HLT-only curves already contain part of the L1 requirement.
+  * Only for matched turn-ons (`match_test_to_ref: True`), not for `iso_vs_efficiency`.
+
+  Configs: `configs/V50nano/object_performance/hlt_{muon,electron,tau,jets}_l1seed.yaml` (V50nano_170pre6HLT).
+  Tests: `menu_tools/object_performance/tests/test_l1_seed.py`.
 
 ## Response and resolution
 
