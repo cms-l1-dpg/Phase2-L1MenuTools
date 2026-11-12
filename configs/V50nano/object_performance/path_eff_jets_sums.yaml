@@ -1,0 +1,60 @@
+# Jet / HT / MET L1 seed and HLT path efficiencies vs gen quantities on ttbar (path_efficiency.py).
+# Reference selections as in jets_trigger.yaml and met_ht_mht.yaml.
+SingleJet520PathEff:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen jets, $|\\eta| < 2.4$"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+  path_efficiency:
+    L1: [L1_pSinglePuppiJet230_final]
+    HLT: [HLT_AK4PFPuppiJet520]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 600
+  xlabel: "Leading gen jet $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 700, 900]
+
+HT1070PathEff:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen HT (jets $p_T > 30$ GeV, $|\\eta| < 2.4$)"
+    trafo: "HT"
+    cuts:
+      object:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 30"
+  path_efficiency:
+    L1: [L1_pPuppiHT450_final]
+    HLT: [HLT_PFPuppiHT1070]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 1200
+  xlabel: "Gen HT (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1400, 1800]
+
+METMHT140PathEff:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenMET"
+    x_arg: "pt"
+    label: "Gen MET"
+  path_efficiency:
+    L1: [L1_pPuppiMET200_final]
+    HLT: [HLT_PFPuppiMETTypeOne140_PFPuppiMHT140]
+    curves: [L1, HLT, L1_and_HLT]
+    plateau_min: 300
+  xlabel: "Gen MET (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 50, 100, 150, 200, 250, 300, 350, 400, 500, 600]
