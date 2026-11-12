@@ -1,0 +1,103 @@
+# pT / eta / phi response of GMT (tk)muons to gen muons (DY); see docs/object-performance.md
+MuonsResolutionBarrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    L1gmtMuon:default:barrel: "pt"
+    L1gmtTkMuon:default:barrel: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [3, 5, 10, 15, 20, 25, 30, 40, 50, 70, 100]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+MuonsResolutionOverlap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    L1gmtMuon:default:overlap: "pt"
+    L1gmtTkMuon:default:overlap: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [3, 5, 10, 15, 20, 25, 30, 40, 50, 70, 100]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+MuonsResolutionEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1gmtMuon:default:endcap: "pt"
+    L1gmtTkMuon:default:endcap: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [3, 5, 10, 15, 20, 25, 30, 40, 50, 70, 100]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+MuonsResolutionVsEta:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "{pt} > 5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1gmtMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+

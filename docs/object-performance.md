@@ -20,6 +20,8 @@
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
 
+* [Response and resolution](#response-and-resolution)
+
 ## Caching the NTuple trees
 
   **Note:** When running on lxplus, usually the cache files will already
@@ -104,3 +106,63 @@
   Examples can be found in
   `configs/V50nano/object_performance/*_trigger_wMatching.yaml`
   (and `configs/V43nano/object_performance/` for the older version).
+
+## Response and resolution
+
+  A plot entry with a `resolution:` block produces pT, eta and phi response / resolution plots
+  instead of efficiencies (`object_performance <config>` dispatches it; `--version` works as usual):
+
+  ```
+  object_performance configs/V50nano/object_performance/tkmuon_resolution.yaml --version V50nano_170X1026
+  ```
+
+  Reference configs: `{electron,photons,tkmuon,tau,jets,met}_resolution.yaml` in
+  `configs/V50nano/object_performance`.
+
+  **Pairs.** With `match_test_to_ref: True`, the reference cuts, the test-object cuts and the matching
+  are those of the matching efficiencies: in each event the leading reference object (after the cuts)
+  is paired with the highest-pT test object within `match_dR`. Unmatched references are dropped
+  (that is the efficiency). Without `match_test_to_ref` the comparison is event by event without
+  matching, for energy sums: `GenMET` vs `L1puppiMET`, or gen HT (`trafo: HT`) vs L1 HT.
+
+  **Quantities.** `pt`: response $p_T^{L1}/p_T^{ref}$ (for sums: L1 value / reference value);
+  `eta`: $\eta^{L1}-\eta^{ref}$; `phi`: $\phi^{L1}-\phi^{ref}$ wrapped to $[-\pi, \pi)$.
+  In each bin: the median, and the effective resolution $\sigma_{eff}$ = half of the 16–84% interquantile
+  range (divided by the median for `pt`), with the counts and distribution-free uncertainties from
+  the order statistics (the rank of a $p$-quantile fluctuates by $\sqrt{np(1-p)}$; the 16% and 84%
+  errors are added in quadrature, neglecting their correlation).
+
+  ```yaml
+  MuonsResolutionBarrel:
+    sample: DYLL_M50
+    version: V50nano
+    match_test_to_ref: True
+    reference_object: {...}            # as in the *_matching.yaml configs
+    test_objects:
+      L1gmtTkMuon:default:barrel: "pt"
+    resolution:
+      variables: [pt, eta, phi]        # default [pt, eta, phi]; event-level: [pt, phi]
+      vs:                              # binning variables; default: pt with the top-level `binning`
+        pt: {edges: [3, 5, 10, 20, 50, 100]}       # reference pT ({min, max, step} also works)
+        eta: {min: -2.4, max: 2.4, step: 0.2}      # reference eta (abseta: |eta|)
+        pu: {edges: [150, 180, 200, 220, 260]}     # pileup, from the `Pileup` parquet
+      response_binning:                # optional: per-bin response distributions for these variables
+        pt: {min: 0, max: 2, step: 0.04}
+      pu_variable: nPU                 # Pileup field (default nPU; nTrueInt is constant 200 in Spring24)
+      min_entries: 20                  # bins with fewer pairs are not reported (default 20)
+      min_ref: 0                       # event-level only: keep reference value > min_ref
+  ```
+
+  Each `vs` entry can also carry a `label` for the x axis. The pileup binning reads
+  `<version>_<sample>_Pileup.parquet` (one row per event, row-aligned with the object parquets;
+  cache the nano `Pileup` table to get it); if it is missing the `pu` binning is skipped with a warning.
+  The event-level phi response needs a `phi` field in both reference and test (e.g. not `L1TrackMET`).
+
+  Outputs, in `outputs/<version>/object_performance/resolution/`:
+
+  * `<plot>_<var>_vs_<vs>_<version>.{png,pdf,json}`: median (top) and resolution (bottom) vs `<vs>`,
+    all test objects overlaid; the json has per object `xbins`, `edges`, `n`, `median(_err)`,
+    `q16`, `q84`, `resolution(_err)`, `mean`, `std`;
+  * `<plot>_<var>_vs_<vs>_dist_<version>.{png,pdf}`: response distributions (unit area, overflow in
+    the edge bins) in every bin of `<vs>`, all test objects overlaid, for the variables in `response_binning`;
+  * `<plot>_<version>.yaml`: the plot config.

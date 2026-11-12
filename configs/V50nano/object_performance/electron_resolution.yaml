@@ -1,0 +1,81 @@
+# pT / eta / phi response of L1 e/gamma objects to gen electrons (DY); see docs/object-performance.md
+ElectronsResolutionBarrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1EG:default: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+ElectronsResolutionEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1EG:default: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+ElectronsResolutionVsEta:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "{pt} > 10"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1EG:default: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
