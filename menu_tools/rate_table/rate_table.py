@@ -5,7 +5,12 @@ import os
 import yaml
 
 from menu_tools.rate_table.menu_table import MenuTable
-from menu_tools.utils.versions import add_version_argument, get_versions, run_per_version
+from menu_tools.utils.versions import (
+    add_version_argument,
+    get_versions,
+    parse_args,
+    run_per_version,
+)
 
 
 def _extract_version(path: str) -> str:
@@ -60,7 +65,7 @@ def main():
             "`_truncated` suffix."
         ),
     )
-    args = parser.parse_args()
+    args = parse_args(parser)
 
     with open(args.config_file, "r") as f:
         menu_config_dict = yaml.safe_load(f)
