@@ -1,0 +1,78 @@
+# pT / eta / phi response of L1 taus to gen visible taus (VBF H->tautau); see docs/object-performance.md
+TausResolutionBarrel:
+  sample: VBFHToTauTau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1nnPuppiTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [10, 20, 30, 40, 50, 60, 80, 100, 150]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+TausResolutionEndcap:
+  sample: VBFHToTauTau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1nnPuppiTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [10, 20, 30, 40, 50, 60, 80, 100, 150]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+TausResolutionVsEta:
+  sample: VBFHToTauTau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{pt} > 20"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1nnPuppiTau:default: "pt"
+    L1hpsTau:default: "pt"
+    L1caloTau:default: "pt"
+    L1nnCaloTau:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+

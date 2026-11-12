@@ -1,0 +1,146 @@
+# pT / eta / phi response of L1 jets to gen jets (ttbar): SC4 vs GenJet, SC8 vs GenJetAK8; see docs/object-performance.md
+JetResolutionBarrel:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC4:default: "pt"
+    L1puppiJetSC4NG:default: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+JetResolutionEndcap:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC4:default: "pt"
+    L1puppiJetSC4NG:default: "pt"
+    L1caloJet:default: "pt"
+    L1TrackJet:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+JetResolutionForward:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+JetResolutionVsEta:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 40"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1puppiJetSC4:default: "pt"
+    L1caloJet:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      eta: {min: -5, max: 5, step: 0.25}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+JetResolutionBarrelSC8:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:barrel: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [50, 75, 100, 125, 150, 200, 250, 300, 400, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+JetResolutionEndcapSC8:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen AK8 Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:endcap: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [50, 75, 100, 125, 150, 200, 250, 300, 400, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
