@@ -1,0 +1,83 @@
+# HLT muons vs L1 tkMuon: efficiency vs gen eta (DY). hltMuon exists only in events with an L1 tkMuon.
+# Trigger blocks: threshold on the test pT (threshold_field), plotted vs gen eta.
+
+HLTMuonsMatching_Eta_Pt30ToInf:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "{pt} > 30"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "eta"
+    L1gmtTkMuon:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (gen $p_T$ > 30 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.1
+
+HLTMuonsTrigger_Eta_Pt30ToInf_wMatching:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "{pt} > 30"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "eta"
+    L1gmtTkMuon:default: "eta"
+  thresholds: [24]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen $p_T$ > 30 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.1
+
+HLTMuonsTrigger_Eta_Pt60ToInf_wMatching:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "{pt} > 60"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "eta"
+    L1gmtTkMuon:default: "eta"
+  thresholds: [50]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen $p_T$ > 60 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.2
