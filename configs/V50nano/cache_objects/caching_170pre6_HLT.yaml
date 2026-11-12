@@ -2,6 +2,8 @@
 # MinBias (12.5k files) is cached in chunks on HTCondor (scripts/condor/caching_170pre6HLT_minbias.sub,
 # cache_objects --files-per-job N --job I) and merged with menu_tools/caching/merge_chunks.py.
 # After caching: make_hlt_sums.py (hltPuppiJetSums) and merge_arrays.py (L1EG) per sample.
+# hltPFPuppiHT was added after the first pass: cached alone with `--objects hltPFPuppiHT`
+# (chunk mode skips objects whose chunk file exists).
 # No YAML anchors: each sample has its own lists.
 V50nano_170pre6HLT:
   DYLL_M50:
@@ -51,14 +53,18 @@ V50nano_170pre6HLT:
         L1DispMuonKMTF: "all"
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
-        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
-        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
-        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
         hltMuon: "all"
         hltElectron: "all"
         hltPhoton: "all"
         hltAK4PuppiJet: "all"
         hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
         ## Pileup
         Pileup: [nTrueInt, nPU]
         ## Per-event bits (one flat record per event).
@@ -118,14 +124,18 @@ V50nano_170pre6HLT:
         L1DispMuonKMTF: "all"
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
-        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
-        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
-        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
         hltMuon: "all"
         hltElectron: "all"
         hltPhoton: "all"
         hltAK4PuppiJet: "all"
         hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
         ## Pileup
         Pileup: [nTrueInt, nPU]
         ## Per-event bits (one flat record per event).
@@ -186,14 +196,18 @@ V50nano_170pre6HLT:
         L1DispMuonKMTF: "all"
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
-        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
-        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
-        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
         hltMuon: "all"
         hltElectron: "all"
         hltPhoton: "all"
         hltAK4PuppiJet: "all"
         hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
         ## Pileup
         Pileup: [nTrueInt, nPU]
         ## Per-event bits (one flat record per event).
@@ -253,14 +267,18 @@ V50nano_170pre6HLT:
         L1DispMuonKMTF: "all"
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
-        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
-        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
-        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
         hltMuon: "all"
         hltElectron: "all"
         hltPhoton: "all"
         hltAK4PuppiJet: "all"
         hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
         ## Pileup
         Pileup: [nTrueInt, nPU]
         ## Per-event bits (one flat record per event).
@@ -315,14 +333,18 @@ V50nano_170pre6HLT:
         L1DispMuonKMTF: "all"
         L1DispMuonOMTF: "all"
         L1DispMuonEMTF: "all"
-        ## HLT objects (hltPFPuppiMET / hltPFPuppiHT are not cached: MET looks broken, ~450 GeV
-        ## in minimum bias, and the HT definition is unclear; HT/MHT are rebuilt from
-        ## hltAK4PuppiJet by menu_tools/caching/make_hlt_sums.py -> hltPuppiJetSums)
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
         hltMuon: "all"
         hltElectron: "all"
         hltPhoton: "all"
         hltAK4PuppiJet: "all"
         hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
         ## Pileup
         Pileup: [nTrueInt, nPU]
         ## Per-event bits (one flat record per event).

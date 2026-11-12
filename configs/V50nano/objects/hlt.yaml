@@ -251,11 +251,21 @@ hltHpsPFTau:
           - "({pt} < 300) | ({deepTauVSjet} > 0.05)"
 
 
+# HLT PUPPI HT: the nano's hltPFPuppiHT_pt, one value per event (used like L1puppiMET:default).
+# It is the sumEt of hltPFPuppiMHT (HLTHtMhtProducer, HLTrigger/NGTScouting hltSums_cfi):
+# JEC-corrected PUPPI jets with pT > 30 GeV and |eta| < 5, summing ET (usePt=False). It is
+# therefore NOT the HT that HLT_PFPuppiHT1070 cuts on (hltPFPuppiHT: |eta| < 2.4, pT sum), but
+# the only HT from corrected jets in the nano. (hltPFPuppiMET is the type-1 PUPPI sumEt: not used.)
+hltPFPuppiHT:
+  label: "HLT PUPPI HT (corr. jets, |eta| < 5, ET sum)"
+  ids:
+    default: {}
+
 # HT / MHT from hltAK4PuppiJet (pt > 30, |eta| < 2.4, as hltPFPuppiHT / PFPuppiMHT of the
 # HLT menu), built by menu_tools/caching/make_hlt_sums.py in the L1puppiJetSC4sums layout.
-# The nano jets are uncorrected (see hltAK4PuppiJet), so this HT is ~0.77 x gen HT, while the
-# HLT HT uses corrected jets (the nano hltPFPuppiHT is ~1.4 x this HT in ttbar, consistent with
-# corrected jets). The nano's own hltPFPuppiHT / hltPFPuppiMET are not used (make_hlt_sums.py).
+# The nano jets are uncorrected (see hltAK4PuppiJet), so these are ~0.77 x gen. MHT has no
+# corrected counterpart in the nano and is taken from here; the HT id is kept for comparison
+# with hltPFPuppiHT (~1.4 x this HT in ttbar).
 hltPuppiJetSums:
   ids:
     HT:
