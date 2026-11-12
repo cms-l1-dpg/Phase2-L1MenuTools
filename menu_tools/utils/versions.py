@@ -5,20 +5,19 @@
     object_performance cfg1.yaml cfg2.yaml --version V50nano_170pre{6,5}{,_140PU}
 
 (braces unquoted, so that bash expands them). The list ends at the next option
-(`--scalings` etc.) or at the end of the command, so the config files have to come
-before `--version`.
+(`--scalings` etc.) or at the end of the command. Config files (`.yaml`/`.yml`) may come
+before or after `--version`: `parse_args` moves them out of the version list.
 """
-import argparse
-import traceback
-from typing import Callable, Optional
 
+import argparse
+import sys
+import traceback
+from typing import Callable, Optional, Sequence
 
 VERSION_HELP = (
     "Override version(s) for output/caching. Several versions run the command once per "
     "version, e.g. `--version V50nano_170pre{6,5}{,_140PU}` (braces unquoted). "
-    "Everything "
-    "after --version up to the next option is taken as a version, so put config files "
-    "before it."
+    "Config files can go before or after it."
 )
 
 
@@ -28,11 +27,43 @@ def add_version_argument(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def parse_args(
+    parser: argparse.ArgumentParser, argv: Optional[Sequence[str]] = None
+) -> argparse.Namespace:
+    """`parser.parse_intermixed_args`, keeping configs after `--version` as configs.
+
+    `--version` takes every following argument up to the next option, so in
+    `rate_table --version V50nano_170pre6 step1p5_menu_cfg.yml` the config would
+    otherwise be taken as a version. Arguments there ending in `.yaml`/`.yml` are
+    moved in front of `--version`.
+    """
+    args = list(sys.argv[1:] if argv is None else argv)
+    if "--version" in args:
+        start = args.index("--version") + 1
+        end = start
+        while end < len(args) and not args[end].startswith("-"):
+            end += 1
+        values = args[start:end]
+        configs = [v for v in values if v.endswith((".yaml", ".yml"))]
+        versions = [v for v in values if not v.endswith((".yaml", ".yml"))]
+        # Configs go just before `--version`, so their order is kept.
+        args = (
+            args[: start - 1]
+            + configs
+            + args[start - 1 : start]
+            + versions
+            + args[end:]
+        )
+    # Intermixed: config files may also sit on both sides of other options.
+    return parser.parse_intermixed_args(args)
+
+
 def get_versions(
     parser: argparse.ArgumentParser, args: argparse.Namespace
 ) -> list[Optional[str]]:
-    """The versions to run, `[None]` (= the config's own version) if --version wasn't
-    given.
+    """The versions to run.
+
+    `[None]` (= the config's own version) if --version wasn't given.
     """
     if not args.version:
         return [None]

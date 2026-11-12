@@ -1,0 +1,4 @@
+version: "V50nano"
+sample: "MinBias"
+menu_config: "configs/V50nano/rate_table/step1and2_P2GT_menu_cfg.yml"
+table_fname: "v45_Step1and2Menu_P2GT"
