@@ -1,4 +1,5 @@
 import argparse
+import fnmatch
 import functools
 import sys
 import glob
@@ -139,8 +140,8 @@ class ObjectCacher:
         # Get Branches. Copy lists: YAML anchors can make several samples share one
         # list object, and the sums handling below appends to it.
         # `branches` can be a list, "all" (all `<obj>_*` branches of the first file),
-        # or a dict {"exclude": [regex, ...]} = "all" minus the fields matching any
-        # regex
+        # a glob on the field names (e.g. "*_final"), or a dict
+        # {"exclude": [regex, ...]} = "all" minus the fields matching any regex
         # (e.g. the `_pHLT` copies of the HLT bits).
         if isinstance(branches, list):
             self._branches = list(branches)
@@ -157,6 +158,14 @@ class ObjectCacher:
                 self._branches = [
                     b for b in self._branches if not any(r.search(b) for r in excl)
                 ]
+            elif branches != "all":
+                self._branches = [
+                    b for b in self._branches if fnmatch.fnmatchcase(b, branches)
+                ]
+                if not self._branches:
+                    raise ValueError(
+                        f"No `{obj}` branches match `{branches}` in {self._ntuple_path}"
+                    )
         if self._job is not None:
             self.cache_out_path = chunk_dir(version) + "/"
         else:
