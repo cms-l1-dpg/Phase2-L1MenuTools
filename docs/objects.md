@@ -59,6 +59,30 @@ The L1 seed of an HLT path can be required on the same gen object with the `l1_s
 (combined L1 x HLT object efficiency, [object-performance](object-performance.md#combined-l1-x-hlt-object-efficiency-l1_seed),
 configs `hlt_*_l1seed.yaml`).
 
+### b-tagging working points
+
+The b-tag working points are ids of the jet objects (used as `working_points` of the `btag:`
+plots, [object-performance](object-performance.md#b-tagging-efficiency-and-mis-identification);
+the yaml comments give the details):
+
+| id | cut | source |
+|---|---|---|
+| `hltAK4PuppiJetCorr:bTagDeepFlavour0p275` | prob(b) > 0.275 | `hltBTagPFPuppiDeepFlavour0p275Eta2p4TripleEta2p4` of `HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4` |
+| `hltAK4PuppiJetCorr:bTagDeepFlavour0p375` | prob(b) > 0.375 | `hltBTagPFPuppiDeepFlavour0p375Eta2p4TripleEta2p4` of `HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4` |
+| `hltAK4PuppiJetCorr:bTagDeepFlavour0p935` | prob(b) > 0.935 | `hltBTagPFPuppiDeepFlavour0p935DoubleEta2p4` of `HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4` |
+| `hltAK4PuppiJetCorr:bTagLight10` / `bTagLight1` | prob(b) > 0.182 / 0.636 | 10% / 1% light mis-id on ttbar (pT > 30 GeV, \|eta\| < 2.4), for the comparison with L1 |
+| `L1puppiJetSC4NG:bTagLight10` / `bTagLight1` | bTagScore > 0.29 / 0.575 | 10% / 1% light mis-id on ttbar (online pT > 30 GeV, \|eta\| < 2.4); measured 9.6% / 0.57% (1/128 score grid) |
+| `L1puppiJetSC4NG:bjetnn` | bTagScore > 0.15 | pre-existing id (origin not documented) |
+
+All ids also require |eta| < 2.4. The HLT filters (CMSSW_17_0_0_pre6,
+`HLTrigger/Configuration/python/HLT_75e33/modules/hltBTagPFPuppiDeepFlavour*_cfi.py`) cut on the
+DeepFlavour `probb` output alone of the corrected jets with pT > 30 GeV and |eta| < 2.4
+(`hltPFPuppiJetForBtagSelectorEta2p4`); the pT cut is not part of the ids (the `btag` plots apply
+`min_pt`). The L1 menu has no per-jet b-tag working point: its b-tag seed
+`L1_PFHTT_QuadJet_BTagNNScore` cuts on the sum of the `bTagScore`s of four jets (> 0.90), so the
+L1 working points are defined at fixed light mis-identification rates on ttbar
+(`configs/V50nano/object_performance/btag_tt.yaml`, `roc: target_misid`).
+
 ### HLT jet energy corrections
 
 The nano stores `hltAK4PFPuppiJets`, the HLT AK4 PUPPI jets *before* the jet energy corrections

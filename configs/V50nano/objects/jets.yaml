@@ -100,6 +100,28 @@ L1puppiJetSC4NG:
         inclusive:
           - "abs({eta}) < 2.4"
           - "{bTagScore} > 0.15"
+    # b-tag working points for the btag plots (configs/V50nano/object_performance/btag_*.yaml).
+    # The L1 menu has no per-jet bTagScore WP: its only b-tag seed, L1_PFHTT_QuadJet_BTagNNScore
+    # (configs/V50nano/rate_table/step1and2_menu_cfg.yml), cuts on the SUM of the scores of four
+    # jets (> 0.90), and `bjetnn` (> 0.15, above) has no documented origin. These WPs are
+    # therefore defined at fixed light-jet mis-identification rates of 10% and 1%, measured on
+    # ttbar (TT of V50nano_170pre6HLT, 500k events): L1 jets with online pT > 30 GeV,
+    # |eta| < 2.4, light = closest GenJet within dR < 0.2 has hadronFlavour 0 (btag block
+    # `roc: target_misid`). bTagScore is quantized in steps of 1/128, so the cuts sit between
+    # two grid values: > 0.29 (= >= 38/128): light mis-id 9.6%, b eff. 53%;
+    # > 0.575 (= >= 74/128): light mis-id 0.57% (the next grid value gives > 1%), b eff. 13%.
+    bTagLight10:
+      label: "NG SC4, bTagScore > 0.29 (10% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{bTagScore} > 0.29"
+    bTagLight1:
+      label: "NG SC4, bTagScore > 0.575 (1% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{bTagScore} > 0.575"
     cjetnn:
       label: "NG SC4, CtagScore > 0.099"
       cuts:

@@ -235,6 +235,56 @@ hltAK4PuppiJetCorr:
       cuts:
         inclusive:
           - "abs({eta}) < 5"
+    # b-tag working points (DeepFlavour). The HLT b-tag filters (HLTPFJetTag) of the Phase-2
+    # HLT menu (HLT_75e33/modules/hltBTagPFPuppiDeepFlavour*_cfi.py, CMSSW_17_0_0_pre6) cut on
+    # JetTags = hltPfDeepFlavourJetTagsModEta2p4:probb, i.e. on prob(b) ALONE (not on
+    # b + bb + lepb), of the corrected jets with pT > 30 GeV, |eta| < 2.4
+    # (hltPFPuppiJetForBtagSelectorEta2p4). The ids below are the score cut only (with
+    # |eta| < 2.4); the btag plots apply the pT cut separately.
+    # Caveat: the nano DeepFlavour_prob_* are from hltPfDeepFlavourJetTags (DST_PFScouting /
+    # MC_BTV paths), the same model run on the UNcorrected hltAK4PFPuppiJets (tag infos for
+    # raw pT > 15 GeV, |eta| < 2.5; other jets get the default-input score), so they are close
+    # to, but not exactly, the scores the HLT paths cut on (the jet pT is a tagger input).
+    #   HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4:
+    #     hltBTagPFPuppiDeepFlavour0p275Eta2p4TripleEta2p4 (>= 3 jets with probb > 0.275)
+    #   HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4:
+    #     hltBTagPFPuppiDeepFlavour0p375Eta2p4TripleEta2p4 (>= 3 jets with probb > 0.375)
+    #   HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4:
+    #     hltBTagPFPuppiDeepFlavour0p935DoubleEta2p4 (>= 2 jets with probb > 0.935)
+    bTagDeepFlavour0p275:
+      label: "HLT DeepFlavour prob(b) > 0.275 (TripleBTag HT330)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{DeepFlavour_prob_b} > 0.275"
+    bTagDeepFlavour0p375:
+      label: "HLT DeepFlavour prob(b) > 0.375 (TripleBTag HT200)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{DeepFlavour_prob_b} > 0.375"
+    bTagDeepFlavour0p935:
+      label: "HLT DeepFlavour prob(b) > 0.935 (DoubleBTag Jets128)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{DeepFlavour_prob_b} > 0.935"
+    # For the comparison with L1 at equal light mis-id: prob(b) cuts at 10% / 1% light-jet
+    # mis-identification on ttbar, defined as the L1 bTagLight10 / bTagLight1 WPs
+    # (configs/V50nano/objects/jets.yaml; corrected pT > 30 GeV, |eta| < 2.4):
+    # > 0.182: light mis-id 10.0%, b eff. 89%; > 0.636: light mis-id 1.0%, b eff. 68%.
+    bTagLight10:
+      label: "HLT DeepFlavour prob(b) > 0.182 (10% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{DeepFlavour_prob_b} > 0.182"
+    bTagLight1:
+      label: "HLT DeepFlavour prob(b) > 0.636 (1% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{DeepFlavour_prob_b} > 0.636"
 
 hltHpsPFTau:
   label: "HLT HPS PF Tau"
