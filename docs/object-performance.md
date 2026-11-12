@@ -19,7 +19,6 @@
 * [Efficiency and Scalings](#efficiency-and-scalings)
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
-
 * [Response and resolution](#response-and-resolution)
 
 ## Caching the NTuple trees
