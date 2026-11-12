@@ -1,0 +1,124 @@
+# L1 seed(s) of each HLTX path of the L1+HLT nanos (CMSSW_17_0_0_pre6, HLT:75e33 menu).
+# l1_seeds: OR of the listed L1_p*_final bits (P2GT emulator decisions in the `L1` record);
+#           ANY = any L1_p*_final bit (L1 accept), used for paths with no L1 requirement.
+# Source: the L1 filter of each path in
+#   $CMSSW_RELEASE_BASE/src/HLTrigger/Configuration/python/HLT_75e33/{paths,sequences,modules}
+# (PathStatusFilter `logicalExpression` or `l1GTAlgoNames` of the L1 / L3 muon filters),
+# resolved recursively through the sequences.
+# Note: "Unseeded" in the e/gamma path names refers to the e/gamma reconstruction (not L1-region
+# seeded); the paths still require the same L1 seed bits as their L1Seeded twins.
+# confidence: high   = GT bit(s) read from the path config, and no event with the path fired
+#                      without one of its seeds in the dev cache;
+#             medium = the path has no GT-bit requirement; the closest bit(s) are given (see note).
+# Dev-cache check (V50nano_dev170pre6HLT: MinBias 7520, DYLL_M50 5000, TT 6000, HHTo2B2Tau 1495,
+# HHTo4B 3000 = 23015 events; `hlt_paths ... --sample ...`, column n_hlt_not_l1): 0 events with
+# the path fired and none of its seeds, for every path (n_hlt from 37 to 3748 per path).
+# Used by `hlt_paths` (menu_tools/rate_table/hlt_paths.py).
+
+# --- Jets, HT, MET (PathStatusFilter on the GT algo)
+HLT_AK4PFPuppiJet520:
+  l1_seeds: [L1_pSinglePuppiJet230_final]        # hltL1SeedsForPuppiJetFilter: pSinglePuppiJet230
+  confidence: high
+HLT_PFPuppiHT1070:
+  l1_seeds: [L1_pPuppiHT450_final]               # hltL1SeedsForPuppiHTFilter: pPuppiHT450
+  confidence: high
+HLT_PFPuppiMETTypeOne140_PFPuppiMHT140:
+  l1_seeds: [L1_pPuppiMET200_final]              # hltL1SeedsForPuppiMETFilter: pPuppiMET200
+  confidence: high
+HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4:
+  l1_seeds: [L1_pDoublePuppiJet112_112_final]    # hltL1SeedsForDoublePuppiJetBtagFilter: pDoublePuppiJet112_112
+  confidence: high
+HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4:
+  l1_seeds: [L1_pDoublePuppiJet112_112_final]    # hltL1SeedsForDoublePuppiJetBtagFilter: pDoublePuppiJet112_112
+  confidence: high
+HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4:
+  # hltL1SeedsForQuadPuppiJetTripleBtagFilter: 'pPuppiHT400 and pQuadJet70_55_40_40', which is the
+  # single GT algo pPuppiHT400_pQuadJet70_55_40_40 in the emulator output
+  l1_seeds: [L1_pPuppiHT400_pQuadJet70_55_40_40_final]
+  confidence: high
+HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4:
+  l1_seeds: [L1_pPuppiHT400_pQuadJet70_55_40_40_final]   # as above
+  confidence: high
+
+# --- Muons (PathStatusFilter and/or l1GTAlgoNames of the L3 filters)
+HLT_Mu50_FromL1TkMuon:
+  l1_seeds: [L1_pSingleTkMuon22_final]           # hltSingleTkMuon22L1TkMuonFilter: pSingleTkMuon22
+  confidence: high
+HLT_IsoMu24_FromL1TkMuon:
+  l1_seeds: [L1_pSingleTkMuon22_final]           # hltSingleTkMuon22L1TkMuonFilter: pSingleTkMuon22
+  confidence: high
+HLT_Mu37_Mu27_FromL1TkMuon:
+  l1_seeds: [L1_pDoubleTkMuon15_7_final]         # L3 filters' l1GTAlgoNames: pDoubleTkMuon15_7 (no PathStatusFilter)
+  confidence: high
+HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon:
+  l1_seeds: [L1_pDoubleTkMuon15_7_final]         # hltDoubleTkMuon157L1TkMuonFilter: pDoubleTkMuon15_7
+  confidence: high
+HLT_TriMu_10_5_5_DZ_FromL1TkMuon:
+  l1_seeds: [L1_pTripleTkMuon5_3_3_final]        # L3 filters' l1GTAlgoNames: pTripleTkMuon5_3_3 (no PathStatusFilter)
+  confidence: high
+
+# --- e/gamma (hltEGL1SeedsFor*Filter: PathStatusFilter)
+HLT_Ele32_WPTight_Unseeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final]
+  confidence: high
+HLT_Ele32_WPTight_L1Seeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final]
+  confidence: high
+HLT_Ele26_WP70_Unseeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final]
+  confidence: high
+HLT_Ele26_WP70_L1Seeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleTkEle36_final, L1_pSingleIsoTkEle28_final]
+  confidence: high
+HLT_Ele115_NonIso_L1Seeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleTkEle36_final]
+  confidence: high
+HLT_Photon108EB_TightID_TightIso_Unseeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleIsoTkPho36_final]
+  confidence: high
+HLT_Photon108EB_TightID_TightIso_L1Seeded:
+  l1_seeds: [L1_pSingleEGEle51_final, L1_pSingleIsoTkPho36_final]
+  confidence: high
+HLT_Photon187_Unseeded:
+  # No L1 requirement at all in the path (no L1 filter): seeded only by the L1 accept.
+  # (All 54 dev-cache events firing it also have pSingleEGEle51, as expected for a 187 GeV photon.)
+  l1_seeds: [ANY]
+  confidence: medium
+HLT_Photon187_L1Seeded:
+  # No GT bit: the path starts with l1tTkEmSingle51Filter (L1TTkEmFilter on L1 TkEm EB/EE,
+  # scaled pT >= 51, quality cuts), i.e. an object-level cut close to pSingleEGEle51 but not
+  # identical. pSingleEGEle51 is the closest bit: all 57 dev-cache events firing the path have it.
+  l1_seeds: [L1_pSingleEGEle51_final]
+  confidence: medium
+HLT_DoubleEle25_CaloIdL_PMS2_Unseeded:
+  l1_seeds: [L1_pDoubleEGEle37_24_final, L1_pDoubleTkEle25_12_final]
+  confidence: high
+HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded:
+  l1_seeds: [L1_pDoubleEGEle37_24_final, L1_pDoubleTkEle25_12_final]
+  confidence: high
+HLT_DoubleEle23_12_Iso_L1Seeded:
+  l1_seeds: [L1_pDoubleEGEle37_24_final, L1_pDoubleTkEle25_12_final, L1_pIsoTkEleEGEle22_12_final]
+  confidence: high
+HLT_Diphoton30_23_IsoCaloId_Unseeded:
+  l1_seeds: [L1_pDoubleEGEle37_24_final, L1_pDoubleIsoTkPho22_12_final]
+  confidence: high
+HLT_Diphoton30_23_IsoCaloId_L1Seeded:
+  l1_seeds: [L1_pDoubleEGEle37_24_final, L1_pDoubleIsoTkPho22_12_final]
+  confidence: high
+
+# --- Taus and cross triggers
+HLT_DoubleMediumChargedIsoPFTauHPS40_eta2p1:
+  l1_seeds: [L1_pDoublePuppiTau52_52_final]      # hltL1P2GTTau: l1GTAlgoNames pDoublePuppiTau52_52
+  confidence: high
+HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1:
+  l1_seeds: [L1_pDoublePuppiTau52_52_final]
+  confidence: high
+HLT_DoubleMediumPFPuppiParTTauh30_eta2p1:
+  l1_seeds: [L1_pDoublePuppiTau52_52_final]
+  confidence: high
+HLT_IsoMu20_eta2p1_LooseDeepTauPFTauHPS27_eta2p1_CrossL1:
+  l1_seeds: [L1_pPuppiTauTkMuon42_18_final]      # hltPuppiTauTkMuon4218L1TkFilter: pPuppiTauTkMuon42_18
+  confidence: high
+HLT_Ele30_WPTight_L1Seeded_LooseDeepTauPFTauHPS30_eta2p1_CrossL1:
+  l1_seeds: [L1_pPuppiTauTkIsoEle45_22_final]    # hltPuppiTauTkIsoEle45_22L1TkFilter: pPuppiTauTkIsoEle45_22
+  confidence: high
