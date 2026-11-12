@@ -358,6 +358,8 @@ class EfficiencyCentral:
         print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
 
         for plot_name, cfg_plot in self.cfg_plots.items():
+            if "resolution" in cfg_plot:
+                continue  # handled by resolution_plotter.ResolutionCentral
             # The previous plotter also holds the old collection; release both
             # before building the next, so two plots' arrays are never held at once.
             turnon_collection = plotter = None
@@ -627,6 +629,12 @@ def main():
 
             scalings = ScalingCentral(path_cfg_plot, override_version=version)
             scalings.run()
+
+            if not args.scalings_only:
+                # Plot entries with a `resolution:` block (imported here: it imports this module)
+                from menu_tools.object_performance.resolution_plotter import ResolutionCentral
+
+                ResolutionCentral(path_cfg_plot, override_version=version).run()
 
     run_per_version(get_versions(parser, args), run)
 

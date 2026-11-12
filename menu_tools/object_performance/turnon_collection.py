@@ -165,6 +165,14 @@ class TurnOnCollection:
             self.numerators["test"][str(test_obj)] = ref_test["test"][x_arg][pass_dR][
                 pt_max
             ][:, :, 0]
+            # Full matched (ref, test) records, e.g. for resolution studies
+            # (ResolutionCollection sets `keep_matched_records`). Same selection
+            # as the numerators: shape [event][ref], None where nothing matched.
+            if getattr(self, "keep_matched_records", False):
+                self.matched_records[str(test_obj)] = {
+                    "ref": ref_test["ref"][pass_dR][pt_max][:, :, 0],
+                    "test": ref_test["test"][pass_dR][pt_max][:, :, 0],
+                }
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """
