@@ -2,7 +2,7 @@
 # make_hlt_sums, merge_arrays: scripts/condor/caching_170pre6HLT_post.sh). Submit after all
 # chunk jobs succeeded; fpj must match the caching .sub files.
 #   condor_submit scripts/condor/caching_170pre6HLT_post.sub                          # all samples
-#   condor_submit scripts/condor/caching_170pre6HLT_post.sub sample=MinBias fpj=125    # one sample
+#   condor_submit scripts/condor/caching_170pre6HLT_post.sub postlist=<file>   # subset, e.g. "MinBias 125"
 # Each step skips outputs that exist already.
 checkout       = $ENV(PWD)
 logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
@@ -14,14 +14,9 @@ log            = $(logdir)/cache170pre6HLT.log
 request_cpus   = 1
 request_memory = 8000
 +JobFlavour    = "longlunch"
-if defined sample
-  queue
-else
-queue sample, fpj from (
-  DYLL_M50 25
-  TT 25
-  HHTo2B2Tau 25
-  HHTo4B 25
-  MinBias 125
-)
+# one line "<sample> <files per job>" per job; override for a subset, e.g.
+# postlist=<file with "MinBias 125">
+if ! defined postlist
+  postlist = scripts/condor/caching_170pre6HLT_post_samples.txt
 endif
+queue sample, fpj from $(postlist)
