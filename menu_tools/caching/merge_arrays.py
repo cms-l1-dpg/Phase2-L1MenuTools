@@ -5,9 +5,11 @@ import os
 from menu_tools.utils import constants
 
 # Set up argument parser
-parser = argparse.ArgumentParser(description='Merge parquet files with custom version and sample')
-parser.add_argument('--version', type=str, default="V45nano", help='Version to use')
-parser.add_argument('--sample', type=str, default="Hgg", help='Sample to use')
+parser = argparse.ArgumentParser(
+    description="Merge parquet files with custom version and sample"
+)
+parser.add_argument("--version", type=str, default="V45nano", help="Version to use")
+parser.add_argument("--sample", type=str, default="Hgg", help="Sample to use")
 args = parser.parse_args()
 
 version = args.version
@@ -32,8 +34,8 @@ else:
         print(obj, arr.fields)
         arrs.append(arr)
 
-    # merge once, after both objects are read (this was inside the loop, so a barrel-only
-    # file was written first), and write-then-rename
+    # merge once, after both objects are read (this was inside the loop, so a
+    # barrel-only file was written first), and write-then-rename
     print("Merging")
     merge_arr = ak.concatenate(arrs, axis=1)
     print(merge_arr)

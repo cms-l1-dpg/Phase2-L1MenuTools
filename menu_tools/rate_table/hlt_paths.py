@@ -1,25 +1,29 @@
 """Per HLT path: L1 seed, HLT and L1·HLT efficiencies (signal) or rates (minimum bias).
 
 Reads the per-event bit records `HLT` (HLT_<path>) and `L1` (L1_p*_final, P2GT emulator)
-from the cache and the path -> L1 seed mapping of `configs/<version>/rate_table/hlt_paths.yml`:
+from the cache and the path -> L1 seed mapping of
+`configs/<version>/rate_table/hlt_paths.yml`:
 
-    hlt_paths configs/V50nano/rate_table/hlt_paths.yml --version V50nano_dev170pre6HLT \\
-        --sample DYLL_M50 TT MinBias
+    hlt_paths configs/V50nano/rate_table/hlt_paths.yml \\
+        --version V50nano_dev170pre6HLT --sample DYLL_M50 TT MinBias
 
-For each path and sample the CSV `outputs/<version>/rate_tables/hlt_paths_<version>_<sample>.csv`
-holds the event counts `n_l1` (OR of the path's L1 seeds), `n_hlt` (path fired), `n_l1_hlt`
-(both) and `n_hlt_not_l1` (path fired without any of its seeds: 0 for a correct mapping of
-an L1-seeded path, since the emulation runs the HLT on every event), the efficiencies with
+For each path and sample the CSV
+`outputs/<version>/rate_tables/hlt_paths_<version>_<sample>.csv` holds the event counts
+`n_l1` (OR of the path's L1 seeds), `n_hlt` (path fired), `n_l1_hlt` (both) and
+`n_hlt_not_l1` (path fired without any of its seeds: 0 for a correct mapping of an
+L1-seeded path, since the emulation runs the HLT on every event), the efficiencies with
 68% Clopper-Pearson errors, and for minimum bias (`--rate`, default for samples named
 `MinBias*`) the rates in kHz with 68% Garwood intervals.
 
-Efficiencies are per event of the sample (no generator-level selection), as `rate_table --signal`.
-The last row, `Total`, is the OR over paths of L1 (OR of all seeds used), HLT and L1·HLT.
+Efficiencies are per event of the sample (no generator-level selection), as `rate_table
+--signal`. The last row, `Total`, is the OR over paths of L1 (OR of all seeds used), HLT
+and L1·HLT.
 
 The mapping file: one entry per HLT path,
 
     HLT_IsoMu24_FromL1TkMuon:
-      l1_seeds: [L1_pSingleTkMuon22_final]    # OR of these bits; `ANY` = any L1_p*_final (L1 accept)
+      # OR of these bits; `ANY` = any L1_p*_final (L1 accept)
+      l1_seeds: [L1_pSingleTkMuon22_final]
       confidence: high                        # optional, informational
 """
 import argparse
@@ -39,7 +43,9 @@ ANY_L1 = "ANY"
 
 
 def load_bits(version: str, sample: str, record: str) -> ak.Array:
-    fpath = os.path.join(constants.CACHE_DIR, version, f"{version}_{sample}_{record}.parquet")
+    fpath = os.path.join(
+        constants.CACHE_DIR, version, f"{version}_{sample}_{record}.parquet"
+    )
     return ak.from_parquet(fpath)
 
 
@@ -140,16 +146,26 @@ def _print(df: pd.DataFrame, as_rate: bool) -> None:
         if as_rate:
             show[f"rate_{key} [kHz]"] = [
                 f"{r:.3g} [{lo:.3g}, {hi:.3g}]"
-                for r, lo, hi in zip(df[f"rate_{key}"], df[f"rate_{key}_lo68"], df[f"rate_{key}_hi68"])
+                for r, lo, hi in zip(
+                    df[f"rate_{key}"], df[f"rate_{key}_lo68"], df[f"rate_{key}_hi68"]
+                )
             ]
         else:
             show[f"eff_{key} [%]"] = (100 * df[f"eff_{key}"]).round(2)
     show["n_hlt_not_l1"] = df["n_hlt_not_l1"]
-    with pd.option_context("display.max_rows", None, "display.width", 250, "display.max_columns", None):
+    with pd.option_context(
+        "display.max_rows", None, "display.width", 250, "display.max_columns", None
+    ):
         print(show.to_string(index=False))
 
 
-def run(mapping_file: str, version: str, sample: str, as_rate: Optional[bool], outdir: Optional[str]) -> pd.DataFrame:
+def run(
+    mapping_file: str,
+    version: str,
+    sample: str,
+    as_rate: Optional[bool],
+    outdir: Optional[str],
+) -> pd.DataFrame:
     with open(mapping_file) as f:
         mapping = yaml.safe_load(f)
     if as_rate is None:
@@ -157,7 +173,11 @@ def run(mapping_file: str, version: str, sample: str, as_rate: Optional[bool], o
     hlt_bits = load_bits(version, sample, "HLT")
     l1_bits = load_bits(version, sample, "L1")
     df = path_table(mapping, hlt_bits, l1_bits, as_rate)
-    print(f"=== {version} {sample}: {len(hlt_bits)} events, " + ("rates" if as_rate else "efficiencies") + " ===")
+    print(
+        f"=== {version} {sample}: {len(hlt_bits)} events, "
+        + ("rates" if as_rate else "efficiencies")
+        + " ==="
+    )
     _print(df, as_rate)
     outdir = outdir or os.path.join("outputs", version, "rate_tables")
     os.makedirs(outdir, exist_ok=True)
@@ -170,15 +190,35 @@ def run(mapping_file: str, version: str, sample: str, as_rate: Optional[bool], o
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(line_buffering=True)
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("mapping", help="HLT path -> L1 seeds yaml, e.g. configs/V50nano/rate_table/hlt_paths.yml")
-    parser.add_argument("--version", required=True, help="Cache version, e.g. V50nano_170pre6HLT")
-    parser.add_argument("--sample", nargs="+", required=True, help="Cached sample(s), e.g. DYLL_M50 TT MinBias")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "mapping",
+        help="HLT path -> L1 seeds yaml, e.g. configs/V50nano/rate_table/hlt_paths.yml",
+    )
+    parser.add_argument(
+        "--version", required=True, help="Cache version, e.g. V50nano_170pre6HLT"
+    )
+    parser.add_argument(
+        "--sample",
+        nargs="+",
+        required=True,
+        help="Cached sample(s), e.g. DYLL_M50 TT MinBias",
+    )
     rate = parser.add_mutually_exclusive_group()
-    rate.add_argument("--rate", dest="as_rate", action="store_true", default=None,
-                      help="Add rates (minimum bias normalisation); default for samples named MinBias*")
+    rate.add_argument(
+        "--rate",
+        dest="as_rate",
+        action="store_true",
+        default=None,
+        help="Add rates (minimum bias normalisation); default for samples named "
+        "MinBias*",
+    )
     rate.add_argument("--no-rate", dest="as_rate", action="store_false")
-    parser.add_argument("--outdir", default=None, help="Default: outputs/<version>/rate_tables")
+    parser.add_argument(
+        "--outdir", default=None, help="Default: outputs/<version>/rate_tables"
+    )
     args = parser.parse_args()
     for sample in args.sample:
         run(args.mapping, args.version, sample, args.as_rate, args.outdir)

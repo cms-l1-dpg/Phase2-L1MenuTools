@@ -63,7 +63,10 @@ def test_derive_cross_seed():
         "cross_masks": ["abs(leg2.z0-leg1.z0) < 1", "abs(leg3.eta) < 2.1"],
         "leg1": {"obj": "L1PV:default", "threshold_cut": None},
         "leg2": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "pt >= 7"},
-        "leg3": {"obj": "L1tkElectron:NoIso:inclusive", "threshold_cut": "offline_pt >= 23.0"},
+        "leg3": {
+            "obj": "L1tkElectron:NoIso:inclusive",
+            "threshold_cut": "offline_pt >= 23.0",
+        },
     }
     derived = lt.derive_seed(seed, "V50nano", OBJECTS)
     # PV leg skipped, online threshold marked, eta merged from object and mask
@@ -74,7 +77,11 @@ def test_derive_cross_seed():
 
 def test_mass_window_and_subscripts():
     seed = {
-        "cross_masks": ["(leg1+leg2).mass > 7.0", "(leg1+leg2).mass < 18.0", "leg1.deltaR(leg3) < 0.4"],
+        "cross_masks": [
+            "(leg1+leg2).mass > 7.0",
+            "(leg1+leg2).mass < 18.0",
+            "leg1.deltaR(leg3) < 0.4",
+        ],
         "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 4"},
         "leg2": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 4"},
         "leg3": {"obj": "L1puppiJetSC4:default", "threshold_cut": "offline_pt >= 40"},
@@ -103,11 +110,26 @@ def test_section_hints(tmp_path):
 
 def test_render_keeps_unplaced_seeds():
     menu = {
-        "L1_A": {"cross_masks": [], "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 22"}},
-        "L1_B_new": {"cross_masks": [], "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 5"}},
+        "L1_A": {
+            "cross_masks": [],
+            "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 22"},
+        },
+        "L1_B_new": {
+            "cross_masks": [],
+            "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 5"},
+        },
     }
-    layout = {"sections": [{"name": "Muon seeds", "seeds": {"L1_A": {"label": "Single TkMuon"}, "L1_gone": {}}}]}
-    sections, _ = lt.build_rows(menu, layout, {200: {"L1_A": 17.4, "L1_B_new": 0.2}}, "V50nano")
+    layout = {
+        "sections": [
+            {
+                "name": "Muon seeds",
+                "seeds": {"L1_A": {"label": "Single TkMuon"}, "L1_gone": {}},
+            }
+        ]
+    }
+    sections, _ = lt.build_rows(
+        menu, layout, {200: {"L1_A": 17.4, "L1_B_new": 0.2}}, "V50nano"
+    )
     assert [name for name, _ in sections][0] == "Muon seeds"
     assert sections[-1][1][0]["seed"] == r"L1\_B\_new"
 
@@ -115,17 +137,28 @@ def test_render_keeps_unplaced_seeds():
     assert r"Single TkMuon & 22 & 17 &" in tex
     assert r"$<$1" in tex  # rate 0.2 kHz
     assert "+30" not in tex  # margin line off by default
-    tex = lt.render_table({**layout, "total_rate_margin": 0.3}, sections, {200: 400.0}, False, ["x.csv"])
+    tex = lt.render_table(
+        {**layout, "total_rate_margin": 0.3}, sections, {200: 400.0}, False, ["x.csv"]
+    )
     assert " & 520 & " in tex  # +30%
     assert "plateau" not in tex  # off by default
 
 
 def test_two_pu_columns():
-    menu = {"L1_A": {"cross_masks": [], "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 22"}}}
-    layout = {"sections": [{"name": "Muons", "seeds": {"L1_A": {"label": "Single TkMuon"}}}]}
+    menu = {
+        "L1_A": {
+            "cross_masks": [],
+            "leg1": {"obj": "L1gmtTkMuon:VLoose", "threshold_cut": "offline_pt >= 22"},
+        }
+    }
+    layout = {
+        "sections": [{"name": "Muons", "seeds": {"L1_A": {"label": "Single TkMuon"}}}]
+    }
     rates = {140: {"L1_A": 7.3}, 200: {"L1_A": 11.6}}
     sections, _ = lt.build_rows(menu, layout, rates, "V50nano")
-    tex = lt.render_table(layout, sections, {140: 189.4, 200: 333.2}, False, ["a.csv", "b.csv"])
+    tex = lt.render_table(
+        layout, sections, {140: 189.4, 200: 333.2}, False, ["a.csv", "b.csv"]
+    )
     assert r"\begin{tabular}{|l|c|c|c|c|}" in tex
     assert r"Single TkMuon & 22 & 7 & 12 & " in tex  # 140 PU left of 200 PU
     assert r"\multicolumn{2}{|l|}{Rate for above Trigger seeds} & 189 & 333 & " in tex
@@ -134,25 +167,47 @@ def test_two_pu_columns():
 def test_resolve_rate_csvs(tmp_path, monkeypatch):
     """140 PU runs live in their own version: outputs/<version>_140PU/rate_tables."""
     monkeypatch.chdir(tmp_path)
-    config = lt.MenuConfig({"version": "V50", "table_fname": "menu", "menu_config": "x", "sample": "MinBias"},
-                           config_version="V50", override_version="V50_pre5")
+    config = lt.MenuConfig(
+        {
+            "version": "V50",
+            "table_fname": "menu",
+            "menu_config": "x",
+            "sample": "MinBias",
+        },
+        config_version="V50",
+        override_version="V50_pre5",
+    )
     main = tmp_path / "outputs/V50_pre5/rate_tables/menu_V50_pre5.csv"
     pu140 = tmp_path / "outputs/V50_pre5_140PU/rate_tables/menu_V50_pre5_140PU.csv"
     for f in (main, pu140):
         f.parent.mkdir(parents=True)
         f.write_text("")
-    layout = {"pu_columns": [{"pu": 140, "version_suffix": "_140PU"}, {"pu": 200, "version_suffix": ""}]}
+    layout = {
+        "pu_columns": [
+            {"pu": 140, "version_suffix": "_140PU"},
+            {"pu": 200, "version_suffix": ""},
+        ]
+    }
     main_csv = lt.csv_path_for(config)
     assert lt.resolve_rate_csvs(layout, config, main_csv, None) == [
-        (140, "outputs/V50_pre5_140PU/rate_tables/menu_V50_pre5_140PU.csv"), (200, main_csv)]
+        (140, "outputs/V50_pre5_140PU/rate_tables/menu_V50_pre5_140PU.csv"),
+        (200, main_csv),
+    ]
     # missing extra version -> column dropped
     layout["pu_columns"][0]["version_suffix"] = "_nope"
     assert lt.resolve_rate_csvs(layout, config, main_csv, None) == [(200, main_csv)]
     # explicit files win
-    assert lt.resolve_rate_csvs(layout, config, main_csv, ["140=x.csv"]) == [(140, "x.csv")]
+    assert lt.resolve_rate_csvs(layout, config, main_csv, ["140=x.csv"]) == [
+        (140, "x.csv")
+    ]
     # the old key is rejected with a pointer to the new one
     with pytest.raises(SystemExit, match="version_suffix"):
-        lt.resolve_rate_csvs({"pu_columns": [{"pu": 140, "csv_suffix": "_140PU"}]}, config, main_csv, None)
+        lt.resolve_rate_csvs(
+            {"pu_columns": [{"pu": 140, "csv_suffix": "_140PU"}]},
+            config,
+            main_csv,
+            None,
+        )
 
 
 def test_crop_png(tmp_path):
@@ -178,7 +233,11 @@ CFG = "configs/V50nano/rate_table/step1p5_cfg.yml"
 
 def test_cli_init_writes_layout(tmp_path, monkeypatch):
     out = tmp_path / "layout.yml"
-    monkeypatch.setattr(lt.sys, "argv", ["rate_table_tex", CFG, "--init", "--layout", str(out), "--title", "T"])
+    monkeypatch.setattr(
+        lt.sys,
+        "argv",
+        ["rate_table_tex", CFG, "--init", "--layout", str(out), "--title", "T"],
+    )
     lt.main()
     text = out.read_text()
     assert "title: 'T'" in text and "L1_SingleTkMu:" in text
@@ -195,8 +254,10 @@ def _fake_tex(dir_, lacks=()):
     dir_.mkdir()
     (dir_ / "pdflatex").write_text("#!/bin/sh\nexit 0\n")
     (dir_ / "kpsewhich").write_text(
-        "#!/bin/sh\nfor a in \"$@\"; do case \"$a\" in " + " | ".join(lacks or ["__none__"])
-        + ") ;; *) echo /tex/$a ;; esac; done\n")
+        '#!/bin/sh\nfor a in "$@"; do case "$a" in '
+        + " | ".join(lacks or ["__none__"])
+        + ") ;; *) echo /tex/$a ;; esac; done\n"
+    )
     for f in ("pdflatex", "kpsewhich"):
         (dir_ / f).chmod(0o755)
     return str(dir_ / "pdflatex")

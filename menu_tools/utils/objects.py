@@ -7,14 +7,16 @@ import yaml
 
 import awkward as ak
 
-# `{field}` placeholders in cut strings. A field name contains no braces (and no `&`/`|`), so
-# two fields in one expression without an operator in between, e.g. "{ecalIso} < 9 + 0.02*{pt}",
-# are still replaced separately.
+# `{field}` placeholders in cut strings. A field name contains no braces (and no
+# `&`/`|`), so two fields in one expression without an operator in between, e.g.
+# "{ecalIso} < 9 + 0.02*{pt}", are still replaced separately.
 CUT_FIELD_RE = r"{([^{}&|]*)}"
 
 
 def is_hlt_object(obj_name: str) -> bool:
-    """True for HLT objects: nano collections named `hlt*` (hltMuon, hltElectron, ...)."""
+    """True for HLT objects: nano collections named `hlt*` (hltMuon,
+    hltElectron, ...).
+    """
     return obj_name.split(":")[0].startswith("hlt")
 
 
@@ -27,7 +29,9 @@ def is_trigger_object(obj_name: str) -> bool:
 
 
 def trigger_level(obj_names) -> str:
-    """Trigger level of a set of objects for axis labels: "L1", "HLT", or "L1/HLT" if mixed.
+    """Trigger level of a set of objects for axis labels.
+
+    "L1", "HLT", or "L1/HLT" if mixed.
 
     Objects that are not HLT objects count as L1 (the default of all existing plots).
     """
@@ -169,8 +173,11 @@ class Object:
 
     @property
     def plot_label(self) -> str:
-        """Legend label from the object config; L1 objects get an "L1 " prefix (unless the
-        label already starts with "L1"), so that L1 and HLT objects can be told apart."""
+        """Legend label from the object config.
+
+        L1 objects get an "L1 " prefix (unless the label already starts with "L1"), so
+        that L1 and HLT objects can be told apart.
+        """
         label = self._object_params["label"]
         if self.nano_obj_name.startswith("L1") and not label.startswith("L1"):
             label = "L1 " + label

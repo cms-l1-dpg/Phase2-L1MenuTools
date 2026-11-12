@@ -4,31 +4,37 @@ Unlike the matching efficiencies (gen object -> trigger object), the loop runs o
 trigger objects: *all* test objects of each event that pass the object ID / eta cuts
 (optionally only the leading one), and each is flagged `matched` if any selected gen
 object lies within `match_dR` (the test object's `match_dR`, or the `purity.match_dR`
-override). The matching is not exclusive: two trigger objects can match the same gen object.
+override). The matching is not exclusive: two trigger objects can match the same gen
+object.
 
-Modes (`purity.mode`):
-  purity        object-level purity  N(matched) / N(all)                        vs pt/eta/pu
-  fake_rate     fake fraction        N(unmatched) / N(all) = 1 - purity         vs pt/eta/pu
-                unmatched objects per event (mean) above threshold              vs threshold/pu
+Modes (`purity.mode`), quantity and binning:
+  purity        object-level purity  N(matched) / N(all)                vs pt/eta/pu
+  fake_rate     fake fraction        N(unmatched) / N(all) = 1 - purity vs pt/eta/pu
+                unmatched objects per event (mean) above threshold
+                                                                    vs threshold/pu
                 events with >= 1 unmatched object above threshold (fraction,
-                in kHz if `rate`)                                               vs threshold/pu
-                unmatched objects per event per bin (dN/dx)                     vs pt/eta
-  multiplicity  as fake_rate, but with all objects and no gen matching (for minimum bias,
-                whose gen record is pruned): mean multiplicity, rate of events with
-                >= 1 object above threshold (kHz), dN/dx per event.
+                in kHz if `rate`)                                   vs threshold/pu
+                unmatched objects per event per bin (dN/dx)         vs pt/eta
+  multiplicity  as fake_rate, but with all objects and no gen matching (for minimum
+                bias, whose gen record is pruned): mean multiplicity, rate of events
+                with >= 1 object above threshold (kHz), dN/dx per event.
 
-Thresholds are on the online pT field `pt` of the test object, `pt >= threshold` as in the
-rate plots (no offline scalings).
+Thresholds are on the online pT field `pt` of the test object, `pt >= threshold` as in
+the rate plots (no offline scalings).
 """
 import os
 import re
-from typing import Any, Optional
+from typing import Any, Optional, Sequence
 
 import awkward as ak
 import numpy as np
+import numpy.typing as npt
 
 from menu_tools.object_performance.resolution_collection import make_edges
-from menu_tools.object_performance.turnon_collection import ArrayLoader, TurnOnCollection
+from menu_tools.object_performance.turnon_collection import (
+    ArrayLoader,
+    TurnOnCollection,
+)
 from menu_tools.utils import constants, utils
 from menu_tools.utils.objects import (
     CUT_FIELD_RE,
@@ -44,7 +50,10 @@ VS_VARIABLES = OBJECT_VS + EVENT_VS
 
 DEFAULT_VS = {
     "purity": {"pt": {"min": 0, "max": 100, "step": 5}},
-    "fake_rate": {"pt": {"min": 0, "max": 100, "step": 5}, "threshold": {"min": 0, "max": 100, "step": 5}},
+    "fake_rate": {
+        "pt": {"min": 0, "max": 100, "step": 5},
+        "threshold": {"min": 0, "max": 100, "step": 5},
+    },
     "multiplicity": {"threshold": {"min": 0, "max": 100, "step": 5}},
 }
 
@@ -66,7 +75,9 @@ def match_any(trig: ak.Array, gen: ak.Array, dr: float, chunk: int = CHUNK) -> a
     for start in range(0, len(trig), chunk):
         t = trig[start : start + chunk]
         g = gen[start : start + chunk]
-        pairs = ak.cartesian({"t": t[["eta", "phi"]], "g": g[["eta", "phi"]]}, nested=True)
+        pairs = ak.cartesian(
+            {"t": t[["eta", "phi"]], "g": g[["eta", "phi"]]}, nested=True
+        )
         deta = pairs.t.eta - pairs.g.eta
         dphi = delta_phi(pairs.t.phi, pairs.g.phi)
         out.append(ak.any(deta * deta + dphi * dphi < dr * dr, axis=2))
@@ -75,7 +86,9 @@ def match_any(trig: ak.Array, gen: ak.Array, dr: float, chunk: int = CHUNK) -> a
     return ak.concatenate(out, axis=0) if len(out) > 1 else out[0]
 
 
-def ratio_with_cp(num: np.ndarray, den: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def ratio_with_cp(
+    num: npt.ArrayLike, den: npt.ArrayLike
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """num/den with Clopper-Pearson 68% errors (NaN where den == 0)."""
     num = np.asarray(num, dtype=float)
     den = np.asarray(den, dtype=float)
@@ -104,7 +117,11 @@ def linear_fit(x, y, yerr) -> Optional[dict[str, float]]:
         return None
     w = 1 / yerr[ok] ** 2
     (b, a), cov = np.polyfit(x[ok], y[ok], 1, w=np.sqrt(w), cov="unscaled")
-    return {"intercept": float(a), "slope": float(b), "slope_err": float(np.sqrt(cov[0, 0]))}
+    return {
+        "intercept": float(a),
+        "slope": float(b),
+        "slope_err": float(np.sqrt(cov[0, 0])),
+    }
 
 
 class PurityConfig:
@@ -112,8 +129,10 @@ class PurityConfig:
 
     purity:
       mode: purity                 # purity | fake_rate | multiplicity
-      reference_gen:               # gen objects to match to (not for multiplicity); a list is an OR
-        object: GenPart            # parquet name, or an object key with id (e.g. "GenPart:electron")
+      # gen objects to match to (not for multiplicity); a list is an OR
+      reference_gen:
+        # parquet name, or an object key with id (e.g. "GenPart:electron")
+        object: GenPart
         cuts: ["abs({pdgId}) == 11", "(({statusFlags}>>0)&1) == 1"]
         label: "gen e"
       match_dR: 0.15               # optional, default: the test object's match_dR
@@ -122,12 +141,15 @@ class PurityConfig:
         eta: {min: -3, max: 3, step: 0.2}     # trigger-object eta (abseta: |eta|, phi)
         pu: {edges: [140, 180, 200, 220, 260]} # pileup of the event (Pileup parquet)
         threshold: {min: 0, max: 100, step: 5} # threshold scan (event-level quantities)
-      thresholds: [0, 20]          # pT thresholds for the vs eta/phi/pu plots (default [0])
-      leading_only: false          # only the leading (highest-pT) test object of each event
-      rate: false                  # event fractions in kHz (default: true for MinBias samples)
+      thresholds: [0, 20]          # pT thresholds for the vs eta/phi/pu plots
+                                   # (default [0])
+      leading_only: false          # only the leading (highest-pT) test object of
+                                   # each event
+      rate: false                  # event fractions in kHz (default: true for
+                                   # MinBias samples)
       pu_variable: nPU
-      pileup_version: null         # cache version holding the Pileup parquet (default: the
-                                   # version, then <version>PU)
+      pileup_version: null         # cache version holding the Pileup parquet
+                                   # (default: the version, then <version>PU)
     """
 
     def __init__(self, cfg: Optional[dict], sample: str) -> None:
@@ -142,14 +164,18 @@ class PurityConfig:
             self.reference_gen: list[dict] = gen if isinstance(gen, list) else [gen]
             for spec in self.reference_gen:
                 if "object" not in spec:
-                    raise KeyError("purity: each `reference_gen` entry needs an `object`")
+                    raise KeyError(
+                        "purity: each `reference_gen` entry needs an `object`"
+                    )
         else:
             self.reference_gen = []
         self.match_dR: Optional[float] = cfg.get("match_dR")
         vs = cfg.get("vs") or DEFAULT_VS[self.mode]
         for name in vs:
             if name not in VS_VARIABLES:
-                raise ValueError(f"purity: unknown `vs` variable `{name}`, use one of {VS_VARIABLES}")
+                raise ValueError(
+                    f"purity: unknown `vs` variable `{name}`, use one of {VS_VARIABLES}"
+                )
         self.vs: dict[str, Any] = dict(vs)
         self.thresholds: list[float] = [float(t) for t in cfg.get("thresholds", [0])]
         self.leading_only: bool = bool(cfg.get("leading_only", False))
@@ -171,11 +197,12 @@ class PurityConfig:
 
 
 class PurityCollection(TurnOnCollection):
-    """Trigger objects of each test object, their gen-match flag, and the derived quantities.
+    """Trigger objects of each test object, their gen-match flag, and the derived
+    quantities.
 
     After `create()`:
-      objects[obj_key]: flat numpy arrays pt, eta, phi, matched (None in multiplicity mode),
-                        event (event index), dr (matching cone)
+      objects[obj_key]: flat numpy arrays pt, eta, phi, matched (None in multiplicity
+                        mode), event (event index), dr (matching cone)
       n_events, pileup (per event, or None)
       plots: list of dicts, one per output plot (see `_add_plot`)
     """
@@ -194,8 +221,10 @@ class PurityCollection(TurnOnCollection):
             config_version=config_version,
             override_version=override_version,
         )
-        self.pur_cfg = PurityConfig(self.cfg_plot.config_dict.get("purity"), self.cfg_plot.sample)
-        self.objects: dict[str, dict[str, np.ndarray]] = {}
+        self.pur_cfg = PurityConfig(
+            self.cfg_plot.config_dict.get("purity"), self.cfg_plot.sample
+        )
+        self.objects: dict[str, dict[str, Any]] = {}
         self.n_events: int = 0
         self.pileup: Optional[np.ndarray] = None
         self.pileup_source: Optional[str] = None
@@ -216,36 +245,49 @@ class PurityCollection(TurnOnCollection):
         return {f for c in cuts or [] for f in re.findall(CUT_FIELD_RE, c)}
 
     def _load_parquet(self, name: str, fields: set[str]) -> ak.Array:
-        """Only the needed columns of <version>_<sample>_<name>.parquet, as a record array with
-        the field names of `ArrayLoader` (prefix stripped)."""
+        """Only the needed columns of <version>_<sample>_<name>.parquet.
+
+        As a record array with the field names of `ArrayLoader` (prefix stripped).
+        """
         v = self.cfg_plot.version
         fname = f"{constants.CACHE_DIR}/{v}/{v}_{self.cfg_plot.sample}_{name}.parquet"
         if not os.path.exists(fname):
             raise FileNotFoundError(fname)
         loader = ArrayLoader(self, self.cfg_plot)
-        cols = [c for c in ak.metadata_from_parquet(fname)["form"].fields if loader._transform_key(c, name) in fields]
+        cols = [
+            c
+            for c in ak.metadata_from_parquet(fname)["form"].fields
+            if loader._transform_key(c, name) in fields
+        ]
         try:
             arr = ak.from_parquet(fname, columns=cols)
         except Exception:
             # Caches written as one awkward record column cannot be pruned by pyarrow
-            # ("only part of an extension's storage type"): read everything, keep the fields.
+            # ("only part of an extension's storage type"): read everything, keep the
+            # fields.
             arr = ak.from_parquet(fname)[cols]
         return ak.zip({loader._transform_key(k, name): arr[k] for k in cols})
 
     def _load_arrays(self) -> None:
         for test_obj, _ in self.test_objects:
             fields = {"pt", "eta", "phi"} | self._cut_fields(test_obj.cuts)
-            self.ak_arrays[str(test_obj)] = self._load_parquet(test_obj.nano_obj_name, fields)
+            self.ak_arrays[str(test_obj)] = self._load_parquet(
+                test_obj.nano_obj_name, fields
+            )
 
     def _load_gen(self) -> None:
-        """Selected gen objects of all `reference_gen` entries (eta, phi, pt), concatenated per event."""
+        """Selected gen objects of all `reference_gen` entries (eta, phi, pt),
+        concatenated per event.
+        """
         parts = []
         for spec in self.pur_cfg.reference_gen:
             key = spec["object"]
             name = key.split(":")[0]
             fields = {"pt", "eta", "phi"} | self._cut_fields(spec.get("cuts", []))
             if ":" in key:
-                fields |= self._cut_fields(Object(key, self.cfg_plot.version_for_objects).cuts)
+                fields |= self._cut_fields(
+                    Object(key, self.cfg_plot.version_for_objects).cuts
+                )
             arr = self._load_parquet(name, fields)
             if ":" in key:
                 # Object key with id: the cuts of the object definition
@@ -258,7 +300,11 @@ class PurityCollection(TurnOnCollection):
 
     def _pileup_file(self) -> Optional[str]:
         version, sample = self.cfg_plot.version, self.cfg_plot.sample
-        candidates = [self.pur_cfg.pileup_version] if self.pur_cfg.pileup_version else [version, version + "PU"]
+        candidates = (
+            [self.pur_cfg.pileup_version]
+            if self.pur_cfg.pileup_version
+            else [version, version + "PU"]
+        )
         for v in candidates:
             fname = f"{constants.CACHE_DIR}/{v}/{v}_{sample}_Pileup.parquet"
             if os.path.exists(fname):
@@ -268,15 +314,31 @@ class PurityCollection(TurnOnCollection):
     def _load_pileup(self, n_events: int) -> None:
         fname = self._pileup_file()
         if fname is None:
-            print(f"WARNING: no Pileup parquet for {self.cfg_plot.version} / {self.cfg_plot.sample}: skipping the pileup binning")
+            print(
+                f"WARNING: no Pileup parquet for {self.cfg_plot.version} / "
+                f"{self.cfg_plot.sample}: skipping the pileup binning"
+            )
             return
         arr = ak.from_parquet(fname)
-        field = next((f for f in arr.fields if f.removeprefix("Pileup_") == self.pur_cfg.pu_variable), None)
+        field = next(
+            (
+                f
+                for f in arr.fields
+                if f.removeprefix("Pileup_") == self.pur_cfg.pu_variable
+            ),
+            None,
+        )
         if field is None:
-            raise KeyError(f"{fname} has no field `{self.pur_cfg.pu_variable}` (fields: {arr.fields})")
+            raise KeyError(
+                f"{fname} has no field `{self.pur_cfg.pu_variable}` (fields: "
+                f"{arr.fields})"
+            )
         pileup = ak.to_numpy(arr[field]).astype(float)
         if len(pileup) != n_events:
-            raise ValueError(f"{fname} has {len(pileup)} events, the test objects {n_events}: not row-aligned")
+            raise ValueError(
+                f"{fname} has {len(pileup)} events, the test objects {n_events}: not "
+                "row-aligned"
+            )
         self.pileup = pileup
         self.pileup_source = fname
 
@@ -285,20 +347,33 @@ class PurityCollection(TurnOnCollection):
     def _build_objects(self) -> None:
         lengths = {len(self.ak_arrays[str(o)]) for o, _ in self.test_objects}
         if len(lengths) != 1:
-            raise ValueError(f"test objects of {self.cfg_plot.plot_name} have different event counts {lengths}")
+            raise ValueError(
+                f"test objects of {self.cfg_plot.plot_name} have different event "
+                f"counts {lengths}"
+            )
         self.n_events = lengths.pop()
         if self.gen is not None and len(self.gen) != self.n_events:
-            raise ValueError(f"gen objects have {len(self.gen)} events, the test objects {self.n_events}")
+            raise ValueError(
+                f"gen objects have {len(self.gen)} events, the test objects "
+                f"{self.n_events}"
+            )
         for test_obj, _ in self.test_objects:
             key = str(test_obj)
             arr = self.ak_arrays[key]
             if arr.ndim < 2:
-                raise ValueError(f"{key}: purity needs a jagged object collection, not a per-event quantity")
+                raise ValueError(
+                    f"{key}: purity needs a jagged object collection, not a per-event "
+                    "quantity"
+                )
             arr = ak.zip({f: arr[f] for f in ("pt", "eta", "phi")})
             if self.pur_cfg.leading_only:
                 arr = arr[ak.argmax(arr.pt, axis=1, keepdims=True)]
                 arr = arr[~ak.is_none(arr, axis=1)]
-            dr = float(self.pur_cfg.match_dR if self.pur_cfg.match_dR is not None else test_obj.match_dR)
+            dr = float(
+                self.pur_cfg.match_dR
+                if self.pur_cfg.match_dR is not None
+                else test_obj.match_dR
+            )
             matched = match_any(arr, self.gen, dr) if self.matching else None
             event = ak.broadcast_arrays(ak.local_index(arr, axis=0), arr.pt)[0]
             flat = lambda a: ak.to_numpy(ak.flatten(a, axis=None))  # noqa: E731
@@ -321,9 +396,22 @@ class PurityCollection(TurnOnCollection):
             return self.pileup[obj["event"]]
         return obj[vs]
 
-    def _add_plot(self, quantity: str, vs: str, threshold: Optional[float], series: dict, extra=None) -> None:
+    def _add_plot(
+        self,
+        quantity: str,
+        vs: str,
+        threshold: Optional[float],
+        series: dict,
+        extra=None,
+    ) -> None:
         edges = self.pur_cfg.vs_edges(vs)
-        plot = {"quantity": quantity, "vs": vs, "threshold": threshold, "edges": edges, "series": series}
+        plot = {
+            "quantity": quantity,
+            "vs": vs,
+            "threshold": threshold,
+            "edges": edges,
+            "series": series,
+        }
         plot.update(extra or {})
         self.plots.append(plot)
 
@@ -332,7 +420,11 @@ class PurityCollection(TurnOnCollection):
         edges = self.pur_cfg.vs_edges(vs)
         series = {}
         for key, obj in self.objects.items():
-            sel = obj["pt"] >= threshold if threshold is not None else np.ones(len(obj["pt"]), bool)
+            sel = (
+                obj["pt"] >= threshold
+                if threshold is not None
+                else np.ones(len(obj["pt"]), bool)
+            )
             x = self._x(obj, vs)[sel]
             m = obj["matched"][sel]
             if quantity == "fake_fraction":
@@ -342,23 +434,42 @@ class PurityCollection(TurnOnCollection):
             y, lo, hi = ratio_with_cp(num, den)
             total = ratio_with_cp([m.sum()], [len(m)])
             series[key] = {
-                "y": y, "err_lo": lo, "err_hi": hi, "num": num, "den": den,
-                "integral": float(total[0][0]) if len(m) else None, "integral_n": int(len(m)),
+                "y": y,
+                "err_lo": lo,
+                "err_hi": hi,
+                "num": num,
+                "den": den,
+                "integral": float(total[0][0]) if len(m) else None,
+                "integral_n": int(len(m)),
             }
         self._add_plot(quantity, vs, threshold, series)
 
-    def _object_density(self, quantity: str, vs: str, threshold: Optional[float]) -> None:
-        """(Unmatched) objects per event in bins of an object variable, Poisson errors."""
+    def _object_density(
+        self, quantity: str, vs: str, threshold: Optional[float]
+    ) -> None:
+        """(Unmatched) objects per event in bins of an object variable,
+        Poisson errors.
+        """
         edges = self.pur_cfg.vs_edges(vs)
         series = {}
         for key, obj in self.objects.items():
-            sel = obj["pt"] >= threshold if threshold is not None else np.ones(len(obj["pt"]), bool)
+            sel = (
+                obj["pt"] >= threshold
+                if threshold is not None
+                else np.ones(len(obj["pt"]), bool)
+            )
             if quantity == "unmatched_density":
                 sel &= ~obj["matched"]
             counts = np.histogram(self._x(obj, vs)[sel], bins=edges)[0]
             y = counts / self.n_events
             err = np.sqrt(counts) / self.n_events
-            series[key] = {"y": y, "err_lo": err, "err_hi": err, "num": counts, "den": np.full(len(counts), self.n_events)}
+            series[key] = {
+                "y": y,
+                "err_lo": err,
+                "err_hi": err,
+                "num": counts,
+                "den": np.full(len(counts), self.n_events),
+            }
         self._add_plot(quantity, vs, threshold, series)
 
     def _per_event_counts(self, obj: dict, threshold: float) -> np.ndarray:
@@ -383,22 +494,36 @@ class PurityCollection(TurnOnCollection):
         thresholds = self.pur_cfg.vs_edges("threshold")
         series = {}
         for key, obj in self.objects.items():
-            cols = [self._event_quantity(self._per_event_counts(obj, t), quantity) for t in thresholds]
+            cols = [
+                self._event_quantity(self._per_event_counts(obj, t), quantity)
+                for t in thresholds
+            ]
             y, lo, hi, num, den = (np.asarray(c) for c in zip(*cols))
             series[key] = {"y": y, "err_lo": lo, "err_hi": hi, "num": num, "den": den}
         self._add_plot(quantity, "threshold", None, series)
 
     def _event_vs_pu(self, quantity: str, threshold: float) -> None:
         edges = self.pur_cfg.vs_edges("pu")
+        assert self.pileup is not None
         ibin = np.digitize(self.pileup, edges) - 1
         centres = 0.5 * (edges[1:] + edges[:-1])
         series = {}
         for key, obj in self.objects.items():
             counts = self._per_event_counts(obj, threshold)
-            cols = [self._event_quantity(counts, quantity, ibin == i) for i in range(len(edges) - 1)]
+            cols = [
+                self._event_quantity(counts, quantity, ibin == i)
+                for i in range(len(edges) - 1)
+            ]
             y, lo, hi, num, den = (np.asarray(c, dtype=float) for c in zip(*cols))
             fit = linear_fit(centres, y, 0.5 * (lo + hi))
-            series[key] = {"y": y, "err_lo": lo, "err_hi": hi, "num": num, "den": den, "fit": fit}
+            series[key] = {
+                "y": y,
+                "err_lo": lo,
+                "err_hi": hi,
+                "num": num,
+                "den": den,
+                "fit": fit,
+            }
         self._add_plot(quantity, "pu", threshold, series)
 
     def _compute(self) -> None:
@@ -407,17 +532,29 @@ class PurityCollection(TurnOnCollection):
         if "pu" in vs_all and self.pileup is None:
             vs_all.remove("pu")
         thresholds = self.pur_cfg.thresholds
+        ratio_q: Optional[str]
+        density_q: Optional[str]
+        event_q: tuple[str, ...]
         if mode == "multiplicity":
-            ratio_q, density_q, event_q = None, "density", ("objects_per_event", "event_fraction")
+            ratio_q, density_q, event_q = (
+                None,
+                "density",
+                ("objects_per_event", "event_fraction"),
+            )
         else:
             ratio_q = "purity" if mode == "purity" else "fake_fraction"
             density_q = "unmatched_density" if mode == "fake_rate" else None
-            event_q = ("unmatched_per_event", "event_fraction") if mode == "fake_rate" else ()
+            event_q = (
+                ("unmatched_per_event", "event_fraction") if mode == "fake_rate" else ()
+            )
 
         for vs in vs_all:
             if vs in OBJECT_VS:
-                # vs pt: no threshold (the binning shows the pT dependence); others: per threshold
-                thrs = [None] if vs == "pt" else thresholds
+                # vs pt: no threshold (the binning shows the pT dependence);
+                # others: per threshold
+                thrs: Sequence[Optional[float]] = thresholds
+                if vs == "pt":
+                    thrs = [None]
                 for t in thrs:
                     if ratio_q:
                         self._object_ratio(ratio_q, vs, t)

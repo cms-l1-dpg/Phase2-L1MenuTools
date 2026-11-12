@@ -16,7 +16,12 @@ from menu_tools.utils.objects import Object
     [
         # L1 objects: as before
         ("L1gmtTkMuon_pt", "L1gmtTkMuon", False, "pt"),
-        ("L1gmtTkMuon_hwQual", "L1gmtTkMuon", False, "hwQual"),  # "qual" is case-sensitive
+        (
+            "L1gmtTkMuon_hwQual",
+            "L1gmtTkMuon",
+            False,
+            "hwQual",
+        ),  # "qual" is case-sensitive
         ("L1puppiJetSC4sums_sumType", "L1puppiJetSC4sums", False, "sumType"),
         ("L1somethingElse", "L1gmtTkMuon", False, "L1somethingElse"),
         # HLT objects: prefix stripped, case kept (was "_pt" before)
@@ -41,9 +46,24 @@ def test_transform_key(raw_key, name, bit_record, expected):
 def test_transform_key_method_uses_bit_records():
     """`HLT` / `L1` are bit records through configs/V50nano/objects/hlt_bits.yaml."""
     table = mt.MenuTable.__new__(mt.MenuTable)  # no config / cache needed
-    assert table._transform_key("HLT_IsoMu24_FromL1TkMuon", Object("HLT:default", "V50nano")) == "IsoMu24_FromL1TkMuon"
-    assert table._transform_key("L1_pSingleTkMuon22_final", Object("L1:default", "V50nano")) == "pSingleTkMuon22_final"
-    assert table._transform_key("L1gmtTkMuon_hwQual", Object("L1gmtTkMuon:VLoose", "V50nano")) == "hwQual"
+    assert (
+        table._transform_key(
+            "HLT_IsoMu24_FromL1TkMuon", Object("HLT:default", "V50nano")
+        )
+        == "IsoMu24_FromL1TkMuon"
+    )
+    assert (
+        table._transform_key(
+            "L1_pSingleTkMuon22_final", Object("L1:default", "V50nano")
+        )
+        == "pSingleTkMuon22_final"
+    )
+    assert (
+        table._transform_key(
+            "L1gmtTkMuon_hwQual", Object("L1gmtTkMuon:VLoose", "V50nano")
+        )
+        == "hwQual"
+    )
 
 
 @pytest.mark.parametrize(
@@ -105,17 +125,23 @@ def test_missing_scalings_fallback():
     arr = ak.zip({"pt": np.array([10.0, 20.0], dtype=np.float32)})
     with pytest.raises(scalings.MissingScalingsError):
         scalings.add_offline_pt(arr, obj, scaling_version="__no_such_version__")
-    out = scalings.add_offline_pt(arr, obj, scaling_version="__no_such_version__", allow_missing=True)
+    out = scalings.add_offline_pt(
+        arr, obj, scaling_version="__no_such_version__", allow_missing=True
+    )
     assert ak.to_list(out.offline_pt) == [10.0, 20.0]
 
 
 def test_has_pt_branch():
     assert scalings.has_pt_branch(ak.zip({"pt": [1.0]}), "hltMuon:default:inclusive")
-    assert not scalings.has_pt_branch(ak.zip({"IsoMu24_FromL1TkMuon": [True]}), "HLT:default:inclusive")
+    assert not scalings.has_pt_branch(
+        ak.zip({"IsoMu24_FromL1TkMuon": [True]}), "HLT:default:inclusive"
+    )
 
 
 def test_hlt_paths_table():
-    hlt = ak.zip({"HLT_A": [True, False, True, False], "HLT_B": [False, False, True, True]})
+    hlt = ak.zip(
+        {"HLT_A": [True, False, True, False], "HLT_B": [False, False, True, True]}
+    )
     l1 = ak.zip(
         {
             "L1_pX_final": [True, True, True, False],

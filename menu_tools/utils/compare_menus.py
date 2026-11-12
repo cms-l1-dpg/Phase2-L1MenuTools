@@ -25,6 +25,8 @@ import pandas as pd
 from matplotlib.container import BarContainer
 from matplotlib.ticker import NullLocator
 
+from menu_tools.rate_table.menu_config import scalings_suffix
+
 # Set up plotting style
 plt.style.use(hep.style.CMS)
 plt.rcParams["figure.facecolor"] = "white"
@@ -66,6 +68,7 @@ def get_df_new_csv(fname):
     df = pd.read_csv(fname)
     return df.rename(columns={"seed": "Seed", "npass": "counts", "efficiency": "eff"})
 
+
 # def save_table_as_image(df, filename, output_dir):
 #     """Save a dataframe as a table in PNG and PDF formats."""
 #     if df.empty:
@@ -74,12 +77,14 @@ def get_df_new_csv(fname):
 #     # Drop rows with NaN values
 #     df_clean = df.dropna()
 #     if df_clean.empty:
-#         print(f"Skipping saving table {filename} as dataframe is empty after dropping NaN")
+#         print(f"Skipping saving table {filename} as dataframe is empty after dropping
+# NaN")
 #         return
 #     fig, ax = plt.subplots(figsize=(12, len(df_clean) * 0.3))
 #     ax.axis('tight')
 #     ax.axis('off')
-#     tbl = table(ax, df_clean, loc='center', cellLoc='center', colWidths=[0.2] * len(df_clean.columns))
+#     tbl = table(ax, df_clean, loc='center', cellLoc='center', colWidths=[0.2] *
+# len(df_clean.columns))
 #     tbl.auto_set_font_size(False)
 #     tbl.set_fontsize(10)
 #     tbl.scale(1.2, 1.2)
@@ -89,6 +94,7 @@ def get_df_new_csv(fname):
 #         plt.savefig(filepath, bbox_inches='tight', dpi=300)
 #         print(f"Saving table at: {filepath}")
 #     plt.close()
+
 
 # Function to strip the prefix like Vxxnano_
 # Hotfix: also drop "_VtxFindOff" so e.g. V49nano_AR25_VtxFindOff shows as AR25
@@ -273,6 +279,17 @@ def main():
         "made with `rate_table --signal SAMPLE`",
     )
     parser.add_argument(
+        "--scalings",
+        default=None,
+        metavar="VERSION",
+        help="Read the tables made with `rate_table --scalings VERSION`",
+    )
+    parser.add_argument(
+        "--truncated",
+        action="store_true",
+        help="Read the tables made with `rate_table --truncated`",
+    )
+    parser.add_argument(
         "--uncertainties",
         action="store_true",
         help="Show statistical uncertainties (needs tables with error columns; "
@@ -286,7 +303,8 @@ def main():
     args = parser.parse_args()
 
     qty = Quantity(signal=args.signal is not None)
-    sample_suffix = f"_{args.signal}" if args.signal else ""
+    name_suffix = scalings_suffix(args.scalings, args.truncated)
+    name_suffix += f"_{args.signal}" if args.signal else ""
 
     # Set menu names
     menu_v0 = args.menu_v0 if args.menu_v0 else args.menu
@@ -324,9 +342,7 @@ def main():
     base_path = "outputs"
     input_files = {}
     for label, version, menu, csv in zip(labels, versions, menus, csv_overrides):
-        default = (
-            f"{base_path}/{version}/rate_tables/{menu}_{version}{sample_suffix}.csv"
-        )
+        default = f"{base_path}/{version}/rate_tables/{menu}_{version}{name_suffix}.csv"
         input_files[label] = csv if csv else default
 
     # Set up output directory
@@ -430,7 +446,7 @@ def main():
     filename_base = "vs".join(
         f"{menu}_{version}" for menu, version in zip(menus, versions)
     )
-    filename_base += sample_suffix
+    filename_base += name_suffix
     n_ver = len(labels)
 
     # Plot: totals
@@ -539,27 +555,40 @@ def main():
 
     # # Save tables as images
     # # Unsorted df_rate
-    # save_table_as_image(df_rate[[label1, label2]], f"{args.vNew}vs{args.vOld}_df_rate_unsorted", output_dir)
+    # save_table_as_image(df_rate[[label1, label2]],
+    # f"{args.vNew}vs{args.vOld}_df_rate_unsorted", output_dir)
     # # Sorted df_rate
-    # df_rate_sorted = df_rate.sort_values(by="Trigger", key=lambda x: abs(df_rate["diff"][x]), ascending=False)
-    # save_table_as_image(df_rate_sorted[[label1, label2]], f"{args.vNew}vs{args.vOld}_df_rate_sorted", output_dir)
+    # df_rate_sorted = df_rate.sort_values(by="Trigger", key=lambda x:
+    # abs(df_rate["diff"][x]), ascending=False)
+    # save_table_as_image(df_rate_sorted[[label1, label2]],
+    # f"{args.vNew}vs{args.vOld}_df_rate_sorted", output_dir)
     # # Unsorted df_counts
-    # save_table_as_image(df_counts[[label1, label2]], f"{args.vNew}vs{args.vOld}_menu_counts", output_dir)
+    # save_table_as_image(df_counts[[label1, label2]],
+    # f"{args.vNew}vs{args.vOld}_menu_counts", output_dir)
     # # Sorted df_counts
-    # df_counts_sorted = df_counts.sort_values(by='Trigger', key=lambda x: abs(df_rate["diff"][x]), ascending=False)
-    # save_table_as_image(df_counts_sorted, f"{args.vNew}__menu_{sorted}", output_dir=output_dir)
+    # df_counts_sorted = df_counts.sort_values(by='Trigger', key=lambda x:
+    # abs(df_rate["diff"][x]), ascending=False)
+    # save_table_as_image(df_counts_sorted, f"{args.vNew}__menu_{sorted}",
+    # output_dir=output_dir)
     # # Unsorted df_rate with diff
-    # save_table_as_image(df_rate[[label1, label2, "diff"]], f"{args.vNew}vs{args.vOld}_menu_diff", output_dir)
+    # save_table_as_image(df_rate[[label1, label2, "diff"]],
+    # f"{args.vNew}vs{args.vOld}_menu_diff", output_dir)
     # # Sorted df_rate with diff
-    # save_table_as_image(df_rate_sorted[[label1, label2, "diff"]], f"{args.vNew}_rates_diff", output_dir)
+    # save_table_as_image(df_rate_sorted[[label1, label2, "diff"]],
+    # f"{args.vNew}_rates_diff", output_dir)
     # # Unsorted df_counts with diff
-    # save_table_as_image(df_counts[[label1, label2, "diff"]], f"{args.vNew}_counts_diff_unsorted", output_dir)
+    # save_table_as_image(df_counts[[label1, label2, "diff"]],
+    # f"{args.vNew}_counts_diff_unsorted", output_dir)
     # # Sorted df_counts with diff
-    # save_table_as_image(df_counts_sorted[[label1, label2, "diff"]], f"{args.vNew}_counts_diff_sorted", output_dir)
+    # save_table_as_image(df_counts_sorted[[label1, label2, "diff"]],
+    # f"{args.vNew}_counts_diff_sorted", output_dir)
     # # Unsorted df_rate with diff, pull, ratio
-    # save_table_as_image(df_rate[[label1, label2, "diff", "pull", "ratio"]], f"{args.vNew}_rate_diff_pull_ratio", output_dir)
+    # save_table_as_image(df_rate[[label1, label2, "diff", "pull", "ratio"]],
+    # f"{args.vNew}_rate_diff_pull_ratio", output_dir)
     # # Sorted df_rate with diff, pull, ratio
-    # save_table_as_image(df_rate_sorted[[label1, label2, "diff", "pull", "ratio"]], f"{args.vNew}_rate_diff_pull_ratio_sorted", output_dir)
+    # save_table_as_image(df_rate_sorted[[label1, label2, "diff", "pull", "ratio"]],
+    # f"{args.vNew}_rate_diff_pull_ratio_sorted", output_dir)
+
 
 if __name__ == "__main__":
     main()

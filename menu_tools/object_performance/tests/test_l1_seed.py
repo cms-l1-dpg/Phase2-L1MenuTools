@@ -36,7 +36,9 @@ def _cfg(l1_seed=None, matching_and_threshold=True) -> dict:
 
 
 def _vec(pt, eta, phi):
-    arr = ak.zip({"pt": pt, "eta": eta, "phi": phi, "mass": [[0.0] * len(x) for x in pt]})
+    arr = ak.zip(
+        {"pt": pt, "eta": eta, "phi": phi, "mass": [[0.0] * len(x) for x in pt]}
+    )
     return ak.with_name(arr, "Momentum4D")
 
 
@@ -59,7 +61,9 @@ L1 = (
 
 def _collection(l1_seed=None, matching_and_threshold=True, l1=L1):
     coll = TurnOnCollection(_cfg(l1_seed, matching_and_threshold), threshold=HLT_THR)
-    coll.ak_arrays["ref"] = _vec([[50.0]] * N_EV, [[e] for e in REF_ETA], [[p] for p in REF_PHI])
+    coll.ak_arrays["ref"] = _vec(
+        [[50.0]] * N_EV, [[e] for e in REF_ETA], [[p] for p in REF_PHI]
+    )
     hlt_key = str(coll.test_objects[0][0])
     coll.ak_arrays[hlt_key] = _vec(
         HLT[0], HLT[1], [[REF_PHI[i]] if HLT[0][i] else [] for i in range(N_EV)]
@@ -97,7 +101,10 @@ def test_l1_seed_numerators():
 
 def test_l1_seed_threshold_per_region():
     # muons at |eta| < 0.83 are barrel: a 100 GeV barrel threshold removes all of them
-    seed = {"object": "L1gmtTkMuon:VLoose", "threshold": {"barrel": 100, "endcap": L1_THR}}
+    seed = {
+        "object": "L1gmtTkMuon:VLoose",
+        "threshold": {"barrel": 100, "endcap": L1_THR},
+    }
     coll, hlt = _collection(seed)
     assert _counts(coll, L1SEED_KEY) == (0, N_EV)
     assert _counts(coll, hlt + L1SEED_SUFFIX) == (0, N_EV)
@@ -124,12 +131,17 @@ def test_l1_seed_without_matching_and_threshold():
     # threshold efficiencies: denominators are the matched reference objects
     coll, hlt = _collection(SEED, matching_and_threshold=False)
     assert _counts(coll, hlt) == (4, 5)  # HLT matched: ev0-4
-    assert _counts(coll, hlt + L1SEED_SUFFIX) == (1, 5)  # same denominator as the HLT curve
+    assert _counts(coll, hlt + L1SEED_SUFFIX) == (
+        1,
+        5,
+    )  # same denominator as the HLT curve
     assert _counts(coll, L1SEED_KEY) == (2, 3)  # L1 matched: ev0, ev2, ev4
 
 
 def test_l1_seed_apply_to_and_labels():
-    coll, hlt = _collection({**SEED, "apply_to": ["hltMuon:default"], "label": "my seed"})
+    coll, hlt = _collection(
+        {**SEED, "apply_to": ["hltMuon:default"], "label": "my seed"}
+    )
     assert coll.l1_seeded_test_objects == [hlt]
     assert coll.curve_label(L1SEED_KEY) == "L1 seed: my seed"
     assert coll.curve_label(hlt + L1SEED_SUFFIX).endswith("$\\wedge$ L1 seed")
@@ -146,4 +158,6 @@ def test_without_l1_seed_unchanged():
     # the HLT-only curve does not depend on the presence of the seed
     coll_seed, _ = _collection(SEED)
     np.testing.assert_array_equal(coll.hists[hlt][0], coll_seed.hists[hlt][0])
-    np.testing.assert_array_equal(coll.hists["ref"][hlt][0], coll_seed.hists["ref"][hlt][0])
+    np.testing.assert_array_equal(
+        coll.hists["ref"][hlt][0], coll_seed.hists["ref"][hlt][0]
+    )

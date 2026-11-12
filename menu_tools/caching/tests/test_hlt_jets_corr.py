@@ -25,7 +25,9 @@ def table():
 
 def _formula(pt, p):
     lx = np.log10(np.clip(pt, p[3], p[4]))
-    return max(1e-4, p[5] + p[6] / (lx**2 + p[7]) + p[8] * np.exp(-p[9] * (lx - p[10]) ** 2))
+    return max(
+        1e-4, p[5] + p[6] / (lx**2 + p[7]) + p[8] * np.exp(-p[9] * (lx - p[10]) ** 2)
+    )
 
 
 def test_trivial_levels_are_one():
@@ -47,15 +49,27 @@ def test_l2relative_matches_formula_and_bins(table):
         assert c == pytest.approx(_formula(x, row), rel=1e-12)
     # raw pT outside the table range is clamped
     row = table[0]
-    assert l2relative([1e5], [row[0] + 0.01], table)[0] == pytest.approx(_formula(row[4], row))
+    assert l2relative([1e5], [row[0] + 0.01], table)[0] == pytest.approx(
+        _formula(row[4], row)
+    )
 
 
 def test_correct_jets_and_sums(table):
     jets = ak.Array(
         [
             [
-                {f"{SRC}_pt": 40.0, f"{SRC}_eta": 0.5, f"{SRC}_phi": 0.0, f"{SRC}_mass": 5.0},
-                {f"{SRC}_pt": 60.0, f"{SRC}_eta": 3.5, f"{SRC}_phi": 1.0, f"{SRC}_mass": 8.0},
+                {
+                    f"{SRC}_pt": 40.0,
+                    f"{SRC}_eta": 0.5,
+                    f"{SRC}_phi": 0.0,
+                    f"{SRC}_mass": 5.0,
+                },
+                {
+                    f"{SRC}_pt": 60.0,
+                    f"{SRC}_eta": 3.5,
+                    f"{SRC}_phi": 1.0,
+                    f"{SRC}_mass": 8.0,
+                },
             ],
             [],
         ]

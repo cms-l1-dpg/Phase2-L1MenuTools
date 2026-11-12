@@ -5,7 +5,13 @@ from menu_tools.utils.objects import Object
 
 
 class PerformancePlotConfig(BasePlotConfig):
-    def __init__(self, cfg: dict[str, Any], name: Optional[str] = None, config_version: Optional[str] = None, override_version: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        cfg: dict[str, Any],
+        name: Optional[str] = None,
+        config_version: Optional[str] = None,
+        override_version: Optional[str] = None,
+    ) -> None:
         super().__init__(cfg, name)
         self._config_version = config_version
         self._override_version = override_version
@@ -96,15 +102,18 @@ class PerformancePlotConfig(BasePlotConfig):
 
     @property
     def l1_seed(self) -> Optional[dict[str, Any]]:
-        """Optional L1 seed requirement for HLT test objects (combined L1 x HLT efficiency).
+        """Optional L1 seed requirement for HLT test objects.
+
+        For the combined L1 x HLT efficiency.
 
         Normalised form of the `l1_seed` block (see docs/object-performance.md):
             {"objects": [{"object": str, "threshold": float | {region: float},
                           "match_dR": float | None}, ...],   # OR of these L1 conditions
-             "apply_to": list[str] | None,                   # None: all hlt* test objects
+             "apply_to": list[str] | None,     # None: all hlt* test objects
              "label": str | None}
-        The single-object shorthand (`object` / `threshold` / `match_dR` at the top level of
-        the block) is converted to a one-element `objects` list. None if no `l1_seed` is set.
+        The single-object shorthand (`object` / `threshold` / `match_dR` at the top
+        level of the block) is converted to a one-element `objects` list. None if no
+        `l1_seed` is set.
         """
         block = self._cfg.get("l1_seed")
         if not block:
@@ -112,21 +121,32 @@ class PerformancePlotConfig(BasePlotConfig):
         if "objects" in block:
             if any(k in block for k in ("object", "threshold", "match_dR")):
                 raise ValueError(
-                    f"l1_seed of {self.plot_name}: give either `objects` or `object`/`threshold`"
+                    f"l1_seed of {self.plot_name}: give either `objects` or "
+                    "`object`/`threshold`"
                 )
             objects = block["objects"]
         else:
-            objects = [{k: block[k] for k in ("object", "threshold", "match_dR") if k in block}]
+            objects = [
+                {k: block[k] for k in ("object", "threshold", "match_dR") if k in block}
+            ]
         norm = []
         for o in objects:
             if "object" not in o or "threshold" not in o:
                 raise ValueError(
-                    f"l1_seed of {self.plot_name}: each seed object needs `object` and `threshold`"
+                    f"l1_seed of {self.plot_name}: each seed object needs `object` and "
+                    "`threshold`"
                 )
             if o["object"].count(":") < 1:
-                raise ValueError(f"l1_seed of {self.plot_name}: misconfigured obj:id key {o['object']}")
+                raise ValueError(
+                    f"l1_seed of {self.plot_name}: misconfigured obj:id key "
+                    f"{o['object']}"
+                )
             norm.append(
-                {"object": o["object"], "threshold": o["threshold"], "match_dR": o.get("match_dR")}
+                {
+                    "object": o["object"],
+                    "threshold": o["threshold"],
+                    "match_dR": o.get("match_dR"),
+                }
             )
         apply_to = block.get("apply_to")
         if isinstance(apply_to, str):
@@ -173,7 +193,7 @@ class PerformancePlotConfig(BasePlotConfig):
     @property
     def test_object_instances(self) -> list:
         test_objects = []
-        
+
         for obj_key in self._cfg["test_objects"]:
             test_objects.append(Object(obj_key, self.version_for_objects))
         return test_objects

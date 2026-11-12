@@ -16,7 +16,8 @@ Layout format::
 
     title: 'Step 1.5 menu, V50nano'
     pu_columns:                      # one rate column per entry, left to right;
-      - {pu: 140, version_suffix: '_140PU'}   # CSV from outputs/<version>_140PU/rate_tables
+      # CSV from outputs/<version>_140PU/rate_tables:
+      - {pu: 140, version_suffix: '_140PU'}
       - {pu: 200, version_suffix: ''}         # the --version itself
     total_rate_margin: 0.3          # adds a "Total (+30%)" line; omit/null for none
     rate_decimals: 0
@@ -49,7 +50,7 @@ import shutil
 import subprocess
 import sys
 import warnings
-from typing import Optional
+from typing import Optional, Sequence, cast
 
 import pandas as pd
 import yaml
@@ -148,7 +149,9 @@ def _fmt_num(value: float) -> str:
 # Deriving thresholds and requirements from the menu config
 ###########################################################################
 
-_THRESHOLD_RE = re.compile(r"^\s*(?:leg\d+\.)?(offline_pt|pt)\s*(>=|>)\s*(-?[\d.]+)\s*$")
+_THRESHOLD_RE = re.compile(
+    r"^\s*(?:leg\d+\.)?(offline_pt|pt)\s*(>=|>)\s*(-?[\d.]+)\s*$"
+)
 
 
 def parse_threshold(cut: Optional[str]) -> Optional[tuple[float, bool]]:
@@ -196,11 +199,28 @@ _CROSS_PATTERNS = [
     ("deta", re.compile(rf"abs\(\s*{_LEG}\.eta\s*-\s*{_LEG}\.eta\s*\)\s*<\s*{_NUM}")),
     ("dr_max", re.compile(rf"{_LEG}\.deltaR\(\s*{_LEG}\s*\)\s*<\s*{_NUM}")),
     ("dr_min", re.compile(rf"{_LEG}\.deltaR\(\s*{_LEG}\s*\)\s*>\s*{_NUM}")),
-    ("mass_min", re.compile(rf"\(\s*((?:{_LEG}\s*\+\s*)+{_LEG})\s*\)\.mass\s*>\s*{_NUM}")),
-    ("mass_max", re.compile(rf"\(\s*((?:{_LEG}\s*\+\s*)+{_LEG})\s*\)\.mass\s*<\s*{_NUM}")),
+    (
+        "mass_min",
+        re.compile(rf"\(\s*((?:{_LEG}\s*\+\s*)+{_LEG})\s*\)\.mass\s*>\s*{_NUM}"),
+    ),
+    (
+        "mass_max",
+        re.compile(rf"\(\s*((?:{_LEG}\s*\+\s*)+{_LEG})\s*\)\.mass\s*<\s*{_NUM}"),
+    ),
     ("os", re.compile(rf"{_LEG}\.charge\s*\*\s*{_LEG}\.charge\s*<\s*0(?:\.0*)?")),
-    ("os3", re.compile(r"abs\(\s*leg\d+\.charge\s*\+\s*leg\d+\.charge\s*\+\s*leg\d+\.charge\s*\)\s*==\s*1(?:\.0*)?")),
-    ("btag", re.compile(rf"\(\s*(?:{_LEG}\.btagscore\s*\+?\s*)+\)\s*>\s*{_NUM}", re.IGNORECASE)),
+    (
+        "os3",
+        re.compile(
+            r"abs\(\s*leg\d+\.charge\s*\+\s*leg\d+\.charge\s*\+\s*leg\d+\.charge\s*"
+            r"\)\s*==\s*1(?:\.0*)?"
+        ),
+    ),
+    (
+        "btag",
+        re.compile(
+            rf"\(\s*(?:{_LEG}\.btagscore\s*\+?\s*)+\)\s*>\s*{_NUM}", re.IGNORECASE
+        ),
+    ),
 ]
 
 
@@ -223,7 +243,9 @@ def _mask_items(mask: str) -> tuple[list[tuple], bool]:
             elif kind in ("dz", "deta", "dr_max", "dr_min"):
                 legs, value = (groups[0], groups[1]), float(groups[2])
             elif kind in ("mass_min", "mass_max"):
-                legs, value = tuple(re.findall(r"leg(\d+)", groups[0])), float(groups[-1])
+                legs, value = tuple(re.findall(r"leg(\d+)", groups[0])), float(
+                    groups[-1]
+                )
             elif kind == "btag":
                 value = float(groups[-1])
             elif kind == "os":
@@ -297,7 +319,9 @@ def derive_seed(seed_def: dict, version: str, objects_cfg: dict) -> dict:
     requirements += _render_items(items, leg_symbols)
     # Object-level requirements from the layout, e.g. an ID score cut
     for leg_name in physics_legs:
-        extra = objects_cfg.get(legs[leg_name]["obj"].split(":")[0], {}).get("requirement")
+        extra = objects_cfg.get(legs[leg_name]["obj"].split(":")[0], {}).get(
+            "requirement"
+        )
         if extra and extra not in requirements:
             requirements.append(extra)
 
@@ -305,10 +329,10 @@ def derive_seed(seed_def: dict, version: str, objects_cfg: dict) -> dict:
     plateaus: list[str] = []
     for leg_name in physics_legs:
         nano = legs[leg_name]["obj"].split(":")[0]
-        value = objects_cfg.get(nano, {}).get("plateau")
-        value = "?" if value is None else str(value)
-        if value not in plateaus:
-            plateaus.append(value)
+        raw_value = objects_cfg.get(nano, {}).get("plateau")
+        plateau = "?" if raw_value is None else str(raw_value)
+        if plateau not in plateaus:
+            plateaus.append(plateau)
 
     return {
         "thresholds": ",".join(thresholds),
@@ -328,7 +352,9 @@ def _subscript(legs: tuple, leg_symbols: dict[str, str]) -> str:
     return "_{" + " ".join(symbols) + "}"
 
 
-def _render_items(items: list[tuple], leg_symbols: Optional[dict[str, str]] = None) -> list[str]:
+def _render_items(
+    items: list[tuple], leg_symbols: Optional[dict[str, str]] = None
+) -> list[str]:
     """Render parsed cross-mask items to LaTeX, merging duplicates."""
     leg_symbols = leg_symbols or {}
     out: list[str] = []
@@ -364,7 +390,7 @@ def _render_items(items: list[tuple], leg_symbols: Optional[dict[str, str]] = No
             elif lo is not None:
                 add(rf"${m}>{_fmt_num(lo)}$")
             else:
-                add(rf"${m}<{_fmt_num(hi)}$")
+                add(rf"${m}<{_fmt_num(cast(float, hi))}$")
         elif kind == "os":
             add(r"$q_1\times q_2<0$")
         elif kind == "os3":
@@ -397,8 +423,14 @@ def read_section_hints(menu_config_path: str) -> dict[str, str]:
             if line.startswith("#"):
                 # "# # ### GTT" -> "GTT"; pure banners ("# ######") are ignored
                 text = re.sub(r"^[#\s]+", "", line).strip()
-                looks_like_yaml = re.match(r"^[\w\-]+\s*:", text) or text.startswith("-")
-                if text and not looks_like_yaml and not re.fullmatch(r"[#=\-*\s]*", text):
+                looks_like_yaml = re.match(r"^[\w\-]+\s*:", text) or text.startswith(
+                    "-"
+                )
+                if (
+                    text
+                    and not looks_like_yaml
+                    and not re.fullmatch(r"[#=\-*\s]*", text)
+                ):
                     current = text
                 continue
             key = re.match(r"^([A-Za-z0-9_]+)\s*:", line)
@@ -426,7 +458,8 @@ def csv_path_for(config: MenuConfig) -> str:
     """Mirror of `MenuTable.save_table` naming."""
     return os.path.join(
         config.table_outdir,
-        f"{config.table_fname}_{config.version}{config.scalings_suffix}{config.sample_suffix}.csv",
+        f"{config.table_fname}_{config.version}{config.scalings_suffix}"
+        f"{config.sample_suffix}.csv",
     )
 
 
@@ -435,7 +468,7 @@ def csv_path_for(config: MenuConfig) -> str:
 ###########################################################################
 
 
-def _format_rate(rate: float, decimals: int) -> str:
+def _format_rate(rate: Optional[float], decimals: int) -> str:
     if rate is None or (isinstance(rate, float) and math.isnan(rate)):
         return "--"
     rounded = round(rate, decimals)
@@ -459,7 +492,9 @@ def build_rows(
         for seed, entry in (section.get("seeds") or {}).items():
             entry = entry or {}
             if seed not in menu:
-                print(f"WARNING: `{seed}` is in the layout but not in the menu, skipping")
+                print(
+                    f"WARNING: `{seed}` is in the layout but not in the menu, skipping"
+                )
                 continue
             placed.add(seed)
             derived = derive_seed(menu[seed], version, objects_cfg)
@@ -467,45 +502,57 @@ def build_rows(
                 # threshold problems are reported as "legN: <cut>"
                 key = "thresholds" if re.match(r"leg\d+: ", problem) else "requirements"
                 if key not in entry:
-                    print(f"WARNING: {seed}: could not translate `{problem}`, set `{key}` by hand")
+                    print(
+                        f"WARNING: {seed}: could not translate `{problem}`, set "
+                        f"`{key}` by hand"
+                    )
             requirements = entry.get("requirements", derived["requirements"])
             if entry.get("extra_requirements"):
-                requirements = ", ".join(x for x in (requirements, entry["extra_requirements"]) if x)
+                requirements = ", ".join(
+                    x for x in (requirements, entry["extra_requirements"]) if x
+                )
             thresholds = str(entry.get("thresholds", derived["thresholds"]))
             any_online |= ONLINE_MARK in thresholds
             for pu, pu_rates in rates.items():
                 if pu_rates and seed not in pu_rates:
                     print(f"WARNING: `{seed}` not found in the PU {pu} CSV")
-            rows.append({
-                "seed": entry.get("label", tex_escape(seed)),
-                "name": r"\texttt{" + tex_escape(seed) + "}",
-                "thresholds": thresholds,
-                "rate": {pu: pu_rates.get(seed) for pu, pu_rates in rates.items()},
-                "online_rate": entry.get("online_rate", ""),
-                "requirements": requirements or "",
-                "plateau": str(entry.get("plateau", derived["plateau"])),
-                "unparsed": derived["unparsed"],
-            })
+            rows.append(
+                {
+                    "seed": entry.get("label", tex_escape(seed)),
+                    "name": r"\texttt{" + tex_escape(seed) + "}",
+                    "thresholds": thresholds,
+                    "rate": {pu: pu_rates.get(seed) for pu, pu_rates in rates.items()},
+                    "online_rate": entry.get("online_rate", ""),
+                    "requirements": requirements or "",
+                    "plateau": str(entry.get("plateau", derived["plateau"])),
+                    "unparsed": derived["unparsed"],
+                }
+            )
         if rows:
             sections.append((section["name"], rows))
 
     missing = [s for s in menu if s not in placed]
     if missing:
-        print(f"WARNING: {len(missing)} seed(s) not in the layout, appended at the end: {missing}")
+        print(
+            f"WARNING: {len(missing)} seed(s) not in the layout, appended at the end: "
+            f"{missing}"
+        )
         rows = []
         for seed in missing:
             derived = derive_seed(menu[seed], version, objects_cfg)
             any_online |= derived["has_online"]
-            rows.append({
-                "seed": tex_escape(seed),
-                "name": r"\texttt{" + tex_escape(seed) + "}",
-                "thresholds": derived["thresholds"],
-                "rate": {pu: pu_rates.get(seed) for pu, pu_rates in rates.items()},
-                "online_rate": "",
-                "requirements": derived["requirements"],
-                "plateau": derived["plateau"],
-                "unparsed": derived["unparsed"],
-            })
+            rows.append(
+                {
+                    "seed": tex_escape(seed),
+                    "name": r"\texttt{" + tex_escape(seed) + "}",
+                    "thresholds": derived["thresholds"],
+                    "rate": {pu: pu_rates.get(seed) for pu, pu_rates in rates.items()},
+                    "online_rate": "",
+                    "requirements": derived["requirements"],
+                    "plateau": derived["plateau"],
+                    "unparsed": derived["unparsed"],
+                }
+            )
         sections.append((r"\color{red}Seeds missing from the table layout", rows))
 
     return sections, any_online
@@ -576,7 +623,9 @@ def render_table(
     out.append(r"\begin{table}[" + str(layout.get("float_placement", "H")) + "]")
     out.append(r"\begin{adjustbox}{width=\textwidth, max totalheight=0.95\textheight}")
     out.append(r"{\scriptsize")
-    out.append(r"\begin{tabular}{|" + "|".join(COLUMNS[key][1] for key, _ in phys) + "|}")
+    out.append(
+        r"\begin{tabular}{|" + "|".join(COLUMNS[key][1] for key, _ in phys) + "|}"
+    )
     out.append(r"\hline")
     out.append(" & ".join(lines[0]) + r" \\")
     if len(pus) > 1:
@@ -614,13 +663,20 @@ def render_table(
             cells.append(rf"\multicolumn{{{n_right}}}{{c|}}{{}}")
         return " & ".join(cells) + r" \\"
 
-    if rate_idx and not rate_is_efficiency and any(v is not None for v in totals.values()):
+    if (
+        rate_idx
+        and not rate_is_efficiency
+        and any(v is not None for v in totals.values())
+    ):
         out.append(r"\hline")
         out.append(summary_row("Rate for above Trigger seeds", totals))
         out.append(r"\hline")
         margin = layout.get("total_rate_margin")  # off unless set
         if margin is not None:
-            with_margin = {pu: (v * (1 + margin) if v is not None else None) for pu, v in totals.items()}
+            with_margin = {
+                pu: (v * (1 + margin) if v is not None else None)
+                for pu, v in totals.items()
+            }
             label = rf"\bf Total \Lone Menu Rate (+{_fmt_num(100 * margin)}\%)"
             out.append(summary_row(label, with_margin))
             out.append(r"\hline")
@@ -628,7 +684,9 @@ def render_table(
     # Footnotes go inside the tabular (without borders) so they float with it
     notes = []
     if any_online:
-        notes.append(ONLINE_MARK + " online (L1) threshold, no online-to-offline scaling applied")
+        notes.append(
+            ONLINE_MARK + " online (L1) threshold, no online-to-offline scaling applied"
+        )
     notes += layout.get("footnotes") or []
     for note in notes:
         out.append(rf"\multicolumn{{{ncol}}}{{l}}{{{note}}} \\")
@@ -655,7 +713,10 @@ def render_document(title: str, table: str) -> str:
 TEXLIVE_FALLBACK_DIRS = [
     "/cvmfs/cms.cern.ch/external/tex/texlive/2017/bin/x86_64-linux",
 ]
-REQUIRED_STY = [f"{name}.sty" for name in re.findall(r"\\usepackage(?:\[[^]]*\])?\{([^}]+)\}", PREAMBLE)]
+REQUIRED_STY = [
+    f"{name}.sty"
+    for name in re.findall(r"\\usepackage(?:\[[^]]*\])?\{([^}]+)\}", PREAMBLE)
+]
 
 
 def _missing_packages(pdflatex: str) -> Optional[list[str]]:
@@ -665,7 +726,11 @@ def _missing_packages(pdflatex: str) -> Optional[list[str]]:
     if not os.path.exists(kpsewhich):
         return None
     result = subprocess.run([kpsewhich, *REQUIRED_STY], capture_output=True, text=True)
-    found = {os.path.basename(line.strip()) for line in result.stdout.splitlines() if line.strip()}
+    found = {
+        os.path.basename(line.strip())
+        for line in result.stdout.splitlines()
+        if line.strip()
+    }
     return [sty for sty in REQUIRED_STY if sty not in found]
 
 
@@ -677,22 +742,33 @@ def find_pdflatex() -> Optional[str]:
         return forced
     on_path = shutil.which("pdflatex")
     candidates = ([on_path] if on_path else []) + [
-        os.path.join(d, "pdflatex") for d in TEXLIVE_FALLBACK_DIRS if os.path.exists(os.path.join(d, "pdflatex"))
+        os.path.join(d, "pdflatex")
+        for d in TEXLIVE_FALLBACK_DIRS
+        if os.path.exists(os.path.join(d, "pdflatex"))
     ]
-    missing_on_path = None
+    missing_on_path: Optional[list[str]] = None
     for candidate in candidates:
         missing = _missing_packages(candidate)
         if not missing:  # complete, or cannot be checked
             if candidate != on_path:
-                print(f"INFO: {on_path or 'no pdflatex on PATH'}"
-                      + (f" lacks {', '.join(missing_on_path)}" if missing_on_path else "")
-                      + f"; using {candidate}")
+                print(
+                    f"INFO: {on_path or 'no pdflatex on PATH'}"
+                    + (
+                        f" lacks {', '.join(missing_on_path)}"
+                        if missing_on_path
+                        else ""
+                    )
+                    + f"; using {candidate}"
+                )
             return candidate
         if candidate == on_path:
             missing_on_path = missing
     if on_path:
-        print(f"WARNING: {on_path} lacks {', '.join(missing_on_path or [])} and no complete TeX Live found; "
-              "trying anyway (set RATE_TABLE_TEX_PDFLATEX to choose one)")
+        print(
+            f"WARNING: {on_path} lacks {', '.join(missing_on_path or [])} and no "
+            "complete TeX Live found; "
+            "trying anyway (set RATE_TABLE_TEX_PDFLATEX to choose one)"
+        )
     return on_path
 
 
@@ -703,8 +779,14 @@ def compile_tex(tex_path: str) -> Optional[str]:
         print("WARNING: pdflatex not found, skipping compilation")
         return None
     outdir = os.path.dirname(os.path.abspath(tex_path))
-    cmd = [pdflatex, "-interaction=nonstopmode", "-halt-on-error",
-           "-output-directory", outdir, os.path.abspath(tex_path)]
+    cmd = [
+        pdflatex,
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-output-directory",
+        outdir,
+        os.path.abspath(tex_path),
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True)
     stem = os.path.splitext(os.path.abspath(tex_path))[0]
     for ext in (".aux", ".log") if result.returncode == 0 else (".aux",):
@@ -722,15 +804,57 @@ def _pdf_to_png_commands(pdf_path: str, png_path: str, dpi: int) -> list[list[st
     stem = os.path.splitext(png_path)[0]
     cmds = []
     if shutil.which("pdftoppm"):  # poppler
-        cmds.append(["pdftoppm", "-png", "-r", str(dpi), "-f", "1", "-l", "1", "-singlefile", pdf_path, stem])
+        cmds.append(
+            [
+                "pdftoppm",
+                "-png",
+                "-r",
+                str(dpi),
+                "-f",
+                "1",
+                "-l",
+                "1",
+                "-singlefile",
+                pdf_path,
+                stem,
+            ]
+        )
     if shutil.which("gs"):  # ghostscript
-        cmds.append(["gs", "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-sDEVICE=png16m", f"-r{dpi}",
-                     "-dFirstPage=1", "-dLastPage=1", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4",
-                     f"-sOutputFile={png_path}", pdf_path])
-    for magick in ("magick", "convert"):  # ImageMagick (needs ghostscript for PDFs itself)
+        cmds.append(
+            [
+                "gs",
+                "-q",
+                "-dSAFER",
+                "-dBATCH",
+                "-dNOPAUSE",
+                "-sDEVICE=png16m",
+                f"-r{dpi}",
+                "-dFirstPage=1",
+                "-dLastPage=1",
+                "-dTextAlphaBits=4",
+                "-dGraphicsAlphaBits=4",
+                f"-sOutputFile={png_path}",
+                pdf_path,
+            ]
+        )
+    for magick in (
+        "magick",
+        "convert",
+    ):  # ImageMagick (needs ghostscript for PDFs itself)
         if shutil.which(magick):
-            cmds.append([magick, "-density", str(dpi), f"{pdf_path}[0]", "-background", "white",
-                         "-alpha", "remove", png_path])
+            cmds.append(
+                [
+                    magick,
+                    "-density",
+                    str(dpi),
+                    f"{pdf_path}[0]",
+                    "-background",
+                    "white",
+                    "-alpha",
+                    "remove",
+                    png_path,
+                ]
+            )
             break
     return cmds
 
@@ -748,19 +872,26 @@ def crop_png(png_path: str, margin: int = 20) -> bool:
     if bbox is None:  # blank page
         return False
     left, top, right, bottom = bbox
-    box = (max(0, left - margin), max(0, top - margin),
-           min(rgb.width, right + margin), min(rgb.height, bottom + margin))
+    box = (
+        max(0, left - margin),
+        max(0, top - margin),
+        min(rgb.width, right + margin),
+        min(rgb.height, bottom + margin),
+    )
     rgb.crop(box).save(png_path)
     return True
 
 
 def _pymupdf_to_png(pdf_path: str, png_path: str, dpi: int) -> bool:
-    """Pure-Python fallback (pip install pymupdf) when no command-line converter works."""
+    """Pure-Python fallback (pip install pymupdf).
+
+    Used when no command-line converter works.
+    """
     try:
-        import pymupdf
+        import pymupdf  # type: ignore[import-not-found]
     except ImportError:
         try:
-            import fitz as pymupdf  # PyMuPDF < 1.24
+            import fitz as pymupdf  # type: ignore[import-not-found] # PyMuPDF < 1.24
         except ImportError:
             return False
     with pymupdf.open(pdf_path) as doc:
@@ -769,9 +900,10 @@ def _pymupdf_to_png(pdf_path: str, png_path: str, dpi: int) -> bool:
 
 
 def export_png(pdf_path: str, dpi: int = 200, crop: bool = True) -> Optional[str]:
-    """Render the first page of the PDF to a PNG next to it (e.g. for web plot browsers).
+    """Render the first page of the PDF to a PNG next to it.
 
-    Tries pdftoppm, ghostscript, ImageMagick, then PyMuPDF; crops to the table with Pillow.
+    E.g. for web plot browsers. Tries pdftoppm, ghostscript, ImageMagick, then
+    PyMuPDF; crops to the table with Pillow.
     """
     png_path = os.path.splitext(pdf_path)[0] + ".png"
     made = False
@@ -784,7 +916,10 @@ def export_png(pdf_path: str, dpi: int = 200, crop: bool = True) -> Optional[str
     if not made:
         made = _pymupdf_to_png(pdf_path, png_path, dpi)
     if not made:
-        print("WARNING: no working PDF-to-PNG converter (pdftoppm, gs, ImageMagick or PyMuPDF), skipping PNG")
+        print(
+            "WARNING: no working PDF-to-PNG converter (pdftoppm, gs, ImageMagick or "
+            "PyMuPDF), skipping PNG"
+        )
         return None
     if crop:
         crop_png(png_path)
@@ -803,7 +938,11 @@ def _yaml_str(text: str) -> str:
 
 
 def make_skeleton(
-    menu: dict, menu_config_path: str, version: str, title: str, inherit: Optional[dict] = None
+    menu: dict,
+    menu_config_path: str,
+    version: str,
+    title: str,
+    inherit: Optional[dict] = None,
 ) -> str:
     hints = read_section_hints(menu_config_path)
     inherited: dict[str, dict] = {}
@@ -817,7 +956,9 @@ def make_skeleton(
     # Keep menu order, grouping by section (inherited section wins over hint)
     order: dict[str, list[str]] = {}
     for seed in menu:
-        section = inherited.get(seed, {}).get("section") or hints.get(seed, "Unsorted seeds")
+        section = inherited.get(seed, {}).get("section") or hints.get(
+            seed, "Unsorted seeds"
+        )
         order.setdefault(section, []).append(seed)
 
     used_objects = []
@@ -830,16 +971,19 @@ def make_skeleton(
 
     lines = [
         f"# Table layout for {menu_config_path}",
-        "# Generated by `rate_table_tex --init`; edit freely. Seeds only need a `label`;",
-        "# thresholds, requirements and plateaus are derived from the menu config unless",
+        "# Generated by `rate_table_tex --init`; edit freely. Seeds only need a "
+        "`label`;",
+        "# thresholds, requirements and plateaus are derived from the menu config "
+        "unless",
         "# overridden here (the derived values are shown in the comments).",
         f"title: {_yaml_str(title)}",
         "pu_columns:",
         "  - {pu: 140, version_suffix: '_140PU'}",
         "  - {pu: 200, version_suffix: ''}",
-        "total_rate_margin: null  # e.g. 0.3 adds a \"Total (+30%)\" line",
+        'total_rate_margin: null  # e.g. 0.3 adds a "Total (+30%)" line',
         "rate_decimals: 0",
-        "columns: [seed, thresholds, rate, requirements]  # add `plateau` to show object plateaus",
+        "columns: [seed, thresholds, rate, requirements]  # add `plateau` to show "
+        "object plateaus",
         "footnotes: []",
         "objects:",
     ]
@@ -860,11 +1004,17 @@ def make_skeleton(
             entry = {k: v for k, v in inherited.get(seed, {}).items() if k != "section"}
             lines.append(f"      {seed}:")
             lines.append(f"        # objects: {', '.join(derived['objects'])}")
-            lines.append(f"        # derived thresholds: {derived['thresholds']}".rstrip())
-            lines.append(f"        # derived requirements: {derived['requirements'] or '(none)'}")
+            lines.append(
+                f"        # derived thresholds: {derived['thresholds']}".rstrip()
+            )
+            lines.append(
+                f"        # derived requirements: {derived['requirements'] or '(none)'}"
+            )
             for problem in derived["unparsed"]:
                 lines.append(f"        # NOT auto-translated: {problem}")
-            lines.append(f"        label: {_yaml_str(entry.pop('label', tex_escape(seed)))}")
+            lines.append(
+                f"        label: {_yaml_str(entry.pop('label', tex_escape(seed)))}"
+            )
             for key, value in entry.items():
                 lines.append(f"        {key}: {_yaml_str(value)}")
     return "\n".join(lines) + "\n"
@@ -894,10 +1044,15 @@ def _load_inputs(args) -> tuple[MenuConfig, dict, str]:
         override_version=args.version,
         override_scalings_version=getattr(args, "scalings", None),
         override_sample=getattr(args, "signal", None),
+        truncated=getattr(args, "truncated", False),
     )
     with open(config.menu_config) as f:
         menu = yaml.safe_load(f)
-    layout_path = args.layout or cfg_dict.get("table_layout") or default_layout_path(config.menu_config)
+    layout_path = (
+        args.layout
+        or cfg_dict.get("table_layout")
+        or default_layout_path(config.menu_config)
+    )
     return config, menu, layout_path
 
 
@@ -905,11 +1060,21 @@ def cmd_init(args) -> None:
     config, menu, layout_path = _load_inputs(args)
     out = layout_path
     if os.path.exists(out) and not args.force:
-        sys.exit(f"{out} exists, use --force to overwrite or --layout to write elsewhere")
+        sys.exit(
+            f"{out} exists, use --force to overwrite or --layout to write elsewhere"
+        )
     inherit = load_layout(args.inherit) if args.inherit else None
     title = args.title or f"{config.table_fname} ({config.version})"
     with open(out, "w") as f:
-        f.write(make_skeleton(menu, config.menu_config, config.config_version_for_objects, title, inherit))
+        f.write(
+            make_skeleton(
+                menu,
+                config.menu_config,
+                config.config_version_for_objects,
+                title,
+                inherit,
+            )
+        )
     print(f"Wrote skeleton layout to {out}")
 
 
@@ -933,12 +1098,16 @@ def resolve_rate_csvs(
             pairs.append((int(pu), path))
         return pairs
 
-    spec = layout.get("pu_columns") or [{"pu": layout.get("pu", 200), "version_suffix": ""}]
+    spec = layout.get("pu_columns") or [
+        {"pu": layout.get("pu", 200), "version_suffix": ""}
+    ]
     pairs = []
     for entry in spec:
         if "csv_suffix" in entry:
-            sys.exit("pu_columns: `csv_suffix` was replaced by `version_suffix` "
-                     "(CSV taken from outputs/<version><version_suffix>/rate_tables)")
+            sys.exit(
+                "pu_columns: `csv_suffix` was replaced by `version_suffix` "
+                "(CSV taken from outputs/<version><version_suffix>/rate_tables)"
+            )
         suffix = entry.get("version_suffix", "")
         if not suffix:
             pairs.append((int(entry["pu"]), main_csv))
@@ -949,6 +1118,7 @@ def resolve_rate_csvs(
             override_version=config.version + suffix,
             override_scalings_version=config._override_scalings_version,
             override_sample=config._override_sample,
+            truncated=config._truncated,
         )
         path = csv_path_for(other)
         if not os.path.exists(path):
@@ -961,14 +1131,19 @@ def resolve_rate_csvs(
 def cmd_make(args) -> None:
     config, menu, layout_path = _load_inputs(args)
     if not os.path.exists(layout_path):
-        sys.exit(f"No layout at {layout_path}; create one with `rate_table_tex {args.config_file} --init`")
+        sys.exit(
+            f"No layout at {layout_path}; create one with `rate_table_tex "
+            f"{args.config_file} --init`"
+        )
     layout = load_layout(layout_path)
 
     csv_path = args.csv or csv_path_for(config)
     if args.no_rates:
         # Layout preview: rate columns from `pu_columns`, all left as "--"
         spec = layout.get("pu_columns") or [{"pu": layout.get("pu", 200)}]
-        rate_csvs = [(int(entry["pu"]), None) for entry in spec]
+        rate_csvs: Sequence[tuple[int, Optional[str]]] = [
+            (int(entry["pu"]), None) for entry in spec
+        ]
     else:
         rate_csvs = resolve_rate_csvs(layout, config, csv_path, args.rates)
 
@@ -981,15 +1156,25 @@ def cmd_make(args) -> None:
             continue
         df = pd.read_csv(path)
         rate_is_efficiency = "rate" not in df.columns
-        pu_rates = dict(zip(df["seed"], df["efficiency" if rate_is_efficiency else "rate"]))
+        pu_rates = dict(
+            zip(df["seed"], df["efficiency" if rate_is_efficiency else "rate"])
+        )
         totals[pu] = pu_rates.pop("Total", None)
         pu_rates.pop("Total Event Number", None)
         rates[pu] = pu_rates
         print(f"INFO: PU {pu} rates from {path}")
 
-    sections, any_online = build_rows(menu, layout, rates, config.config_version_for_objects)
-    table = render_table(layout, sections, totals, any_online,
-                         [path for _, path in rate_csvs if path], rate_is_efficiency)
+    sections, any_online = build_rows(
+        menu, layout, rates, config.config_version_for_objects
+    )
+    table = render_table(
+        layout,
+        sections,
+        totals,
+        any_online,
+        [path for _, path in rate_csvs if path],
+        rate_is_efficiency,
+    )
     title = layout.get("title", f"{config.table_fname} ({config.version})")
 
     tex_path = args.output or os.path.splitext(csv_path)[0] + ".tex"
@@ -1009,8 +1194,10 @@ def cmd_make(args) -> None:
 
 
 EXAMPLES = """examples (from the repository root):
-  rate_table_tex configs/V50nano/rate_table/step1p5_cfg.yml --version V50nano_170pre5 --png
-  rate_table_tex configs/V50nano/rate_table/v0p0_cfg.yml --no-rates --compile -o v0p0_check.tex
+  rate_table_tex configs/V50nano/rate_table/step1p5_cfg.yml \
+--version V50nano_170pre5 --png
+  rate_table_tex configs/V50nano/rate_table/v0p0_cfg.yml \
+--no-rates --compile -o v0p0_check.tex
   rate_table_tex configs/V50nano/rate_table/v0p0_cfg.yml --init \\
       --inherit configs/V50nano/rate_table/step1p5_table_layout.yml
 """
@@ -1023,39 +1210,93 @@ def main() -> None:
         epilog=EXAMPLES,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("config_file", help="rate_table config, e.g. configs/V50nano/rate_table/step1p5_cfg.yml")
-    parser.add_argument("--version", help="outputs/<version>/rate_tables to read the CSVs from and write to "
-                        "(same as for rate_table)", default=None)
-    parser.add_argument("--layout", help="table layout (default: `table_layout` in the config, "
-                        "else <menu>_table_layout.yml next to the menu config)")
+    parser.add_argument(
+        "config_file",
+        help="rate_table config, e.g. configs/V50nano/rate_table/step1p5_cfg.yml",
+    )
+    parser.add_argument(
+        "--version",
+        help="outputs/<version>/rate_tables to read the CSVs from and write to "
+        "(same as for rate_table)",
+        default=None,
+    )
+    parser.add_argument(
+        "--layout",
+        help="table layout (default: `table_layout` in the config, "
+        "else <menu>_table_layout.yml next to the menu config)",
+    )
 
     out = parser.add_argument_group("output")
-    out.add_argument("--compile", action="store_true", help="also run pdflatex to make the .pdf")
-    out.add_argument("--png", action="store_true",
-                     help="also write a cropped .png of the table next to the .pdf (implies --compile)")
-    out.add_argument("--dpi", type=int, default=200, help="PNG resolution (default: 200)")
-    out.add_argument("--no-crop", action="store_true", help="keep the full A4 page in the PNG")
-    out.add_argument("-o", "--output", help="write the .tex here instead of next to the CSV")
-    out.add_argument("--body-only", action="store_true",
-                     help="only write the table environment, for \\input into another document")
+    out.add_argument(
+        "--compile", action="store_true", help="also run pdflatex to make the .pdf"
+    )
+    out.add_argument(
+        "--png",
+        action="store_true",
+        help="also write a cropped .png of the table next to the .pdf (implies "
+        "--compile)",
+    )
+    out.add_argument(
+        "--dpi", type=int, default=200, help="PNG resolution (default: 200)"
+    )
+    out.add_argument(
+        "--no-crop", action="store_true", help="keep the full A4 page in the PNG"
+    )
+    out.add_argument(
+        "-o", "--output", help="write the .tex here instead of next to the CSV"
+    )
+    out.add_argument(
+        "--body-only",
+        action="store_true",
+        help="only write the table environment, for \\input into another document",
+    )
 
     inp = parser.add_argument_group("inputs")
-    inp.add_argument("--rates", action="append", metavar="PU=PATH",
-                     help="rate column from an explicit CSV, repeatable, left to right "
-                     "(overrides `pu_columns` in the layout)")
-    inp.add_argument("--csv", help="main (200 PU) CSV, instead of the one derived from the config and --version")
-    inp.add_argument("--no-rates", action="store_true",
-                     help="render without any CSV (rates shown as --), e.g. to check a new layout")
-    inp.add_argument("--scalings", help="same as for rate_table, to pick up the matching CSV")
-    inp.add_argument("--signal", help="same as for rate_table, to pick up the matching CSV")
+    inp.add_argument(
+        "--rates",
+        action="append",
+        metavar="PU=PATH",
+        help="rate column from an explicit CSV, repeatable, left to right "
+        "(overrides `pu_columns` in the layout)",
+    )
+    inp.add_argument(
+        "--csv",
+        help="main (200 PU) CSV, instead of the one derived from the config and "
+        "--version",
+    )
+    inp.add_argument(
+        "--no-rates",
+        action="store_true",
+        help="render without any CSV (rates shown as --), e.g. to check a new layout",
+    )
+    inp.add_argument(
+        "--scalings", help="same as for rate_table, to pick up the matching CSV"
+    )
+    inp.add_argument(
+        "--signal", help="same as for rate_table, to pick up the matching CSV"
+    )
+    inp.add_argument(
+        "--truncated",
+        action="store_true",
+        help="same as for rate_table, to pick up the matching CSV",
+    )
 
     new = parser.add_argument_group("new menu")
-    new.add_argument("--init", action="store_true",
-                     help="write a skeleton layout for this menu (to --layout or the default path) and exit")
-    new.add_argument("--inherit", help="with --init: copy labels, overrides and sections from another layout "
-                     "for seeds with the same name")
+    new.add_argument(
+        "--init",
+        action="store_true",
+        help="write a skeleton layout for this menu (to --layout or the default path) "
+        "and exit",
+    )
+    new.add_argument(
+        "--inherit",
+        help="with --init: copy labels, overrides and sections from another layout "
+        "for seeds with the same name",
+    )
     new.add_argument("--title", help="with --init: table title")
-    new.add_argument("--force", action="store_true", help="with --init: overwrite an existing layout")
+    new.add_argument(
+        "--force", action="store_true", help="with --init: overwrite an existing layout"
+    )
 
     args = parser.parse_args()
     if not args.init:

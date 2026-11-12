@@ -1,4 +1,5 @@
 import argparse
+import fnmatch
 import functools
 import sys
 import glob
@@ -49,7 +50,9 @@ def _all_branches(fname, tree, obj):
     if tree != "Events":
         return utils.get_branches(fname, tree, obj)
     return [
-        x.removeprefix(obj + "_") for x in _tree_keys(fname, tree) if x.startswith(obj + "_")
+        x.removeprefix(obj + "_")
+        for x in _tree_keys(fname, tree)
+        if x.startswith(obj + "_")
     ]
 
 
@@ -70,14 +73,16 @@ def chunk_suffix(job):
     return f"_chunk{job:05d}"
 
 
-# Transient EOS FUSE read errors (EIO) hit a few of ~100 parallel condor jobs; retry a file
-# a few times before giving up (the pieces read from a failed attempt are dropped).
+# Transient EOS FUSE read errors (EIO) hit a few of ~100 parallel condor jobs; retry a
+# file a few times before giving up (the pieces read from a failed attempt are dropped).
 READ_RETRIES = 4
 READ_RETRY_WAIT_S = 30
 
 
 def read_file_with_retries(fname, tree, loaders):
-    """Open `fname` and add its `tree` to each loader (ObjectCacher), retrying on OSError."""
+    """Open `fname` and add its `tree` to each loader (ObjectCacher), retrying on
+    OSError.
+    """
     for attempt in range(1, READ_RETRIES + 1):
         n_pieces = [{k: len(v) for k, v in ld._pieces.items()} for ld in loaders]
         try:
@@ -92,7 +97,10 @@ def read_file_with_retries(fname, tree, loaders):
                     del v[n[k] :]
             if attempt == READ_RETRIES:
                 raise
-            print(f"{fname}: {err!r}, retry {attempt}/{READ_RETRIES - 1} in {READ_RETRY_WAIT_S} s")
+            print(
+                f"{fname}: {err!r}, retry {attempt}/{READ_RETRIES - 1} in "
+                f"{READ_RETRY_WAIT_S} s"
+            )
             time.sleep(READ_RETRY_WAIT_S * attempt)
 
 
@@ -132,7 +140,8 @@ class ObjectCacher:
         # Get Branches. Copy lists: YAML anchors can make several samples share one
         # list object, and the sums handling below appends to it.
         # `branches` can be a list, "all" (all `<obj>_*` branches of the first file),
-        # or a dict {"exclude": [regex, ...]} = "all" minus the fields matching any regex
+        # a glob on the field names (e.g. "*_final"), or a dict
+        # {"exclude": [regex, ...]} = "all" minus the fields matching any regex
         # (e.g. the `_pHLT` copies of the HLT bits).
         if isinstance(branches, list):
             self._branches = list(branches)
@@ -149,6 +158,14 @@ class ObjectCacher:
                 self._branches = [
                     b for b in self._branches if not any(r.search(b) for r in excl)
                 ]
+            elif branches != "all":
+                self._branches = [
+                    b for b in self._branches if fnmatch.fnmatchcase(b, branches)
+                ]
+                if not self._branches:
+                    raise ValueError(
+                        f"No `{obj}` branches match `{branches}` in {self._ntuple_path}"
+                    )
         if self._job is not None:
             self.cache_out_path = chunk_dir(version) + "/"
         else:
@@ -383,7 +400,10 @@ class ObjectCacher:
         return [self._object + x for x in self._branches]
 
     def _begin(self):
-        """Start reading: per-branch lists of per-step arrays, concatenated in _finish."""
+        """Start reading.
+
+        Per-branch lists of per-step arrays, concatenated in _finish.
+        """
         self._pieces = {x.removeprefix("part"): [] for x in self._nano_branches}
 
     def _add_file(self, tree_obj):
@@ -400,7 +420,8 @@ class ObjectCacher:
 
     def _finish(self):
         all_arrays = {
-            k: ak.concatenate(v) if len(v) > 1 else v[0] for k, v in self._pieces.items()
+            k: ak.concatenate(v) if len(v) > 1 else v[0]
+            for k, v in self._pieces.items()
         }
         del self._pieces
 
@@ -441,10 +462,12 @@ class ObjectCacher:
         # An empty array would be cached and then skipped on every later run.
         if len(self._final_ak_array) == 0:
             raise RuntimeError(
-                f"No events read for {self.parquet_fname}; not writing an empty cache file"
+                f"No events read for {self.parquet_fname}; not writing an empty cache "
+                "file"
             )
         fpath = self.cache_out_path + f"{self.parquet_fname}.parquet"
-        # Write then rename, so an interrupted write never leaves a complete-looking file.
+        # Write then rename, so an interrupted write never leaves a complete-looking
+        # file.
         ak.to_parquet(
             self._final_ak_array,
             destination=fpath + ".tmp",
@@ -485,8 +508,8 @@ def load_file_major(loaders):
     """Cache several objects of one sample/tree/file list, opening each file once.
 
     Deserialising the TTree metadata of a nano (~1000 branches) costs ~0.5 s per open,
-    which dominated the per-object loop for the 160-event minimum-bias files. All objects
-    of the file list are held in memory at once: use it with chunks (--job).
+    which dominated the per-object loop for the 160-event minimum-bias files. All
+    objects of the file list are held in memory at once: use it with chunks (--job).
     """
     loaders = [ld for ld in loaders if ld._needs_work()]
     if not loaders:
@@ -536,8 +559,8 @@ def parse_args():
         "--files-per-job",
         type=int,
         default=None,
-        help="Chunked caching: number of input files per job (with --job). Output goes to "
-        "<cache>/<version>/chunks/<version>_<sample>_<object>_chunkNNNNN.parquet; "
+        help="Chunked caching: number of input files per job (with --job). Output goes "
+        "to <cache>/<version>/chunks/<version>_<sample>_<object>_chunkNNNNN.parquet; "
         "merge with menu_tools/caching/merge_chunks.py.",
     )
     parser.add_argument(
@@ -591,7 +614,7 @@ def main():
                         loaders.append(loader)
                 # chunked mode: read each file once for all objects
                 load_file_major(loaders)
-    print(f"Caching finished in {time.time() - start_time:.2f} s") 
+    print(f"Caching finished in {time.time() - start_time:.2f} s")
 
 
 if __name__ == "__main__":

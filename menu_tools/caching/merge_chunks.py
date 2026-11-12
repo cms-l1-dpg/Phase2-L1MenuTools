@@ -1,15 +1,15 @@
 """Merge the per-chunk parquet files of chunked caching into the standard cache files.
 
-`cache_objects <cfg> --files-per-job N --job I` caches files [I*N, (I+1)*N) of the sorted
-input list of each sample into
+`cache_objects <cfg> --files-per-job N --job I` caches files [I*N, (I+1)*N) of the
+sorted input list of each sample into
     <cache>/<version>/chunks/<version>_<sample>_<object>_chunkNNNNN.parquet
 This script concatenates the chunks of each sample/object in chunk order (= sorted file
 order, so all objects of a sample stay row-aligned) into
     <cache>/<version>/<version>_<sample>_<object>.parquet
-It refuses to merge if a chunk is missing (unless --allow-missing), since a missing chunk
-in one object but not another would break the alignment. Each chunk becomes one parquet
-row group (streamed, so memory stays at about one chunk). The chunk files are left in
-place; delete <cache>/<version>/chunks/ by hand after checking the merged files.
+It refuses to merge if a chunk is missing (unless --allow-missing), since a missing
+chunk in one object but not another would break the alignment. Each chunk becomes one
+parquet row group (streamed, so memory stays at about one chunk). The chunk files are
+left in place; delete <cache>/<version>/chunks/ by hand after checking the merged files.
 
 Usage:
     python3 menu_tools/caching/merge_chunks.py <cfg.yaml> --files-per-job N \

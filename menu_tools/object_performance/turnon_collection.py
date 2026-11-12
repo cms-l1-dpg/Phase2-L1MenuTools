@@ -8,13 +8,18 @@ import vector
 from menu_tools.object_performance.config import PerformancePlotConfig
 from menu_tools.utils import constants
 from menu_tools.utils import utils
-from menu_tools.utils.objects import CUT_FIELD_RE, Object, is_hlt_object, is_trigger_object
+from menu_tools.utils.objects import (
+    CUT_FIELD_RE,
+    Object,
+    is_hlt_object,
+    is_trigger_object,
+)
 
 
 vector.register_awkward()
 
-# Keys of the extra curves of the `l1_seed` option (in `TurnOnCollection.hists` and the JSON):
-# the L1 seed alone, and each seeded HLT test object combined with the seed.
+# Keys of the extra curves of the `l1_seed` option (in `TurnOnCollection.hists` and the
+# JSON): the L1 seed alone, and each seeded HLT test object combined with the seed.
 L1SEED_KEY = "L1seed"
 L1SEED_SUFFIX = "+L1seed"
 
@@ -63,7 +68,9 @@ class ArrayLoader:
         array_dict = {self._transform_key(key, obj): array[key] for key in array.fields}
         # Reference objects of trafo plots (HT/MHT from gen jets) are kept unzipped;
         # trigger objects (L1* and hlt*) are zipped into records.
-        if self.cfg_plot.reference_trafo and not (obj.startswith("L1") or is_hlt_object(obj)):
+        if self.cfg_plot.reference_trafo and not (
+            obj.startswith("L1") or is_hlt_object(obj)
+        ):
             array = ak.Array(array_dict)
         else:
             array = ak.zip(array_dict)
@@ -96,20 +103,31 @@ class ArrayLoader:
 
 class TurnOnCollection:
     def __init__(
-        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None, config_version: Optional[str] = None, override_version: Optional[str] = None
+        self,
+        cfg_plot: dict,
+        threshold: float,
+        plot_name: Optional[str] = None,
+        config_version: Optional[str] = None,
+        override_version: Optional[str] = None,
     ):
         self._config_version = config_version
         self._override_version = override_version
-        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name, config_version=config_version, override_version=override_version)
+        self.cfg_plot = PerformancePlotConfig(
+            cfg_plot,
+            plot_name,
+            config_version=config_version,
+            override_version=override_version,
+        )
         self.version = self.cfg_plot.version
         self.threshold = threshold
         self.ak_arrays: dict[str, Any] = {}
         self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
         self.hists: dict[str, Any] = {"ref": {}}
-        # Curves that are not a configured test object (`l1_seed`): key -> {"label", "style"}
+        # Curves that are not a configured test object (`l1_seed`):
+        # key -> {"label", "style"}
         self.extra_curves: dict[str, dict[str, Any]] = {}
-        # `l1_seed`: per reference object ([event][ref]), matched to an L1 seed object passing
-        # the L1 threshold / matched to an L1 seed object at all
+        # `l1_seed`: per reference object ([event][ref]), matched to an L1 seed object
+        # passing the L1 threshold / matched to an L1 seed object at all
         self.l1_seed_pass = None
         self.l1_seed_matched = None
 
@@ -123,11 +141,11 @@ class TurnOnCollection:
         obj_args = []
 
         test_objects = self.cfg_plot.test_objects
-        
+
         # Determine correct version for object definition
         obj_version = self.version
         if self._override_version and self._config_version:
-             obj_version = self._config_version
+            obj_version = self._config_version
 
         for obj_key, x_arg in test_objects.items():
             obj = Object(obj_key, obj_version)
@@ -403,7 +421,9 @@ class TurnOnCollection:
     # ------------------------------------------------------------------------------------------
     @property
     def l1_seed_objects(self) -> list[tuple[Object, Any, float]]:
-        """(L1 object, online pT threshold, match_dR) of each OR-ed L1 seed condition."""
+        """(L1 object, online pT threshold, match_dR) of each OR-ed L1 seed
+        condition.
+        """
         seed = self.cfg_plot.l1_seed
         if seed is None:
             return []
@@ -415,7 +435,8 @@ class TurnOnCollection:
                 unknown = set(thr) - set(obj.eta_ranges)
                 if unknown:
                     raise ValueError(
-                        f"l1_seed: threshold regions {sorted(unknown)} are not eta ranges of {obj}"
+                        f"l1_seed: threshold regions {sorted(unknown)} are not eta "
+                        f"ranges of {obj}"
                     )
             match_dR = o["match_dR"] if o["match_dR"] is not None else obj.match_dR
             out.append((obj, thr, match_dR))
@@ -430,7 +451,9 @@ class TurnOnCollection:
         names = [str(obj) for obj, _ in self.test_objects]
         if seed["apply_to"] is None:
             return [n for n in names if is_hlt_object(n)]
-        keys = [str(Object(k, self.cfg_plot.version_for_objects)) for k in seed["apply_to"]]
+        keys = [
+            str(Object(k, self.cfg_plot.version_for_objects)) for k in seed["apply_to"]
+        ]
         for k in keys:
             if k not in names:
                 raise ValueError(f"l1_seed: apply_to object {k} is not a test object")
@@ -442,10 +465,12 @@ class TurnOnCollection:
 
     @staticmethod
     def _l1_threshold_mask(obj: Object, arr, threshold):
-        """L1 objects with pT > threshold (strictly, as the P2GT emulator: hwPt > floor(thr / LSB),
-        identical to pt > thr for pT in units of the LSB). A {region: threshold} dict uses the
-        eta ranges of the L1 object's config (|eta| in [low, high)); objects outside the listed
-        regions fail."""
+        """L1 objects with pT > threshold.
+
+        Strictly, as the P2GT emulator: hwPt > floor(thr / LSB), identical to pt > thr
+        for pT in units of the LSB. A {region: threshold} dict
+        uses the eta ranges of the L1 object's config (|eta| in [low, high)); objects
+        outside the listed regions fail."""
         pt = arr["pt"]
         if not isinstance(threshold, dict):
             return pt > float(threshold)
@@ -468,12 +493,14 @@ class TurnOnCollection:
             self._apply_object_cuts(obj, self._l1_seed_key(i, obj))
 
     def _match_l1_seed_to_ref(self) -> None:
-        """Per reference object: is an L1 seed object within match_dR that passes the L1 threshold
-        (`l1_seed_pass`), and is any L1 seed object within match_dR (`l1_seed_matched`)?
+        """Per reference object: is an L1 seed object within match_dR that passes the
+        L1 threshold (`l1_seed_pass`), and is any L1 seed object within match_dR
+        (`l1_seed_matched`)?
 
-        `any` L1 object passing within dR: for a single threshold this is the same as taking the
-        highest-pT L1 object within dR (as `_match_test_to_ref`) and cutting on it. The seed
-        conditions of `l1_seed.objects` are OR-ed. Needs the reference cuts applied before.
+        `any` L1 object passing within dR: for a single threshold this is the same as
+        taking the highest-pT L1 object within dR (as `_match_test_to_ref`) and cutting
+        on it. The seed conditions of `l1_seed.objects` are OR-ed. Needs the reference
+        cuts applied before.
         """
         ref = self.ak_arrays["ref"]
         passed = matched = None
@@ -502,7 +529,12 @@ class TurnOnCollection:
         parts = []
         for obj, thr, _ in self.l1_seed_objects:
             if isinstance(thr, dict):
-                thr_str = " / ".join(f"{v:g}" for v in thr.values()) + " (" + "/".join(thr) + ")"
+                thr_str = (
+                    " / ".join(f"{v:g}" for v in thr.values())
+                    + " ("
+                    + "/".join(thr)
+                    + ")"
+                )
             else:
                 thr_str = f"{float(thr):g}"
             parts.append(f"{obj.plot_label} > {thr_str} GeV")
@@ -510,10 +542,10 @@ class TurnOnCollection:
 
     def _skim_l1_seed_hists(self, ref_all) -> None:
         """Histograms of the `l1_seed` curves (see docs/object-performance.md):
-        `L1seed`: reference objects matched to an L1 seed object passing the L1 threshold
-        (independent of the HLT threshold); `<hlt test object>+L1seed`: reference objects
-        passing the HLT test object's numerator AND the L1 seed requirement, with the HLT test
-        object's denominator."""
+        `L1seed`: reference objects matched to an L1 seed object passing the L1
+        threshold (independent of the HLT threshold); `<hlt test object>+L1seed`:
+        reference objects passing the HLT test object's numerator AND the L1 seed
+        requirement, with the HLT test object's denominator."""
         seed_label = self._l1_seed_label()
         ref_vals = self.ak_arrays["ref"][self.cfg_plot.reference_field]
 
@@ -528,11 +560,16 @@ class TurnOnCollection:
             self.hists["ref"][L1SEED_KEY] = np.histogram(
                 self._flatten_array(ref_all, ak_to_np=True), bins=self.bins
             )
-        self.extra_curves[L1SEED_KEY] = {"label": f"L1 seed: {seed_label}", "style": {"marker": "s"}}
+        self.extra_curves[L1SEED_KEY] = {
+            "label": f"L1 seed: {seed_label}",
+            "style": {"marker": "s"},
+        }
 
         labels = {str(obj): obj.plot_label for obj, _ in self.test_objects}
         for key in self.l1_seeded_test_objects:
-            sel_hlt = ak.fill_none(self.numerators["test"][key] >= self.threshold, False)
+            sel_hlt = ak.fill_none(
+                self.numerators["test"][key] >= self.threshold, False
+            )
             numerator = self.numerators["ref"][key][sel_hlt & self.l1_seed_pass]
             self.hists[key + L1SEED_SUFFIX] = _hist(numerator)
             self.hists["ref"][key + L1SEED_SUFFIX] = self.hists["ref"][key]
@@ -542,8 +579,10 @@ class TurnOnCollection:
             }
 
     def curve_label(self, key: str) -> str:
-        """Legend label of a curve in `hists`: the object's plot label, or the label of an extra
-        (`l1_seed`) curve."""
+        """Legend label of a curve in `hists`.
+
+        The object's plot label, or the label of an extra (`l1_seed`) curve.
+        """
         if key in self.extra_curves:
             return self.extra_curves[key]["label"]
         return Object(key, version=self.cfg_plot.version_for_objects).plot_label
@@ -583,7 +622,10 @@ class TurnOnCollection:
                 self._skim_to_hists_dR_matched()
 
     def set_threshold(self, threshold):
-        """Re-histograms at a new threshold; loading, cuts and matching don't depend on it."""
+        """Re-histograms at a new threshold.
+
+        Loading, cuts and matching don't depend on it.
+        """
         self.threshold = threshold
         self._skim()
 
@@ -592,7 +634,9 @@ class TurnOnCollection:
         self._apply_cuts()
         if self.cfg_plot.l1_seed is not None:
             if not self.cfg_plot.matching or self.cfg_plot.iso_vs_eff_plot:
-                raise ValueError("l1_seed needs match_test_to_ref: True (and no iso_vs_efficiency)")
+                raise ValueError(
+                    "l1_seed needs match_test_to_ref: True (and no iso_vs_efficiency)"
+                )
             self._load_l1_seed_arrays()
             self._apply_l1_seed_cuts()
             self._match_l1_seed_to_ref()

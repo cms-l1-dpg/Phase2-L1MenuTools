@@ -49,9 +49,9 @@ def garwood_interval(n: int, cl: float = 0.68) -> tuple[float, float]:
 
     Returns the (lower, upper) bounds on the Poisson mean, e.g. (0, 1.83) for
     n = 0, (0.17, 3.29) for n = 1 and (43.0, 58.1) for n = 50 at 68% CL.
-    Multiply by the rate per event to get the interval on a rate. Unlike the binomial errors, it does not depend
-    on the number of events in the sample, which is the right limit for the small
-    counts of HLT paths on minimum bias.
+    Multiply by the rate per event to get the interval on a rate. Unlike the binomial
+    errors, it does not depend on the number of events in the sample, which is the right
+    limit for the small counts of HLT paths on minimum bias.
     """
     alpha = 1 - cl
     lo = 0.0 if n == 0 else float(chi2.ppf(alpha / 2, 2 * n)) / 2
@@ -61,7 +61,8 @@ def garwood_interval(n: int, cl: float = 0.68) -> tuple[float, float]:
 
 # Per-event records of trigger decisions (one bool field per path/seed). Their fields
 # keep their names apart from the record prefix, e.g. `HLT_IsoMu24_FromL1TkMuon` of
-# `HLT` -> `IsoMu24_FromL1TkMuon`. An object config can declare more with `bit_record: true`.
+# `HLT` -> `IsoMu24_FromL1TkMuon`. An object config can declare more with
+# `bit_record: true`.
 BIT_RECORDS = {"HLT", "L1"}
 
 
@@ -95,14 +96,17 @@ def _is_bit_record(obj: objects.Object) -> bool:
 
 
 def wrap_event_records(arr: ak.Array) -> ak.Array:
-    """Turns one record per event (MET, HT, trigger bits) into a length-1 list per event.
+    """Turns one record per event (MET, HT, trigger bits) into a length-1 list per
+    event.
 
     Same result as `ak.zip({f: [[k] for k in arr[f]] for f in arr.fields})`, which this
     replaces (that loop is slow for millions of events times tens of bit fields): the
-    types are those of the Python round trip, i.e. floats become float64, integers int64.
+    types are those of the Python round trip, i.e. floats become float64, integers
+    int64.
     """
     # Counts array (not the scalar 1), so that the lists are variable-length (`var`),
-    # as from the Python lists: the rate table tells sums from fixed-size arrays that way.
+    # as from the Python lists: the rate table tells sums from fixed-size arrays that
+    # way.
     counts = np.ones(len(arr), dtype=np.int64)
     out = {}
     for field in arr.fields:
@@ -135,6 +139,7 @@ class MenuTable:
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
         allow_missing_scalings: Optional[bool] = None,
+        truncated: bool = False,
     ):
         self.config: MenuConfig = MenuConfig(
             config,
@@ -143,21 +148,42 @@ class MenuTable:
             override_scalings_version=override_scalings_version,
             override_sample=override_sample,
             allow_missing_scalings=allow_missing_scalings,
+            truncated=truncated,
         )
 
-        print(f"INFO: Loading cached inputs from {constants.CACHE_DIR}/{self.config.version}")
+        print(
+            "INFO: Loading cached inputs from "
+            f"{constants.CACHE_DIR}/{self.config.version}"
+        )
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
-        print(f"INFO: Loading object configs from configs/{self.config.config_version_for_objects}/objects")
-        print(f"INFO: Loading scalings from outputs/{self.config.scalings_version}/object_performance/scalings")
+        print(
+            "INFO: Loading object configs from "
+            f"configs/{self.config.config_version_for_objects}/objects"
+        )
+        print(
+            "INFO: Loading scalings from "
+            f"outputs/{self.config.scalings_version}/object_performance/scalings"
+        )
+        if self.config.scalings_decimals is not None:
+            print(
+                f"INFO: Rounding scalings to {self.config.scalings_decimals} "
+                "decimals, as in the P2GT menus"
+            )
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
-            print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
+            print(
+                "INFO: Signal sample requested; table holds efficiencies, rate column "
+                "dropped"
+            )
         if self.config.allow_missing_scalings:
-            print("INFO: Objects without scalings get offline_pt = pt (allow_missing_scalings)")
+            print(
+                "INFO: Objects without scalings get offline_pt = pt "
+                "(allow_missing_scalings)"
+            )
         if CHUNK_SIZE > 0:
             print(f"INFO: Evaluating seeds in chunks of {CHUNK_SIZE} events")
 
-        self.arr_cache = {}
+        self.arr_cache: dict = {}
         self._obj_mask_cache: dict[str, ak.Array] = {}
         self.table: Optional[list[dict[str, Union[str, float]]]] = None
         self._trigger_seeds: Optional[dict] = None
@@ -243,6 +269,7 @@ class MenuTable:
                 obj,
                 scaling_version=self.config.scalings_version,
                 allow_missing=self.config.allow_missing_scalings,
+                decimals=self.config.scalings_decimals,
             )
 
         if "idx" not in arr.fields:
@@ -262,12 +289,15 @@ class MenuTable:
         return arr
 
     def _get_object_mask(self, object_name: str, arr: ak.Array) -> ak.Array:
-        """Object ID mask, memoised: it is requested once per leg but depends only on the object."""
+        """Object ID mask, memoised.
+
+        It is requested once per leg but depends only on the object.
+        """
         if object_name not in self._obj_mask_cache:
             obj = objects.Object(object_name, self.config.config_version_for_objects)
-            self._obj_mask_cache[object_name] = (
-                objects.compute_selection_mask_for_object_cuts(obj, arr)
-            )
+            self._obj_mask_cache[
+                object_name
+            ] = objects.compute_selection_mask_for_object_cuts(obj, arr)
         return self._obj_mask_cache[object_name]
 
     def get_legs_arrays_for_seed(
@@ -522,7 +552,14 @@ class MenuTable:
         value, prefix = (
             ("efficiency", "eff") if self.config.is_signal else ("rate", "rate")
         )
-        err_cols = ["effErrLo", "effErrHi", "rateErrLo", "rateErrHi", "rateLo68", "rateHi68"]
+        err_cols = [
+            "effErrLo",
+            "effErrHi",
+            "rateErrLo",
+            "rateErrHi",
+            "rateLo68",
+            "rateHi68",
+        ]
         df_table[f"+-{value}"] = (
             df_table[f"{prefix}ErrLo"] + df_table[f"{prefix}ErrHi"]
         ) / 2
@@ -569,7 +606,8 @@ class MenuTable:
         print(df_counts)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_pd.csv",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}_pd.csv",
         )
         df_counts.to_csv(out_file)
 
@@ -638,12 +676,15 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_path = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}_masks.parquet",
         )
         print(f"Dumping masks of seeds to `{out_path}`")
         # Masks are held as bool; drop the astype for an 8x smaller file.
-        dumped = {k: np.asarray(v).astype(np.int64) for k, v in self._seed_masks.items()}
-        ak.to_parquet(ak.zip(dumped), out_path, compression = "LZ4")
+        dumped = {
+            k: np.asarray(v).astype(np.int64) for k, v in self._seed_masks.items()
+        }
+        ak.to_parquet(ak.zip(dumped), out_path, compression="LZ4")
 
     def save_table(self) -> None:
         """Function that saves to file the table produced by `make_table`."""
@@ -654,7 +695,8 @@ class MenuTable:
         os.makedirs(self.config.table_outdir, exist_ok=True)
         out_file = os.path.join(
             self.config.table_outdir,
-            f"{self.config.table_fname}_{self.config.version}{self.config.scalings_suffix}{self.config.sample_suffix}.csv",
+            f"{self.config.table_fname}_{self.config.version}"
+            f"{self.config.scalings_suffix}{self.config.sample_suffix}.csv",
         )
         columns = list(self.table[0].keys())
         with open(out_file, "w") as f:

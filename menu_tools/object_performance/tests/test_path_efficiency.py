@@ -54,9 +54,18 @@ def _write_cache(tmp_path):
         }
     )
     ak.to_parquet(gen, d / f"{prefix}_GenPart.parquet")
-    ak.to_parquet(ak.Array({"GenMET_pt": GENMET, "GenMET_phi": [0.0] * len(GENMET)}), d / f"{prefix}_GenMET.parquet")
-    ak.to_parquet(ak.Array({"L1_pSeedA_final": SEED_A, "L1_pSeedB_final": SEED_B}), d / f"{prefix}_L1.parquet")
-    ak.to_parquet(ak.Array({"HLT_Path": PATH, "HLT_Other": [False] * len(PATH)}), d / f"{prefix}_HLT.parquet")
+    ak.to_parquet(
+        ak.Array({"GenMET_pt": GENMET, "GenMET_phi": [0.0] * len(GENMET)}),
+        d / f"{prefix}_GenMET.parquet",
+    )
+    ak.to_parquet(
+        ak.Array({"L1_pSeedA_final": SEED_A, "L1_pSeedB_final": SEED_B}),
+        d / f"{prefix}_L1.parquet",
+    )
+    ak.to_parquet(
+        ak.Array({"HLT_Path": PATH, "HLT_Other": [False] * len(PATH)}),
+        d / f"{prefix}_HLT.parquet",
+    )
 
 
 @pytest.fixture
@@ -70,7 +79,11 @@ def _cfg(rank=1, obj="GenPart", curves=("L1", "HLT", "L1_and_HLT", "HLT_given_L1
     ref = {"object": obj, "x_arg": "pt", "label": "Gen"}
     if obj == "GenPart":
         ref["cuts"] = {
-            "object": ["abs({pdgId}) == 13", "(({statusFlags}>>7)&1) == 1", "abs({eta}) < 2.4"]
+            "object": [
+                "abs({pdgId}) == 13",
+                "(({statusFlags}>>7)&1) == 1",
+                "abs({eta}) < 2.4",
+            ]
         }
     if rank != 1:
         ref["rank"] = rank
@@ -122,7 +135,9 @@ def test_subleading_reference(cache):
 
 
 def test_met_reference_and_outputs(cache, tmp_path, monkeypatch):
-    coll = PathEfficiencyCollection(_cfg(obj="GenMET", curves=("L1", "L1_and_HLT")), "metTest")
+    coll = PathEfficiencyCollection(
+        _cfg(obj="GenMET", curves=("L1", "L1_and_HLT")), "metTest"
+    )
     coll.create_hists()
     np.testing.assert_array_equal(coll.x, GENMET)
     # [0,25): ev0 (A), ev4 (A) -> 2/2; [25,50): ev1 (B) -> 1/1; [50,100): ev2, ev3 (A), ev5 -> 1/3

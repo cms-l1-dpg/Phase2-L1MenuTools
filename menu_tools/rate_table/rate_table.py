@@ -5,7 +5,12 @@ import os
 import yaml
 
 from menu_tools.rate_table.menu_table import MenuTable
-from menu_tools.utils.versions import add_version_argument, get_versions, run_per_version
+from menu_tools.utils.versions import (
+    add_version_argument,
+    get_versions,
+    parse_args,
+    run_per_version,
+)
 
 
 def _extract_version(path: str) -> str:
@@ -20,7 +25,8 @@ def _extract_version(path: str) -> str:
 
 
 def main():
-    # ensure log printouts are flushed per line for easier monitoring when output is piped, e.g via tee
+    # ensure log printouts are flushed per line for easier monitoring when output is
+    # piped, e.g via tee
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(line_buffering=True)
 
@@ -60,7 +66,16 @@ def main():
             "`allow_missing_scalings: true` in the config."
         ),
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--truncated",
+        action="store_true",
+        help=(
+            "Round the scalings to two decimals, as in the P2GT emulator menus, "
+            "so that both apply identical thresholds. Output filenames get a "
+            "`_truncated` suffix."
+        ),
+    )
+    args = parse_args(parser)
 
     with open(args.config_file, "r") as f:
         menu_config_dict = yaml.safe_load(f)
@@ -69,12 +84,15 @@ def main():
 
     def run(version):
         menu_table = MenuTable(
-            copy.deepcopy(menu_config_dict),  # each version starts from the config as read
+            copy.deepcopy(
+                menu_config_dict
+            ),  # each version starts from the config as read
             config_version=config_version,
             override_version=version,
             override_scalings_version=args.scalings,
             override_sample=args.signal,
             allow_missing_scalings=args.allow_missing_scalings,
+            truncated=args.truncated,
         )
         menu_table.make_table()
         menu_table.print_table()

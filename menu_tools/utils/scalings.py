@@ -3,6 +3,7 @@ import warnings
 from typing import Optional
 
 import awkward as ak
+import numpy as np
 import yaml
 
 from menu_tools.utils.objects import Object
@@ -17,12 +18,18 @@ class MissingScalingsError(UserWarning):
 _warned_missing: set = set()
 
 
-def load_scaling_params(obj: Object, eta_range: str, scaling_version: Optional[str] = None) -> tuple[float, float]:
+def load_scaling_params(
+    obj: Object,
+    eta_range: str,
+    scaling_version: Optional[str] = None,
+    decimals: Optional[int] = None,
+) -> tuple[float, float]:
     """Retrieves scalings for object+id from `outputs`
 
     obj: Object for which to retrive scaling parameters
     eta_range: specifier of the range for which scalings are to be retrieved
     scaling_version: version to load scalings from (overrides obj.version)
+    decimals: round the parameters to this many decimals, as np.round
 
     Returns:
         scaling_params: parameters computed in object_performance
@@ -47,7 +54,12 @@ def load_scaling_params(obj: Object, eta_range: str, scaling_version: Optional[s
             lineno=26,
         )
         raise MissingScalingsError(fpath)
-    return scaling_params["slope"], scaling_params["offset"]
+    slope = float(scaling_params["slope"])
+    offset = float(scaling_params["offset"])
+    if decimals is not None:
+        slope = float(np.round(slope, decimals))
+        offset = float(np.round(offset, decimals))
+    return slope, offset
 
 
 def has_pt_branch(arr: ak.Array, obj_name: str) -> bool:
@@ -75,16 +87,20 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
 
 
 def _scaling_params_or_identity(
-    obj: Object, eta_range: str, scaling_version: Optional[str], allow_missing: bool
+    obj: Object,
+    eta_range: str,
+    scaling_version: Optional[str],
+    allow_missing: bool,
+    decimals: Optional[int] = None,
 ) -> tuple[float, float]:
     """`load_scaling_params`, or (1, 0) with a warning (once per object) if the file
     is missing and `allow_missing` is set."""
     if not allow_missing:
-        return load_scaling_params(obj, eta_range, scaling_version)
+        return load_scaling_params(obj, eta_range, scaling_version, decimals)
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            return load_scaling_params(obj, eta_range, scaling_version)
+            return load_scaling_params(obj, eta_range, scaling_version, decimals)
     except MissingScalingsError as err:
         key = (str(obj), scaling_version)
         if key not in _warned_missing:
@@ -102,6 +118,7 @@ def add_offline_pt(
     obj: Object,
     scaling_version: Optional[str] = None,
     allow_missing: bool = False,
+    decimals: Optional[int] = None,
 ) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
@@ -120,7 +137,7 @@ def add_offline_pt(
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
         slope, offset = _scaling_params_or_identity(
-            obj, "inclusive", scaling_version, allow_missing
+            obj, "inclusive", scaling_version, allow_missing, decimals
         )
         new_pt = new_pt + (pt_orig * slope + offset)
     else:
@@ -130,7 +147,7 @@ def add_offline_pt(
             if eta_range == "inclusive":
                 continue
             slope, offset = _scaling_params_or_identity(
-                obj, eta_range, scaling_version, allow_missing
+                obj, eta_range, scaling_version, allow_missing, decimals
             )
             eta_mask = (abs(arr.eta) >= eta_min_max[0]) & (
                 abs(arr.eta) < eta_min_max[1]

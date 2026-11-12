@@ -98,7 +98,11 @@ def _cfg(test_objects, matching_and_threshold=True):
 )
 def test_hlt_object_turnon(cache, obj_key, threshold, n_num):
     coll = TurnOnCollection(
-        _cfg({obj_key: "pt"}), threshold, "test", config_version="V50nano", override_version=VERSION
+        _cfg({obj_key: "pt"}),
+        threshold,
+        "test",
+        config_version="V50nano",
+        override_version=VERSION,
     )
     coll.create_hists()
     test_obj = str(coll.test_objects[0][0])
@@ -136,7 +140,9 @@ def test_hlt_scaling_thresholds():
     assert central._get_scaling_thresholds(cfg, l1) == [1, 2]
     # HLT objects fall back to the group thresholds if no HLT<group> entry exists
     cfg_jet = {"test_objects": {"hltAK4PuppiJet:default": "pt"}}
-    assert central._get_scaling_thresholds(cfg_jet, Object("hltAK4PuppiJet:default", "V50nano")) == [3]
+    assert central._get_scaling_thresholds(
+        cfg_jet, Object("hltAK4PuppiJet:default", "V50nano")
+    ) == [3]
 
 
 def test_cuts_with_several_fields():
@@ -157,7 +163,9 @@ def test_cuts_with_several_fields():
             "dPhiIn": [[0.0, 0.0]],
         }
     )
-    sel = compute_selection_mask_for_object_cuts(Object("hltElectron:WPTight", "V50nano"), arr)
+    sel = compute_selection_mask_for_object_cuts(
+        Object("hltElectron:WPTight", "V50nano"), arr
+    )
     # ecalIso < 9 + 0.02 * 100 = 11
     assert ak.to_list(sel) == [[True, False]]
     assert np.all(ak.to_numpy(ak.flatten(sel)) == np.array([True, False]))
