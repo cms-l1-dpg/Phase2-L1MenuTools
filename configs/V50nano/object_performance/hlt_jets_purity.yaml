@@ -1,13 +1,13 @@
 # Purity and fake rates of HLT AK4 PUPPI jets vs the L1 SC4 PUPPI jet (`purity:` block, see
 # docs/object-performance.md#purity-fake-rate-and-multiplicity). Run on an L1+HLT cache.
-# hltAK4PuppiJet pt is uncorrected (~0.78 x gen pt): thresholds are on the uncorrected pt.
+# HLT jets: hltAK4PuppiJetCorr (HLT JEC applied, menu_tools/caching/make_hlt_jets_corr.py): thresholds on the corrected pt.
 # Fake (pileup) jets: no GenJet (pT > 10 GeV, hard-scatter particles only) within match_dR.
 
 HLTJetsPurity:
   sample: TT
   version: V50nano
   test_objects:
-    hltAK4PuppiJet:extended: "pt"
+    hltAK4PuppiJetCorr:extended: "pt"
     L1puppiJetSC4:default: "pt"
   purity:
     mode: purity
@@ -26,7 +26,7 @@ HLTJetsFakeRate:
   sample: TT
   version: V50nano
   test_objects:
-    hltAK4PuppiJet:extended: "pt"
+    hltAK4PuppiJetCorr:extended: "pt"
     L1puppiJetSC4:default: "pt"
   purity:
     mode: fake_rate
@@ -41,7 +41,7 @@ HLTJetsMultiplicityMinBias:
   sample: MinBias
   version: V50nano
   test_objects:
-    hltAK4PuppiJet:extended: "pt"
+    hltAK4PuppiJetCorr:extended: "pt"
     L1puppiJetSC4:default: "pt"
   purity:
     mode: multiplicity

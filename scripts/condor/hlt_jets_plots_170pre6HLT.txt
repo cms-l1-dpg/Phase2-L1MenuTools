@@ -1,0 +1,8 @@
+jets_matching object_performance configs/V50nano/object_performance/hlt_jets_matching.yaml --version V50nano_170pre6HLT
+jets_trigger object_performance configs/V50nano/object_performance/hlt_jets_trigger.yaml --version V50nano_170pre6HLT
+jets_trigger_wMatching object_performance configs/V50nano/object_performance/hlt_jets_trigger_wMatching.yaml --version V50nano_170pre6HLT
+jets_eta object_performance configs/V50nano/object_performance/hlt_jets_eta.yaml --version V50nano_170pre6HLT
+jets_resolution object_performance configs/V50nano/object_performance/hlt_jets_resolution.yaml --version V50nano_170pre6HLT
+jets_purity object_performance configs/V50nano/object_performance/hlt_jets_purity.yaml --version V50nano_170pre6HLT
+ht_trigger object_performance configs/V50nano/object_performance/hlt_ht_trigger.yaml --version V50nano_170pre6HLT
+ht_resolution object_performance configs/V50nano/object_performance/hlt_ht_resolution.yaml --version V50nano_170pre6HLT

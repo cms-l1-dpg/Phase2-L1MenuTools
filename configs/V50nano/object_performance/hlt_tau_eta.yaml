@@ -1,0 +1,54 @@
+# HLT HPS taus vs L1 NN PUPPI tau: efficiency vs gen visible-tau eta (HH -> bbtautau).
+# hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
+
+HLTTauMatching_Eta_Pt40ToInf:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "eta"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{pt} > 40"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:default: "eta"
+    hltHpsPFTau:MediumDeepTau: "eta"
+    hltHpsPFTau:LooseDeepTau: "eta"
+    L1nnPuppiTau:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (gen vis. $p_T$ > 40 GeV)"
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2
+
+HLTTauTrigger_Eta_Pt50ToInf_wMatching:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "eta"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "{pt} > 50"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:MediumDeepTau: "eta"
+    hltHpsPFTau:LooseDeepTau: "eta"
+    L1nnPuppiTau:default: "eta"
+  thresholds: [35]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen vis. $p_T$ > 50 GeV)"
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2

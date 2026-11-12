@@ -1,0 +1,101 @@
+# HLT AK4 PUPPI jets (JEC applied: hltAK4PuppiJetCorr) vs L1 seeded-cone PUPPI jets: efficiency vs gen eta (ttbar).
+# |eta| < 5 objects (hltAK4PuppiJetCorr:extended, L1puppiExtJetSC4). Trigger blocks: threshold on the test pT (threshold_field).
+
+HLTJetMatching_Eta_Pt40To100:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 40"
+        - "{pt} < 100"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "eta"
+    L1puppiExtJetSC4:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (gen $p_T$ 40-100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
+HLTJetMatching_Eta_Pt100ToInf:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "eta"
+    L1puppiExtJetSC4:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (gen $p_T$ > 100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
+HLTJetTrigger_Eta_Pt200ToInf_wMatching:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 200"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "eta"
+    L1puppiExtJetSC4:default: "eta"
+  thresholds: [100]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen $p_T$ > 200 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
+HLTJetTrigger_Eta_Pt100ToInf_wMatching:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJetCorr:extended: "eta"
+    L1puppiExtJetSC4:default: "eta"
+  thresholds: [30, 50]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen $p_T$ > 100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25

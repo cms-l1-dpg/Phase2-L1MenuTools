@@ -1,0 +1,5 @@
+jec_DYLL_M50 python3 menu_tools/caching/make_hlt_jets_corr.py --version V50nano_170pre6HLT --sample DYLL_M50
+jec_TT python3 menu_tools/caching/make_hlt_jets_corr.py --version V50nano_170pre6HLT --sample TT
+jec_HHTo2B2Tau python3 menu_tools/caching/make_hlt_jets_corr.py --version V50nano_170pre6HLT --sample HHTo2B2Tau
+jec_HHTo4B python3 menu_tools/caching/make_hlt_jets_corr.py --version V50nano_170pre6HLT --sample HHTo4B
+jec_MinBias python3 menu_tools/caching/make_hlt_jets_corr.py --version V50nano_170pre6HLT --sample MinBias

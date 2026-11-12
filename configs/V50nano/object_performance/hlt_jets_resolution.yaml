@@ -1,4 +1,4 @@
-# HLT AK4 PUPPI jets (hltAK4PuppiJet) vs the L1 seeded-cone PUPPI jets, ttbar.
+# HLT AK4 PUPPI jets with the HLT JEC (hltAK4PuppiJetCorr, menu_tools/caching/make_hlt_jets_corr.py) vs the L1 seeded-cone PUPPI jets, ttbar.
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLTJetResolutionBarrel:
@@ -15,6 +15,7 @@ HLTJetResolutionBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    hltAK4PuppiJetCorr:default: "pt"
     hltAK4PuppiJet:default: "pt"
     L1puppiJetSC4:default: "pt"
   resolution:
@@ -39,6 +40,7 @@ HLTJetResolutionEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
+    hltAK4PuppiJetCorr:default: "pt"
     hltAK4PuppiJet:default: "pt"
     L1puppiJetSC4:default: "pt"
   resolution:
@@ -63,6 +65,7 @@ HLTJetResolutionForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
+    hltAK4PuppiJetCorr:extended: "pt"
     hltAK4PuppiJet:extended: "pt"
     L1puppiExtJetSC4:default: "pt"
   resolution:
