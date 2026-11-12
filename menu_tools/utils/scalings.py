@@ -8,6 +8,15 @@ import yaml
 from menu_tools.utils.objects import Object
 
 
+class MissingScalingsError(UserWarning):
+    """No scaling file for an object/eta range. A `UserWarning` subclass, as the bare
+    `UserWarning` raised before, so callers catching that keep working."""
+
+
+# Objects for which the missing-scalings fallback was already reported (warn once).
+_warned_missing: set = set()
+
+
 def load_scaling_params(
     obj: Object, eta_range: str, scaling_version: Optional[str] = None
 ) -> tuple[float, float]:
@@ -39,8 +48,15 @@ def load_scaling_params(
             filename="utils/scalings.py",
             lineno=26,
         )
-        raise UserWarning
+        raise MissingScalingsError(fpath)
     return scaling_params["slope"], scaling_params["offset"]
+
+
+def has_pt_branch(arr: ak.Array, obj_name: str) -> bool:
+    """True if `get_pt_branch` finds a pt-like field (False e.g. for trigger bits)."""
+    return any(f in arr.fields for f in ("pt", "et", "")) or (
+        "TrackHT:MHT" in obj_name or "TrackHT:HT" in obj_name
+    )
 
 
 def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
@@ -60,19 +76,54 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
     return pt_orig
 
 
+def _scaling_params_or_identity(
+    obj: Object, eta_range: str, scaling_version: Optional[str], allow_missing: bool
+) -> tuple[float, float]:
+    """`load_scaling_params`, or (1, 0) with a warning (once per object) if the file
+    is missing and `allow_missing` is set."""
+    if not allow_missing:
+        return load_scaling_params(obj, eta_range, scaling_version)
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            return load_scaling_params(obj, eta_range, scaling_version)
+    except MissingScalingsError as err:
+        key = (str(obj), scaling_version)
+        if key not in _warned_missing:
+            _warned_missing.add(key)
+            warnings.warn(
+                f"No scalings for {obj} ({err}): using offline_pt = pt "
+                "(allow_missing_scalings is set)",
+                UserWarning,
+            )
+        return 1.0, 0.0
+
+
 def add_offline_pt(
-    arr: ak.Array, obj: Object, scaling_version: Optional[str] = None
+    arr: ak.Array,
+    obj: Object,
+    scaling_version: Optional[str] = None,
+    allow_missing: bool = False,
 ) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
+
+    allow_missing: if a scaling file is missing, use offline_pt = pt for that
+    object/eta range (with one warning per object) instead of failing.
+    An object config with `apply_scalings: false` always gets offline_pt = pt,
+    e.g. for HLT objects, whose pt is already offline-like.
     """
     pt_orig = get_pt_branch(arr, str(obj))
     new_pt = ak.zeros_like(pt_orig)
 
-    if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
+    if not obj._object_params.get("apply_scalings", True):
+        new_pt = pt_orig
+    elif len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
-        slope, offset = load_scaling_params(obj, "inclusive", scaling_version)
+        slope, offset = _scaling_params_or_identity(
+            obj, "inclusive", scaling_version, allow_missing
+        )
         new_pt = new_pt + (pt_orig * slope + offset)
     else:
         # if multiple eta ranges are found, the "inclusive" range is skipped
@@ -80,7 +131,9 @@ def add_offline_pt(
         for eta_range, eta_min_max in obj.eta_ranges.items():
             if eta_range == "inclusive":
                 continue
-            slope, offset = load_scaling_params(obj, eta_range, scaling_version)
+            slope, offset = _scaling_params_or_identity(
+                obj, eta_range, scaling_version, allow_missing
+            )
             eta_mask = (abs(arr.eta) >= eta_min_max[0]) & (
                 abs(arr.eta) < eta_min_max[1]
             )

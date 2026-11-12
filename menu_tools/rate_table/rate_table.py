@@ -56,6 +56,15 @@ def main():
         ),
         default=None,
     )
+    parser.add_argument(
+        "--allow-missing-scalings",
+        action="store_true",
+        help=(
+            "Use offline_pt = pt (one warning per object) for objects without a "
+            "scaling file instead of failing, e.g. for HLT objects. Same as "
+            "`allow_missing_scalings: true` in the config."
+        ),
+    )
     args = parser.parse_args()
 
     with open(args.config_file, "r") as f:
@@ -72,6 +81,7 @@ def main():
             override_version=version,
             override_scalings_version=args.scalings,
             override_sample=args.signal,
+            allow_missing_scalings=args.allow_missing_scalings,
         )
         menu_table.make_table()
         menu_table.print_table()

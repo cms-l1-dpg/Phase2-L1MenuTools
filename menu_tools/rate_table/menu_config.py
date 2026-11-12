@@ -10,12 +10,14 @@ class MenuConfig:
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
+        allow_missing_scalings: Optional[bool] = None,
     ) -> None:
         self._config = config
         self._config_version = config_version
         self._override_version = override_version
         self._override_scalings_version = override_scalings_version
         self._override_sample = override_sample
+        self._allow_missing_scalings = allow_missing_scalings
 
     @property
     def sample(self) -> str:
@@ -75,6 +77,15 @@ class MenuConfig:
         if self._override_scalings_version:
             return f"_scalings_{self._override_scalings_version}"
         return ""
+
+    @property
+    def allow_missing_scalings(self) -> bool:
+        """Use offline_pt = pt (one warning per object) for objects without a
+        scaling file instead of failing. Set by `--allow-missing-scalings` or
+        `allow_missing_scalings: true` in the config; default False."""
+        if self._allow_missing_scalings:
+            return True
+        return bool(self._config.get("allow_missing_scalings", False))
 
     @property
     def table_outdir(self) -> str:
