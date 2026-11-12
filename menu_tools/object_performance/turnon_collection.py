@@ -442,16 +442,18 @@ class TurnOnCollection:
 
     @staticmethod
     def _l1_threshold_mask(obj: Object, arr, threshold):
-        """L1 objects with pT >= threshold. A {region: threshold} dict uses the eta ranges of
-        the L1 object's config (|eta| in [low, high)); objects outside the listed regions fail."""
+        """L1 objects with pT > threshold (strictly, as the P2GT emulator: hwPt > floor(thr / LSB),
+        identical to pt > thr for pT in units of the LSB). A {region: threshold} dict uses the
+        eta ranges of the L1 object's config (|eta| in [low, high)); objects outside the listed
+        regions fail."""
         pt = arr["pt"]
         if not isinstance(threshold, dict):
-            return pt >= float(threshold)
+            return pt > float(threshold)
         abs_eta = abs(arr["eta"])
         passed = ak.zeros_like(pt, dtype=bool)
         for region, thr in threshold.items():
             low, high = obj.eta_ranges[region]
-            passed = passed | ((abs_eta >= low) & (abs_eta < high) & (pt >= float(thr)))
+            passed = passed | ((abs_eta >= low) & (abs_eta < high) & (pt > float(thr)))
         return passed
 
     def _load_l1_seed_arrays(self) -> None:
@@ -503,7 +505,7 @@ class TurnOnCollection:
                 thr_str = " / ".join(f"{v:g}" for v in thr.values()) + " (" + "/".join(thr) + ")"
             else:
                 thr_str = f"{float(thr):g}"
-            parts.append(f"{obj.plot_label} $\\geq$ {thr_str} GeV")
+            parts.append(f"{obj.plot_label} > {thr_str} GeV")
         return " OR ".join(parts)
 
     def _skim_l1_seed_hists(self, ref_all) -> None:
@@ -526,7 +528,7 @@ class TurnOnCollection:
             self.hists["ref"][L1SEED_KEY] = np.histogram(
                 self._flatten_array(ref_all, ak_to_np=True), bins=self.bins
             )
-        self.extra_curves[L1SEED_KEY] = {"label": seed_label, "style": {"marker": "s"}}
+        self.extra_curves[L1SEED_KEY] = {"label": f"L1 seed: {seed_label}", "style": {"marker": "s"}}
 
         labels = {str(obj): obj.plot_label for obj, _ in self.test_objects}
         for key in self.l1_seeded_test_objects:
@@ -535,7 +537,7 @@ class TurnOnCollection:
             self.hists[key + L1SEED_SUFFIX] = _hist(numerator)
             self.hists["ref"][key + L1SEED_SUFFIX] = self.hists["ref"][key]
             self.extra_curves[key + L1SEED_SUFFIX] = {
-                "label": f"{labels[key]} $\\wedge$ {seed_label}",
+                "label": f"{labels[key]} $\\wedge$ L1 seed",
                 "style": {"marker": "^", "markerfacecolor": "none", "markersize": 10},
             }
 
