@@ -1,0 +1,162 @@
+# One seed per HLT path, from the per-event bit record `HLT` of the L1+HLT nanos
+# (CMSSW_17_0_0_pre6 re-emulation, process HLTX; objects in configs/V50nano/objects/hlt_bits.yaml).
+# Only the HLTX paths: no `_pHLT` copies (old HLT process), no HLTriggerFinalPath / *_step.
+# Also left out: HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepCSV_2p4 and
+# HLT_PFHT200PT30_..._TriplePFPuppiBTagDeepCSV_2p4, which have no `_pHLT` suffix but come from the old
+# HLT process only (not in the CMSSW_17_0_0_pre6 HLT:75e33 menu, so not re-run in HLTX).
+# Generated from the branch list of the nanos; rates come with counts and Garwood 68% intervals.
+HLT_AK4PFPuppiJet520:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.AK4PFPuppiJet520
+HLT_PFPuppiHT1070:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.PFPuppiHT1070
+HLT_PFPuppiMETTypeOne140_PFPuppiMHT140:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.PFPuppiMETTypeOne140_PFPuppiMHT140
+HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4
+HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4
+HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4
+HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4
+HLT_Mu50_FromL1TkMuon:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Mu50_FromL1TkMuon
+HLT_IsoMu24_FromL1TkMuon:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.IsoMu24_FromL1TkMuon
+HLT_Mu37_Mu27_FromL1TkMuon:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Mu37_Mu27_FromL1TkMuon
+HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon
+HLT_TriMu_10_5_5_DZ_FromL1TkMuon:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.TriMu_10_5_5_DZ_FromL1TkMuon
+HLT_Ele32_WPTight_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele32_WPTight_Unseeded
+HLT_Ele26_WP70_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele26_WP70_Unseeded
+HLT_Photon108EB_TightID_TightIso_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Photon108EB_TightID_TightIso_Unseeded
+HLT_Photon187_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Photon187_Unseeded
+HLT_DoubleEle25_CaloIdL_PMS2_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleEle25_CaloIdL_PMS2_Unseeded
+HLT_Diphoton30_23_IsoCaloId_Unseeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Diphoton30_23_IsoCaloId_Unseeded
+HLT_Ele32_WPTight_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele32_WPTight_L1Seeded
+HLT_Ele115_NonIso_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele115_NonIso_L1Seeded
+HLT_Ele26_WP70_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele26_WP70_L1Seeded
+HLT_Photon108EB_TightID_TightIso_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Photon108EB_TightID_TightIso_L1Seeded
+HLT_Photon187_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Photon187_L1Seeded
+HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleEle25_CaloIdL_PMS2_L1Seeded
+HLT_DoubleEle23_12_Iso_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleEle23_12_Iso_L1Seeded
+HLT_Diphoton30_23_IsoCaloId_L1Seeded:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Diphoton30_23_IsoCaloId_L1Seeded
+HLT_DoubleMediumChargedIsoPFTauHPS40_eta2p1:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleMediumChargedIsoPFTauHPS40_eta2p1
+HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleMediumDeepTauPFTauHPS35_eta2p1
+HLT_DoubleMediumPFPuppiParTTauh30_eta2p1:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.DoubleMediumPFPuppiParTTauh30_eta2p1
+HLT_IsoMu20_eta2p1_LooseDeepTauPFTauHPS27_eta2p1_CrossL1:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.IsoMu20_eta2p1_LooseDeepTauPFTauHPS27_eta2p1_CrossL1
+HLT_Ele30_WPTight_L1Seeded_LooseDeepTauPFTauHPS30_eta2p1_CrossL1:
+  cross_masks: []
+  leg1:
+    obj: HLT:default
+    threshold_cut: leg1.Ele30_WPTight_L1Seeded_LooseDeepTauPFTauHPS30_eta2p1_CrossL1

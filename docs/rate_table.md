@@ -23,6 +23,60 @@ The scalings for the objects in the menu table are applied automatically
 and assume that the have been produced by running `object_performance`, which
 saves them to `outputs/<version>/object_performance/scalings/`.
 
+### Output columns
+
+The CSV holds, per seed and for the OR of all seeds (`Total`): `npass` (number of
+passing events), `efficiency` with 68% Clopper-Pearson errors `effErrLo`/`effErrHi`,
+and for minimum bias `rate` [kHz] with `rateErrLo`/`rateErrHi` (the same binomial
+errors) and `rateLo68`/`rateHi68`, the bounds of the 68% Garwood (Poisson) interval
+on the rate. Quote small rates (HLT paths) with `npass` and the Garwood interval:
+one Spring24 minimum-bias event of 2M is 15.5 Hz. The last row gives the number of
+events.
+
+### Scalings, HLT objects and trigger bits
+
+Objects without a pt field (trigger-bit records, pile-up info) get no scalings.
+For objects with a pt but no scaling file (e.g. HLT objects), `--allow-missing-scalings`
+or `allow_missing_scalings: true` in the config sets `offline_pt = pt` with one warning
+per object, instead of failing. An object config with `apply_scalings: false` always
+uses `offline_pt = pt`.
+
+The L1+HLT nanos (`V50nano_170pre6HLT`) carry the per-event records `HLT`
+(`HLT_<path>` decisions) and `L1` (`L1_p*_final`, P2GT emulator seeds), defined in
+`configs/V50nano/objects/hlt_bits.yaml`. Their fields lose the record prefix and are
+used as legs, alone, ORed, or ANDed with other legs:
+
+```yaml
+HLT_IsoMu24_FromL1TkMuon:
+  cross_masks: []
+  leg1: {obj: "HLT:default", threshold_cut: "leg1.IsoMu24_FromL1TkMuon"}
+L1_SingleEle_OR:
+  cross_masks: []
+  leg1: {obj: "L1:default", threshold_cut: "(leg1.pSingleEGEle51_final | leg1.pSingleTkEle36_final)"}
+L1xHLT_IsoMu24:   # L1 seed AND HLT path
+  cross_masks: []
+  leg1: {obj: "HLT:default", threshold_cut: "leg1.IsoMu24_FromL1TkMuon"}
+  leg2: {obj: "L1:default", threshold_cut: "leg2.pSingleTkMuon22_final"}
+```
+
+`configs/V50nano/rate_table/hlt_bits_cfg.yml` and `l1_bits_cfg.yml` are tables with one
+seed per HLT path / per GT seed (`Total` = HLT / L1 total OR):
+
+    rate_table configs/V50nano/rate_table/hlt_bits_cfg.yml --version V50nano_170pre6HLT
+
+### HLT paths: L1, HLT and L1·HLT
+
+`hlt_paths` (`python3 -m menu_tools.rate_table.hlt_paths`) gives per HLT path the
+efficiency (signal) or rate (minimum bias, with Garwood intervals) of its L1 seed (OR of
+the seed bits), of the path, and of both, using the path -> seed mapping
+`configs/V50nano/rate_table/hlt_paths.yml`:
+
+    hlt_paths configs/V50nano/rate_table/hlt_paths.yml --version V50nano_170pre6HLT \
+        --sample MinBias DYLL_M50 TT
+
+The CSV goes to `outputs/<version>/rate_tables/hlt_paths_<version>_<sample>.csv`;
+`n_hlt_not_l1` (path fired without its seed) checks the mapping and should be 0.
+
 ## LaTeX menu tables
 
 `rate_table_tex` turns the CSVs written by `rate_table` into the LaTeX menu
