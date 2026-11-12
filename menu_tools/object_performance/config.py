@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from menu_tools.object_performance.reference_cleaning import parse_reference_cleaning
 from menu_tools.utils.config import BasePlotConfig
 from menu_tools.utils.objects import Object
 
@@ -47,6 +48,13 @@ class PerformancePlotConfig(BasePlotConfig):
             return self._cfg["reference_object"]["trafo"]
         except KeyError:
             return None
+
+    @property
+    def reference_cleaning(self) -> list[dict[str, Any]]:
+        """Normalised `reference_cleaning` blocks (see reference_cleaning.py), or []."""
+        return parse_reference_cleaning(
+            self._cfg.get("reference_cleaning"), self.plot_name
+        )
 
     @property
     def reference_label(self) -> str:
