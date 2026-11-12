@@ -19,7 +19,7 @@ from menu_tools.utils import constants
 from menu_tools.utils import objects
 from menu_tools.utils import scalings
 
-from scipy.stats import beta
+from scipy.stats import beta, chi2
 
 # Events per chunk when evaluating a seed. 0 restores whole-file behaviour.
 CHUNK_SIZE = int(os.environ.get("MENU_TABLE_CHUNK", "20000"))
@@ -44,6 +44,78 @@ def get_eff_err(npass: int, ntot: int, cl: float = 0.68) -> tuple[float, float, 
     return (err_lo + err_hi) / 2, err_lo, err_hi
 
 
+def garwood_interval(n: int, cl: float = 0.68) -> tuple[float, float]:
+    """Garwood (exact Poisson) central interval on a count `n`.
+
+    Returns the (lower, upper) bounds on the Poisson mean, e.g. (0, 1.83) for
+    n = 0, (0.17, 3.29) for n = 1 and (43.0, 58.1) for n = 50 at 68% CL.
+    Multiply by the rate per event to get the interval on a rate. Unlike the binomial errors, it does not depend
+    on the number of events in the sample, which is the right limit for the small
+    counts of HLT paths on minimum bias.
+    """
+    alpha = 1 - cl
+    lo = 0.0 if n == 0 else float(chi2.ppf(alpha / 2, 2 * n)) / 2
+    hi = float(chi2.ppf(1 - alpha / 2, 2 * (n + 1))) / 2
+    return lo, hi
+
+
+# Per-event records of trigger decisions (one bool field per path/seed). Their fields
+# keep their names apart from the record prefix, e.g. `HLT_IsoMu24_FromL1TkMuon` of
+# `HLT` -> `IsoMu24_FromL1TkMuon`. An object config can declare more with `bit_record: true`.
+BIT_RECORDS = {"HLT", "L1"}
+
+
+def transform_key(raw_key: str, nano_obj_name: str, bit_record: bool = False) -> str:
+    """Maps the cached field `<object_name>_<field>` to `<field>`.
+
+    - `<object_name>_` is stripped for any object (`L1gmtTkMuon_pt`, `hltMuon_pt`,
+      `HLT_IsoMu24_FromL1TkMuon`, `L1_pSingleTkMuon22_final`) and the case is kept;
+    - other `L1*` keys are kept as they are;
+    - otherwise the legacy (pre-nano) rule: strip `<object_name>`, lower case.
+    Any key containing `qual` becomes `quality` (the L1 hardware quality word),
+    except in bit records, where it would be part of a path name.
+    """
+    prefix = nano_obj_name + "_"
+    if raw_key.startswith(prefix):
+        key = raw_key[len(prefix) :]
+    elif raw_key.startswith("L1"):
+        key = raw_key
+    else:
+        key = raw_key.removeprefix(nano_obj_name).lower()
+
+    if "qual" in key and not bit_record:
+        return "quality"
+    return key
+
+
+def _is_bit_record(obj: objects.Object) -> bool:
+    if obj.nano_obj_name in BIT_RECORDS:
+        return True
+    return bool(obj._get_object_default_params().get("bit_record", False))
+
+
+def wrap_event_records(arr: ak.Array) -> ak.Array:
+    """Turns one record per event (MET, HT, trigger bits) into a length-1 list per event.
+
+    Same result as `ak.zip({f: [[k] for k in arr[f]] for f in arr.fields})`, which this
+    replaces (that loop is slow for millions of events times tens of bit fields): the
+    types are those of the Python round trip, i.e. floats become float64, integers int64.
+    """
+    # Counts array (not the scalar 1), so that the lists are variable-length (`var`),
+    # as from the Python lists: the rate table tells sums from fixed-size arrays that way.
+    counts = np.ones(len(arr), dtype=np.int64)
+    out = {}
+    for field in arr.fields:
+        col = arr[field]
+        kind = ak.to_numpy(col).dtype.kind
+        if kind == "f":
+            col = ak.values_astype(col, np.float64)
+        elif kind in "iu":
+            col = ak.values_astype(col, np.int64)
+        out[field] = ak.unflatten(col, counts)
+    return ak.zip(out)
+
+
 vector.register_awkward()
 
 
@@ -62,6 +134,7 @@ class MenuTable:
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
+        allow_missing_scalings: Optional[bool] = None,
     ):
         self.config: MenuConfig = MenuConfig(
             config,
@@ -69,6 +142,7 @@ class MenuTable:
             override_version=override_version,
             override_scalings_version=override_scalings_version,
             override_sample=override_sample,
+            allow_missing_scalings=allow_missing_scalings,
         )
 
         print(f"INFO: Loading cached inputs from {constants.CACHE_DIR}/{self.config.version}")
@@ -78,6 +152,8 @@ class MenuTable:
         print(f"INFO: Using sample {self.config.sample}")
         if self.config.is_signal:
             print("INFO: Signal sample requested; table holds efficiencies, rate column dropped")
+        if self.config.allow_missing_scalings:
+            print("INFO: Objects without scalings get offline_pt = pt (allow_missing_scalings)")
         if CHUNK_SIZE > 0:
             print(f"INFO: Evaluating seeds in chunks of {CHUNK_SIZE} events")
 
@@ -110,20 +186,13 @@ class MenuTable:
         return menu_seeds
 
     def _transform_key(self, raw_key: str, obj: objects.Object) -> str:
-        """Maps <object_name><obj_field> to <object_field>.
+        """Maps <object_name>_<obj_field> to <object_field> (see `transform_key`).
 
         Returns:
-            key: string of with the l1 object name prefix removed, qual
+            key: string of with the object name prefix removed, qual
             transformed to quality
         """
-        if raw_key.startswith("L1"):
-            key = raw_key.removeprefix(obj.nano_obj_name + "_")
-        else:
-            key = raw_key.removeprefix(obj.nano_obj_name).lower()
-
-        if "qual" in key:
-            return "quality"
-        return key
+        return transform_key(raw_key, obj.nano_obj_name, _is_bit_record(obj))
 
     def _load_cached_arrays(self, object_name: str) -> ak.Array:
         """Loads array for specified object/version combination
@@ -156,26 +225,34 @@ class MenuTable:
         # Remove object name prefix from array fields
         arr = ak.zip({self._transform_key(var, obj): arr[var] for var in arr.fields})
 
-        # Apply scalings, except for PV variable, which has no scalings
+        # Apply scalings, except for PV variable, which has no scalings, and for
+        # objects without a pt (trigger bit records, pile-up info)
         if (
             ("PV" not in object_name)
             and ("disp" not in object_name.lower())
             and ("TrackTripletWord" not in object_name)
             and ("ExtTrackHT" not in object_name)
             and ("mass" not in object_name)
+            and not _is_bit_record(obj)
+            and scalings.has_pt_branch(arr, str(obj))
         ):
             if VERBOSE:
                 print("adding scalings")
-            arr = scalings.add_offline_pt(arr, obj, scaling_version=self.config.scalings_version)
+            arr = scalings.add_offline_pt(
+                arr,
+                obj,
+                scaling_version=self.config.scalings_version,
+                allow_missing=self.config.allow_missing_scalings,
+            )
 
         if "idx" not in arr.fields:
             arr["idx"] = ak.local_index(arr)
 
-        # When loading sums (MET, HT, etc.) transfrom the array structure to
-        # mimic that of "normal" objects which have lists at the event level
-        # instead of a single number.
+        # When loading sums (MET, HT, etc.) or trigger bits transfrom the array
+        # structure to mimic that of "normal" objects which have lists at the
+        # event level instead of a single number.
         if isinstance(arr[0], ak.highlevel.Record):
-            arr = ak.zip({field: [[k] for k in arr[field]] for field in arr.fields})
+            arr = wrap_event_records(arr)
 
         if "eta" in arr.fields:
             arr = ak.with_name(arr, "Momentum4D")
@@ -240,8 +317,9 @@ class MenuTable:
             leg_mask = obj_mask
             leg_array = raw_object_arrays[leg["obj"]]
             if leg["threshold_cut"] is not None:
-                # Substitute
-                if re.match(r"leg\d", leg["threshold_cut"]):
+                # Substitute `legN` (anywhere in the cut, e.g. an OR of bits
+                # "(leg1.A | leg1.B)"), or else prefix the bare field names
+                if re.search(r"\bleg\d", leg["threshold_cut"]):
                     leg_mask_str = re.sub(
                         r"(leg\d)", r"leg_array", leg["threshold_cut"]
                     )
@@ -444,11 +522,20 @@ class MenuTable:
         value, prefix = (
             ("efficiency", "eff") if self.config.is_signal else ("rate", "rate")
         )
-        err_cols = ["effErrLo", "effErrHi", "rateErrLo", "rateErrHi"]
+        err_cols = ["effErrLo", "effErrHi", "rateErrLo", "rateErrHi", "rateLo68", "rateHi68"]
         df_table[f"+-{value}"] = (
             df_table[f"{prefix}ErrLo"] + df_table[f"{prefix}ErrHi"]
         ) / 2
-        print(df_table.drop(columns=err_cols, errors="ignore"))
+        if "rateLo68" in df_table:
+            # Garwood 68% interval on the rate; it matters for small counts
+            df_table["rate68 [kHz]"] = [
+                "" if np.isnan(lo) else f"[{lo:.3g}, {hi:.3g}]"
+                for lo, hi in zip(df_table["rateLo68"], df_table["rateHi68"])
+            ]
+        with pd.option_context(
+            "display.max_rows", None, "display.max_columns", None, "display.width", 250
+        ):
+            print(df_table.drop(columns=err_cols, errors="ignore"))
 
     def compute_tot_and_pure(self) -> pd.DataFrame:
         df_masks = ak.to_dataframe(self._seed_masks)
@@ -492,7 +579,9 @@ class MenuTable:
         self, seed: str, npass: int, ntot: int
     ) -> dict[str, Union[str, float]]:
         """One table row: counts, efficiency and (for minbias) rate, each with
-        asymmetric Clopper-Pearson statistical errors."""
+        asymmetric Clopper-Pearson statistical errors. For minbias also the
+        68% Garwood (Poisson) interval on the rate, `rateLo68`/`rateHi68` (bounds,
+        not distances), which is what to quote for small counts (HLT paths)."""
         efficiency = npass / ntot
         _, err_lo, err_hi = get_eff_err(npass, ntot)
         row: dict[str, Union[str, float]] = {
@@ -507,6 +596,9 @@ class MenuTable:
             row["rate"] = efficiency * norm
             row["rateErrLo"] = err_lo * norm
             row["rateErrHi"] = err_hi * norm
+            n_lo, n_hi = garwood_interval(npass)
+            row["rateLo68"] = n_lo / ntot * norm
+            row["rateHi68"] = n_hi / ntot * norm
         return row
 
     def make_table(self) -> None:
