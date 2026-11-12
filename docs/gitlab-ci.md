@@ -50,9 +50,14 @@ not part of this initial CI set.
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
 an artifact. Scaling YAML files are prefixed with the CI job name before upload,
 so electron and photon L1 EG scalings cannot overwrite one another when artifacts
-are combined. The optional manual `publish_plots` job downloads all plot artifacts
-and copies their combined `V50nano_170` output, together with CI provenance, to
-a unique EOS directory under:
+are combined. Cache and plotting jobs are allowed to fail at pipeline level: the
+failed job remains visible as a warning, while independent samples continue and
+the pipeline can complete. Artifacts use `when: always`, so partial output from a
+failed plot job is retained as well.
+
+The optional manual `publish_plots` job waits for all plotting jobs, downloads
+whatever artifacts they produced, and copies the combined `V50nano_170` output,
+together with CI provenance, to a unique EOS directory under:
 
 ```text
 /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools/<branch>/pipeline-<id>/

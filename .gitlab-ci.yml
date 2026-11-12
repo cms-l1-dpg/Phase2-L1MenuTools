@@ -47,7 +47,9 @@ default:
 
 .cache_sample:
   stage: cache
-  allow_failure: false
+  # Keep a failed sample visible, but let unrelated sample groups complete and
+  # leave the partial publish job available.
+  allow_failure: true
   timeout: 2h
 
   before_script:
@@ -133,7 +135,9 @@ cache_photon_objects:
 
 .object_performance:
   stage: object-performance
-  allow_failure: false
+  # Plot failures remain visible as warnings without blocking other plots or
+  # publication of the successful artifacts.
+  allow_failure: true
   # Scaling payload names are object-based. Prefix them before upload so plots
   # for different samples cannot overwrite one another in the publish job.
   after_script:
