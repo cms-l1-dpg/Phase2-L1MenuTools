@@ -1,0 +1,43 @@
+# P2GT algorithm of each step 1 seed, for the P2GT menus step1_2024 and
+# step1and2_2026 (whose step 2 seeds follow L1_X -> pX), for p2gt_compare
+# (seeds L1_X whose algorithm is pX need no entry)
+L1_SingleTkMu: pSingleTkMuon22
+L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4: pDoubleTkMuon_OS_Er1p5_Dr1p4
+L1_DoubleTkMu4_SQ_OS_dR_Max1p2: pDoubleTkMuon_4_4_OS_Dr1p2
+L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18: pDoubleTkMuon_4p5_4p5_OS_Er2_Mass7to18
+L1_DoubleTkMu: pDoubleTkMuon15_7
+L1_TripleTkMu: pTripleTkMuon5_3_3
+L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9: pTripleTkMuon_5_3_0_DoubleTkMuon_5_3_OS_MassTo9
+L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17: pTripleTkMuon_5_3p5_2p5_OS_Mass5to17
+L1_SingleTkEle: pSingleTkEle36
+L1_SingleTkPhoIso: pSingleIsoTkPho36
+L1_SingleTkEleIso: pSingleIsoTkEle28
+L1_DoubleTkEle: pDoubleTkEle25_12
+L1_DoubleTkPhoIso: pDoubleIsoTkPho22_12
+L1_SingleEGEle: pSingleEGEle51
+L1_DoubleEGEle: pDoubleEGEle37_24
+L1_TkEleIso_EG: pIsoTkEleEGEle22_12
+L1_PFIsoTau_PFIsoTau: pDoublePuppiTau52_52
+L1_SinglePfJet: pSinglePuppiJet230
+L1_DoublePFJet_dEtaMax: pDoublePuppiJet112_112
+L1_PFHTT: pPuppiHT450
+L1_PFMHTT: pPuppiMHT140
+L1_PFHTT_QuadJet: pPuppiHT400_pQuadJet70_55_40_40
+L1_PFMet: pPuppiMET200
+L1_TkMu_TkEle: pTkMuonTkEle7_23
+L1_TkEle_TkMu: pTkEleTkMuon10_20
+L1_TkMu_TkEleIso: pTkMuonTkIsoEle7_20
+L1_TkMu_DoubleTkEle: pTkMuonDoubleTkEle6_17_17
+L1_DoubleTkMu_TkEle: pDoubleTkMuonTkEle5_5_9
+L1_TkMu_PfHTT: pTkMuonPuppiHT6_320
+L1_DoubleTkMu_PfHTT: pDoubleTkMuPuppiHT_3_3_300
+L1_PFIsoTau_TkMu: pPuppiTauTkMuon42_18
+L1_TkMu_PfJet_PfMet: pTkMuPuppiJetPuppiMet_3_110_120
+L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax: pTkMuTriPuppiJet_12_40_dRMax_DoubleJet_dEtaMax
+L1_DoubleTkMu_PfJet_PfMet: pDoubleTkMuPuppiJetPuppiMet_3_3_60_130
+L1_DoubleTkEle_PFHTT: pDoubleTkElePuppiHT_8_8_390
+L1_TkEleIso_PFIsoTau: pPuppiTauTkIsoEle45_22
+L1_TkEleIso_PFHTT: pTkEleIsoPuppiHT_26_190
+L1_TkEle_PFJet_dRMin: pTkElePuppiJet_28_40_MinDR
+L1_PFIsoTau_PFMet: pNNPuppiTauPuppiMet_55_190
+L1_DoublePFJet_MassMin: pDoublePuppiJet160_35_mass620

@@ -22,6 +22,7 @@ from menu_tools.utils.plotting import add_watermark
 from menu_tools.utils.versions import (
     add_version_argument,
     get_versions,
+    parse_args,
     run_per_version,
 )
 
@@ -674,7 +675,7 @@ def main():
     )
     parser.add_argument("-s", "--scalings_only", action="store_true")
     add_version_argument(parser)
-    args = parser.parse_args()
+    args = parse_args(parser)
 
     def run(version):
         for path_cfg_plot in args.cfg_plots:
