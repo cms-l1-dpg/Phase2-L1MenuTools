@@ -25,6 +25,7 @@
 * [Response and resolution](#response-and-resolution)
 * [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
 * [Purity, fake rate and multiplicity](#purity-fake-rate-and-multiplicity)
+* [b-tagging efficiency and mis-identification](#b-tagging-efficiency-and-mis-identification)
 
 ## Caching the NTuple trees
 
@@ -433,3 +434,110 @@
   object: `label`, `match_dR`, `edges`/`xbins` or `thresholds`, `y`, `err_lo`, `err_hi`, `num`,
   `den`, and `integral` (all objects) or `fit`; plus `definition`, `n_events`, `pileup_source`) and
   `<plot>_<version>.yaml` (the plot config).
+
+## b-tagging efficiency and mis-identification
+
+  A plot entry with a `btag:` block gives the b-tagging efficiency and the c / light / pileup
+  mis-identification rates of L1 and HLT jets, and ROC curves from the continuous discriminant
+  (`menu_tools/object_performance/btag_collection.py`, `btag_plotter.py`, dispatched by
+  `object_performance <config>`):
+
+  ```
+  object_performance configs/V50nano/object_performance/btag_tt.yaml --version V50nano_170pre6HLT
+  ```
+
+  Reference configs: `btag_tt.yaml` (TT, where the L1 working points are defined) and
+  `btag_hh4b.yaml` (HHTo4B), comparing `L1puppiJetSC4NG` (NG tagger `bTagScore`) with
+  `hltAK4PuppiJetCorr` (DeepFlavour, JEC-corrected pT). The working points are ids of the jet
+  objects, see [objects](objects.md#b-tagging-working-points).
+
+  **Jets and truth.** All reco jets of each event passing the test object's id cuts and
+  |eta| < `max_abs_eta` are used. The closest `GenJet` (after the `reference_gen` cuts, default
+  pT > 10 GeV) within `match_dR` gives the flavour from `hadronFlavour`: b (5), c (4), light (0).
+  Jets with no `GenJet` within `pu_dR` are *pileup* jets (`GenJet`s are clustered from the
+  hard-scatter particles only). Jets with a `GenJet` between `match_dR` and `pu_dR` but none
+  within `match_dR` are not used. Two reco jets may match the same `GenJet`.
+
+  **Definitions.** A jet is *tagged* at a working point if it passes the cuts of the
+  working-point id (an id of the same object). For each flavour: N(tagged jets) / N(jets), i.e.
+  the tagging efficiency of b jets and the mis-identification rates of c, light and pileup jets,
+  **conditional on the reco jet existing** (and passing the |eta| cut): the jet reconstruction
+  efficiency is not included. Clopper-Pearson 68% intervals.
+
+  ```yaml
+  BTagTT:
+    sample: TT
+    version: V50nano
+    test_objects:
+      L1puppiJetSC4NG:default: "pt"
+      hltAK4PuppiJetCorr:default: "pt"
+    btag:
+      discriminants:                   # per test object: expression, or {name: expression}
+        L1puppiJetSC4NG:default: "{bTagScore}"
+        hltAK4PuppiJetCorr:default:
+          "prob(b)": "{DeepFlavour_prob_b}"            # the first one is the main one
+          "b+bb+lepb": "{DeepFlavour_prob_b} + {DeepFlavour_prob_bb} + {DeepFlavour_prob_lepb}"
+      working_points:                  # ids of the same object (or full keys obj:id)
+        L1puppiJetSC4NG:default: [bTagLight10, bTagLight1, bjetnn]
+        hltAK4PuppiJetCorr:default: [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagLight10]
+      reference_gen: {object: GenJet, label: "GenJet", cuts: ["{pt} > 10"]}   # default
+      flavour_field: hadronFlavour     # default
+      match_dR: 0.2                    # default: the test object's match_dR
+      pu_dR: 0.4                       # default 0.4
+      max_abs_eta: 2.4                 # default 2.4
+      min_pt: 30                       # reco pT cut of the vs eta / |eta| / pu plots (default 30)
+      flavours: [b, c, light, pu]      # default: all
+      vs:
+        pt: {edges: [20, 30, 50, 100, 200, 500]}     # reco-jet pT (no pT cut)
+        genpt: {edges: [20, 30, 50, 100, 200, 500]}  # matched GenJet pT (not for pileup)
+        eta: {min: -2.4, max: 2.4, step: 0.3}        # reco-jet eta (abseta: |eta|)
+        pu: {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+      roc:
+        pt_bins: [[30, 100], [100, null], [30, null]]   # reco-jet pT bins, null: no upper edge
+        against: [light, c, pu]
+        # eta_region: [0, 1.5]         # optional |eta| range of the ROC jets
+        target_misid: {light: [0.1, 0.01]}   # discriminant thresholds at these mis-id rates
+      summary:
+        pt_bins: [[30, 100], [100, null]]
+        eta_regions: {inclusive: [0, 2.4], barrel: [0, 1.5]}
+      # pu_variable: nPU               # pileup binning, as for purity (pileup_version too)
+  ```
+
+  The pT binning uses the `pt` field of each object: the online pT for L1 jets (no offline
+  scalings) and the corrected pT for `hltAK4PuppiJetCorr`. The vs `genpt` plots compare L1 and
+  HLT at the same true jet pT.
+
+  **ROC curves.** In each reco pT bin, b efficiency vs mis-id rate of the `against` flavour for a
+  scan of the discriminant (all distinct values, e.g. the 1/128 grid of the L1 scores, or 400
+  quantiles), all objects and discriminants overlaid; the working points are drawn as markers with
+  their measured (b eff., mis-id) and errors. With `target_misid` the json lists, per object and
+  discriminant, the smallest threshold t among the score values with mis-id(score > t) <= target,
+  and the b efficiency there (this is how the L1 working points were defined).
+
+  Outputs, in `outputs/<version>/object_performance/btag/`:
+
+  * `<plot>_<flavour>_vs_<vs>_<version>.{png,pdf,json}`: efficiency (b) or mis-id rate vs `<vs>`,
+    one curve per object and working point; json per curve `label`, `edges`, `xbins`, `y`,
+    `err_lo`, `err_hi`, `num`, `den`;
+  * `<plot>_roc_<against>_pt<lo>to<hi>_<version>.{png,pdf,json}`: ROC curves (json: per curve the
+    `threshold`, `eff_b`, `misid` arrays; per working point `eff_b`, `misid` and errors;
+    `target_misid`);
+  * `<plot>_summary_<version>.{json,txt}`: all rates in the `summary` pT bins and eta regions, and
+    the number of jets per truth category;
+  * `<plot>_<version>.yaml`: the plot config.
+
+  **Caveats (V50nano_170pre6HLT).**
+  * The HLT b-tag filters (`HLTPFJetTag`) cut on DeepFlavour **prob(b) alone**
+    (`hltPfDeepFlavourJetTagsModEta2p4:probb`), not on b + bb + lepb; the HLT working points do the
+    same. b + bb + lepb is shown as a second ROC curve.
+  * The nano scores are from `hltPfDeepFlavourJetTags` (run by `DST_PFScouting`, i.e. stored in
+    all events), the same model as in the b-tag paths but run on the uncorrected
+    `hltAK4PFPuppiJets` (the paths run it on the corrected jets with pT > 30 GeV, |eta| < 2.4).
+    The jet pT is a tagger input, so the stored scores are close to, but not exactly, the ones
+    the paths cut on.
+  * The L1 `bTagScore` is quantized in steps of 1/128 and depends strongly on the jet pT: a fixed
+    cut gives a strongly pT-dependent mis-id rate.
+  * `GenJet`s have pT > 10 GeV in the nano: a reco jet next to a softer hard-scatter jet counts
+    as pileup.
+
+  Tests: `menu_tools/object_performance/tests/test_btag.py`.
