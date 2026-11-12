@@ -1,0 +1,41 @@
+# Fake rates of L1 muons (`purity:` block, see docs/object-performance.md#purity-fake-rate-and-multiplicity).
+#  - DY -> ll: fake fraction, unmatched objects per event, events with >= 1 unmatched muon above threshold.
+#  - Minimum bias: objects per event and rate (kHz) of events with >= 1 muon above threshold (no gen matching).
+
+MuonsFakeRate:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    L1gmtTkMuon:default: "pt"
+    L1gmtTkMuon:Tight: "pt"
+    L1gmtMuon:default: "pt"
+  purity:
+    mode: fake_rate
+    reference_gen:
+      object: GenPart
+      label: "prompt gen $\\mu$"
+      cuts:
+        - "abs({pdgId}) == 13"
+        - "(({statusFlags}>>13)&1) == 1"
+        - "((({statusFlags}>>0)&1) == 1) | ((({statusFlags}>>3)&1) == 1)"
+    vs:
+      pt: {edges: [0, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100]}
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+      threshold: &thr_mu {min: 0, max: 40, step: 1}
+    thresholds: [5, 10, 20]
+
+MuonsMultiplicityMinBias:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    L1gmtTkMuon:default: "pt"
+    L1gmtTkMuon:Tight: "pt"
+    L1gmtMuon:default: "pt"
+  purity:
+    mode: multiplicity
+    vs:
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: *pu_bins
+      threshold: *thr_mu
+    thresholds: [5, 10, 20]

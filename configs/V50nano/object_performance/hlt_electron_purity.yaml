@@ -1,0 +1,56 @@
+# Purity and fake rates of HLT electrons vs the L1 tkElectron (`purity:` block, see
+# docs/object-performance.md#purity-fake-rate-and-multiplicity). Run on an L1+HLT cache.
+# hltElectron WPTight: approximate (endcap: track-based part only), see objects/hlt.yaml.
+# Gen electrons: last copy, prompt or from a prompt tau decay.
+
+HLTElectronsPurity:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    hltElectron:default: "pt"
+    hltElectron:WPTight: "pt"
+    L1tkElectron:NoIso: "pt"
+    L1tkElectron:Iso: "pt"
+  purity:
+    mode: purity
+    reference_gen: &gen_e
+      object: GenPart
+      label: "prompt gen e"
+      cuts:
+        - "abs({pdgId}) == 11"
+        - "(({statusFlags}>>13)&1) == 1"
+        - "((({statusFlags}>>0)&1) == 1) | ((({statusFlags}>>3)&1) == 1)"
+    vs:
+      pt: {edges: [0, 2.5, 5, 7.5, 10, 12.5, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100]}
+      eta: {min: -3, max: 3, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    thresholds: [10, 30]
+
+HLTElectronsFakeRate:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    hltElectron:default: "pt"
+    hltElectron:WPTight: "pt"
+    L1tkElectron:Iso: "pt"
+  purity:
+    mode: fake_rate
+    reference_gen: *gen_e
+    vs:
+      pu: *pu_bins
+      threshold: &thr_e {min: 0, max: 60, step: 2}
+    thresholds: [10, 30]
+
+HLTElectronsMultiplicityMinBias:
+  sample: MinBias
+  version: V50nano
+  test_objects:
+    hltElectron:default: "pt"
+    hltElectron:WPTight: "pt"
+    L1tkElectron:Iso: "pt"
+  purity:
+    mode: multiplicity
+    vs:
+      pu: *pu_bins
+      threshold: *thr_e
+    thresholds: [10, 30]

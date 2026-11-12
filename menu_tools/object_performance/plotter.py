@@ -358,8 +358,8 @@ class EfficiencyCentral:
         print(f"INFO: Loading object configs from configs/{self.config_version}/objects")
 
         for plot_name, cfg_plot in self.cfg_plots.items():
-            if "resolution" in cfg_plot or "path_efficiency" in cfg_plot:
-                continue  # handled by ResolutionCentral / PathEfficiencyCentral
+            if "resolution" in cfg_plot or "path_efficiency" in cfg_plot or "purity" in cfg_plot:
+                continue  # handled by ResolutionCentral / PathEfficiencyCentral / PurityCentral
             # The previous plotter also holds the old collection; release both
             # before building the next, so two plots' arrays are never held at once.
             turnon_collection = plotter = None
@@ -649,6 +649,11 @@ def main():
                 from menu_tools.object_performance.path_efficiency import PathEfficiencyCentral
 
                 PathEfficiencyCentral(path_cfg_plot, override_version=version).run()
+
+                # Plot entries with a `purity:` block (purity, fake rate, multiplicity)
+                from menu_tools.object_performance.purity_plotter import PurityCentral
+
+                PurityCentral(path_cfg_plot, override_version=version).run()
 
     run_per_version(get_versions(parser, args), run)
 
