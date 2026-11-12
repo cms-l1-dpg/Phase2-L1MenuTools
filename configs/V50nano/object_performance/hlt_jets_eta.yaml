@@ -1,5 +1,5 @@
-# HLT AK4 PUPPI jets (uncorrected in the nano, ~0.79 x gen) vs L1 seeded-cone PUPPI jets: efficiency vs gen eta (ttbar).
-# |eta| < 5 objects (hltAK4PuppiJet:extended, L1puppiExtJetSC4). Trigger blocks: threshold on the test pT (threshold_field).
+# HLT AK4 PUPPI jets (JEC applied: hltAK4PuppiJetCorr) vs L1 seeded-cone PUPPI jets: efficiency vs gen eta (ttbar).
+# |eta| < 5 objects (hltAK4PuppiJetCorr:extended, L1puppiExtJetSC4). Trigger blocks: threshold on the test pT (threshold_field).
 
 HLTJetMatching_Eta_Pt40To100:
   sample: TT
@@ -16,7 +16,7 @@ HLTJetMatching_Eta_Pt40To100:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended: "eta"
+    hltAK4PuppiJetCorr:extended: "eta"
     L1puppiExtJetSC4:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (gen $p_T$ 40-100 GeV)"
@@ -39,7 +39,7 @@ HLTJetMatching_Eta_Pt100ToInf:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended: "eta"
+    hltAK4PuppiJetCorr:extended: "eta"
     L1puppiExtJetSC4:default: "eta"
   xlabel: "Gen. $\\eta$"
   ylabel: "Matching Efficiency (gen $p_T$ > 100 GeV)"
@@ -64,7 +64,7 @@ HLTJetTrigger_Eta_Pt200ToInf_wMatching:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended: "eta"
+    hltAK4PuppiJetCorr:extended: "eta"
     L1puppiExtJetSC4:default: "eta"
   thresholds: [100]
   xlabel: "Gen. $\\eta$"
@@ -90,7 +90,7 @@ HLTJetTrigger_Eta_Pt100ToInf_wMatching:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended: "eta"
+    hltAK4PuppiJetCorr:extended: "eta"
     L1puppiExtJetSC4:default: "eta"
   thresholds: [30, 50]
   xlabel: "Gen. $\\eta$"

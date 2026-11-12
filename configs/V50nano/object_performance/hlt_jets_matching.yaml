@@ -1,4 +1,4 @@
-# HLT AK4 PUPPI jets (hltAK4PuppiJet) vs the L1 seeded-cone PUPPI jets, ttbar.
+# HLT AK4 PUPPI jets with the HLT JEC (hltAK4PuppiJetCorr, menu_tools/caching/make_hlt_jets_corr.py) vs the L1 seeded-cone PUPPI jets, ttbar.
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLTJetMatchingBarrel:
@@ -15,7 +15,7 @@ HLTJetMatchingBarrel:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    hltAK4PuppiJet:default: "pt"
+    hltAK4PuppiJetCorr:default: "pt"
     L1puppiJetSC4:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
@@ -38,7 +38,7 @@ HLTJetMatchingEndcap:
       object:
         - "abs({eta}) < 2.4"
   test_objects:
-    hltAK4PuppiJet:default: "pt"
+    hltAK4PuppiJetCorr:default: "pt"
     L1puppiJetSC4:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"
@@ -61,7 +61,7 @@ HLTJetMatchingForward:
       object:
         - "abs({eta}) < 5"
   test_objects:
-    hltAK4PuppiJet:extended: "pt"
+    hltAK4PuppiJetCorr:extended: "pt"
     L1puppiExtJetSC4:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (forwardHF)"

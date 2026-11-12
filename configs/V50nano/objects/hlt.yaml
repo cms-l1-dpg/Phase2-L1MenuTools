@@ -195,7 +195,7 @@ hltAK4PuppiJet:
     # NOTE: the nano stores hltAK4PFPuppiJets, i.e. jets WITHOUT the jet energy corrections
     # (HLTrigger/NGTScouting/python/hltJets_cfi.py), while the HLT paths cut on
     # hltAK4PFPuppiJetsCorrected: the nano pt is ~0.78 x gen pt (ttbar), so thresholds on it are
-    # not the HLT thresholds (use the scalings / a JEC). pt > 5 in the nano.
+    # not the HLT thresholds: use hltAK4PuppiJetCorr (below). pt > 5 (raw) in the nano.
     # HLT_AK4PFPuppiJet520 (hltSingleAK4PFPuppiJet520) uses |eta| < 5 (= `extended`); the HT and
     # b-tag paths use |eta| < 2.4 (= `default`).
     default:
@@ -209,6 +209,32 @@ hltAK4PuppiJet:
         inclusive:
           - "abs({eta}) < 5"
 
+
+# hltAK4PuppiJet with the HLT jet energy corrections applied (= hltAK4PFPuppiJetsCorrected, the
+# jets the HLT paths cut on), built by menu_tools/caching/make_hlt_jets_corr.py: pt x L2Relative
+# of the AK4PFPuppiHLT payload of auto:phase2_realistic_T35 (L1FastJet and L3Absolute are 1),
+# tables in configs/V50nano/cache_objects/hlt_jec/. Reproduces HLT_AK4PFPuppiJet520 and
+# HLT_PFPuppiHT1070 event by event. Extra fields: rawPt, jecFactor.
+hltAK4PuppiJetCorr:
+  label: "HLT AK4 PUPPI Jet"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forwardHGC: [2.4, 3]
+    forwardHF: [3, 5]
+  ids:
+    default:
+      label: "HLT AK4 PUPPI Jet"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+    extended:
+      label: "HLT AK4 PUPPI Jet, |eta| < 5"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 5"
 
 hltHpsPFTau:
   label: "HLT HPS PF Tau"
@@ -275,6 +301,24 @@ hltPuppiJetSums:
           - "{sumType} == 0"
     MHT:
       label: "HLT PUPPI MHT (uncorr. jets)"
+      cuts:
+        inclusive:
+          - "{sumType} == 1"
+
+# HT / MHT from the corrected jets (hltAK4PuppiJetCorr, menu_tools/caching/make_hlt_jets_corr.py),
+# with the definitions of the HLT menu producers:
+#   HT  = hltPFPuppiHT  (HLT_PFPuppiHT1070): sum of jet pT, pT > 30, |eta| < 2.4;
+#   MHT = hltPFPuppiMHT (HLT_PFPuppiMETTypeOne140_PFPuppiMHT140): |vector sum of jet E_T|,
+#         E_T > 30, |eta| < 5.
+hltPuppiJetCorrSums:
+  ids:
+    HT:
+      label: "HLT PUPPI HT"
+      cuts:
+        inclusive:
+          - "{sumType} == 0"
+    MHT:
+      label: "HLT PUPPI MHT"
       cuts:
         inclusive:
           - "{sumType} == 1"
