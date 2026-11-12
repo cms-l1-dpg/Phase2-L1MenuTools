@@ -26,6 +26,10 @@ from menu_tools.utils.versions import (
     run_per_version,
 )
 
+# Plot entries with one of these blocks are not turn-ons: they are run by their own
+# *Central class (see `main`) and skipped by the efficiency plotter.
+SPECIAL_BLOCKS = ("resolution", "path_efficiency", "purity", "btag")
+
 
 colors = [
     "#3f90da",
@@ -380,13 +384,8 @@ class EfficiencyCentral:
         )
 
         for plot_name, cfg_plot in self.cfg_plots.items():
-            if (
-                "resolution" in cfg_plot
-                or "path_efficiency" in cfg_plot
-                or "purity" in cfg_plot
-            ):
-                # handled by ResolutionCentral / PathEfficiencyCentral / PurityCentral
-                continue
+            if any(k in cfg_plot for k in SPECIAL_BLOCKS):
+                continue  # handled by ResolutionCentral, PathEfficiencyCentral, ...
             # The previous plotter also holds the old collection; release both
             # before building the next, so two plots' arrays are never held at once.
             turnon_collection = plotter = None
@@ -718,6 +717,11 @@ def main():
                 from menu_tools.object_performance.purity_plotter import PurityCentral
 
                 PurityCentral(path_cfg_plot, override_version=version).run()
+
+                # Plot entries with a `btag:` block (b-tag efficiency / mis-id, ROC)
+                from menu_tools.object_performance.btag_plotter import BTagCentral
+
+                BTagCentral(path_cfg_plot, override_version=version).run()
 
     run_per_version(get_versions(parser, args), run)
 

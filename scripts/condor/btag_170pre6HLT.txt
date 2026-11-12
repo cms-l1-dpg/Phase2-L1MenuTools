@@ -1,0 +1,2 @@
+btag_tt object_performance configs/V50nano/object_performance/btag_tt.yaml --version V50nano_170pre6HLT
+btag_hh4b object_performance configs/V50nano/object_performance/btag_hh4b.yaml --version V50nano_170pre6HLT

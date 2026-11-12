@@ -1,0 +1,51 @@
+# b-tagging efficiency and c / light / pileup mis-identification rates of L1 and HLT jets
+# (`btag:` block, see docs/object-performance.md#b-tagging-efficiency-and-mis-identification).
+# Run on an L1+HLT cache: object_performance <this file> --version V50nano_170pre6HLT
+#
+# L1: L1puppiJetSC4NG (NG tagger, bTagScore), binned in the online L1 pT (no offline scaling).
+# HLT: hltAK4PuppiJetCorr (HLT JEC applied, binned in the corrected pT) with the nano
+#   DeepFlavour scores. The HLT b-tag filters cut on prob(b) alone (not b+bb+lepb, shown as a
+#   second ROC curve); the WPs and their sources are documented in configs/V50nano/objects/
+#   {jets,hlt}.yaml (L1: fixed 10% / 1% light mis-id on this sample; HLT: the DeepFlavour
+#   filters of the Phase-2 HLT menu b-tag paths, plus prob(b) at 10% / 1% light mis-id).
+# Truth: closest GenJet within dR < 0.2 -> hadronFlavour b (5) / c (4) / light (0);
+#   no GenJet (pT > 10 GeV, hard scatter) within dR < 0.4 -> pileup jet.
+
+BTagTT:
+  sample: TT
+  version: V50nano
+  test_objects:
+    L1puppiJetSC4NG:default: "pt"
+    hltAK4PuppiJetCorr:default: "pt"
+  btag:
+    discriminants:
+      L1puppiJetSC4NG:default: "{bTagScore}"
+      hltAK4PuppiJetCorr:default:
+        "prob(b)": "{DeepFlavour_prob_b}"
+        "b+bb+lepb": "{DeepFlavour_prob_b} + {DeepFlavour_prob_bb} + {DeepFlavour_prob_lepb}"
+    working_points:
+      L1puppiJetSC4NG:default: [bTagLight10, bTagLight1, bjetnn]
+      hltAK4PuppiJetCorr:default:
+        [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagDeepFlavour0p935, bTagLight10, bTagLight1]
+    reference_gen:
+      object: GenJet
+      label: "GenJet"
+      cuts: ["{pt} > 10"]
+    flavour_field: hadronFlavour
+    match_dR: 0.2
+    pu_dR: 0.4
+    max_abs_eta: 2.4
+    min_pt: 30
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      genpt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      eta: {min: -2.4, max: 2.4, step: 0.3}
+      abseta: {min: 0, max: 2.4, step: 0.2}
+      pu: {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    roc:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      against: [light, c, pu]
+      target_misid: {light: [0.1, 0.01], c: [0.1]}
+    summary:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      eta_regions: {inclusive: [0, 2.4], barrel: [0, 1.5]}
