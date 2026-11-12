@@ -1,0 +1,89 @@
+# HLT muons (hltMuon, L3 without isolation) vs the L1 tkMuon, DY -> ll.
+# hltMuon exists only in events with an L1 tkMuon: HLT efficiency includes the L1 tkMuon reco.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTMuonsTriggerBarrel:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    hltMuon:default:barrel: "pt"
+    L1gmtTkMuon:default:barrel: "pt"
+  thresholds: [24, 50]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (barrel, $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+HLTMuonsTriggerOverlap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    hltMuon:default:overlap: "pt"
+    L1gmtTkMuon:default:overlap: "pt"
+  thresholds: [24, 50]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (overlap, $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+HLTMuonsTriggerEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default:endcap: "pt"
+    L1gmtTkMuon:default:endcap: "pt"
+  thresholds: [24, 50]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (endcap, $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2

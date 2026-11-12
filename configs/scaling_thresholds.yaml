@@ -9,6 +9,17 @@ MET: [30, 40, 50, 60, 70, 80, 90, 100]
 MHT: [70, 80, 90, 100, 125]
 HT: [50, 100, 150, 200, 250, 300]
 
+### HLT objects (hlt*): used instead of the group values above when present
+### (ScalingCentral: "HLT" + group). Around the Phase-2 HLT menu thresholds
+### (IsoMu24, Mu50, Ele32, Ele26, Photon108, PFTau35, PFPuppiHT1070, ...).
+HLTMuon: [10, 15, 20, 24, 27, 30, 37, 40, 50]
+HLTEG: [15, 20, 23, 26, 30, 32, 40, 50]
+HLTTau: [25, 30, 35, 40, 50, 60]
+HLTJet: [40, 60, 80, 100, 128, 150, 200, 250, 300]
+HLTHT: [100, 200, 300, 400, 500, 600]
+HLTMHT: [70, 80, 90, 100, 125, 140]
+HLTMET: [40, 60, 80, 100, 120, 140]
+
 ### Specific values:
 L1TrackHT:HT:inclusive: [50, 100, 150, 200, 250]
 # Jets
