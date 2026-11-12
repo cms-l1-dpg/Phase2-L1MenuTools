@@ -23,6 +23,7 @@
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
 * [Response and resolution](#response-and-resolution)
 * [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
+* [Purity, fake rate and multiplicity](#purity-fake-rate-and-multiplicity)
 
 ## Caching the NTuple trees
 
@@ -222,3 +223,103 @@
   Outputs, in `outputs/<version>/object_performance/path_efficiency/`: `<plot>_<version>.{png,pdf,json}`
   (json per curve: `label`, `xbins`, `efficiency`, `efficiency_err`, `n_pass`, `n_total`, `plateau`)
   and `<plot>_<version>.yaml` (the plot config).
+
+## Purity, fake rate and multiplicity
+
+  A plot entry with a `purity:` block looks at the trigger objects themselves instead of the gen
+  objects (`menu_tools/object_performance/purity_collection.py`, `purity_plotter.py`, dispatched by
+  `object_performance <config>`):
+
+  ```
+  object_performance configs/V50nano/object_performance/electron_purity.yaml --version V50nano_170X1026
+  ```
+
+  Reference configs in `configs/V50nano/object_performance`: `{electron,muons,tau,jets}_purity.yaml`,
+  `{electron,muons,tau,jets}_fakerate.yaml`, `photon_purity.yaml` (L1), and
+  `hlt_{muon,electron,jets,tau}_purity.yaml` (HLT vs L1, on an L1+HLT cache such as `V50nano_170pre6HLT`).
+  They replace the earlier turn-on based `*_purity.yaml` entries, which used the leading L1 object as
+  the "reference" and `GenPart`/`GenVisTau` as the "test" object: that gives the purity of the leading
+  L1 object only, and their second "test" object (`L1EG`, `L1gmtMuon`, `L1caloTau`) gave an L1-L1
+  overlap fraction, not a purity.
+
+  **Objects and matching.** All test objects of each event that pass the object ID / eta cuts of the
+  object definition (`leading_only: true`: only the highest-pT one) are kept. A trigger object is
+  *matched* if any selected gen object (`reference_gen`) lies within $\Delta R$ < `match_dR` (the test
+  object's `match_dR`, unless `purity.match_dR` overrides it). The matching is not exclusive (two
+  trigger objects may match the same gen object, e.g. duplicates count as matched). Thresholds are on
+  the online `pt` field, `pt >= threshold` as in the rate plots (no offline scalings).
+
+  **Definitions.**
+
+  | mode | quantity (file name) | definition | vs |
+  |---|---|---|---|
+  | `purity` | `purity` | N(matched objects) / N(objects), Clopper-Pearson 68% | pt, eta, abseta, phi, pu |
+  | `fake_rate` | `fake_fraction` | N(unmatched) / N(objects) = 1 - purity | pt, eta, abseta, phi, pu |
+  | `fake_rate` | `unmatched_per_event` | mean number of unmatched objects with pT >= thr per event, error std/sqrt(N) | threshold, pu |
+  | `fake_rate` | `event_fraction` | fraction of events with >= 1 unmatched object with pT >= thr (CP; x 31038 kHz if `rate`) | threshold, pu |
+  | `fake_rate` | `unmatched_density` | unmatched objects with pT >= thr per event per bin (Poisson) | eta, abseta, phi |
+  | `multiplicity` | `objects_per_event` | mean number of objects with pT >= thr per event (no gen matching) | threshold, pu |
+  | `multiplicity` | `event_fraction` | fraction of events with >= 1 object with pT >= thr; x 31038 kHz (`RATE_NORM_FACTOR`) if `rate` | threshold, pu |
+  | `multiplicity` | `density` | objects with pT >= thr per event per bin | eta, abseta, phi |
+
+  The vs-pt plots use all objects (no threshold); the vs eta/phi/pu plots are made for each of
+  `thresholds`. The event-level quantities vs pileup also get a weighted straight-line fit (slope per
+  pileup interaction in the legend and the json).
+
+  *Minimum bias.* The gen record of the minimum-bias samples is pruned (no `GenPart`/`GenJet` in the
+  caches), so a gen-based fake rate is not defined there. The `multiplicity` mode gives the
+  well-defined, gen-independent quantity: the per-event multiplicity of trigger objects above
+  threshold and the rate of events with >= 1 such object in kHz (`rate`, default true for samples
+  named `MinBias*`), vs threshold and pileup. In minimum bias essentially every object above a few GeV
+  is a fake / pileup object, so this is the fake rate the trigger sees; at a given threshold the
+  `event_fraction` in kHz is the single-object rate of the rate plots.
+
+  *Jets.* The usual definition of fake (pileup) jets is used: L1 jets with no `GenJet` (pT > 10 GeV)
+  within `match_dR`. `GenJet`s are clustered from the hard-scatter particles only, so pileup jets are
+  unmatched.
+
+  *Signal samples.* Gen leptons: last copy (`statusFlags` bit 13) and prompt (bit 0) or from a prompt
+  tau decay (bit 3), so that $Z \to \tau\tau \to e/\mu$ in DY counts as real. Unmatched objects in
+  signal samples are not all "fakes": in DY the unmatched high-pT L1 electrons sit mostly at
+  $\Delta R$ = 0.2-0.45 from the gen electron or on a gen photon (brem / FSR duplicates).
+  `Pileup_nTrueInt` is constant (200) in the Spring24 samples: bin in `nPU`.
+
+  ```yaml
+  ElectronsFakeRate:
+    sample: DYLL_M50
+    version: V50nano
+    test_objects:                      # all overlaid; obj:id[:eta_range] as usual
+      L1tkElectron:NoIso: "pt"
+      L1tkElectron:Iso: "pt"
+    purity:
+      mode: fake_rate                  # purity | fake_rate | multiplicity
+      reference_gen:                   # not for multiplicity; a list of such entries is an OR
+        object: GenPart                # parquet name, or an object key with id ("GenPart:electron")
+        label: "prompt gen e"
+        cuts: ["abs({pdgId}) == 11", "(({statusFlags}>>13)&1) == 1"]
+      # match_dR: 0.15                 # default: the test object's match_dR
+      vs:
+        pt: {edges: [0, 5, 10, 20, 30, 50, 100]}   # trigger-object pT
+        eta: {min: -2.4, max: 2.4, step: 0.2}       # trigger-object eta (abseta, phi too)
+        pu: {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+        threshold: {min: 0, max: 60, step: 2}       # threshold scan (event-level quantities)
+      thresholds: [10, 20, 30]         # for the vs eta/phi/pu plots (default [0])
+      leading_only: false
+      # rate: true                     # event fractions in kHz (default: MinBias samples)
+      # pu_variable: nPU
+      # pileup_version: V50nano_170X1026PU
+  ```
+
+  **Pileup.** The `pu` binning reads `<v>_<sample>_Pileup.parquet` from `pileup_version` if given,
+  else from the plot version `<v>`, else from `<v>PU` (e.g. the row-aligned `V50nano_170X1026PU`
+  cache next to `V50nano_170X1026`); the event count must match. Without it the `pu` plots are
+  skipped with a warning (e.g. `MinBias` of `V50nano_170X1026`: run the `*_fakerate.yaml` configs on
+  `V50nano_dev170pre6HLT`, whose minimum bias has `Pileup`, for the multiplicity vs nPU). Plot
+  entries whose sample is missing in the version (e.g. `MinBias` in `V50nano_170pre6HLT`) are skipped
+  with a warning.
+
+  Outputs, in `outputs/<version>/object_performance/purity/`:
+  `<plot>_<quantity>_vs_<vs>[_thr<t>]_<version>.{png,pdf,json}` (all test objects overlaid; json per
+  object: `label`, `match_dR`, `edges`/`xbins` or `thresholds`, `y`, `err_lo`, `err_hi`, `num`,
+  `den`, and `integral` (all objects) or `fit`; plus `definition`, `n_events`, `pileup_source`) and
+  `<plot>_<version>.yaml` (the plot config).
