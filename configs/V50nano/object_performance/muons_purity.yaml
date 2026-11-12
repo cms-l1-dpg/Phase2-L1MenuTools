@@ -1,82 +1,78 @@
-Purity_Muons_Barrel:
-  sample: DYLL_M50
-  version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1gmtTkMuon"
-    x_arg: "pt"
-    label: "L1gmtTkMuon"
-    cuts:
-      event:
-        - "({hwQual}>>0)&1 == 1"
-        - "abs({eta}) < 0.83"
-      object:
-        - "abs({eta}) < 2.4"
-  test_objects:
-    GenPart:muon: "pt"
-    L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
-  xlabel: "L1 TkMuon. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Barrel)"
-  binning:
-    min: 0
-    max: 100
-    step: 3
+# Purity of L1 muons (DY -> ll; `purity:` block, see docs/object-performance.md#purity-fake-rate-and-multiplicity):
+# fraction of ALL L1 tkMuons / standalone gmtMuons passing the ID cuts with a prompt gen muon within
+# the object's match_dR (tkMuon 0.1, standalone gmtMuon 0.6). Fake rates: muons_fakerate.yaml.
+# Gen muons: last copy, prompt or from a prompt tau decay.
+# Replaces the earlier turn-on based Purity_Muons_* entries (leading L1 tkMuon as the reference and
+# GenPart:muon as the test object: leading tkMuon only, hard-process gen muons only, and L1gmtMuon as
+# a second "test" object, which gave an L1-L1 overlap fraction rather than a purity).
 
-Purity_Muons_Overlap:
+MuonsPurity:
   sample: DYLL_M50
   version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1gmtTkMuon"
-    x_arg: "pt"
-    label: "L1gmtTkMuon"
-    cuts:
-      event:
-        - "({hwQual}>>0)&1 == 1"
-        - "abs({eta}) > 0.83"
-        - "abs({eta}) < 1.24"
-      object:
-        - "abs({eta}) < 2.4"
   test_objects:
-    GenPart:muon: "pt"
+    L1gmtTkMuon:default: "pt"
+    L1gmtTkMuon:Medium: "pt"
+    L1gmtTkMuon:Tight: "pt"
     L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
-  xlabel: "L1 TkMuon. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Overlap)"
-  binning:
-    min: 0
-    max: 100
-    step: 3
+  purity:
+    mode: purity
+    reference_gen: &gen_mu
+      object: GenPart
+      label: "prompt gen $\\mu$"
+      cuts:
+        - "abs({pdgId}) == 13"
+        - "(({statusFlags}>>13)&1) == 1"                                     # last copy
+        - "((({statusFlags}>>0)&1) == 1) | ((({statusFlags}>>3)&1) == 1)"     # prompt, or prompt tau decay
+    vs:
+      pt: &pt_mu {edges: [0, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100]}
+      eta: {min: -2.4, max: 2.4, step: 0.2}
+      pu: &pu_bins {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    thresholds: [5, 20]
 
-Purity_Muons_Endcap:
+MuonsPurityBarrel:
   sample: DYLL_M50
   version: V50nano
-  match_test_to_ref: True
-  reference_object:
-    object: "L1gmtTkMuon"
-    x_arg: "pt"
-    label: "L1gmtTkMuon"
-    cuts:
-      event:
-        - "({hwQual}>>0)&1 == 1"
-        - "abs({eta}) > 1.24"
-        - "abs({eta}) < 2.4"
-      object:
-        - "abs({eta}) < 2.4"
   test_objects:
-    GenPart:muon: "pt"
+    L1gmtTkMuon:default:barrel: "pt"
+    L1gmtTkMuon:Tight:barrel: "pt"
+    L1gmtMuon:default:barrel: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_mu
+    vs: {pt: *pt_mu}
+
+MuonsPurityOverlap:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    L1gmtTkMuon:default:overlap: "pt"
+    L1gmtTkMuon:Tight:overlap: "pt"
+    L1gmtMuon:default:overlap: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_mu
+    vs: {pt: *pt_mu}
+
+MuonsPurityEndcap:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    L1gmtTkMuon:default:endcap: "pt"
+    L1gmtTkMuon:Tight:endcap: "pt"
+    L1gmtMuon:default:endcap: "pt"
+  purity:
+    mode: purity
+    reference_gen: *gen_mu
+    vs: {pt: *pt_mu}
+
+MuonsPurityLeading:
+  sample: DYLL_M50
+  version: V50nano
+  test_objects:
+    L1gmtTkMuon:default: "pt"
     L1gmtMuon:default: "pt"
-    # L1tkElectron:NoIso: "pt"
-    # L1tkElectron:NoIsoNoLowPtID: "pt"
-    # L1tkElectron:Iso: "pt"
-  xlabel: "L1 TkMuon. $p_T$ (GeV)"
-  ylabel: "Matching Efficiency (Endcap)"
-  binning:
-    min: 0
-    max: 100
-    step: 3
+  purity:
+    mode: purity
+    leading_only: true
+    reference_gen: *gen_mu
+    vs: {pt: *pt_mu}
