@@ -1,6 +1,9 @@
 # One seed per HLT path, from the per-event bit record `HLT` of the L1+HLT nanos
 # (CMSSW_17_0_0_pre6 re-emulation, process HLTX; objects in configs/V50nano/objects/hlt_bits.yaml).
 # Only the HLTX paths: no `_pHLT` copies (old HLT process), no HLTriggerFinalPath / *_step.
+# Also left out: HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepCSV_2p4 and
+# HLT_PFHT200PT30_..._TriplePFPuppiBTagDeepCSV_2p4, which have no `_pHLT` suffix but come from the old
+# HLT process only (not in the CMSSW_17_0_0_pre6 HLT:75e33 menu, so not re-run in HLTX).
 # Generated from the branch list of the nanos; rates come with counts and Garwood 68% intervals.
 HLT_AK4PFPuppiJet520:
   cross_masks: []

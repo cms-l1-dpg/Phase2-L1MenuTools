@@ -13,6 +13,9 @@
 # Dev-cache check (V50nano_dev170pre6HLT: MinBias 7520, DYLL_M50 5000, TT 6000, HHTo2B2Tau 1495,
 # HHTo4B 3000 = 23015 events; `hlt_paths ... --sample ...`, column n_hlt_not_l1): 0 events with
 # the path fired and none of its seeds, for every path (n_hlt from 37 to 3748 per path).
+# Not listed: the `_pHLT` copies (old HLT process of the input) and the two DeepCSV quad-jet paths
+# HLT_PFHT{330,200}PT30_QuadPFPuppiJet_..._TriplePFPuppiBTagDeepCSV_2p4, which come from the old HLT
+# process only (not in the 17_0_0_pre6 menu).
 # Used by `hlt_paths` (menu_tools/rate_table/hlt_paths.py).
 
 # --- Jets, HT, MET (PathStatusFilter on the GT algo)
