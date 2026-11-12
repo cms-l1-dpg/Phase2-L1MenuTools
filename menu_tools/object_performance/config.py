@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from menu_tools.object_performance.reference_cleaning import parse_reference_cleaning
 from menu_tools.utils.config import BasePlotConfig
 from menu_tools.utils.objects import Object
 
@@ -47,6 +48,13 @@ class PerformancePlotConfig(BasePlotConfig):
             return self._cfg["reference_object"]["trafo"]
         except KeyError:
             return None
+
+    @property
+    def reference_cleaning(self) -> list[dict[str, Any]]:
+        """Normalised `reference_cleaning` blocks (see reference_cleaning.py), or []."""
+        return parse_reference_cleaning(
+            self._cfg.get("reference_cleaning"), self.plot_name
+        )
 
     @property
     def reference_label(self) -> str:
@@ -197,3 +205,27 @@ class PerformancePlotConfig(BasePlotConfig):
         for obj_key in self._cfg["test_objects"]:
             test_objects.append(Object(obj_key, self.version_for_objects))
         return test_objects
+
+    @property
+    def scaling_object_instances(self) -> list:
+        """Test objects for which scalings are computed and written.
+
+        All test objects, or only those listed in `scalings: objects:` (e.g. to keep
+        a comparison curve out of the scaling files of a plot with a different
+        reference definition).
+        """
+        selected = self._cfg.get("scalings", {}).get("objects")
+        if selected is None:
+            return self.test_object_instances
+        unknown = set(selected) - set(self._cfg["test_objects"])
+        if unknown:
+            raise ValueError(
+                f"{self.plot_name}: scalings objects {sorted(unknown)} "
+                "are not test objects"
+            )
+        # match on the config keys: str(obj) adds e.g. ":inclusive" to "Sums:HT"
+        return [
+            obj
+            for key, obj in zip(self._cfg["test_objects"], self.test_object_instances)
+            if key in selected
+        ]

@@ -1,4 +1,14 @@
 JetTurnonBarrel_wMatching:
+  # GenJets within dR < 0.4 of a prompt gen e/mu (incl. leptonic tau decays) are not jets:
+  # removed from the reference (docs/object-performance.md#reference-cleaning-reference_cleaning)
+  reference_cleaning: &prompt_leptons
+    object: GenPart
+    cuts:
+      - "{status} == 1"
+      - "(abs({pdgId}) == 11) | (abs({pdgId}) == 13)"
+      - "({statusFlags} & 33) > 0"  # isPrompt (bit 0) | isDirectPromptTauDecayProduct (bit 5)
+      - "{pt} > 10"
+    dR: 0.4
   version: V50nano
   sample: TT
   match_test_to_ref: True
@@ -27,6 +37,7 @@ JetTurnonBarrel_wMatching:
     step: 10
 
 JetTurnonEndcap_wMatching:
+  reference_cleaning: *prompt_leptons
   version: V50nano
   sample: TT
   match_test_to_ref: True
@@ -55,6 +66,7 @@ JetTurnonEndcap_wMatching:
     step: 10
 
 JetTurnonForwardHGC_wMatching:
+  reference_cleaning: *prompt_leptons
   version: V50nano
   sample: TT
   match_test_to_ref: True
@@ -81,6 +93,7 @@ JetTurnonForwardHGC_wMatching:
     step: 10
 
 JetTurnonForwardHF_wMatching:
+  reference_cleaning: *prompt_leptons
   version: V50nano
   sample: TT
   match_test_to_ref: True

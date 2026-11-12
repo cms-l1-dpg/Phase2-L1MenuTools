@@ -22,6 +22,7 @@
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
   * [Combined L1 x HLT object efficiency (`l1_seed`)](#combined-l1-x-hlt-object-efficiency-l1_seed)
+  * [Reference cleaning (`reference_cleaning`)](#reference-cleaning-reference_cleaning)
 * [Response and resolution](#response-and-resolution)
 * [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
 * [Purity, fake rate and multiplicity](#purity-fake-rate-and-multiplicity)
@@ -220,6 +221,73 @@
 
   Configs: `configs/V50nano/object_performance/hlt_{muon,electron,tau,jets}_l1seed.yaml` (V50nano_170pre6HLT).
   Tests: `menu_tools/object_performance/tests/test_l1_seed.py`.
+
+### Reference cleaning (`reference_cleaning`)
+
+  Removes reference objects that lie within `dR` of a selected object of a second cached
+  collection, before the reference cuts and before the selection of the leading reference
+  object (and before the HT / MHT `trafo`). The jet configs use it to remove GenJets built
+  around prompt leptons: the nano GenJets contain leptons (neutrinos excluded), so in
+  ttbar -> 2l2nu about 25% of the gen jets with pT > 15 GeV in the barrel are a prompt e or mu.
+  These are not jets: prompt muons above ~90 GeV have no HLT PF candidate, so they show up
+  as a ~6% dip in the HLT jet matching efficiency at 90-200 GeV
+  ([report](https://alobanov.web.cern.ch/L1T/Phase2/menu/Validation/GenJetLeptonContamination/)).
+
+  ```yaml
+  HLTJetMatchingBarrel:
+    reference_cleaning: &prompt_leptons
+      object: GenPart
+      cuts:
+        - "{status} == 1"
+        - "(abs({pdgId}) == 11) | (abs({pdgId}) == 13)"
+        - "({statusFlags} & 33) > 0"  # isPrompt (bit 0) | isDirectPromptTauDecayProduct (bit 5)
+        - "{pt} > 10"
+      dR: 0.4
+    reference_object:
+      object: "GenJet"
+      ...
+  HLTJetMatchingEndcap:
+    reference_cleaning: *prompt_leptons
+  ```
+
+  * `object`: cached object, read from `<version>_<sample>_<object>.parquet` of the same
+    version and sample as the reference (event-aligned; an error is raised otherwise, or if
+    the file is missing).
+  * `cuts`: selection of the cleaning objects, in the `{field}` syntax of the reference cuts.
+  * `dR`: a reference object is removed if any selected object is within `dR`.
+  * A list of such blocks is OR-ed (removed if close to an object of any block).
+  * Configs without `reference_cleaning` are unchanged.
+
+  The prompt-lepton definition above: final-state (`status == 1`) electrons and muons that
+  are prompt (`isPrompt`, statusFlags bit 0) or come from a prompt tau decay
+  (`isDirectPromptTauDecayProduct`, bit 5), with pT > 10 GeV, within dR < 0.4 (the AK4
+  offline lepton-jet cleaning). Hadronic tau decays are *not* removed: their visible
+  products are reconstructed as jets by the L1 and HLT. The result does not depend on the
+  lepton pT cut (5, 10 or 20 GeV) or dR (0.3, 0.4) at the per-mille level.
+
+  It needs `GenPart` with `pdgId`, `status` and `statusFlags` cached for the sample (e.g.
+  `GenPart: [pt, eta, phi, pdgId, status, statusFlags]` in the caching config).
+
+  Applied to the GenJet references of the ttbar jet, HT and MHT configs of
+  `configs/V50nano/object_performance/`: `hlt_jets_{matching,eta,l1seed,resolution,trigger,
+  trigger_wMatching}`, `hlt_ht_{trigger,resolution}`, `path_eff_jets_sums` (jet and HT
+  paths), and the L1 `jets_{matching,matching_eta,trigger,trigger_wMatching,resolution}`
+  (AK4 references). Not applied to the purity configs (a trigger jet built from a prompt
+  electron is not a pileup jet), to the GenJetAK8 references, and to the L1 HT / MHT
+  configs (`met_ht_mht`, `met_resolution`), whose offline scalings would change. The L1
+  PUPPI jets and sums contain the prompt leptons, so the uncleaned reference is the
+  consistent one for L1 HT / MHT (report, section 7).
+
+  Scalings are written for every test object of a plot unless `scalings: objects:` lists a
+  subset (config keys). The cleaned HLT jet / HT / MHT plots use it to keep their L1
+  comparison curves out of the scaling files, which come from the L1 configs:
+
+  ```yaml
+  scalings:
+    objects: ["hltPuppiJetCorrSums:HT", "hltPFPuppiHT:default"]
+    method: "naive"
+    threshold: 0.9
+  ```
 
 ## Response and resolution
 

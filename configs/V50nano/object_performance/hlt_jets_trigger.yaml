@@ -2,6 +2,16 @@
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLTJetTurnonBarrel:
+  # GenJets within dR < 0.4 of a prompt gen e/mu (incl. leptonic tau decays) are not jets:
+  # removed from the reference (docs/object-performance.md#reference-cleaning-reference_cleaning)
+  reference_cleaning: &prompt_leptons
+    object: GenPart
+    cuts:
+      - "{status} == 1"
+      - "(abs({pdgId}) == 11) | (abs({pdgId}) == 13)"
+      - "({statusFlags} & 33) > 0"  # isPrompt (bit 0) | isDirectPromptTauDecayProduct (bit 5)
+      - "{pt} > 10"
+    dR: 0.4
   sample: TT
   version: V50nano
   match_test_to_ref: True
@@ -19,6 +29,8 @@ HLTJetTurnonBarrel:
     L1puppiJetSC4:default:barrel: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:default:barrel"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
@@ -29,6 +41,7 @@ HLTJetTurnonBarrel:
     step: 5
 
 HLTJetTurnonEndcap:
+  reference_cleaning: *prompt_leptons
   sample: TT
   version: V50nano
   match_test_to_ref: True
@@ -46,6 +59,8 @@ HLTJetTurnonEndcap:
     L1puppiJetSC4:default:endcap: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:default:endcap"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"
@@ -56,6 +71,7 @@ HLTJetTurnonEndcap:
     step: 5
 
 HLTJetTurnonForward:
+  reference_cleaning: *prompt_leptons
   sample: TT
   version: V50nano
   match_test_to_ref: True
@@ -73,6 +89,8 @@ HLTJetTurnonForward:
     L1puppiExtJetSC4:default:forwardHF: "pt"
   thresholds: [30, 50, 100, 200, 300]
   scalings:
+    # L1 objects are comparison curves here; their scalings come from the L1 configs
+    objects: ["hltAK4PuppiJetCorr:extended:forwardHF"]
     method: "naive"
     threshold: 0.95
   xlabel: "Gen. $p_T$ (GeV)"

@@ -2,6 +2,16 @@
 # Object definitions: configs/V50nano/objects/hlt.yaml.
 
 HLTJetResolutionBarrel:
+  # GenJets within dR < 0.4 of a prompt gen e/mu (incl. leptonic tau decays) are not jets:
+  # removed from the reference (docs/object-performance.md#reference-cleaning-reference_cleaning)
+  reference_cleaning: &prompt_leptons
+    object: GenPart
+    cuts:
+      - "{status} == 1"
+      - "(abs({pdgId}) == 11) | (abs({pdgId}) == 13)"
+      - "({statusFlags} & 33) > 0"  # isPrompt (bit 0) | isDirectPromptTauDecayProduct (bit 5)
+      - "{pt} > 10"
+    dR: 0.4
   sample: TT
   version: V50nano
   match_test_to_ref: True
@@ -27,6 +37,7 @@ HLTJetResolutionBarrel:
       pt: {min: 0, max: 2, step: 0.04}
 
 HLTJetResolutionEndcap:
+  reference_cleaning: *prompt_leptons
   sample: TT
   version: V50nano
   match_test_to_ref: True
@@ -52,6 +63,7 @@ HLTJetResolutionEndcap:
       pt: {min: 0, max: 2, step: 0.04}
 
 HLTJetResolutionForward:
+  reference_cleaning: *prompt_leptons
   sample: TT
   version: V50nano
   match_test_to_ref: True

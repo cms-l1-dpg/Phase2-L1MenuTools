@@ -6,6 +6,7 @@ import numpy as np
 import vector
 
 from menu_tools.object_performance.config import PerformancePlotConfig
+from menu_tools.object_performance.reference_cleaning import clean_reference
 from menu_tools.utils import constants
 from menu_tools.utils import utils
 from menu_tools.utils.objects import (
@@ -303,6 +304,15 @@ class TurnOnCollection:
         if "met" in self.cfg_plot.reference_object.lower():
             # TODO: Maybe we want to modify it and allow possible cuts on MET
             return
+
+        if self.cfg_plot.reference_cleaning:
+            # Cross-object cleaning (e.g. GenJets near prompt leptons), before any cut
+            self.ak_arrays["ref"] = clean_reference(
+                self.ak_arrays["ref"],
+                self.cfg_plot.reference_cleaning,
+                self.cfg_plot.version,
+                self.cfg_plot.sample,
+            )
 
         ref_object_cuts = self.cfg_plot.reference_object_cuts
         self._apply_list_of_reference_cuts(ref_object_cuts)
