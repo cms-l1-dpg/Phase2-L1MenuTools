@@ -1,0 +1,74 @@
+# HLT AK4 PUPPI jets (hltAK4PuppiJet) vs the L1 seeded-cone PUPPI jets, ttbar.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTJetResolutionBarrel:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJet:default: "pt"
+    L1puppiJetSC4:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 75, 100, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+HLTJetResolutionEndcap:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltAK4PuppiJet:default: "pt"
+    L1puppiJetSC4:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 75, 100, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
+
+HLTJetResolutionForward:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.0"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    hltAK4PuppiJet:extended: "pt"
+    L1puppiExtJetSC4:default: "pt"
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt: {edges: [20, 30, 40, 50, 75, 100, 150, 200, 300, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}

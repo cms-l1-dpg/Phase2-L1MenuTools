@@ -1,0 +1,54 @@
+# HLT HPS taus (hltHpsPFTau, no ID / Medium / Loose DeepTau) vs the L1 NN PUPPI tau, HH -> bbtautau.
+# hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
+# Reference: visible gen taus with |eta| < 2.1 (the HLT tau paths cut |eta| < 2.1).
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTTausMatchingBarrel:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:default: "pt"
+    hltHpsPFTau:MediumDeepTau: "pt"
+    hltHpsPFTau:LooseDeepTau: "pt"
+    L1nnPuppiTau:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+HLTTausMatchingEndcap:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:default: "pt"
+    hltHpsPFTau:MediumDeepTau: "pt"
+    hltHpsPFTau:LooseDeepTau: "pt"
+    L1nnPuppiTau:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
