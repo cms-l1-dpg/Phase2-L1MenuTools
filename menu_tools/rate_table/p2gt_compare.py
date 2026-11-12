@@ -133,10 +133,11 @@ def load_gt_cache(path: str) -> dict[str, np.ndarray]:
 
 
 def load_gt_ntuples(pattern: str) -> dict[str, np.ndarray]:
-    """Decisions read straight from ntuples, in `glob` order as cache_objects does."""
+    """Decisions read straight from ntuples, in sorted file order as cache_objects
+    reads them."""
     import uproot
 
-    fnames = glob.glob(pattern)
+    fnames = sorted(glob.glob(pattern))
     if not fnames:
         raise FileNotFoundError(f"No ntuples match `{pattern}`")
     parts = []

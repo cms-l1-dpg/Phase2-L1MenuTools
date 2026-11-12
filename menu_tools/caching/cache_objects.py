@@ -1,8 +1,10 @@
 import argparse
 import fnmatch
+import functools
 import sys
 import glob
 import os
+import re
 import time
 
 import awkward as ak
@@ -18,8 +20,72 @@ from menu_tools.utils import utils
 vector.register_awkward()
 
 
+@functools.lru_cache(maxsize=None)
+def sorted_ntuple_files(ntuple_path):
+    """All files matching `ntuple_path`, sorted.
+
+    The order must be deterministic: every object of a sample is cached by a separate
+    pass over the files, and the per-event arrays of different objects (L1, HLT, bits)
+    are combined later, so they must stay row-aligned. Chunked caching (--job) slices
+    this same sorted list. Memoised: globbing the 12.5k-file minimum-bias directory
+    on EOS takes ~0.4 s, and it was done several times per object.
+    """
+    return tuple(sorted(glob.glob(ntuple_path)))
+
+
+@functools.lru_cache(maxsize=None)
+def _load_cfg(cfg_file):
+    with open(cfg_file, "r") as f:
+        return yaml.safe_load(f)
+
+
+@functools.lru_cache(maxsize=None)
+def _tree_keys(fname, tree):
+    with uproot.open(fname) as f:
+        return tuple(f[tree].keys())
+
+
+def _all_branches(fname, tree, obj):
+    """Like utils.get_branches, for one file, memoised (nano trees only)."""
+    if tree != "Events":
+        return utils.get_branches(fname, tree, obj)
+    return [
+        x.removeprefix(obj + "_")
+        for x in _tree_keys(fname, tree)
+        if x.startswith(obj + "_")
+    ]
+
+
+def chunk_files(fnames, files_per_job, job):
+    """Slice `job` (0-based) of the sorted file list, `files_per_job` files each."""
+    return fnames[job * files_per_job : (job + 1) * files_per_job]
+
+
+def n_chunks(n_files, files_per_job):
+    return -(-n_files // files_per_job)
+
+
+def chunk_dir(version):
+    return os.path.join(constants.CACHE_DIR, version, "chunks")
+
+
+def chunk_suffix(job):
+    return f"_chunk{job:05d}"
+
+
 class ObjectCacher:
-    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
+    def __init__(
+        self,
+        version,
+        sample,
+        obj,
+        tree,
+        branches,
+        cfg_file,
+        dryrun=False,
+        files_per_job=None,
+        job=None,
+    ):
         self._version = version
         self._sample = sample
         self._cfg_file = cfg_file
@@ -33,10 +99,35 @@ class ObjectCacher:
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
-        # Get Branches: a list, "all", or a glob on the field names, e.g. "*_final"
-        if not isinstance(branches, list):
-            self._branches = utils.get_branches(self._ntuple_path, tree, obj)
-            if branches != "all":
+        # Chunked mode: cache only files [job*files_per_job, (job+1)*files_per_job)
+        # of the sorted file list, into <version>/chunks/<name>_chunkNNNNN.parquet;
+        # merge_chunks.py concatenates them in chunk order.
+        if (files_per_job is None) != (job is None):
+            raise ValueError("--files-per-job and --job must be given together")
+        self._files_per_job = files_per_job
+        self._job = job
+        # Get Branches. Copy lists: YAML anchors can make several samples share one
+        # list object, and the sums handling below appends to it.
+        # `branches` can be a list, "all" (all `<obj>_*` branches of the first file),
+        # a glob on the field names (e.g. "*_final"), or a dict
+        # {"exclude": [regex, ...]} = "all" minus the fields matching any regex
+        # (e.g. the `_pHLT` copies of the HLT bits).
+        if isinstance(branches, list):
+            self._branches = list(branches)
+        else:
+            # first file of the sorted list (get_branches globs and takes [0])
+            first = sorted_ntuple_files(self._ntuple_path)[:1]
+            self._branches = (
+                _all_branches(first[0], tree, obj)
+                if first
+                else utils.get_branches(self._ntuple_path, tree, obj)
+            )
+            if isinstance(branches, dict):
+                excl = [re.compile(x) for x in branches.get("exclude", [])]
+                self._branches = [
+                    b for b in self._branches if not any(r.search(b) for r in excl)
+                ]
+            elif branches != "all":
                 self._branches = [
                     b for b in self._branches if fnmatch.fnmatchcase(b, branches)
                 ]
@@ -44,9 +135,10 @@ class ObjectCacher:
                     raise ValueError(
                         f"No `{obj}` branches match `{branches}` in {self._ntuple_path}"
                     )
+        if self._job is not None:
+            self.cache_out_path = chunk_dir(version) + "/"
         else:
-            self._branches = branches
-        self.cache_out_path = os.path.join(constants.CACHE_DIR, version) + "/"
+            self.cache_out_path = os.path.join(constants.CACHE_DIR, version) + "/"
         os.makedirs(self.cache_out_path, exist_ok=True)
 
     @property
@@ -58,7 +150,16 @@ class ObjectCacher:
         fname = self._version + "_" + self._sample + "_" + self._object
         if self._part_type:
             fname += "_" + self._part_type
+        if self._job is not None:
+            fname += chunk_suffix(self._job)
         return fname
+
+    @property
+    def _input_files(self):
+        fnames = sorted_ntuple_files(self._ntuple_path)
+        if self._job is not None:
+            fnames = chunk_files(fnames, self._files_per_job, self._job)
+        return fnames
 
     @property
     def _ntuple_path(self):
@@ -69,8 +170,7 @@ class ObjectCacher:
         if glob.glob(local_ntuple_path):
             return local_ntuple_path
 
-        with open(self._cfg_file, "r") as f:
-            cfg = yaml.safe_load(f)[self._version][self._sample]
+        cfg = _load_cfg(self._cfg_file)[self._version][self._sample]
         return cfg["ntuple_path"]
 
     def _p4_sum(self, array, axis=-1):
@@ -260,43 +360,39 @@ class ObjectCacher:
             chunk_array[branch_key] = branch_arr
         return chunk_array
 
-    def _ak_array_in_chunk(self, arr, chunk_array, branches):
-        for branch in branches:
-            branch_key = branch.removeprefix("part")
-            arr[branch_key] = ak.concatenate([arr[branch_key], chunk_array[branch_key]])
-        return arr
-
-    @utils.timer("Loading objects files")
-    def _concat_array_from_ntuples(self):
-        fnames = glob.glob(self._ntuple_path)[:]
-
+    @property
+    def _nano_branches(self):
         ## Nano
         if self._tree == "Events":
-            branches = [f"{self._object}_{x}" for x in self._branches]
+            return [f"{self._object}_{x}" for x in self._branches]
         ## menu ntuple
-        else:
-            branches = [self._object + x for x in self._branches]
+        return [self._object + x for x in self._branches]
 
-        all_arrays = {x.removeprefix("part"): [] for x in branches}
+    def _begin(self):
+        """Start reading.
 
-        for fname in tqdm(fnames):
-            new_array = {x.removeprefix("part"): [] for x in branches}
+        Per-branch lists of per-step arrays, concatenated in _finish.
+        """
+        self._pieces = {x.removeprefix("part"): [] for x in self._nano_branches}
 
-            # Read files in chunks to avoid issues with large size files
-            chunk_name = f"{fname}:{self._tree}"
-            for array in uproot.iterate(
-                chunk_name, filter_name=branches, step_size="100 MB"
-            ):
-                chunk_array = {x.removeprefix("part"): [] for x in branches}
-                chunk_array = self._load_branches_from_ntuple(
-                    chunk_array, array, branches
-                )
-                chunk_array = self._postprocess_branches(chunk_array)
+    def _add_file(self, tree_obj):
+        """Read this object's branches from an open TTree (one file)."""
+        branches = self._nano_branches
+        # Read files in chunks to avoid issues with large size files
+        for array in tree_obj.iterate(filter_name=branches, step_size="100 MB"):
+            chunk_array = {x.removeprefix("part"): [] for x in branches}
+            chunk_array = self._load_branches_from_ntuple(chunk_array, array, branches)
+            chunk_array = self._postprocess_branches(chunk_array)
+            for branch in branches:
+                key = branch.removeprefix("part")
+                self._pieces[key].append(chunk_array[key])
 
-                new_array = self._ak_array_in_chunk(new_array, chunk_array, branches)
-
-            # Concatenate array from "fname file" to all_arrays
-            all_arrays = self._ak_array_in_chunk(all_arrays, new_array, branches)
+    def _finish(self):
+        all_arrays = {
+            k: ak.concatenate(v) if len(v) > 1 else v[0]
+            for k, v in self._pieces.items()
+        }
+        del self._pieces
 
         if self._object.startswith("part"):
             all_arrays = {**all_arrays, **self._ref_part_iso}
@@ -311,6 +407,14 @@ class ObjectCacher:
                 self._branches += [f"{self._object}_sumType"]
         else:
             self._final_ak_array = ak.Array(all_arrays)
+
+    @utils.timer("Loading objects files")
+    def _concat_array_from_ntuples(self):
+        self._begin()
+        for fname in tqdm(self._input_files):
+            with uproot.open(fname) as f:
+                self._add_file(f[self._tree])
+        self._finish()
 
     def _cache_file_exists(self):
         """
@@ -340,11 +444,10 @@ class ObjectCacher:
         )
         os.replace(fpath + ".tmp", fpath)
 
-    def load(self):
-        # print(f"Process {self._object + self._part_type} object...")
-
+    def _needs_work(self):
+        """False if cached already or dry run; raises if there are no input files."""
         if self._cache_file_exists():
-            return
+            return False
 
         print(
             f"Loading {self._object + self._part_type} object "
@@ -352,18 +455,53 @@ class ObjectCacher:
         )
 
         if self._dryrun:
-            return
+            return False
 
-        if not glob.glob(self._ntuple_path):
+        if not self._input_files:
             raise FileNotFoundError(
-                f"No input ntuples match `{self._ntuple_path}`; not writing "
-                f"{self.parquet_fname}"
+                f"No input ntuples match `{self._ntuple_path}`"
+                + (f" in job {self._job}" if self._job is not None else "")
+                + f"; not writing {self.parquet_fname}"
             )
+        return True
 
+    def load(self):
+        if not self._needs_work():
+            return
         start_time = time.time()
         self._concat_array_from_ntuples()
         self._save_array_to_parquet()
         print(f"Loaded {self.parquet_fname} in {time.time() - start_time:.2f} s")
+
+
+def load_file_major(loaders):
+    """Cache several objects of one sample/tree/file list, opening each file once.
+
+    Deserialising the TTree metadata of a nano (~1000 branches) costs ~0.5 s per open,
+    which dominated the per-object loop for the 160-event minimum-bias files. All
+    objects of the file list are held in memory at once: use it with chunks (--job).
+    """
+    loaders = [ld for ld in loaders if ld._needs_work()]
+    if not loaders:
+        return
+    start_time = time.time()
+    fnames = loaders[0]._input_files
+    tree = loaders[0]._tree
+    assert all(ld._input_files == fnames and ld._tree == tree for ld in loaders)
+    for ld in loaders:
+        ld._begin()
+    for fname in tqdm(fnames):
+        with uproot.open(fname) as f:
+            tree_obj = f[tree]
+            for ld in loaders:
+                ld._add_file(tree_obj)
+    for ld in loaders:
+        ld._finish()
+        ld._save_array_to_parquet()
+    print(
+        f"Loaded {len(loaders)} objects from {len(fnames)} files "
+        f"in {time.time() - start_time:.2f} s"
+    )
 
 
 def parse_args():
@@ -378,7 +516,35 @@ def parse_args():
         action="store_true",
         help="Only do print-out of objects and branches to be loaded.",
     )
+    parser.add_argument(
+        "--samples",
+        nargs="+",
+        default=None,
+        help="Only cache these samples (default: all samples in the config).",
+    )
+    parser.add_argument(
+        "--objects",
+        nargs="+",
+        default=None,
+        help="Only cache these objects (config keys, default: all).",
+    )
+    parser.add_argument(
+        "--files-per-job",
+        type=int,
+        default=None,
+        help="Chunked caching: number of input files per job (with --job). Output goes "
+        "to <cache>/<version>/chunks/<version>_<sample>_<object>_chunkNNNNN.parquet; "
+        "merge with menu_tools/caching/merge_chunks.py.",
+    )
+    parser.add_argument(
+        "--job",
+        type=int,
+        default=None,
+        help="Chunked caching: 0-based chunk index into the sorted file list.",
+    )
     args = parser.parse_args()
+    if (args.files_per_job is None) != (args.job is None):
+        parser.error("--files-per-job and --job must be given together")
     return args
 
 
@@ -389,16 +555,20 @@ def main():
 
     start_time = time.time()
     args = parse_args()
-    with open(args.cfg, "r") as f:
-        cfg = yaml.safe_load(f)
+    cfg = _load_cfg(args.cfg)
     for version, samples in cfg.items():
         print("Processing: version", version)
         for sample, sample_cfg in samples.items():
+            if args.samples and sample not in args.samples:
+                continue
             print("\tSample:", sample)
             for tree, object_branches in sample_cfg["trees_branches"].items():
                 if tree == "ntuple_path":
                     continue
+                loaders = []
                 for obj, branches in object_branches.items():
+                    if args.objects and obj not in args.objects:
+                        continue
                     print("\t\tObject:", obj)
                     loader = ObjectCacher(
                         version=version,
@@ -408,8 +578,15 @@ def main():
                         branches=branches,
                         cfg_file=args.cfg,
                         dryrun=args.dry_run,
+                        files_per_job=args.files_per_job,
+                        job=args.job,
                     )
-                    loader.load()
+                    if args.job is None:
+                        loader.load()
+                    else:
+                        loaders.append(loader)
+                # chunked mode: read each file once for all objects
+                load_file_major(loaders)
     print(f"Caching finished in {time.time() - start_time:.2f} s")
 
 
