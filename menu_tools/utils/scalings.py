@@ -3,19 +3,24 @@ import warnings
 from typing import Optional
 
 import awkward as ak
+import numpy as np
 import yaml
 
 from menu_tools.utils.objects import Object
 
 
 def load_scaling_params(
-    obj: Object, eta_range: str, scaling_version: Optional[str] = None
+    obj: Object,
+    eta_range: str,
+    scaling_version: Optional[str] = None,
+    decimals: Optional[int] = None,
 ) -> tuple[float, float]:
     """Retrieves scalings for object+id from `outputs`
 
     obj: Object for which to retrive scaling parameters
     eta_range: specifier of the range for which scalings are to be retrieved
     scaling_version: version to load scalings from (overrides obj.version)
+    decimals: round the parameters to this many decimals, as np.round
 
     Returns:
         scaling_params: parameters computed in object_performance
@@ -40,7 +45,12 @@ def load_scaling_params(
             lineno=26,
         )
         raise UserWarning
-    return scaling_params["slope"], scaling_params["offset"]
+    slope = float(scaling_params["slope"])
+    offset = float(scaling_params["offset"])
+    if decimals is not None:
+        slope = float(np.round(slope, decimals))
+        offset = float(np.round(offset, decimals))
+    return slope, offset
 
 
 def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
@@ -61,7 +71,10 @@ def get_pt_branch(arr: ak.Array, obj_name: str) -> ak.Array:
 
 
 def add_offline_pt(
-    arr: ak.Array, obj: Object, scaling_version: Optional[str] = None
+    arr: ak.Array,
+    obj: Object,
+    scaling_version: Optional[str] = None,
+    decimals: Optional[int] = None,
 ) -> ak.Array:
     """
     Add offline pt to filed called `offline_pt` and return array
@@ -72,7 +85,7 @@ def add_offline_pt(
     if len(obj.eta_ranges) == 1 and list(obj.eta_ranges)[0] == "inclusive":
         # if only a single eta range is configured, the scalings are applied
         # inclusively on that region
-        slope, offset = load_scaling_params(obj, "inclusive", scaling_version)
+        slope, offset = load_scaling_params(obj, "inclusive", scaling_version, decimals)
         new_pt = new_pt + (pt_orig * slope + offset)
     else:
         # if multiple eta ranges are found, the "inclusive" range is skipped
@@ -80,7 +93,9 @@ def add_offline_pt(
         for eta_range, eta_min_max in obj.eta_ranges.items():
             if eta_range == "inclusive":
                 continue
-            slope, offset = load_scaling_params(obj, eta_range, scaling_version)
+            slope, offset = load_scaling_params(
+                obj, eta_range, scaling_version, decimals
+            )
             eta_mask = (abs(arr.eta) >= eta_min_max[0]) & (
                 abs(arr.eta) < eta_min_max[1]
             )

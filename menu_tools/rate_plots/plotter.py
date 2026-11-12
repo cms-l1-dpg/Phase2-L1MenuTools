@@ -20,6 +20,7 @@ from menu_tools.rate_plots.config import RatePlotConfig
 from menu_tools.utils.versions import (
     add_version_argument,
     get_versions,
+    parse_args,
     run_per_version,
 )
 
@@ -467,7 +468,7 @@ def main():
         ),
         default=None,
     )
-    args = parser.parse_args()
+    args = parse_args(parser)
 
     def run(version):
         plotter = RatePlotCentral(
