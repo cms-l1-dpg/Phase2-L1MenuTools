@@ -1,9 +1,25 @@
+import copy
+import functools
 import glob
 import re
 from typing import Optional
 import yaml
 
 import awkward as ak
+
+
+@functools.lru_cache(maxsize=None)
+def _load_object_configs(version: str) -> dict:
+    """Parses and merges the object configs of `version` once per run."""
+    nano_obj_configs: dict[str, dict] = {}
+    config_path = f"configs/{version}/objects/*.y*ml"
+    config_files = glob.glob(config_path)
+
+    for config in config_files:
+        with open(config, "r") as f:
+            _conf_dict = yaml.safe_load(f)
+        nano_obj_configs = nano_obj_configs | _conf_dict
+    return nano_obj_configs
 
 
 class Object:
@@ -73,17 +89,11 @@ class Object:
             nano_obj_configs: dictionary containing the object parameters and ids
             or None if no configuration is found.
         """
-        nano_obj_configs: dict[str, dict] = {}
-        config_path = f"configs/{self.version}/objects/*.y*ml"
-        config_files = glob.glob(config_path)
-
-        for config in config_files:
-            with open(config, "r") as f:
-                _conf_dict = yaml.safe_load(f)
-            nano_obj_configs = nano_obj_configs | _conf_dict
+        nano_obj_configs = _load_object_configs(self.version)
 
         try:
-            return nano_obj_configs[self.nano_obj_name]
+            # Deep copy: `cuts` and `eta_ranges` modify the dict they are given.
+            return copy.deepcopy(nano_obj_configs[self.nano_obj_name])
         except KeyError:
             raise FileNotFoundError(
                 f"No config file found for {self.nano_obj_name}:{self.obj_id_name}!"

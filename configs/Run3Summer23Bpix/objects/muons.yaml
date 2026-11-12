@@ -1,0 +1,21 @@
+GenPart:
+  label: "Gen Muon"
+  eta_ranges:
+    inclusive: [0, 7]
+  ids:
+    gen_electron_default:
+      cuts:
+        inclusive:
+          - "(({statusFlags}>>7)&1) == 1"
+
+
+L1Mu:
+  label: "GMT Muon"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 0.83]
+    overlap: [0.83, 1.24]
+    endcap: [1.24, 2.4]
+  ids:
+    default: {}

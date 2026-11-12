@@ -1,0 +1,73 @@
+Run3Winter24:
+  # DYLL_M50:
+  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/DYToLL_M-50_TuneCP5_14TeV-pythia8/DY_M50_131_200PU_v32_reL1only/240205_120621/0000/l1nano_*.root
+  #   trees_branches:
+  #     Events:
+  #       GenPart: "all" 
+  #       prunedGenPart: "all" 
+  #       # GenVisTau: "all" 
+  #       # L1scJet: [pt, eta, phi]
+  #       # L1scExtJet: [pt, eta, phi, btagScore]
+  #       L1gmtTkMuon: "all" 
+  #       L1StaMu: "all"  # aka gmtMuon
+  #       L1tkElectron: "all" 
+  #       # L1nnTau: "all" 
+  TT:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/run3/L1nano/Run3Winter24/TT_TuneCP5_13p6TeV_powheg-pythia8/TT_Winter24_GT133X_mcRun3_2024_realistic_v8/240124_123719/0000/*_1.root
+    trees_branches:
+      Events:
+        # # gen
+        # GenJet: [pt, eta, phi]
+        # GenVisTau: [pt, eta, phi]
+        # GenPart: "all" 
+        # GenMET: [pt]
+        # # sums
+        # L1EtSum: [pt, phi, etSumType]
+        # L1Jet: [pt, eta, phi]
+        L1EG: [pt, eta, phi, hwIso]
+        #L1Tau: [pt, eta, phi, hwIso]
+        # Tau: [pt, eta, phi, idDeepTau2018v2p5VSe, idDeepTau2018v2p5VSmu, idDeepTau2018v2p5VSjet]
+        L1Mu: [pt, eta, phi, hwQual]
+          ### OFFLINE
+        # PuppiMET: [pt]
+
+  VBFHinv:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/run3/L1nano/Run3Winter24/VBFHToInvisible_M-125_TuneCP5_13p6TeV_powheg-pythia8/VBFHInv_Winter24_GTv9_GT133X_mcRun3_2024_realistic_v8/240119_200112/hadd.root
+    trees_branches:
+      Events:
+        # gen
+        GenJet: [pt, eta, phi]
+        # GenVisTau: [pt, eta, phi]
+        # GenPart: "all" 
+        GenMET: [pt]
+        # sums
+        L1EtSum: [pt, phi, etSumType]
+        L1Jet: [pt, eta, phi]
+        # L1EG: [pt, eta, phi, hwIso]
+        # L1Tau: [pt, eta, phi, hwIso]
+        # L1Mu: [pt, eta, phi, hwQual]
+
+  HHbbWW:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/run3/L1nano/Run3Winter24/GluGlutoHHto2B2WtoLNu2Q_kl-1p00_kt-1p00_c2-0p00_TuneCP5_13p6TeV_powheg-pythia8/HHbbWW_2b2WqqLNu_Winter24_GT133X_mcRun3_2024_realistic_v8/240119_191931/hadd.root
+    trees_branches:
+      Events:
+        # gen
+        GenJet: [pt, eta, phi]
+        # GenVisTau: [pt, eta, phi]
+        # GenPart: "all" 
+        GenMET: [pt]
+        # sums
+        L1EtSum: [pt, phi, etSumType]
+        L1Jet: [pt, eta, phi]
+        # L1EG: [pt, eta, phi, hwIso]
+        L1Tau: [pt, eta, phi, hwIso]
+        # L1Mu: [pt, eta, phi, hwQual]
+        ### OFFLINE
+        PuppiMET: [pt]
+  # VBFHToTauTau:
+  #   ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/14X/v32_reL1only/VBFHToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHToTauTau_131_200PU_v32_reL1only/240206_115854/0000/l1nano_*.root
+  #   trees_branches:
+  #     Events:
+  #       GenVisTau: "all" 
+  #       L1nnTau: "all" 
+  #       L1caloTau: "all" 

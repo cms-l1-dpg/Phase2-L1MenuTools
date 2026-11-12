@@ -1,0 +1,4 @@
+version: "V49nano_RelVal"
+sample: "MinBias"
+menu_config: "configs/V49nano_RelVal/rate_table/step1p5_menu_cfg.yml"
+table_fname: "v45_Step1p5Menu"

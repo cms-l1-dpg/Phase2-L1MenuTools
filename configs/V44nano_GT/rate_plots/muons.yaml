@@ -1,0 +1,34 @@
+gmtMuonByRegion:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1GTgmtMuon:default:barrel
+    - L1GTgmtMuon:default:overlap
+    - L1GTgmtMuon:default:endcap
+  binning:
+    min: 0
+    max: 75
+    step: 3
+
+gmtTkMuonByRegion:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1GTgmtTkMuon:default:barrel
+    - L1GTgmtTkMuon:default:overlap
+    - L1GTgmtTkMuon:default:endcap
+  binning:
+    min: 0
+    max: 75
+    step: 3
+
+MuonRates:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1GTgmtMuon:default
+    - L1GTgmtTkMuon:default
+  binning:
+    min: 0
+    max: 75
+    step: 3

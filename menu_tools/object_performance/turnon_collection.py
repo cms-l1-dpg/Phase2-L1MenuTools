@@ -26,7 +26,11 @@ class ArrayLoader:
         """
         ## nano
         if ("_" in raw_key) and ("dr_0" not in raw_key):
-            key = raw_key.removeprefix(obj).split("_")[-1]
+            # Strip the exact `<obj>_` prefix: field names can contain underscores.
+            if raw_key.startswith(obj + "_"):
+                key = raw_key.removeprefix(obj + "_")
+            else:
+                key = raw_key.removeprefix(obj).split("_")[-1]
         ## menu ntuples
         else:
             key = raw_key.removeprefix(obj).lower()
@@ -84,15 +88,16 @@ class ArrayLoader:
 
 class TurnOnCollection:
     def __init__(
-        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None
+        self, cfg_plot: dict, threshold: float, plot_name: Optional[str] = None, config_version: Optional[str] = None, override_version: Optional[str] = None
     ):
-        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name)
+        self._config_version = config_version
+        self._override_version = override_version
+        self.cfg_plot = PerformancePlotConfig(cfg_plot, plot_name, config_version=config_version, override_version=override_version)
         self.version = self.cfg_plot.version
         self.threshold = threshold
         self.ak_arrays: dict[str, Any] = {}
         self.numerators: dict[str, Any] = {"ref": {}, "test": {}}
         self.hists: dict[str, Any] = {"ref": {}}
-        self._prepared = False
 
     @property
     def test_objects(self) -> list[tuple[Object, str]]:
@@ -104,8 +109,14 @@ class TurnOnCollection:
         obj_args = []
 
         test_objects = self.cfg_plot.test_objects
+        
+        # Determine correct version for object definition
+        obj_version = self.version
+        if self._override_version and self._config_version:
+             obj_version = self._config_version
+
         for obj_key, x_arg in test_objects.items():
-            obj = Object(obj_key, self.cfg_plot.version)
+            obj = Object(obj_key, obj_version)
             if "L1" in obj_key:
                 obj_args.append((obj, x_arg))
             else:
@@ -369,23 +380,23 @@ class TurnOnCollection:
         self._apply_reference_cuts()
         self._apply_reference_trafo()
 
-    def prepare(self) -> None:
-        """Load, select, and match arrays independently of the L1 threshold."""
-        if self._prepared:
-            return
+    def _skim(self):
+        if not self.cfg_plot.matching:
+            self._skim_to_hists()
+        else:
+            if self.cfg_plot.iso_vs_eff_plot:
+                self._skim_to_hists_dR_matched_Iso()
+            else:
+                self._skim_to_hists_dR_matched()
 
+    def set_threshold(self, threshold):
+        """Re-histograms at a new threshold; loading, cuts and matching don't depend on it."""
+        self.threshold = threshold
+        self._skim()
+
+    def create_hists(self):
         self._load_arrays()
         self._apply_cuts()
         if self.cfg_plot.matching:
             self._match_test_to_ref()
-        self._prepared = True
-
-    def create_hists(self):
-        self.prepare()
-        self.hists = {"ref": {}}
-        if not self.cfg_plot.matching:
-            self._skim_to_hists()
-        elif self.cfg_plot.iso_vs_eff_plot:
-            self._skim_to_hists_dR_matched_Iso()
-        else:
-            self._skim_to_hists_dR_matched()
+        self._skim()

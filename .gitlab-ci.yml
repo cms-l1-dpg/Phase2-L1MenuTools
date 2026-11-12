@@ -13,10 +13,10 @@ stages:
   - publish
 
 variables:
-  # These public group-area samples are the V44nano baseline. Override the
+  # These public group-area samples follow the V50nano_170 baseline. Override the
   # paths when starting a pipeline with different compatible menu Nanos.
-  JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V44_reL1wTT/241004_154807/hadd/output_Phase2_L1T.root"
-  TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/142pre1/v44/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V44_reL1wTT/*/0000/*.root"
+  JET_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/TT_TuneCP5_14TeV-powheg-pythia8/TT_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
+  TAU_NANO_GLOB: "root://eoscms.cern.ch//eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/roward/phase2/menu/ntuples/Spring24/170/v45/VBF_HToTauTau_M-125_TuneCP5_14TeV-powheg-pythia8/VBFHtoTaus_Spring24_200PU_V45_reL1wTT_170/*/hadd/*.root"
   PUBLISH_EOS_BASE: "/eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/cmsl1dpg/MenuTools"
   MPLBACKEND: "Agg"
   LCG_VIEW: "/cvmfs/sft.cern.ch/lcg/views/LCG_106/x86_64-el8-gcc11-opt"
@@ -73,13 +73,13 @@ cache_menu_objects:
     - echo "Reading jet and event-sum input from ${JET_NANO_GLOB}"
     - echo "Reading tau input from ${TAU_NANO_GLOB}"
     - cache_objects configs/ci/pf_performance_caching.yaml
-    - find cache/V44nano -type f -print
+    - find cache/V50nano_170 -type f -print
 
   # Object-performance jobs in the next stage reuse this columnar cache.
   artifacts:
     expire_in: 14 days
     paths:
-      - cache/V44nano/
+      - cache/V50nano_170/
 
 .object_performance:
   stage: object-performance
@@ -91,33 +91,33 @@ cache_menu_objects:
     when: always
     expire_in: 14 days
     paths:
-      - outputs/V44nano/object_performance/
+      - outputs/V50nano_170/object_performance/
 
 jet_matching_efficiency:
   extends: .object_performance
   script:
-    - object_performance configs/V44nano/object_performance/jets_matching.yaml
+    - object_performance configs/V50nano/object_performance/jets_matching.yaml --version V50nano_170
 
 jet_trigger_turnons:
   extends: .object_performance
   script:
-    - object_performance configs/V44nano/object_performance/jets_trigger.yaml
-    - object_performance configs/V44nano/object_performance/jets_sc8_trigger.yaml
+    - object_performance configs/V50nano/object_performance/jets_trigger.yaml --version V50nano_170
+    - object_performance configs/V50nano/object_performance/jets_sc8_trigger.yaml --version V50nano_170
 
 event_sum_turnons:
   extends: .object_performance
   script:
-    - object_performance configs/V44nano/object_performance/met_ht_mht.yaml
+    - object_performance configs/V50nano/object_performance/met_ht_mht.yaml --version V50nano_170
 
 tau_matching_efficiency:
   extends: .object_performance
   script:
-    - object_performance configs/V44nano/object_performance/tau_matching.yaml
+    - object_performance configs/V50nano/object_performance/tau_matching.yaml --version V50nano_170
 
 tau_trigger_turnons:
   extends: .object_performance
   script:
-    - object_performance configs/V44nano/object_performance/tau_trigger.yaml
+    - object_performance configs/V50nano/object_performance/tau_trigger.yaml --version V50nano_170
 
 publish_plots:
   image: gitlab-registry.cern.ch/cms-cactus/ops/auto-devops/eos:tag-0.4.10
@@ -135,8 +135,8 @@ publish_plots:
       artifacts: true
   variables:
     EOS_MGM_URL: "root://eoscms.cern.ch"
-    LOCAL_FOLDER: "${CI_PROJECT_DIR}/outputs/V44nano"
-    CERNBOX_FOLDER: "${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}/V44nano"
+    LOCAL_FOLDER: "${CI_PROJECT_DIR}/outputs/V50nano_170"
+    CERNBOX_FOLDER: "${PUBLISH_EOS_BASE}/${CI_COMMIT_REF_SLUG}/pipeline-${CI_PIPELINE_ID}/V50nano_170"
   # Publication is optional and must be requested after the plots are ready.
   when: manual
   allow_failure: true
@@ -151,7 +151,7 @@ publish_plots:
         "tau_input=${TAU_NANO_GLOB}" \
         "eos_endpoint=${EOS_MGM_URL}" \
         "eos_destination=${CERNBOX_FOLDER}" \
-        > outputs/V44nano/CI_PROVENANCE.txt
+        > outputs/V50nano_170/CI_PROVENANCE.txt
 
   script:
     # eos-sync in this image hardcodes EOSUSER; use the EOS client directly

@@ -7,6 +7,7 @@ import yaml
 import json
 
 from menu_tools.object_performance.plotter import Plotter
+from menu_tools.utils.plotting import add_watermark
 
 plt.style.use(hep.style.CMS)
 
@@ -47,16 +48,8 @@ class ComparisonCentral(Plotter):
         ax.set_ylabel(rf"{ylabel}")
         ax.set_ylim(0.0, 1)
         ax.tick_params(direction="in")
-        ax.text(
-            0,
-            -0.1,
-            self._get_watermark(cfg),
-            color="grey",
-            alpha=0.2,
-            fontsize=20,
-            transform=ax.transAxes,
-        )
         fig.tight_layout()
+        add_watermark(ax, self._get_watermark(cfg))
 
     def run(self):
         for plot_name, cfg in self.cfgs.items():

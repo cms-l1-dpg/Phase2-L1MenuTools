@@ -1,0 +1,89 @@
+JetDefaultRates:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    # - L1puppiJetHisto:default
+    - L1puppiJetSC4:default
+    - L1puppiJetSC4NG:default
+    - L1caloJet:default
+    - L1TrackJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetsByRegion:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    - L1puppiJetSC4:default:barrel
+    - L1puppiJetSC4:default:endcap
+    - L1puppiJetSC4:default:forwardHGC
+    - L1puppiJetSC4:default:forwardHF
+    - L1caloJet:default:barrel
+    - L1caloJet:default:endcap
+    - L1caloJet:default:forwardHGC
+    - L1caloJet:default:forwardHF
+    # - L1TrackJet:default:barrel
+    # - L1TrackJet:default:endcap
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRates:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    - L1puppiJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
+    - L1puppiExtJetSC4:default:inclusive
+    - L1puppiExtJetSC4:bjetnn:inclusive
+    - L1puppiJetSC4NG:bjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesTags:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    - L1puppiExtJetSC4:default:inclusive
+    - L1puppiJetSC4NG:default:inclusive
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:mass30:inclusive
+    # - L1puppiJetSC4NG:taupjetnn:inclusive
+    # - L1puppiJetSC4NG:taunjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetExtendedRatesByRegion:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    - L1puppiExtJetSC4:default:barrel
+    - L1puppiExtJetSC4:default:endcap
+    - L1puppiExtJetSC4:default:forwardHF
+    - L1puppiExtJetSC4:default:forwardHGC
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetSC8RatesMassID:
+  sample: MinBias
+  version: V49nano_AR25
+  test_objects:
+    # - L1puppiExtJetSC4:default:inclusive
+    # - L1puppiJetSC4NG:default:inclusive
+    - L1puppiJetSC8:default:inclusive
+    - L1puppiJetSC8:mass30:inclusive
+    # - L1puppiJetSC4NG:taupjetnn:inclusive
+    # - L1puppiJetSC4NG:taunjetnn:inclusive
+  binning:
+    min: 40
+    max: 420
+    step: 20

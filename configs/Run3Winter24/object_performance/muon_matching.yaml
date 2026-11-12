@@ -1,0 +1,73 @@
+MuonsMatchingBarrel:
+  sample: TT
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muon"
+    cuts:
+      event:
+        # - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 0.83"
+  test_objects:
+    L1Mu:default:barrel: "pt"
+    L1Mu:pt22:barrel: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingOverlap:
+  sample: TT
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muon"
+    cuts:
+      event:
+        # - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 0.83"
+        - "abs({eta}) < 1.24"
+  test_objects:
+    L1Mu:default:overlap: "pt"
+    L1Mu:pt22:overlap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (overlap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+MuonsMatchingEndcap:
+  sample: TT
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        # - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) > 1.24"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1Mu:default:endcap: "pt"
+    L1Mu:pt22:endcap: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

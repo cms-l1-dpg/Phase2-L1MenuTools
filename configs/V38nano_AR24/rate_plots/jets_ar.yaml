@@ -1,0 +1,23 @@
+JetDefaultRates:
+  sample: MinBias
+  version: V38nano
+  test_objects:
+    # - L1puppiJetHisto:default
+    - L1puppiJetSC4:default 
+    - L1caloJet:default
+    - L1TrackJet:default
+  binning:
+    min: 40
+    max: 420
+    step: 20
+
+JetSC4SC8Rates:
+  sample: MinBias
+  version: V38nano
+  test_objects:
+    - L1puppiJetSC4:default
+    - L1puppiJetSC8:default
+  binning:
+    min: 40
+    max: 420
+    step: 20

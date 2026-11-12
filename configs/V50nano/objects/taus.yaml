@@ -1,0 +1,94 @@
+L1nnPuppiTau:
+  label: "NN Puppi Tau"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
+          # - "{passLooseNN}==1"
+          # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
+          - "{chargedIso} > 0.22"
+    noID:
+      label: "NN Puppi Tau, no ID"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
+    extended:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          # - "{passLooseNN}==1"
+          # Current IB (22 Feb recipe) does not have updated WP, so cut on NN score rather than checking passLooseNN
+          - "{chargedIso} > 0.22"
+    noIDExt:
+      label: "NN Puppi Tau, no ID"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+
+L1hpsTau: # not in 151pre2
+  label: "HPS Tau"
+  match_dR: 0.1
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
+    extended:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+
+L1caloTau:
+  label: "Calo Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 3.0] # temp hack to use same scalings for endcap
+    # endcap: [1.5, 2.4]
+    # forwardHGC: [2.4, 3]
+    # forwardHF: [3, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
+    extended:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3.0"
+  PtGe20:
+    label: "Calo Tau, pt > 20"
+    cuts:
+      inclusive:
+        - "abs({eta}) < 2.4"
+        - "{pt} > 20"
+
+L1nnCaloTau:
+  label: "NN Calo Tau"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.172"
+          - "{hwQual}==3"
+    extended:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 3.0"
+          - "{hwQual}==3"

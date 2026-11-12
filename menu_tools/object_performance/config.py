@@ -5,8 +5,10 @@ from menu_tools.utils.objects import Object
 
 
 class PerformancePlotConfig(BasePlotConfig):
-    def __init__(self, cfg: dict[str, Any], name: Optional[str] = None) -> None:
+    def __init__(self, cfg: dict[str, Any], name: Optional[str] = None, config_version: Optional[str] = None, override_version: Optional[str] = None) -> None:
         super().__init__(cfg, name)
+        self._config_version = config_version
+        self._override_version = override_version
 
     @property
     def iso_vs_eff_plot(self):
@@ -96,8 +98,21 @@ class PerformancePlotConfig(BasePlotConfig):
         return self._cfg["ylabel"]
 
     @property
+    def version(self) -> str:
+        if self._override_version:
+            return self._override_version
+        return super().version
+
+    @property
+    def version_for_objects(self) -> str:
+        if self._override_version and self._config_version:
+            return self._config_version
+        return self.version
+
+    @property
     def test_object_instances(self) -> list:
         test_objects = []
+        
         for obj_key in self._cfg["test_objects"]:
-            test_objects.append(Object(obj_key, self.version))
+            test_objects.append(Object(obj_key, self.version_for_objects))
         return test_objects

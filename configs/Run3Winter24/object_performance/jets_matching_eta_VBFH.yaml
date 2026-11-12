@@ -1,0 +1,46 @@
+JetMatching_Eta_Pt40To100_VBFHinv:
+  sample: VBFHinv
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object: 
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 40"
+        - "{pt} < 100"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1Jet:default: "eta"
+    # L1Tau:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (40-100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25
+
+JetMatching_Eta_Pt100ToInf_VBFHinv:
+  sample: VBFHinv
+  version: Run3Winter24
+  match_test_to_ref: True
+  reference_object: 
+    object: "GenJet"
+    x_arg: "eta"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 5"
+  test_objects:
+    L1Jet:default: "eta"
+    # L1Tau:default: "eta"
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Matching Efficiency (>100 GeV)"
+  binning:
+    min: -5
+    max: 5
+    step: 0.25

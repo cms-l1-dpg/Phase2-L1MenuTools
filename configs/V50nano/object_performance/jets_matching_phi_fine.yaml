@@ -1,0 +1,72 @@
+JetMatching_PhiFine_Pt40To100:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "phi"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 40"
+        - "{pt} < 100"
+      object:
+        - "abs({eta}) < 1.3"
+  test_objects:
+    # L1puppiJetHisto:default: "phi"
+    L1puppiJetSC4:default: "phi"
+    L1caloJet:default: "phi"
+    L1TrackJet:default: "phi"
+  xlabel: "Gen. $\\phi$"
+  ylabel: "Matching Efficiency (40-100 GeV)"
+  binning:
+    min: -3.2
+    max: 3.2
+    step: 0.05
+
+JetMatching_PhiFine_Pt100ToInf:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "phi"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 1.3"
+  test_objects:
+    # L1puppiJetHisto:default: "phi"
+    L1puppiJetSC4:default: "phi"
+    L1caloJet:default: "phi"
+    L1TrackJet:default: "phi"
+  xlabel: "Gen. $\\phi$"
+  ylabel: "Matching Efficiency (>100 GeV)"
+  binning:
+    min: -3.2
+    max: 3.2
+    step: 0.05
+
+JetMatching_PhiFine_Pt100ToInf_extEta:
+  sample: TT
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJet"
+    x_arg: "phi"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "{pt} > 100"
+      object:
+        - "abs({eta}) < 7"
+  test_objects:
+    L1caloJet:default: "phi"
+  xlabel: "Gen. $\\phi$"
+  ylabel: "Matching Efficiency (>100 GeV)"
+  binning:
+    min: -3.2
+    max: 3.2
+    step: 0.05

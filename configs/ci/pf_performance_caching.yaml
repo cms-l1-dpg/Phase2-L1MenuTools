@@ -1,4 +1,4 @@
-V44nano:
+V50nano_170:
   TT:
     # Each CI variable can name one remote ROOT file, one local ROOT file, or a
     # local/remote filesystem glob.
@@ -10,6 +10,7 @@ V44nano:
         GenMET: [pt]
         L1puppiJetHisto: [pt, eta, phi]
         L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC4NG: [pt, eta, phi]
         L1puppiJetSC8: [pt, eta, phi]
         L1caloJet: [pt, eta, phi]
         L1TrackJet: [pt, eta, phi]

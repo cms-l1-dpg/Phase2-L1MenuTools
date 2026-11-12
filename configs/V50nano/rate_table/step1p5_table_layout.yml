@@ -1,0 +1,143 @@
+# Table layout for the Step 1.5 menu (step1p5_menu_cfg.yml), used by `rate_table_tex`.
+# Thresholds, requirements and plateaus are derived from the menu config; only
+# labels, section order and genuine overrides live here.
+title: 'Step 1.5 Menu for AR26: CMSSW\_17\_0\_X, V50nano'
+pu_columns:
+  - {pu: 140, version_suffix: '_140PU'}  # from outputs/<version>_140PU/rate_tables
+  - {pu: 200, version_suffix: ''}
+total_rate_margin: null  # e.g. 0.3 adds a "Total (+30%)" line
+rate_decimals: 0
+columns: [seed, thresholds, rate, requirements]  # add `plateau` to show object plateaus
+footnotes: []
+objects:
+  # Plateaus (only shown with `plateau` in `columns`) carried over from AR25, to be re-checked
+  L1gmtTkMuon: {plateau: '95', max_eta: 2.4}
+  L1tkElectron: {plateau: '93'}
+  L1tkPhoton: {plateau: '97'}
+  L1EG: {plateau: '99'}
+  L1caloTau: {plateau: '99'}
+  L1nnPuppiTau: {plateau: '90', requirement: 'NN score $>0.22$'}
+  L1puppiJetSC4: {plateau: '100'}
+  L1puppiJetSC4sums: {plateau: '100'}
+  L1puppiMET: {plateau: '100'}
+  L1gmtDispMuon: {plateau: '99', max_eta: 2.4}
+sections:
+  - name: 'Muon seeds'
+    seeds:
+      L1_SingleTkMu_Barrel:
+        label: 'Single TkMuon (barrel)'
+        extra_requirements: 'Medium ID'
+      L1_SingleTkMu:
+        label: 'Single TkMuon'
+      L1_DoubleTkMu0er1p4_SQ_OS_dR_Max1p4:
+        label: 'Double TkMuon'
+      L1_DoubleTkMu4er2p0_SQ_OS_dR_Max1p6:
+        label: 'Double TkMuon'
+      L1_DoubleTkMu:
+        label: 'Double TkMuon'
+      L1_TripleTkMu:
+        label: 'Triple TkMuon'
+      L1_TripleTkMu_4_2p5_0_OS_Mass_Max12:
+        label: 'Triple TkMuon'
+  - name: 'EG seeds (electron, photon)'
+    seeds:
+      L1_SingleTkEle:
+        label: 'Single TkElectron'
+      L1_SingleTkEleIso:
+        label: 'Single TkIsoElectron'
+      L1_DoubleTkEle:
+        label: 'Double TkElectron'
+      L1_DoubleTkEle_er1p2_dR_Max0p6:
+        label: 'Double TkElectron'
+      L1_DoubleTkEle_er1p5_dEta_Max1p5:
+        label: 'Double TkElectron'
+      L1_SingleEGEle:
+        label: 'Single StaEG'
+      L1_DoubleEGEle:
+        label: 'Double StaEG'
+      L1_SingleTkIsoPhoton:
+        label: 'Single TkIsoPhoton'
+      L1_DoubleTkPhoIso:
+        label: 'Double TkIsoPhoton'
+  - name: 'Tau seeds'
+    seeds:
+      L1_SingleTau:
+        label: 'Single CaloTau'
+      L1_DoubleTau:
+        label: 'Double CaloTau'
+      L1_DoubleIsoTau:
+        label: 'Double PuppiTau'
+  - name: 'Hadronic seeds (jets, \HT)'
+    seeds:
+      L1_SingleJet:
+        label: 'Single PuppiJet'
+      L1_DoubleJet:
+        label: 'Double PuppiJet'
+      L1_DoubleJet_dEta_Max1p6:
+        label: 'Double PuppiJet'
+      L1_DoubleJet_Mass_Min250_dEta_Max1p5:
+        label: 'Double PuppiJet'
+      L1_HTSum:
+        label: 'Puppi\HT'
+        # AR25 quoted the HT jet definition ('jets: $|\eta|<2.4$, $\pt>30$');
+        # add it back as `requirements` once confirmed for the SC4 sums.
+  - name: '\ETmiss seeds'
+    seeds:
+      L1_METSum:
+        label: 'Puppi\ETmiss'
+  - name: 'Cross lepton seeds'
+    seeds:
+      L1_TkMu7_TkEle20:
+        label: 'TkMuon-TkElectron'
+      L1_TkMu20_TkEle10:
+        label: 'TkMuon-TkElectron'
+      L1_TkMu_DoubleTkEle:
+        label: 'TkMuon-DoubleTkElectron'
+      L1_DoubleTkMu_TkEle:
+        label: 'DoubleTkMuon-TkElectron'
+      L1_DoubleTkMu_DoubleTkEle:
+        label: 'DoubleTkMuon-DoubleTkElectron'
+  - name: 'Cross hadronic-lepton seeds'
+    seeds:
+      L1_TkMu6_HTSum240:
+        label: 'TkMuon-Puppi\HT'
+      L1_TkMu12_HTSum150:
+        label: 'TkMuon-Puppi\HT'
+      L1_DoubleTkMu_HTSum:
+        label: 'DoubleTkMuon-Puppi\HT'
+      L1_DoubleTkMu_Jet:
+        label: 'DoubleTkMuon-PuppiJet'
+      L1_TkMu_Jet_METSum:
+        label: 'TkMuon-PuppiJet-Puppi\ETmiss'
+      L1_DoubleTkMu_METSum_HTSum:
+        label: 'DoubleTkMuon-Puppi\ETmiss-Puppi\HT'
+      L1_TkMu_IsoTau:
+        label: 'TkMuon-PuppiTau'
+      L1_DoubleTkEle_HTSum:
+        label: 'DoubleTkElectron-Puppi\HT'
+      L1_TkEleIso_HTSum:
+        label: 'TkIsoElectron-Puppi\HT'
+      L1_TkEleIso_IsoTau:
+        label: 'TkIsoElectron-PuppiTau'
+  - name: 'Cross hadronic seeds'
+    seeds:
+      L1_DoubleIsoTau_Jet:
+        label: 'DoublePuppiTau-PuppiJet'
+  - name: 'VBF seeds'
+    seeds:
+      L1_DoubleJet_Mass_Min1000:
+        label: 'Double PuppiJet'
+      L1_DoubleJet_IsoTau:
+        label: 'DoublePuppiJet-PuppiTau'
+      L1_DoubleJet_TkEleIso:
+        label: 'DoublePuppiJet-TkIsoElectron'
+      L1_DoubleJet_TkMu:
+        label: 'DoublePuppiJet-TkMuon'
+      L1_DoubleJet_METSum:
+        label: 'DoublePuppiJet-Puppi\ETmiss'
+  - name: 'Displaced muon seeds'
+    seeds:
+      L1_SingleDispMu_BMTF:
+        label: 'Single Displaced Muon (barrel)'
+      L1_DoubleDispMu:
+        label: 'Double Displaced Muon'

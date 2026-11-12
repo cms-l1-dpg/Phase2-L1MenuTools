@@ -1,0 +1,70 @@
+GenMET:
+  label: "GenMET"
+  eta_ranges:
+    inclusive: [0, 7]
+
+GenJet:
+  match_dR: 0.3
+  label: "GenJet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+
+L1Jet:
+  match_dR: 0.3
+  label: "L1 Jet"
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+    forward: [2.4, 5]
+  cuts:
+    inclusive:
+      - "abs({eta}) < 7"
+  ids:
+    default:
+      cuts:
+        inclusive:
+          - "abs({eta}) < 7"
+    pt25:
+      label: "L1Jet, pt > 25"
+      cuts:
+        inclusive:
+          - "{pt}>25"
+
+L1EtSum:
+  # match_dR: 0.3
+  label: "L1 EtSum"
+  eta_ranges:
+    inclusive: [0, 7]
+  # cuts:
+  #   inclusive:
+  #     - "abs({eta}) < 7"
+  ids:
+    MET:
+      label: "MET no HF"
+      cuts:
+        inclusive:
+          - "{etSumType} == 2"
+    METHF:
+      label: "METHF"
+      cuts:
+        inclusive:
+          - "{etSumType} == 8"
+    HT:
+      label: "HT"
+      cuts:
+        inclusive:
+          - "{etSumType} == 1"
+    MHTHF:
+      label: "MHTHF"
+      cuts:
+        inclusive:
+          - "{etSumType} == 20"

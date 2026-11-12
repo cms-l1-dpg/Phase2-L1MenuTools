@@ -1,0 +1,13 @@
+JetSC8Rates_byRegion2:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    # - L1GTsc4Jet:default
+    - L1GTsc8Jet:default
+    - L1GTsc8Jet:default:inclusive
+    - L1GTsc8Jet:default:barrel
+    #- L1GTsc8Jet:default:endcap
+  binning:
+    min: 40
+    max: 420
+    step: 20

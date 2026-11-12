@@ -1,0 +1,21 @@
+TausEfficiency_AR24:
+  sample: VBFHToTauTau
+  version: V38nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) < 2.5"
+      object:
+        - "abs({eta}) < 2.5"
+  test_objects:
+    L1nnPuppiTau:default_ptcut: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 150
+    step: 6

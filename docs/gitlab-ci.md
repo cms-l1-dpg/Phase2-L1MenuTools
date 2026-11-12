@@ -6,7 +6,7 @@ that several `object_performance` jobs can reuse the same selected columns.
 The `cache_menu_objects` job starts automatically and reads the TT and VBF
 $H\to\tau\tau$ menu
 Nanos, caches only the columns listed in
-`configs/ci/pf_performance_caching.yaml`, and uploads `cache/V44nano` as an
+`configs/ci/pf_performance_caching.yaml`, and uploads `cache/V50nano_170` as an
 artifact. It supports a single local or remote ROOT file and local or remote
 filesystem globs.
 
@@ -20,13 +20,13 @@ artifact:
 - `tau_matching_efficiency`: PUPPI and calorimeter tau matching efficiency.
 - `tau_trigger_turnons`: PUPPI and calorimeter tau trigger turn-ons.
 
-These CI configurations produce only their explicitly listed turn-on thresholds.
-Scaling extraction is disabled because it processes a larger threshold grid and is
-not needed for this validation milestone.
+The jobs use the upstream V50 object-performance configurations, including their
+configured scaling extraction. The `dev_ar26` implementation prepares and
+matches each object collection once, then reuses it across thresholds.
 
 Each plotting job uploads its PNG, PDF, JSON, and plot-configuration outputs as
 an artifact. Once they have all succeeded, the optional manual `publish_plots`
-job downloads all five artifacts and copies their combined `V44nano` output,
+job downloads all five artifacts and copies their combined `V50nano_170` output,
 together with CI provenance, to a unique EOS directory under:
 
 ```text
@@ -39,11 +39,10 @@ files individually with the EOS client. It sets `EOS_MGM_URL` to
 `root://eoscms.cern.ch` for this group area. The image's `eos-sync` helper
 hardcodes EOSUSER, so the job uses explicit `eos mkdir` and `eos cp` commands.
 Override `PUBLISH_EOS_BASE` when starting a pipeline to publish under another
-writable EOS directory; also override `EOS_MGM_URL` if changing EOS instances. Additional object-performance jobs can reuse
-the cache through the same `needs` dependency when their required branches are
-added to the caching configuration; add their artifact to
-`publish_plots.needs` when it
-should also be published.
+writable EOS directory; also override `EOS_MGM_URL` if changing EOS instances.
+Additional object-performance jobs can reuse the cache through the same `needs`
+dependency when their required branches are added to the caching configuration;
+add their artifact to `publish_plots.needs` when it should also be published.
 
 Pipelines are created for GitHub pull requests when GitLab is connected using
 **Run CI/CD for external repository**, for native GitLab merge requests, and
@@ -52,8 +51,9 @@ cache job immediately, and all dependent plotting jobs follow automatically.
 Trigger `publish_plots` manually when the complete plot set should be copied to
 EOS; leaving it untriggered does not make the pipeline fail.
 
-By default the cache job uses the public V44nano TT and VBF tau samples
-configured in `.gitlab-ci.yml`. It reads them through CERN's internal EOS XRootD
+By default the cache job uses the public CMSSW 17_0_0 TT and VBF tau samples
+referenced by the upstream `V50nano_170` caching configuration and configured in
+`.gitlab-ci.yml`. It reads them through CERN's internal EOS XRootD
 endpoint using the job's Kerberos ticket. The job runs in CERN's `al8-cms`
 image and creates a virtual environment using Python 3.11 from the mounted CERN
 LCG view. It then isolates that environment from the LCG Python packages and
@@ -68,7 +68,7 @@ root://eoscms.cern.ch//eos/cms/store/group/example/*.root
 
 The inputs must contain the `Events` tree and the branches listed in
 `configs/ci/pf_performance_caching.yaml`. The current configuration uses the
-V44nano table names and object definitions.
+V50nano object definitions and records outputs under the `V50nano_170` label.
 
 The cache job needs two masked GitLab CI/CD variables, using a CERN account that
 can read the inputs: `AUTO_DEVOPS_CERNBOX_USER` (without `@CERN.CH`) and
@@ -89,10 +89,10 @@ pip install -e . xrootd fsspec-xrootd
 export JET_NANO_GLOB='/absolute/path/to/tt_menu_nano.root'
 export TAU_NANO_GLOB='/absolute/path/to/tau_menu_nano.root'
 cache_objects configs/ci/pf_performance_caching.yaml
-object_performance configs/V44nano/object_performance/jets_matching.yaml
-object_performance configs/V44nano/object_performance/jets_trigger.yaml
-object_performance configs/V44nano/object_performance/jets_sc8_trigger.yaml
-object_performance configs/V44nano/object_performance/met_ht_mht.yaml
-object_performance configs/V44nano/object_performance/tau_matching.yaml
-object_performance configs/V44nano/object_performance/tau_trigger.yaml
+object_performance configs/V50nano/object_performance/jets_matching.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/jets_trigger.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/jets_sc8_trigger.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/met_ht_mht.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/tau_matching.yaml --version V50nano_170
+object_performance configs/V50nano/object_performance/tau_trigger.yaml --version V50nano_170
 ```

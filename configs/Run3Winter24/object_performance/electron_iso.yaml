@@ -1,0 +1,50 @@
+ElectronsIsolation_Barrel:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  iso_vs_efficiency: True
+  reference_object:
+    object: "prunedGenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 1.479"
+      object:
+        - "abs({eta}) < 1.479"
+  test_objects:
+    L1tkElectron:NoIso: "relIso"
+  xlabel: "Isolation"
+  ylabel: "Efficiency (Barrel)"
+  binning:
+    min: 0
+    max: 0.5
+    step: 0.005
+
+ElectronsIsolation_Endcap:
+  sample: DYLL_M50
+  version: Run3Winter24
+  match_test_to_ref: True
+  iso_vs_efficiency: True
+  reference_object:
+    object: "prunedGenPart"
+    x_arg: "pt"
+    label: "Gen Electrons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.479"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1tkElectron:NoIsoForIso: "relIso"
+  xlabel: "Isolation"
+  ylabel: "Efficiency (Endcap)"
+  binning:
+    min: 0
+    max: 0.5
+    step: 0.005
+

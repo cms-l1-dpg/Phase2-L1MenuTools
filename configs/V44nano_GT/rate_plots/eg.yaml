@@ -1,0 +1,38 @@
+EGRates:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1EG:default
+    - L1GTtkElectron:NoIso
+    - L1GTtkElectron:Iso
+    - L1GTtkPhoton:Iso
+  binning:
+    min: 10
+    max: 97
+    step: 3
+
+EG_NoIso_RatesByRegion:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1EG:default:barrel
+    - L1EG:default:endcap
+    - L1GTtkElectron:NoIso:barrel
+    - L1GTtkElectron:NoIso:endcap
+  binning:
+    min: 10
+    max: 97
+    step: 3
+
+EG_Iso_RatesByRegion:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1GTtkElectron:Iso:barrel
+    - L1GTtkElectron:Iso:endcap
+    - L1GTtkPhoton:Iso:barrel
+    - L1GTtkPhoton:Iso:endcap
+  binning:
+    min: 10
+    max: 97
+    step: 3

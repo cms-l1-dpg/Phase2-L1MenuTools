@@ -1,0 +1,154 @@
+# Table layout for configs/V50nano/rate_table/step1and2_menu_cfg.yml, used by `rate_table_tex`.
+# Labels and sections ported from the AR25 table (L1Table.ipynb). Thresholds,
+# requirements and plateaus are derived from the menu config unless overridden.
+title: 'Step 1 and 2 Menu for AR26: CMSSW\_17\_0\_X, V50nano'
+pu_columns:
+  - {pu: 140, version_suffix: '_140PU'}  # from outputs/<version>_140PU/rate_tables
+  - {pu: 200, version_suffix: ''}
+total_rate_margin: 0.3
+rate_decimals: 0
+columns: [seed, thresholds, rate, requirements]  # add `plateau` to show object plateaus
+footnotes: []
+objects:
+  # Plateaus (only shown with `plateau` in `columns`) carried over from AR25, to be re-checked
+  L1gmtTkMuon: {plateau: '95', max_eta: 2.4}
+  L1gmtDispMuon: {plateau: '99', max_eta: 2.4}
+  L1tkElectron: {plateau: '93'}
+  L1tkPhoton: {plateau: '97'}
+  L1EG: {plateau: '99'}
+  L1caloTau: {plateau: '99'}
+  L1nnPuppiTau: {plateau: '90', requirement: 'NN score $>0.22$'}
+  L1puppiJetSC4: {plateau: '100'}
+  L1puppiJetSC4NG: {plateau: '100'}
+  L1puppiJetSC8: {plateau: '100'}
+  L1puppiJetSC4sums: {plateau: '100'}
+  L1puppiMET: {plateau: '100'}
+  L1TrackTripletWord: {plateau: '100'}
+sections:
+  - name: 'Single/Double/Triple Lepton (electron, muon) seeds'
+    seeds:
+      L1_SingleTkMu:
+        label: 'Single TkMuon'
+      L1_DoubleTkMu:
+        label: 'Double TkMuon'
+      L1_SingleTkEle:
+        label: 'Single TkElectron'
+      L1_SingleTkEleIso:
+        label: 'Single TkIsoElectron'
+      L1_TkEleIso_EG:
+        label: 'TkIsoElectron-StaEG'
+      L1_DoubleTkEle:
+        label: 'Double TkElectron'
+      L1_SingleEGEle:
+        label: 'Single StaEG'
+      L1_DoubleEGEle:
+        label: 'Double StaEG'
+  - name: 'Photon seeds'
+    seeds:
+      L1_SingleTkPhoIso:
+        label: 'Single TkIsoPhoton'
+      L1_DoubleTkPhoIso:
+        label: 'Double TkIsoPhoton'
+  - name: 'Tau seeds'
+    seeds:
+      L1_SinglePFTau:
+        label: 'Single CaloTau'
+      L1_PFTau_PFTau:
+        label: 'Double CaloTau'
+      L1_PFIsoTau_PFIsoTau:
+        label: 'Double PuppiTau'
+  - name: 'Hadronic seeds (jets,\HT)'
+    seeds:
+      L1_SinglePfJet:
+        label: 'Single PuppiJet'
+      L1_DoublePFJet_dEtaMax:
+        label: 'Double PuppiJet'
+      L1_PFHTT:
+        label: 'Puppi\HT'
+        requirements: 'jets: $|\eta|<2.4$, $\pt>30$'
+      L1_PFMHTT:
+        label: 'Puppi\MHT'
+        requirements: 'jets: $|\eta|<2.4$, $\pt>30$'
+      L1_PFHTT_QuadJet:
+        label: 'QuadPuppiJets-Puppi\HT(**)'
+        requirements: 'jets: $|\eta|<2.4$, $\pt>25$'
+  - name: '\ETmiss seeds'
+    seeds:
+      L1_PFMet:
+        label: 'Puppi\ETmiss'
+  - name: 'Cross Lepton seeds'
+    seeds:
+      L1_TkMu_TkEleIso:
+        label: 'TkMuon-TkIsoElectron'
+      L1_TkMu_TkEle:
+        label: 'TkMuon-TkElectron'
+      L1_TkEle_TkMu:
+        label: 'TkElectron-TkMuon'
+      L1_TripleTkMu:
+        label: 'Triple TkMuon'
+      L1_TkMu_DoubleTkEle:
+        label: 'TkMuon-DoubleTkElectron'
+      L1_DoubleTkMu_TkEle:
+        label: 'DoubleTkMuon-TkElectron'
+      L1_PFIsoTau_TkMu:
+        label: 'PuppiTau-TkMuon'
+      L1_TkEleIso_PFIsoTau:
+        label: 'TkIsoElectron-PuppiTau'
+  - name: 'Cross Hadronic-Lepton seeds'
+    seeds:
+      L1_TkMu_PfHTT:
+        label: 'TkMuon-Puppi\HT'
+      L1_TkMu_PfJet_dRMax_DoubleJet_dEtaMax:
+        label: 'TkMuon-TriplePuppiJet'
+      L1_DoubleTkEle_PFHTT:
+        label: 'DoubleTkElectron-Puppi\HT'
+      L1_DoubleTkMu_PfHTT:
+        label: 'DoubleTkMuon-Puppi\HT'
+      L1_DoubleTkMu_PfJet_PfMet:
+        label: 'DoubleTkMuon-PuppiJet-Puppi\ETmiss'
+      L1_TkEleIso_PFHTT:
+        label: 'TkIsoElectron-Puppi\HT'
+      L1_TkEle_PFJet_dRMin:
+        label: 'TkElectron-PuppiJet (**)'
+      L1_PFIsoTau_PFMet:
+        label: 'PuppiTau-Puppi\ETmiss'
+      L1_TkMu_PfJet_PfMet:
+        label: 'TkMuon-PuppiJet-Puppi\ETmiss'
+  - name: 'VBF seeds'
+    seeds:
+      L1_DoublePFJet_MassMin:
+        label: 'Double PuppiJets (**)'
+  - name: 'BPH seeds'
+    seeds:
+      L1_DoubleTkMu0er1p5_SQ_OS_dR_Max1p4:
+        label: 'Double TkMuon'
+      L1_DoubleTkMu4_SQ_OS_dR_Max1p2:
+        label: 'Double TkMuon'
+      L1_DoubleTkMu4p5er2p0_SQ_OS_Mass7to18:
+        label: 'Double TkMuon'
+      L1_TripleTkMu_5SQ_3SQ_0OQ_DoubleMu_5_3_SQ_OS_Mass_Max9:
+        label: 'Triple TkMuon'
+      L1_TripleTkMu_5_3p5_2p5_OS_Mass_5to17:
+        label: 'Triple TkMuon'
+  - name: 'Step2 seeds'
+    seeds:
+      L1_PFHTT_QuadJet_BTagNNScore:
+        label: 'QuadPuppiJets-Puppi\HT'
+      L1_SinglePfJet8:
+        label: 'Single Ak8 PuppiJet'
+      L1_DoublePFJet8_dEtaMax:
+        label: 'Double Ak8 PuppiJet'
+      L1_SingleDispMu:
+        label: 'Single Displaced Muon'
+        extra_requirements: 'Qual $\geq$ 15'
+      L1_DoubleDispMu:
+        label: 'Double Displaced Muon'
+      L1_W3pi_GTT:
+        label: 'Track Triplet for W3Pi'
+        thresholds: '--'
+      L1_SinglePfJet8_Mass:
+        label: 'Single Ak8 PuppiJet (mass)'
+        extra_requirements: '$m_{J}>20$'
+      L1_DoublePFJet8_dEtaMax_Mass:
+        label: 'Double Ak8 PuppiJet (mass)'
+        extra_requirements: '$m_{J}>10$'

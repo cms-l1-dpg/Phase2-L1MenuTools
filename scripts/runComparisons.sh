@@ -1,0 +1,345 @@
+MAX_JOBS=3
+
+run_when_ready() {
+    while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+        sleep 3
+    done
+    "$@" &
+}
+
+# Geometry Comparisons
+# source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D127 "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_200_D121 V49nano_RelVal_200_D128 "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_200_D127 V49nano_RelVal_200_D128 "comparisons/relVals"
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_RelVal_200_D121 --v1 V49nano_RelVal_200_D127 --v2 V49nano_RelVal_200_D128 --output-dir "comparisons/relVals"  |& tee complogs/relVals/objects.log
+
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_200_D121_200PU "comparisons/relVals"
+
+mkdir "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre5_Muon V50nano_170pre5_MuonUpdate1  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre5_MuonUpdate1  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre6  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004 V50nano_170X1006  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1006 V50nano_170pre6  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre6 V50nano_170pre6_PhiFix  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1006 V50nano_170pre6  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre6_140PU V50nano_170pre6  "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre6 V50nano_170pre7 "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre7 V50nano_170X1026 "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre6 V50nano_170X1026 "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre7 V50nano_170pre7_MuonKMTF "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre7 V50nano_170pre7_P2GT "comparisons/ar26_followups"
+# run_when_ready source scripts/compareVersions.sh V50nano_170pre7 V50nano_170pre7_P2GT_Update1 "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre7 V50nano_170 "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170pre2 V50nano_170 "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170 "comparisons/ar26_followups"
+run_when_ready source scripts/compareVersions.sh V50nano_170_140PU V50nano_170 "comparisons/ar26_followups"
+
+
+# mkdir "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170X1004_Corr  "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr V50nano_170X1004_Corr_140PU  "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr_140PU V50nano_170X1004_Corr  "comparisons/tauID"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25 V50nano_170X1004_Corr  "comparisons/tauID"
+
+
+# mkdir "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre3 V50nano_170pre4  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre4 V50nano_170pre5  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre5_SC8mass  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre5_Muon  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre5_Muon  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170X1004  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170X1004_Corr  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170X1004 V50nano_170X1004_Corr  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5_140PU V50nano_170pre5  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre3 V50nano_170pre3_140PU  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5 V50nano_170pre5_140PU  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre5_140PU V50nano_170pre5  "comparisons/ar26"
+# source scripts/compareVersions.sh V49nano_AR25 V50nano_170pre3  "comparisons/ar26"
+# source scripts/compareVersions.sh V50nano_170pre3 V50nano_170pre5  "comparisons/ar26"
+# source scripts/compareVersions.sh V49nano_AR25 V50nano_170pre5  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170pre5  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170X1004  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_140PU V50nano_170X1004  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004 V50nano_170X1004_140PU  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V50nano_170X1004_Corr  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr_140PU V50nano_170X1004_Corr  "comparisons/ar26"
+# run_when_ready source scripts/compareVersions.sh V50nano_170X1004_Corr V50nano_170X1004_Corr_140PU  "comparisons/ar26"
+
+# # AR26 3rd train
+# # mkdir "comparisons/ar26_thirdtrain"
+# source scripts/compareVersions.sh V50nano_170pre2 V50nano_170pre2_140PU  "comparisons/ar26_thirdtrain"
+
+
+# mkdir "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_AR25_170pre3 V49nano_RelVal  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_RelVal  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShower  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal V49nano_RelVal_RelValwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_RelValwL1 V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+# source scripts/compareVersions.sh V49nano_RelVal_MuonShower V49nano_RelVal_MuonShowerwL1  "comparisons/relVals"
+
+
+# mkdir "comparisons/ar26_thirdtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre3  "comparisons/ar26_thirdtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre3 V49nano_AR25_170pre3_3rdTrain  "comparisons/ar26_thirdtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre3_3rdTrain  "comparisons/ar26_thirdtrain"
+
+
+# AR26 2nd train
+# source scripts/compareVersions.sh V50nano_170pre2 V50nano_170pre2_140PU  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V50nano_170pre2_140PU V50nano_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V50nano_170pre2  "comparisons/ar26_secondtrain"
+# mkdir "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2_140PU V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre2_140PU  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre1 V49nano_AR25_170pre2  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre1 V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+# source scripts/compareVersions.sh V49nano_AR25_170pre2 V49nano_AR25_170pre2_JetWord  "comparisons/ar26_secondtrain"
+
+
+# MuonOMTF comparisons new developments
+# mkdir "comparisons/MuonOMTF" "complogs/MuonOMTF"
+# # python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1 --v1 V49nano_AR25_170pre1_MuonOMTF --v2 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects.log
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1 --v1 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects_1.log
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_AR25_170pre1_MuonOMTF --v1 V49nano_AR25_170pre1_MuonOMTFUpdate1 --output-dir "comparisons/MuonOMTF"  |& tee complogs/MuonOMTF/objects_2.log
+# # source scripts/compareVersions.sh V49nano
+
+
+# AR26 1st train
+# NOTE: deleted the commands by accident!
+
+# E2ENNVtx Comparisons
+# source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtx  "comparisons/e2eNNVtx"
+# source scripts/compareVersions.sh V49nano_151pre3 V49nano_151pre3_E2ENNVtxOff "comparisons/e2eNNVtx"
+# source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+# source scripts/compareVersions.sh V49nano_AR24 V49nano_142pre1 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
+# source scripts/compareVersions.sh V49nano_142pre1 V49nano_151pre3 "comparisons/ar25"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_L1EGupdate3 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_L1EGupdate2 V49nano_L1EGupdate3 "comparisons/thirdTrain"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V48_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3 V49nano_AR25_VtxFindOff "comparisons/ar25"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25 "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxOnlyAssoc "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25_VtxFindOff V49nano_AR25_VtxBothOn "comparisons/ar25"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25 V49nano_AR25_VtxBothOn "comparisons/ar25"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_VtxOnlyAssoc "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_E2ENNVtxOff V49nano_151pre3_VtxOnlyFind "comparisons/e2eNNVtx"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre3_VtxOnlyFind V49nano_151pre3_E2ENNVtx "comparisons/e2eNNVtx"
+
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_preHCAL V49nano_151X_postHCAL "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_noHCALStep V49nano_151X_rerunHCALStep "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_151X_rerunHCALStep V49nano_151X_newHCALStep "comparisons/hcalPR"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR25 V49nano_151X_newHCALStep "comparisons/hcalPR"
+
+# mkdir -p complogs/hcal
+# python menu_tools/utils/compare_json-wNano.py --v0 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v2 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/objects.log
+# python menu_tools/utils/compare_json-wNano.py --v2 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v0 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/objects_reverse.log
+# python menu_tools/utils/compare_menus.py --v2 V49nano_151X_noHCALStep --v1 V49nano_151X_rerunHCALStep --v0 V49nano_151X_newHCALStep --output-dir "comparisons/hcalPR"  |& tee complogs/hcal/menus_reverse.log
+
+
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_151pre3 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V38nano_DT12x V49nano_AR24 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_L1EGupdate2 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_AR24 V49nano_142pre1 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V44nano V49nano_142pre1 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_142pre1 V49nano_151pre3 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_142pre1 V49nano_151pre1 "comparisons/thirdTrain"
+# run_when_ready source scripts/compareVersions.sh V49nano_151pre1 V49nano_151pre3 "comparisons/thirdTrain"
+
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_151pre3 --output-dir "comparisons/thirdTrain" --menu-vOld v44_Step1Menu |& tee complogs/V45nano_151pre3vsV44nano_step1.log
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_151pre3 --output-dir "comparisons/thirdTrain" --menu-vOld v44_Step2Menu --menu-vNew v45_Step2Menu |& tee complogs/V45nano_151pre3vsV44nano_step2.log
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V49nano_151pre3 --output-dir "comparisons/thirdTrain" --menu-vOld v44_Step1Menu |& tee complogs/V49nano_151pre3vsV44nano_step1.log
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V49nano_151pre3 --output-dir "comparisons/thirdTrain" --menu-vOld v44_Step2Menu --menu-vNew v45_Step2Menu |& tee complogs/V49nano_151pre3vsV44nano_step2.log
+# python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V49nano_151pre3 --output-dir "comparisons/thirdTrain" |& tee complogs/V49nano_151pre3vsV45nano_151pre3_step1.log
+# python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V49nano_151pre3 --output-dir "comparisons/thirdTrain" --menu v45_Step2Menu |& tee complogs/V49nano_151pre3vsV45nano_151pre3_step2.log
+# python menu_tools/utils/compare_menus.py --vOld V49nano_151pre3 --vNew V49nano_L1EGupdate2 --output-dir "comparisons/thirdTrain" |& tee complogs/V49nano_L1EGupdate2vsV49nano_151pre3_step1.log
+# python menu_tools/utils/compare_menus.py --vOld V49nano_151pre3 --vNew V49nano_L1EGupdate2 --output-dir "comparisons/thirdTrain" --menu v45_Step2Menu |& tee complogs/V49nano_L1EGupdate2vsV49nano_151pre3_step2.log
+
+# python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x --vNew V49nano_151pre3 --menu-vOld menu_Step1 --output-dir "comparisons/thirdTrain"
+# python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x --vNew V49nano_151pre3 --menu-vOld menu_Step2 --menu-vNew v45_Step2Menu --output-dir "comparisons/thirdTrain"
+
+# python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x --vNew V49nano_AR24 --menu-vOld menu_Step1 --output-dir "comparisons/thirdTrain"
+# python menu_tools/utils/compare_menus.py --vOld V49nano_AR24 --vNew V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+# python menu_tools/utils/compare_menus.py --vOld V49nano_AR24 --vNew V49nano_151pre3 --menu v45_Step2Menu --output-dir "comparisons/thirdTrain"
+# python menu_tools/utils/compare_menus.py --vOld V49nano_AR24 --vNew V49nano_151pre3 --menu v45_Step1and2Menu --output-dir "comparisons/thirdTrain"
+# python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x --vNew V49nano_AR24 --menu-vOld menu_Step2 --menu-vNew v45_Step2Menu --output-dir "comparisons/thirdTrain"
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_151pre3 --v0 V49nano_L1EGupdate2 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_151pre3 --v0 V49nano_L1EGupdate2 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_151pre3 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_151pre3 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V49nano_151pre3 --output-dir "comparisons/thirdTrain"
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR24 --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V49nano_AR25_VtxFindOff --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+
+
+
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_jetSC8
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_jetSC8
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_l1Track
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_l1Track
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_firstTrain
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_firstTrain
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_jetSC4NG
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_jetSC4NG
+
+# Bisecting
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_142pre4
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre4 --v0 V45nano_150pre3
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre3 --v0 V45nano
+
+# Second train PR
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_L1EG
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_L1EG
+
+
+# Bisecting
+# python menu_tools/utils/compare_json-wNano.py --v1 V44nano --v0 V45nano_142pre2
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre2 --v0 V45nano_142pre3
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre3 --v0 V45nano_142pre4
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre4 --v0 V45nano_150pre1
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre1 --v0 V45nano_150pre2
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre2 --v0 V45nano_150pre3
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre3 --v0 V45nano_151pre1
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre1 --v0 V45nano
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_nanoSC4NG
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_nanoSC4NG --v0 V45nano_L1EG
+
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V49nano_142pre1 --output-dir "comparisons/thirdTrain"  --menu-vOld v44_Step1Menu
+
+# Bisecting
+# python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_142pre2 --output-dir "comparisons/bisecting" --menu-vOld v44_Step1Menu
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V45nano_142pre2 --output-dir "comparisons/bisecting"  --menu-vOld v44_Step1Menu
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre2 --vNew V45nano_142pre3 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre3 --vNew V45nano_142pre4 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_142pre4 --vNew V45nano_150pre1 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre1 --vNew V45nano_150pre2 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre2 --vNew V45nano_150pre3 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_150pre3 --vNew V45nano_151pre1 --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre1 --vNew V45nano --output-dir "comparisons/bisecting"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano --vNew V45nano_151pre3 --output-dir "comparisons/bisecting"
+
+# # Fixed IDs - plots
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_L1EGupdate2 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V47nano_151pre3 --v0 V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# # Fixed IDs - menus
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V47nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_L1EGupdate2 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V47nano_151pre3 --vNew V47nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# # Fixed IDs - plots
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate3 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_L1EGupdate2 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V46nano_151pre3 --v0 V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V48nano_151pre3 --v0 V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+# # Fixed IDs - menus
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V46nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_151pre3 --vNew V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V48nano_151pre3 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate2 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V45nano_L1EGupdate3 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_L1EGupdate2 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# # run_when_ready python menu_tools/utils/compare_menus.py --vOld V46nano_151pre3 --vNew V46nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V48nano_151pre3 --vNew V48nano_L1EGupdate2 --output-dir "comparisons/correctedIDs"
+
+
+
+# # Reproducing V44nano - menus
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu v44_Step1Menu --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_Oct24 --vNew V38nano --menu menu_Step1 --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V38nano_DT12x --menu menu_Step1 --output-dir "comparisons/validationOct24"
+
+# # Reproducing V44nano - plots
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V44nano_Oct24 --v0 V44nano --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_Oct24 --v0 V38nano --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V49nano_AR24 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V38nano_DT12x_Oct24 --v0 V49nano_AR25 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V49nano_AR24 --menu-vOld menu_Step1 --output-dir "comparisons/ar25"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V38nano_DT12x_Oct24 --vNew V49nano_AR25 --menu-vOld menu_Step1 --output-dir "comparisons/ar25"
+
+# Reproducing V44nano
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano --vNew V44nano --menu-vOld v44_Step1Menu_gtneq --menu-vNew v44_Step1Menu --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_gtneq --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_gtneq_oldScalings --output-dir "comparisons/validationOct24"
+# run_when_ready python menu_tools/utils/compare_menus.py --vOld V44nano_Oct24 --vNew V44nano --menu-vOld v44_Step1Menu --menu-vNew v44_Step1Menu_oldScalings --output-dir "comparisons/validationOct24"
+
+
+
+# # Muon RPC Geometry change
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre2 --v0 V45nano_150pre2_RPC
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_150pre2_RPC --v0 V45nano_150pre3
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151pre3_D110Fix # hacked 110 fix vs 151pre3
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3_D110Fix --v0 V45nano_151X_D121 # official 110 fix vs hacked one
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D110 # verify that D110 is the same
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D116 # look at intermediate version
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151X_D116 --v0 V45nano_151X_D121 # look at fixed version
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151X_D110 --v0 V45nano_151X_D121 # look at fixed version
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_151X_D121 # look at fixed version directly vs official release
+
+
+
+# L1EG mega commit
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano --v0 V45nano_noL1EG
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_noL1EG --v0 V45nano_L1EGupdate1
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_noL1EG --v0 V45nano_L1EG
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EG --v0 V45nano_L1EGupdate1
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate2 # compare PR with previous PR version (but 151X vs 151pre3)
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate1 --v0 V45nano_L1EGupdate1p5 # rebase of update1 on 151pre3
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate1p5 --v0 V45nano_L1EGupdate2 # better comparison of update1 vs update2
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_L1EGupdate2 --v0 V45nano_L1EGupdate3 # compare new IDs with identical CMSSW
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate3 # compare new IDs with CMSSW 151pre3
+
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate2 # compare commit with version it's based on
+# run_when_ready python menu_tools/utils/compare_json-wNano.py --v1 V45nano_151pre3 --v0 V45nano_L1EGupdate1p5 # compare commit with version it's based on
+
+# # L1Track differences
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre3 --v0 V45nano_142pre3_L1Track
+# python menu_tools/utils/compare_json-wNano.py --v1 V45nano_142pre3_L1Track --v0 V45nano_142pre4
+

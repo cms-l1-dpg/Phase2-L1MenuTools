@@ -1,0 +1,134 @@
+# MET_90perc:
+#   sample: TT
+#   version: Run3Winter24
+#   # match_test_to_ref: True
+#   reference_object:
+#     object: "GenMET"
+#     x_arg: "pt"
+#     label: "Gen MET"
+#   test_objects:
+#     L1EtSum:MET: "pt"
+#     L1EtSum:METHF: "pt"
+#   thresholds: [90, 150]
+#   xlabel: "Gen. MET (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   scalings:
+#     method: "naive"
+#     threshold: 0.90
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20
+
+# VBFHinv_MET_90perc:
+#   sample: VBFHinv
+#   version: Run3Winter24
+#   # match_test_to_ref: True
+#   reference_object:
+#     object: "GenMET"
+#     x_arg: "pt"
+#     label: "Gen MET"
+#   test_objects:
+#     L1EtSum:MET: "pt"
+#     L1EtSum:METHF: "pt"
+#   thresholds: [90, 150]
+#   xlabel: "Gen. MET (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   scalings:
+#     method: "naive"
+#     threshold: 0.90
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20
+
+TT_MET_90perc_refOffMET:
+  sample: TT
+  version: Run3Winter24
+  # match_test_to_ref: True
+  reference_object:
+    object: "PuppiMET"
+    x_arg: "pt"
+    label: "Puppi MET"
+  test_objects:
+    L1EtSum:MET: "pt"
+    # L1EtSum:METHF: "pt"
+    # L1EtSum:MHTHF: "pt"
+    # L1EtSum:HT: "pt"
+  thresholds: [60, 90, 150]
+  xlabel: "Puppi MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+HHbbWW_MET_90perc_refOffMET:
+  sample: HHbbWW
+  version: Run3Winter24
+  # match_test_to_ref: True
+  reference_object:
+    object: "PuppiMET"
+    x_arg: "pt"
+    label: "Puppi MET"
+  test_objects:
+    L1EtSum:MET: "pt"
+    L1EtSum:METHF: "pt"
+    L1EtSum:MHTHF: "pt"
+    # L1EtSum:HT: "pt"
+  thresholds: [60, 90, 150]
+  xlabel: "Puppi MET (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV)"
+  scalings:
+    method: "naive"
+    threshold: 0.90
+  binning:
+    min: 0
+    max: 500
+    step: 20
+
+# HHbbWW_MET_90perc:
+#   sample: HHbbWW
+#   version: Run3Winter24
+#   # match_test_to_ref: True
+#   reference_object:
+#     object: "GenMET"
+#     x_arg: "pt"
+#     label: "Gen MET"
+#   test_objects:
+#     L1EtSum:MET: "pt"
+#     L1EtSum:METHF: "pt"
+#   thresholds: [60, 90, 150]
+#   xlabel: "Gen. MET (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   # scalings:
+#   #   method: "naive"
+#   #   threshold: 0.90
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20
+
+# MET_50perc:
+#   sample: TT
+#   version: Run3Winter24
+#   reference_object:
+#     object: "GenMet"
+#     x_arg: ""
+#     label: "Gen MET"
+#   test_objects:
+#     trackerMET:default: ""
+#     puppiMET:default: "et"
+#   thresholds: [150]
+#   xlabel: "Gen. MET (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV)"
+#   scalings:
+#     method: "naive"
+#     threshold: 0.50
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 20

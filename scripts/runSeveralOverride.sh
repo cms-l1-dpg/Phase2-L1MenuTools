@@ -1,0 +1,54 @@
+## VERSIONS="V49nano_AR25"
+# VERSIONS="V49nano_RelVal"
+VERSIONS="V50nano"
+# REVISION="251201"
+REVISION=$(date +%y%m%d)
+# OVER_SHORT="170pre3_3rdTrain"
+# OVER_SHORT="170pre3_140PU"
+# OVER_SHORT="170pre4"
+# OVER_SHORT="170pre4_140PU"
+# OVER_SHORT="170pre5"
+# OVER_SHORT="170pre5_140PU"
+# OVER_SHORT="170pre3"
+# OVER_SHORT="200_D121_200PU"
+# OVER_SHORT="200_D127"
+# OVER_SHORT="200_D128"
+# OVER_SHORT="170pre2"
+# OVER_SHORT="170pre2_140PU"
+# OVER_SHORT="170pre1_MuonOMTFUpdate1"
+# OVER_SHORT="170pre2_JetWord"
+# OVER_SHORT="MuonShower"
+# OVER_SHORT="MuonShowerwL1"
+# OVER_SHORT="RelValwL1"
+# OVER_VER="${VERSIONS}_${OVER_SHORT}"
+# OVER_VER="${VERSIONS}_${OVER_SHORT}"
+OVER_VER="V49nano_AR25_VtxFindOff"
+# OVER_VER="V49nano_RelVal"
+# OVER_VER="V49nano_AR25_160pre2_140PU"
+# OVER_SHORT="160pre2_140PU"
+MAX_JOBS=2
+
+# run_when_ready() {
+#     while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+#         sleep 3
+#     done
+#     # Extract a meaningful identifier from the config path
+#     local filename=$(basename "$2")  # assumes config is 2nd argument
+#     local logname=${filename%.*}  # removes file extension
+#     echo Submitting $logname
+#     "$@" | tee -a logs/${VERSION}_${REVISION}/${VERSION}_${logname}.log &
+#     # "$@" &> logs/${VERSION}_${REVISION}/${VERSION}_${logname}.log &
+# }
+
+for VERSION in $VERSIONS; do
+    while [ $(jobs -p | wc -l) -ge $MAX_JOBS ]; do
+        sleep 3
+    done
+    echo "Submitting ${OVER_VER}_${REVISION}"
+    mkdir -p logs/${OVER_VER}_${REVISION}
+    # run_when_ready object_performance configs/$VERSION/object_performance/muon_trigger.yaml
+    source scripts/runGenericOverride.sh $VERSION $REVISION $OVER_VER $OVER_SHORT &> logs/${OVER_VER}_${REVISION}/${OVER_VER}_batch.log &
+    echo "Check on progress with e.g: tail -f logs/${OVER_VER}_${REVISION}/*_batch.log logs/${OVER_VER}_${REVISION}/*_caching.log"
+done
+
+echo "All jobs submitted! Jobs are running in the background - check with 'jobs' and 'tail -f <logfile>'."

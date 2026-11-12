@@ -1,0 +1,186 @@
+JetTurnonBarrelSC8:
+  version: V49nano_151pre3_SC8Nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:barrel: "pt"
+    L1puppiJetSC8:mass30:barrel: "pt"
+  thresholds: [150]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetTurnonEndcapSC8:
+  version: V49nano_151pre3_SC8Nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    L1puppiJetSC8:default:endcap: "pt"
+    L1puppiJetSC8:mass30:endcap: "pt"
+  thresholds: [150]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetTurnonForwardHGCSC8:
+  version: V49nano_151pre3_SC8Nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 2.4"
+      object:
+        - "abs({eta}) < 3.0"
+  test_objects:
+    L1puppiJetSC8:default:forwardHGC: "pt"
+    L1puppiJetSC8:mass30:forwardHGC: "pt"
+  thresholds: [150]
+  scalings:
+    method: "naive"
+    threshold: 0.95
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, forwardHGC)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+JetTurnonForwardHFSC8:
+  version: V49nano_151pre3_SC8Nano
+  sample: TT
+  match_test_to_ref: True
+  reference_object:
+    object: "GenJetAK8"
+    x_arg: "pt"
+    label: "Gen Jets"
+    cuts:
+      event:
+        - "abs({eta}) > 3.0"
+      object:
+        - "abs({eta}) < 5.0"
+  test_objects:
+    L1puppiJetSC8:default:forwardHF: "pt"
+    L1puppiJetSC8:mass30:forwardHF: "pt"
+  thresholds: [150]
+  scalings:
+    method: "naive"
+    threshold: 0.60
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Trigger Efficiency (<threshold> GeV, forwardHF)"
+  binning:
+    min: 0
+    max: 500
+    step: 10
+
+# JetTurnonBarrelSC8Mass:
+#   version: V49nano_151pre3_SC8Nano
+#   sample: TT
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "pt"
+#     label: "Gen Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) < 1.5"
+#       object:
+#         - "abs({eta}) < 2.4"
+#   test_objects:
+#     L1puppiJetSC8:mass30:barrel: "pt"
+#   thresholds: [150]
+#   pu_value: 200
+#   scalings:
+#     method: "naive"
+#     threshold: 0.7
+#   xlabel: "Gen. $p_T$ (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV, barrel)"
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 10
+
+# JetTurnonEndcapSC8Mass:
+#   version: V49nano_151pre3_SC8Nano
+#   sample: TT
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "pt"
+#     label: "Gen Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) > 1.5"
+#       object:
+#         - "abs({eta}) < 2.4"
+#   test_objects:
+#     L1puppiJetSC8:mass30:endcap: "pt"
+#   thresholds: [150]
+#   scalings:
+#     method: "naive"
+#     threshold: 0.5
+#   xlabel: "Gen. $p_T$ (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV, endcap)"
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 10
+
+# JetTurnonForwardSC8Mass:
+#   version: V49nano_151pre3_SC8Nano
+#   sample: TT
+#   match_test_to_ref: True
+#   reference_object:
+#     object: "GenJetAK8"
+#     x_arg: "pt"
+#     label: "Gen Jets"
+#     cuts:
+#       event:
+#         - "abs({eta}) > 2.4"
+#       object:
+#         - "abs({eta}) < 5"
+#   test_objects:
+#     L1puppiJetSC8:mass30:forward: "pt"
+#   thresholds: [150]
+#   scalings:
+#     method: "naive"
+#     threshold: 0.2
+#   xlabel: "Gen. $p_T$ (GeV)"
+#   ylabel: "Trigger Efficiency (<threshold> GeV, forward)"
+#   binning:
+#     min: 0
+#     max: 500
+#     step: 10

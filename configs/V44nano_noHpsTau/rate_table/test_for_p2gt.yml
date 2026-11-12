@@ -1,0 +1,4 @@
+version: "V44nano_noHpsTau"
+sample: "TTtestP2GT"
+menu_config: "configs/V44nano_noHpsTau/rate_table/step1_menu_cfg.yml"
+table_fname: "v45_Step1Menu_TTtestP2GT_fixGeQ"

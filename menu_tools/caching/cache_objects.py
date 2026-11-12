@@ -1,6 +1,9 @@
 import argparse
+import fnmatch
+import sys
 import glob
 import os
+import time
 
 import awkward as ak
 import fsspec
@@ -30,9 +33,17 @@ class ObjectCacher:
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
-        # Get Branches
+        # Get Branches: a list, "all", or a glob on the field names, e.g. "*_final"
         if not isinstance(branches, list):
             self._branches = utils.get_branches(self._ntuple_path, tree, obj)
+            if branches != "all":
+                self._branches = [
+                    b for b in self._branches if fnmatch.fnmatchcase(b, branches)
+                ]
+                if not self._branches:
+                    raise ValueError(
+                        f"No `{obj}` branches match `{branches}` in {self._ntuple_path}"
+                    )
         else:
             self._branches = branches
         self.cache_out_path = f"cache/{version}/"
@@ -321,18 +332,28 @@ class ObjectCacher:
         Checks if there is parquet file in cache
         with the name 'version_sample_object.parquet'
         """
-        cached_files = glob.glob(self.cache_out_path + "*")
+        # Check the one path rather than listing the whole cache directory.
         fpath = self.cache_out_path + f"{self.parquet_fname}.parquet"
-        return fpath in cached_files
+        return os.path.exists(fpath)
 
     def _save_array_to_parquet(self):
         """
         Save
         """
+        # An empty array would be cached and then skipped on every later run.
+        if len(self._final_ak_array) == 0:
+            raise RuntimeError(
+                f"No events read for {self.parquet_fname}; "
+                "not writing an empty cache file"
+            )
+        fpath = self.cache_out_path + f"{self.parquet_fname}.parquet"
+        # Write then rename, so an interrupted write never leaves a
+        # complete-looking file.
         ak.to_parquet(
             self._final_ak_array,
-            destination=self.cache_out_path + f"{self.parquet_fname}.parquet",
+            destination=fpath + ".tmp",
         )
+        os.replace(fpath + ".tmp", fpath)
 
     def load(self):
         # print(f"Process {self._object + self._part_type} object...")
@@ -348,8 +369,10 @@ class ObjectCacher:
         if self._dryrun:
             return
 
+        start_time = time.time()
         self._concat_array_from_ntuples()
         self._save_array_to_parquet()
+        print(f"Loaded {self.parquet_fname} in {time.time() - start_time:.2f} s")
 
 
 def parse_args():
@@ -369,8 +392,12 @@ def parse_args():
 
 
 def main():
-    args = parse_args()
+    # stdout block-buffers when piped or redirected, so force a flush per line.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
 
+    start_time = time.time()
+    args = parse_args()
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
     for version, samples in cfg.items():
@@ -392,6 +419,7 @@ def main():
                         dryrun=args.dry_run,
                     )
                     loader.load()
+    print(f"Caching finished in {time.time() - start_time:.2f} s")
 
 
 if __name__ == "__main__":

@@ -17,7 +17,19 @@
   git clone git@github.com:cms-l1-dpg/Phase2-L1MenuTools.git
   ```
 
-  A standard venv with Python3.11 can be created on lxplus
+  The quickest way to set up the environment is
+
+  ```bash
+  scripts/setup_pyenv.sh
+  source setup.sh
+  ```
+
+  which creates the venv `pyenv/` with Python 3.11, installs the tools into it,
+  and makes it put a complete TeX Live (from cvmfs) on `PATH` when activated, as
+  needed by `rate_table_tex` (the lxplus system TeX Live lacks some packages).
+  Afterwards `source setup.sh` is all that is needed in a new shell.
+
+  Alternatively, a standard venv with Python3.11 can be created on lxplus
   via `python3.11 -m venv <name_of_venv>` and all necessary
   dependencies installed via `pip install -e .`:
 
@@ -36,11 +48,28 @@
   object_performance <path_to_config>
   rate_plots <path_to_config>
   rate_table <path_to_config>
+  rate_table_tex <path_to_config>
+  p2gt_compare --version <version> --menu <table_fname> --p2gt <P2GT menu>
+  p2gt_scalings --version <version>
   ```
+
+  `rate_table --truncated` rounds the scalings to two decimals, as the P2GT
+  emulator menus do, so that both apply identical thresholds. Its outputs get a
+  `_truncated` suffix, which `rate_table_tex` and `compare_menus` pick up with
+  the same option.
+
+  `p2gt_compare --version <version> --menu <table_fname> --p2gt <P2GT menu>`
+  compares the `rate_table` results of a menu with the P2GT emulator decisions,
+  which `cache_objects` caches from an `L1: "*_final"` entry in the MinBias
+  section of the caching config (see the module docstring).
+
+  `p2gt_scalings --version <version>` writes the scalings of a version in the format
+  of the P2GT emulator menus; with `--cmssw <CMSSW_BASE>/src` straight into the menu
+  folders, after checking that the menus find every scalings key they use.
 
 ## GitLab CI
 
-The initial GitLab workflow caches the jet objects from a standard menu Nano
-and produces the existing jet matching-efficiency plots. See
-[`docs/gitlab-ci.md`](docs/gitlab-ci.md) for the input variable, artifacts and
-local equivalent commands.
+The GitLab workflow caches selected objects from configurable menu Nanos and
+produces the V50 jet, event-sum, and tau performance plots. See
+[`docs/gitlab-ci.md`](docs/gitlab-ci.md) for inputs, artifacts, publication, and
+equivalent local commands.

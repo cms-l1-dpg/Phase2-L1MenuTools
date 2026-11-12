@@ -14,7 +14,11 @@ rates/table/rates_tables/*
 *.backup*
 **/tmp/*
 *~
+*.log
 outputs
+oldoutputs
+complogs
+logs
 menu_tools.egg-info
 dist
 ph2-menu-tools

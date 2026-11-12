@@ -1,0 +1,43 @@
+HT_puppi:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen HT"
+    trafo: "HT"
+    cuts:
+       object:
+         - "abs({eta}) < 2.4"
+         - "{pt} > 30"
+  test_objects:
+    L1puppiJetSC4sums:HT: "pt"
+  thresholds: [353]
+  xlabel: "Gen. HT (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 750
+    step: 20
+
+HT_track:
+  sample: TT
+  version: V38nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen HT"
+    trafo: "HT"
+    cuts:
+       object:
+         - "abs({eta}) < 2.4"
+         - "{pt} > 30"
+  test_objects:
+    L1TrackHT:HT: "ht"
+  thresholds: [258]
+  xlabel: "Gen. HT (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    min: 0
+    max: 750
+    step: 20

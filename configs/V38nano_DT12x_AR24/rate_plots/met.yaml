@@ -1,0 +1,11 @@
+METRates:
+  sample: MinBias
+  version: V38nano_DT12x
+  test_objects:
+    - L1puppiMET:default
+    - L1puppiMLMET:default
+    # - L1TrackMET:default
+  binning:
+    min: 50
+    max: 500
+    step: 25

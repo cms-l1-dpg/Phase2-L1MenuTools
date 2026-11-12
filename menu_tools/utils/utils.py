@@ -67,7 +67,10 @@ def get_branches(ntuple_path: str, tree: str, obj: str):
 
     ## nano
     if tree == "Events":
-        obj_branches = [x.split("_")[-1] for x in all_branches if x.startswith(obj)]
+        # Strip the exact `<obj>_` prefix: field names can contain underscores.
+        obj_branches = [
+            x.removeprefix(obj + "_") for x in all_branches if x.startswith(obj + "_")
+        ]
     ## no nano
     else:
         obj_branches = [

@@ -1,0 +1,13 @@
+
+DispHTRates_Signal:
+  sample: HtoLLPto4B_M125_Phi60_ctau100
+  version: V38nano_DT12x
+  test_objects:
+    # - L1puppiHistoJetSums:HT
+    - L1puppiJetSC4sums:HT
+    - L1TrackHT:HT
+    - L1ExtTrackHT:HT
+  binning:
+    min: 50
+    max: 975
+    step: 25

@@ -1,0 +1,151 @@
+### SC8 wide cone jet seeds
+L1_SinglePfJet8:
+  cross_masks: []
+  leg1:
+    threshold_cut: offline_pt >= 230.0
+    obj: L1puppiJetSC8:default
+
+# L1_SinglePfJet8Mass27:
+#   cross_masks: []
+#   leg1:
+#     threshold_cut: pt >= 0
+#     obj: L1puppiJetSC8:mass27
+
+L1_SinglePfJet8_Mass:
+  cross_masks: []
+  leg1:
+    threshold_cut: pt >= 120
+    obj: L1puppiJetSC8:mass20
+
+### Double wide jet mass
+L1_DoublePFJet8_dEtaMax:
+  cross_masks:
+    - abs(leg2.eta-leg1.eta) < 1.6
+  leg1:
+    threshold_cut: leg1.offline_pt >= 200.0
+    obj: L1puppiJetSC8:default
+  leg2:
+    threshold_cut: leg2.offline_pt >= 200.0
+    obj: L1puppiJetSC8:default
+
+# L1_DoublePFJet8_dEtaMaxMass19:
+#   cross_masks:
+#     - abs(leg2.eta-leg1.eta) < 1.6
+#   leg1:
+#     threshold_cut: pt >= 0
+#     obj: L1puppiJetSC8:mass19
+#   leg2:
+#     threshold_cut: pt >= 0
+#     obj: L1puppiJetSC8:mass19
+
+
+# L1_DoublePFJet8_dEtaMax_Mass:
+#   cross_masks:
+#     - abs(leg2.eta-leg1.eta) < 1.6
+#   leg1:
+#     threshold_cut: pt >= 115
+#     obj: L1puppiJetSC8:mass10
+#   leg2:
+#     threshold_cut: pt >= 115
+#     obj: L1puppiJetSC8:mass10
+
+# # B Jet Seeds
+# L1_PFHTT_QuadJet_BTagNNScore:
+#   cross_masks:
+#     - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 2.20
+#   leg1:
+#     threshold_cut: offline_pt >= 299.0
+#     obj: L1puppiJetSC4sums:HT
+#   leg2:
+#     threshold_cut: pt >= 25
+#     obj: L1puppiExtJetSC4:default
+#   leg3:
+#     threshold_cut: pt >= 25
+#     obj: L1puppiExtJetSC4:default
+#   leg4:
+#     threshold_cut: pt >= 25
+#     obj: L1puppiExtJetSC4:default
+#   leg5:
+#     threshold_cut: pt >= 25
+#     obj: L1puppiExtJetSC4:default
+
+# B Jet Seeds with 
+L1_PFHTT_QuadJet_BTagNNScore_Relaxed:
+  cross_masks:
+    - (leg2.btagScore + leg3.btagScore + leg4.btagScore + leg5.btagScore) > 0
+    - abs(leg2.eta) < 2.4
+    - abs(leg3.eta) < 2.4
+    - abs(leg4.eta) < 2.4
+    - abs(leg5.eta) < 2.4
+  leg1:
+    threshold_cut: offline_pt >= 299.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg3:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg4:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+  leg5:
+    threshold_cut: pt >= 25
+    obj: L1puppiExtJetSC4:default
+
+L1_PFHTT_QuadJetNG_BTagNNScore:
+  cross_masks:
+    - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 0
+  leg1:
+    threshold_cut: offline_pt >= 299.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: pt >= 25
+    obj: L1puppiJetSC4NG:default
+  leg3:
+    threshold_cut: pt >= 25
+    obj: L1puppiJetSC4NG:default
+  leg4:
+    threshold_cut: pt >= 25
+    obj: L1puppiJetSC4NG:default
+  leg5:
+    threshold_cut: pt >= 25
+    obj: L1puppiJetSC4NG:default
+
+L1_PFHTT_QuadJetNG_BTagNNScore_Relaxed:
+  cross_masks:
+    - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 0
+  leg1:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg3:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg4:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg5:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+
+L1_PFHTT_QuadJetNG_BTagNNScore_Relaxed_Btag:
+  cross_masks:
+    - (leg2.bTagScore + leg3.bTagScore + leg4.bTagScore + leg5.bTagScore) > 10
+  leg1:
+    threshold_cut: offline_pt >= 0.0
+    obj: L1puppiJetSC4sums:HT
+  leg2:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg3:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg4:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default
+  leg5:
+    threshold_cut: pt >= 20
+    obj: L1puppiJetSC4NG:default

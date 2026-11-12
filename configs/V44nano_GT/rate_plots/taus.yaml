@@ -1,0 +1,39 @@
+TauRates:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1GTnnTau:default
+    # - L1hpsTau:default
+    - L1caloTau:default
+    - L1nnCaloTau:default
+  binning:
+    min: 10
+    max: 155
+    step: 5
+
+TauRatesByRegion:
+  sample: MinBias
+  version: V44nano_GT
+  test_objects:
+    - L1caloTau:default:barrel
+    - L1caloTau:default:endcap
+    - L1GTnnTau:default:barrel
+    - L1GTnnTau:default:endcap
+  binning:
+    min: 10
+    max: 155
+    step: 5
+
+DiTauRates:
+  sample: MinBias
+  version: V44nano_GT
+  nObjects: 2
+  test_objects:
+    - L1GTnnTau:default
+    # - L1hpsTau:default
+    - L1caloTau:default
+    - L1nnCaloTau:default
+  binning:
+    min: 10
+    max: 155
+    step: 5

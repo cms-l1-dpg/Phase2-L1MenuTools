@@ -1,4 +1,3 @@
-# Scaling extraction is omitted in CI; only the configured turn-ons are produced.
 HT_90perc:
   sample: TT
   version: V44nano
@@ -16,6 +15,9 @@ HT_90perc:
     L1puppiJetSC4sums:HT: "pt"
     L1TrackHT:HT: "ht"
   thresholds: [350]
+  scalings:
+    method: "naive"
+    threshold: 0.90
   xlabel: "Gen. HT (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
@@ -67,6 +69,9 @@ MHT_50perc:
     L1puppiJetSC4sums:MHT: "pt"
     L1TrackHT:MHT: "mht"
   thresholds: [70, 150]
+  scalings:
+    method: "naive"
+    threshold: 0.50
   xlabel: "Gen. MHT30 (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
   binning:
@@ -88,6 +93,9 @@ MET_90perc:
   thresholds: [125, 150, 175, 200]
   xlabel: "Gen. MET (GeV)"
   ylabel: "Trigger Efficiency (<threshold> GeV)"
+  scalings:
+    method: "naive"
+    threshold: 0.90
   binning:
     min: 0
     max: 500
