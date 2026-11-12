@@ -1,0 +1,23 @@
+# Chunked caching of the V50nano_170pre6HLT signal samples, 25 files (25k events) per job:
+# DYLL_M50 200 files -> 8 jobs, TT 500 -> 20, HHTo2B2Tau 170 -> 7, HHTo4B 50 -> 2 (37 jobs),
+# ~2-3 min and ~1 GB each (local test: ~4.5 s/file of 1000 events).
+# Submit from the checkout to run, with the EOS submit pool (see caching_170pre6HLT_minbias.sub).
+#   condor_submit scripts/condor/caching_170pre6HLT_signal.sub
+#   condor_submit scripts/condor/caching_170pre6HLT_signal.sub joblist=mylist.txt   # subset
+# Then: scripts/condor/caching_170pre6HLT_post.sub (merge, hltPuppiJetSums, L1EG).
+checkout       = $ENV(PWD)
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+fpj            = 25
+executable     = $(checkout)/scripts/condor/menu_job.sh
+arguments      = $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLT.yaml --samples $(sample) --files-per-job $(fpj) --job $(job)
+output         = $(logdir)/cache170pre6HLT_$(sample).$(job).out
+error          = $(logdir)/cache170pre6HLT_$(sample).$(job).err
+log            = $(logdir)/cache170pre6HLT.log
+request_cpus   = 1
+request_memory = 2500
++JobFlavour    = "microcentury"
+# one line "<sample> <job>" per job; override for a test, e.g. joblist=<file with "HHTo4B 1">
+if ! defined joblist
+  joblist = scripts/condor/caching_170pre6HLT_signal_jobs.txt
+endif
+queue sample, job from $(joblist)

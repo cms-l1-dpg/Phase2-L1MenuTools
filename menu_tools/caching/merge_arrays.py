@@ -32,8 +32,11 @@ else:
         print(obj, arr.fields)
         arrs.append(arr)
 
-        print("Merging")
-        merge_arr = ak.concatenate(arrs, axis=1)
-        print(merge_arr)
-        print(f"Writing merged array to: {target_file}")
-        ak.to_parquet(merge_arr, target_file)
+    # merge once, after both objects are read (this was inside the loop, so a barrel-only
+    # file was written first), and write-then-rename
+    print("Merging")
+    merge_arr = ak.concatenate(arrs, axis=1)
+    print(merge_arr)
+    print(f"Writing merged array to: {target_file}")
+    ak.to_parquet(merge_arr, target_file + ".tmp")
+    os.replace(target_file + ".tmp", target_file)
