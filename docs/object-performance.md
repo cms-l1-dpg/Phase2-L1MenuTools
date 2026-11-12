@@ -20,6 +20,7 @@
   * [Reference config files](#reference-config-files)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
 * [Response and resolution](#response-and-resolution)
+* [L1 seed and HLT path efficiencies](#l1-seed-and-hlt-path-efficiencies)
 
 ## Caching the NTuple trees
 
@@ -165,3 +166,57 @@
   * `<plot>_<var>_vs_<vs>_dist_<version>.{png,pdf}`: response distributions (unit area, overflow in
     the edge bins) in every bin of `<vs>`, all test objects overlaid, for the variables in `response_binning`;
   * `<plot>_<version>.yaml`: the plot config.
+
+## L1 seed and HLT path efficiencies
+
+  A plot entry with a `path_efficiency:` block gives the per-event efficiency of trigger bits
+  (L1 seeds from the GT emulator, HLT paths) vs a reference (gen) quantity
+  (`menu_tools/object_performance/path_efficiency.py`, dispatched by `object_performance <config>`):
+
+  ```
+  object_performance configs/V50nano/object_performance/path_eff_muons.yaml --version V50nano_170pre6HLT
+  ```
+
+  Reference configs: `path_eff_{muons,electrons,taus,jets_sums}.yaml` in `configs/V50nano/object_performance`.
+
+  ```yaml
+  IsoMu24PathEff:
+    sample: DYLL_M50
+    version: V50nano
+    reference_object:                  # as in the turn-on configs
+      object: "GenPart"
+      x_arg: "pt"
+      label: "Gen muon, $|\eta| < 2.4$"
+      # rank: 2                        # x of the 2nd-highest-pT reference object (default 1: leading)
+      cuts:
+        object: ["(({statusFlags}>>7)&1) == 1", "abs({pdgId}) == 13", "abs({eta}) < 2.4"]
+    path_efficiency:
+      L1: [L1_pSingleTkMuon22_final]   # OR of the listed L1 seeds
+      HLT: [HLT_IsoMu24_FromL1TkMuon]  # OR of the listed HLT paths
+      curves: [L1, HLT, L1_and_HLT, HLT_given_L1]
+      labels: {L1: "..."}              # optional legend labels per curve
+      plateau_min: 30                  # optional: integrated efficiency for x >= plateau_min
+    binning: {min: 0, max: 100, step: 2.5}   # or {edges: [...]}
+    xlabel: "Leading gen muon $p_T$ (GeV)"
+    ylabel: "Efficiency"
+  ```
+
+  **Reference.** Loading and cuts are those of `TurnOnCollection`: `object` cuts, then the leading
+  object, then `event` cuts on it; `trafo: HT`/`MHT` (gen HT/MHT from `GenJet`) and `GenMET` are
+  event-level. Put the particle selection (pdgId, status) in the `object` cuts to get the leading gen
+  muon/electron (in the `*_trigger.yaml` turn-ons it is an `event` cut on the leading `GenPart`).
+  `rank: n` takes the n-th highest-pT object instead (e.g. the subleading muon for a double-muon path;
+  events with fewer objects drop out).
+
+  **Efficiency.** Per event, without matching to trigger objects: the denominator is the events with a
+  reference object in the bin, the numerator those in which the OR of the bits fired. Curves: `L1`,
+  `HLT`, `L1_and_HLT` (both fired), `HLT_given_L1` (denominator: events where the L1 OR fired).
+  Clopper-Pearson 68% errors. The bits are read directly from the cached per-event records
+  `<version>_<sample>_L1.parquet` (`L1_*` fields) and `<version>_<sample>_HLT.parquet` (`HLT_*`),
+  row-aligned with the gen parquets. In the Spring24 L1+HLT nanos the HLT bit of an L1-seeded path
+  already includes its L1 seed (HLT fired ⇒ seed fired, checked for all reference configs), so `HLT`
+  and `L1_and_HLT` coincide; `HLT_given_L1` gives the HLT efficiency relative to L1.
+
+  Outputs, in `outputs/<version>/object_performance/path_efficiency/`: `<plot>_<version>.{png,pdf,json}`
+  (json per curve: `label`, `xbins`, `efficiency`, `efficiency_err`, `n_pass`, `n_total`, `plateau`)
+  and `<plot>_<version>.yaml` (the plot config).
