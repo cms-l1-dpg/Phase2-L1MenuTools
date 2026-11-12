@@ -1,0 +1,75 @@
+# Combined L1 x HLT object efficiency of HLT_IsoMu24_FromL1TkMuon (without the isolation, which is
+# not in the nano hltMuon), DY -> ll. `l1_seed`: docs/object-performance.md.
+# Reference: leading hard-process gen muon with |eta| < 2.4 (selection in the `object` cuts, as in
+# path_eff_muons.yaml, for the comparison with the path bits).
+# Curves: hltMuon pT > 24 (HLT only), the L1 seed alone (L1seed) and hltMuon pT > 24 AND the same
+# gen muon matched to an L1 tkMuon passing the seed (hltMuon+L1seed).
+#
+# L1 seed L1_pSingleTkMuon22 (configs/V50nano/rate_table/hlt_paths.yml), P2GT menu step1_2024
+# (CMSSW_17_0_0_pre6 L1Trigger/Configuration/python/Phase2GTMenus/SeedDefinitions/step1_2024):
+#   SingleTkMuon22 = tkMuon VLoose (qual bit 0), |eta| < 2.4, offline pT 22 GeV.
+#   Online threshold = (22 - offset) / slope with the GT scalings (l1tGTObject_scalings.py,
+#   GMTTkMuons VLoose): barrel (22 - 1.01) / 1.04 = 20.2, overlap (22 - 1.09) / 1.03 = 20.3,
+#   endcap (22 - 0.85) / 1.04 = 20.3 GeV (the menu-tools v0p0 scalings in
+#   outputs/V50nano_regscal give 20.3 / 20.2 / 20.3, i.e. the same).
+#   Check against the GT emulator bit (L1gmtTkMuon:VLoose with pT > these, per event): identical
+#   decision in 200k DY and 500k TT events.
+
+HLTMuonL1Seed_IsoMu24:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "pt"
+  l1_seed:
+    object: "L1gmtTkMuon:VLoose"
+    threshold: {barrel: 20.2, overlap: 20.3, endcap: 20.3}   # online pT of pSingleTkMuon22
+    label: "pSingleTkMuon22 (TkMuon VLoose)"
+  thresholds: [24]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
+
+HLTMuonL1Seed_IsoMu24_Eta_Pt30ToInf:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  threshold_field: "pt"
+  reference_object:
+    object: "GenPart"
+    x_arg: "eta"
+    label: "Gen Muons"
+    cuts:
+      object:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+        - "abs({eta}) < 2.4"
+      event:
+        - "{pt} > 30"
+  test_objects:
+    hltMuon:default: "eta"
+  l1_seed:
+    object: "L1gmtTkMuon:VLoose"
+    threshold: {barrel: 20.2, overlap: 20.3, endcap: 20.3}
+    label: "pSingleTkMuon22 (TkMuon VLoose)"
+  thresholds: [24]
+  xlabel: "Gen. $\\eta$"
+  ylabel: "Efficiency (HLT $p_T > <threshold>$, gen $p_T$ > 30 GeV)"
+  binning:
+    min: -2.4
+    max: 2.4
+    step: 0.1

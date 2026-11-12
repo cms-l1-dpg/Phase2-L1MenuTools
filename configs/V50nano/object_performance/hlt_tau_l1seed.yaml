@@ -1,0 +1,77 @@
+# Combined L1 x HLT object efficiency of the tau leg of HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1,
+# HH -> bbtautau: hltHpsPFTau:MediumDeepTau pT > 35 AND the gen visible tau matched to an L1 NN
+# PUPPI tau passing ONE leg of L1_pDoublePuppiTau52_52. `l1_seed`: docs/object-performance.md.
+# Per-leg only: the seed's second leg (and its dR > 0.5) is not required, so the L1 x HLT curve
+# is the per-tau efficiency, not the path efficiency (see path_eff_taus.yaml for the latter).
+# hltHpsPFTau is stored only in events in which an L1 tau seed fired: the HLT-only curve is
+# already biased towards L1-triggered events.
+#
+# L1 seed L1_pDoublePuppiTau52_52 (configs/V50nano/rate_table/hlt_paths.yml), P2GT menu step1_2024
+# (CMSSW_17_0_0_pre6): two CL2Taus with minQualityScore 225 (= L1nnPuppiTau:default,
+# chargedIso > 0.22), |eta| < 2.172, offline pT 52, dR > 0.5. Online threshold =
+# (52 - offset) / slope with the GT scalings (l1tGTObject_scalings.py, CL2Taus):
+#   barrel (|eta| < 1.5)  (52 + 0.29) / 1.38 = 37.9 GeV
+#   endcap                (52 + 4.96) / 1.89 = 30.1 GeV
+#   (menu-tools v0p0 scalings, outputs/V50nano_regscal: 38.3 / 33.3 GeV; the GT values are used.)
+#   Check against the GT emulator bit (>= 2 L1nnPuppiTau:default passing, dR > 0.5), per event,
+#   49k HH -> bbtautau events: identical decision.
+# match_dR: 0.3 for the L1 tau, as the HLT tau (the L1nnPuppiTau default 0.1 gives the same
+# result within 0.2%: L1 seed plateau 0.957 instead of 0.958 in the barrel, gen pT 80-150 GeV).
+
+HLTTauL1Seed_DoubleTau35_Barrel:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:barrel: "pt"
+  l1_seed:
+    object: "L1nnPuppiTau:default"
+    threshold: {barrel: 37.9, endcap: 30.1}   # one leg of pDoublePuppiTau52_52
+    match_dR: 0.3
+    label: "NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52"
+  thresholds: [35]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, barrel (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
+
+HLTTauL1Seed_DoubleTau35_Endcap:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen Taus"
+    cuts:
+      event:
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.1"
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:endcap: "pt"
+  l1_seed:
+    object: "L1nnPuppiTau:default"
+    threshold: {barrel: 37.9, endcap: 30.1}
+    match_dR: 0.3
+    label: "NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52"
+  thresholds: [35]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Efficiency, endcap (HLT $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 150
+    step: 6
