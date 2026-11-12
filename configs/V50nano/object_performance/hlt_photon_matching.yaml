@@ -1,0 +1,59 @@
+# HLT photons: no prompt-photon sample in the L1+HLT production, so DY gen electrons are used as a
+# proxy reference. hltPhoton holds only the e/gamma candidates WITHOUT a GSF track (the others are
+# in hltElectron): the two efficiencies add up to the HLT e/gamma candidate efficiency. The photon
+# ids (hlt.yaml) need a photon sample (e.g. Hgg) to be measured.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTPhotonsMatchingBarrel_eleProxy:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons (photon proxy)"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) < 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltPhoton:default: "pt"
+    hltElectron:default: "pt"
+    L1tkPhoton:NoIso: "pt"
+    L1EG:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (barrel)"
+  binning:
+    min: 0
+    max: 100
+    step: 3
+
+HLTPhotonsMatchingEndcap_eleProxy:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Electrons (photon proxy)"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 11"
+        - "abs({eta}) > 1.5"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltPhoton:default: "pt"
+    hltElectron:default: "pt"
+    L1tkPhoton:NoIso: "pt"
+    L1EG:default: "pt"
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching Efficiency (endcap)"
+  binning:
+    min: 0
+    max: 100
+    step: 3

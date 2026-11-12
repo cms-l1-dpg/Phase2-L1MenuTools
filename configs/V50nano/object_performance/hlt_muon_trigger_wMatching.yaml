@@ -1,0 +1,29 @@
+# HLT muons (hltMuon, L3 without isolation) vs the L1 tkMuon, DY -> ll.
+# hltMuon exists only in events with an L1 tkMuon: HLT efficiency includes the L1 tkMuon reco.
+# Object definitions: configs/V50nano/objects/hlt.yaml.
+
+HLTMuonsTrigger_wMatching:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: True
+  matching_and_threshold: True
+  reference_object:
+    object: "GenPart"
+    x_arg: "pt"
+    label: "Gen Muons"
+    cuts:
+      event:
+        - "(({statusFlags}>>7)&1) == 1"
+        - "abs({pdgId}) == 13"
+      object:
+        - "abs({eta}) < 2.4"
+  test_objects:
+    hltMuon:default: "pt"
+    L1gmtTkMuon:default: "pt"
+  thresholds: [24, 50]
+  xlabel: "Gen. $p_T$ (GeV)"
+  ylabel: "Matching + Trigger Efficiency (|eta| < 2.4, $p_T > <threshold>$ GeV)"
+  binning:
+    min: 0
+    max: 100
+    step: 2
