@@ -77,7 +77,8 @@ EOS; leaving it untriggered does not make the pipeline fail.
 The cache jobs read CERN EOS through its internal XRootD endpoint using a
 Kerberos ticket. They run in CERN's `al8-cms` image, create a Python 3.11 virtual
 environment from the mounted LCG view, and install MenuTools plus the XRootD
-Python bindings.
+Python bindings. `cache_objects` uses a five-minute Uproot read timeout for
+remote basket requests; it can be changed with `--read-timeout` when needed.
 
 The inputs must contain the `Events` tree and the branches listed in
 `configs/ci/pf_performance_caching.yaml`. The current configuration uses the

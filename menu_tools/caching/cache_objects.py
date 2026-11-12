@@ -19,7 +19,17 @@ vector.register_awkward()
 
 
 class ObjectCacher:
-    def __init__(self, version, sample, obj, tree, branches, cfg_file, dryrun=False):
+    def __init__(
+        self,
+        version,
+        sample,
+        obj,
+        tree,
+        branches,
+        cfg_file,
+        dryrun=False,
+        read_timeout=300,
+    ):
         self._version = version
         self._sample = sample
         self._cfg_file = cfg_file
@@ -33,6 +43,7 @@ class ObjectCacher:
         except IndexError:
             self._part_type = ""
         self._dryrun = dryrun
+        self._read_timeout = read_timeout
         # Get Branches: a list, "all", or a glob on the field names, e.g. "*_final"
         if not isinstance(branches, list):
             self._branches = utils.get_branches(self._ntuple_path, tree, obj)
@@ -289,8 +300,13 @@ class ObjectCacher:
 
             # Read files in chunks to avoid issues with large size files
             chunk_name = f"{fname}:{self._tree}"
+            # Remote EOS reads can occasionally take longer than Uproot's
+            # short default timeout for one basket request.
             for array in uproot.iterate(
-                chunk_name, filter_name=branches, step_size="100 MB"
+                chunk_name,
+                filter_name=branches,
+                step_size="100 MB",
+                timeout=self._read_timeout,
             ):
                 chunk_array = {x.removeprefix("part"): [] for x in branches}
                 chunk_array = self._load_branches_from_ntuple(
@@ -383,6 +399,12 @@ def parse_args():
         action="append",
         help="Cache only this sample. May be specified more than once.",
     )
+    parser.add_argument(
+        "--read-timeout",
+        type=float,
+        default=300,
+        help="Timeout in seconds for each Uproot input read (default: 300).",
+    )
     args = parser.parse_args()
     return args
 
@@ -396,6 +418,9 @@ def main():
     args = parse_args()
     with open(args.cfg, "r") as f:
         cfg = yaml.safe_load(f)
+
+    if args.read_timeout <= 0:
+        raise ValueError("--read-timeout must be greater than zero")
 
     requested_samples = set(args.samples or [])
     available_samples = {
@@ -426,6 +451,7 @@ def main():
                         branches=branches,
                         cfg_file=args.cfg,
                         dryrun=args.dry_run,
+                        read_timeout=args.read_timeout,
                     )
                     loader.load()
     print(f"Caching finished in {time.time() - start_time:.2f} s")
