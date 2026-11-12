@@ -1,0 +1,15 @@
+# Full-statistics menu-tools runs (rate tables, path efficiencies, purity, HT), one job per line
+# "<tag> <command> [args...]" of the job list, run with scripts/condor/menu_job.sh in the
+# submitting checkout:
+#   condor_submit scripts/condor/menu_runs.sub joblist=scripts/condor/menu_runs_170pre6HLT.txt
+checkout       = $ENV(PWD)
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+executable     = $(checkout)/scripts/condor/menu_job.sh
+arguments      = $(checkout) $(cmd)
+output         = $(logdir)/menu_run_$(tag).out
+error          = $(logdir)/menu_run_$(tag).err
+log            = $(logdir)/menu_runs.log
+request_cpus   = 1
+request_memory = 12000
++JobFlavour    = "workday"
+queue tag, cmd from $(joblist)
