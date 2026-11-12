@@ -49,6 +49,8 @@ object_performance = "menu_tools.object_performance.plotter:main"
 rate_plots = "menu_tools.rate_plots.plotter:main"
 rate_table = "menu_tools.rate_table.rate_table:main"
 rate_table_tex = "menu_tools.rate_table.latex_table:main"
+p2gt_compare = "menu_tools.rate_table.p2gt_compare:main"
+p2gt_scalings = "menu_tools.object_performance.p2gt_scalings:main"
 
 [tool.pytest.ini_options]
 filterwarnings = [

@@ -1,6 +1,14 @@
 import os
 from typing import Optional
 
+from menu_tools.utils.constants import P2GT_DECIMALS
+
+
+def scalings_suffix(scalings_version: Optional[str], truncated: bool) -> str:
+    """Filename tag of tables made with `--scalings` and/or `--truncated`."""
+    suffix = f"_scalings_{scalings_version}" if scalings_version else ""
+    return suffix + ("_truncated" if truncated else "")
+
 
 class MenuConfig:
     def __init__(
@@ -10,12 +18,14 @@ class MenuConfig:
         override_version: Optional[str] = None,
         override_scalings_version: Optional[str] = None,
         override_sample: Optional[str] = None,
+        truncated: bool = False,
     ) -> None:
         self._config = config
         self._config_version = config_version
         self._override_version = override_version
         self._override_scalings_version = override_scalings_version
         self._override_sample = override_sample
+        self._truncated = truncated
 
     @property
     def sample(self) -> str:
@@ -69,12 +79,16 @@ class MenuConfig:
         return self.version
 
     @property
+    def scalings_decimals(self) -> Optional[int]:
+        """Decimals the scalings are rounded to with `--truncated` (those of the
+        P2GT menus), None otherwise."""
+        return P2GT_DECIMALS if self._truncated else None
+
+    @property
     def scalings_suffix(self) -> str:
-        """Tag appended to output filenames when `--scalings` is used, so that
-        tables made with alternative scalings do not overwrite the nominal ones."""
-        if self._override_scalings_version:
-            return f"_scalings_{self._override_scalings_version}"
-        return ""
+        """Tag appended to output filenames when `--scalings` or `--truncated` is
+        used, so that such tables do not overwrite the nominal ones."""
+        return scalings_suffix(self._override_scalings_version, self._truncated)
 
     @property
     def table_outdir(self) -> str:

@@ -105,9 +105,9 @@ if [[ $PERFORMANCE == "true" ]]; then
     run_when_ready object_performance configs/$CONFIGDIR/object_performance/jets_ext_trigger.yaml --version ${VERSION} # step 2
     run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger.yaml --version ${VERSION} # includes step 2 disp muons
     run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_VLoose.yaml --version ${VERSION}
-    # run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_Loose.yaml --version ${VERSION} 
+    run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_Loose.yaml --version ${VERSION} 
     run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_Medium.yaml --version ${VERSION}
-    # run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_Tight.yaml --version ${VERSION} 
+    run_when_ready object_performance configs/$CONFIGDIR/object_performance/muon_trigger_Tight.yaml --version ${VERSION} 
     # run_when_ready object_performance configs/$CONFIGDIR/object_performance/tkmuon_trigger.yaml --version ${VERSION} # commented as it takes a long time
     if [[ $RELVAL == "false" ]]; then
 	run_when_ready object_performance configs/$CONFIGDIR/object_performance/muonTF_trigger.yaml --version ${VERSION}

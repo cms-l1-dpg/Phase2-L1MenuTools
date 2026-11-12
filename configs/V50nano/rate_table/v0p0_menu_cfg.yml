@@ -156,7 +156,7 @@ L1_DoubleTkEleIso_er1p5:
   cross_masks:
     - (abs(leg1.eta) < 1.5)
     - (abs(leg2.eta) < 1.5)
-    # - abs(leg2.z0-leg1.z0) < 1
+    - abs(leg2.z0-leg1.z0) < 1
   leg1:
     threshold_cut: offline_pt >= 24.0
     obj: L1tkElectron:Iso:inclusive
