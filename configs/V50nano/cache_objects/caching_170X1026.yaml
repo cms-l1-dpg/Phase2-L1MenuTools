@@ -91,6 +91,8 @@ V50nano_170X1026:
       Events:
         # gen
         GenJet: [pt, eta, phi, partonFlavour]
+        # prompt leptons for the GenJet `reference_cleaning` (docs/object-performance.md)
+        GenPart: [pt, eta, phi, pdgId, status, statusFlags]
         GenJetAK8: [pt, eta, phi, mass]
         GenMET: "all"
         # PV

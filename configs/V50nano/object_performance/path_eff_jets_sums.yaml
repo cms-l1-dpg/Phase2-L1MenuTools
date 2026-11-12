@@ -1,6 +1,16 @@
 # Jet / HT / MET L1 seed and HLT path efficiencies vs gen quantities on ttbar (path_efficiency.py).
 # Reference selections as in jets_trigger.yaml and met_ht_mht.yaml.
 SingleJet520PathEff:
+  # GenJets within dR < 0.4 of a prompt gen e/mu (incl. leptonic tau decays) are not jets:
+  # removed from the reference (docs/object-performance.md#reference-cleaning-reference_cleaning)
+  reference_cleaning: &prompt_leptons
+    object: GenPart
+    cuts:
+      - "{status} == 1"
+      - "(abs({pdgId}) == 11) | (abs({pdgId}) == 13)"
+      - "({statusFlags} & 33) > 0"  # isPrompt (bit 0) | isDirectPromptTauDecayProduct (bit 5)
+      - "{pt} > 10"
+    dR: 0.4
   sample: TT
   version: V50nano
   reference_object:
@@ -21,6 +31,7 @@ SingleJet520PathEff:
     edges: [0, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 700, 900]
 
 HT1070PathEff:
+  reference_cleaning: *prompt_leptons
   sample: TT
   version: V50nano
   reference_object:
