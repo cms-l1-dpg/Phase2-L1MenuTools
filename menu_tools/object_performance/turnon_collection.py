@@ -6,6 +6,7 @@ import numpy as np
 import vector
 
 from menu_tools.object_performance.config import PerformancePlotConfig
+from menu_tools.utils import constants
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object
 
@@ -48,7 +49,7 @@ class ArrayLoader:
         in self._transform_key().
         """
         fname = (
-            f"cache/{self.cfg_plot.version}/"
+            f"{constants.CACHE_DIR}/{self.cfg_plot.version}/"
             f"{self.cfg_plot.version}_"
             f"{self.cfg_plot.sample}_"
             f"{obj}.parquet"
@@ -174,6 +175,14 @@ class TurnOnCollection:
             self.numerators["test"][str(test_obj)] = ref_test["test"][x_arg][pass_dR][
                 pt_max
             ][:, :, 0]
+            # Full matched (ref, test) records, e.g. for resolution studies
+            # (ResolutionCollection sets `keep_matched_records`). Same selection
+            # as the numerators: shape [event][ref], None where nothing matched.
+            if getattr(self, "keep_matched_records", False):
+                self.matched_records[str(test_obj)] = {
+                    "ref": ref_test["ref"][pass_dR][pt_max][:, :, 0],
+                    "test": ref_test["test"][pass_dR][pt_max][:, :, 0],
+                }
 
     def _flatten_array(self, ak_array, ak_to_np=False):
         """

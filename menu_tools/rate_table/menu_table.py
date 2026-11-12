@@ -73,7 +73,10 @@ class MenuTable:
             truncated=truncated,
         )
 
-        print(f"INFO: Loading cached inputs from cache/{self.config.version}")
+        print(
+            "INFO: Loading cached inputs from "
+            f"{constants.CACHE_DIR}/{self.config.version}"
+        )
         print(f"INFO: Saving outputs to outputs/{self.config.version}/rate_tables")
         print(
             "INFO: Loading object configs from "
@@ -154,7 +157,7 @@ class MenuTable:
         """
         obj = objects.Object(object_name, self.config.config_version_for_objects)
         fpath = os.path.join(
-            "cache",
+            constants.CACHE_DIR,
             self.config.version,
             f"{self.config.version}_{self.config.sample}_{obj.nano_obj_name}.parquet",
         )

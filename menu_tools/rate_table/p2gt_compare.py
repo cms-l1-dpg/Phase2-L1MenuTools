@@ -369,7 +369,7 @@ def run_compare(args, version: str) -> None:
         gt = load_gt_ntuples(args.gt_ntuples)
     else:
         gt_source = args.gt_cache or os.path.join(
-            "cache", version, f"{version}_{sample}_L1.parquet"
+            constants.CACHE_DIR, version, f"{version}_{sample}_L1.parquet"
         )
         if not os.path.exists(gt_source):
             raise CompareError(
@@ -463,7 +463,8 @@ def main() -> None:
     inp.add_argument(
         "--gt-cache",
         help="P2GT decisions cache "
-        "(default: cache/<version>/<version>_<sample>_L1.parquet)",
+        "(default: <cache>/<version>/<version>_<sample>_L1.parquet, <cache> = "
+        "$MENU_TOOLS_CACHE or cache)",
     )
     inp.add_argument(
         "--gt-ntuples",

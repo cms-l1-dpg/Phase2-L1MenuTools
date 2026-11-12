@@ -1,0 +1,46 @@
+# Response of L1 energy sums to the gen-level ones (ttbar), event by event without matching
+# (match_test_to_ref: False). pt = MET (HT) response; phi only for objects that store a phi.
+# min_ref drops events with a small gen value, where the response test/ref diverges.
+METResolution:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenMET"
+    x_arg: "pt"
+    label: "Gen MET"
+  test_objects:
+    L1puppiMET:default: "pt"
+    L1puppiMLMET:default: "pt"
+    L1TrackMET:default: "pt"
+  resolution:
+    variables: [pt, phi]
+    min_ref: 30
+    vs:
+      pt: {edges: [30, 50, 75, 100, 125, 150, 200, 250, 300, 400, 500]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 3, step: 0.05}
+
+HTResolution:
+  sample: TT
+  version: V50nano
+  reference_object:
+    object: "GenJet"
+    x_arg: "pt"
+    label: "Gen HT"
+    trafo: "HT"
+    cuts:
+       object:
+         - "abs({eta}) < 2.4"
+         - "{pt} > 30"
+  test_objects:
+    L1puppiJetSC4sums:HT: "pt"
+    L1TrackHT:HT: "ht"
+  resolution:
+    variables: [pt]
+    min_ref: 50
+    vs:
+      pt: {edges: [50, 100, 150, 200, 250, 300, 400, 500, 750, 1000]}
+      pu: {edges: [150, 180, 190, 200, 210, 220, 260]}
+    response_binning:
+      pt: {min: 0, max: 2, step: 0.04}
