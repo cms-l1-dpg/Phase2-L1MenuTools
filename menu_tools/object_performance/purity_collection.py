@@ -218,16 +218,19 @@ class PurityCollection(TurnOnCollection):
     def _load_parquet(self, name: str, fields: set[str]) -> ak.Array:
         """Only the needed columns of <version>_<sample>_<name>.parquet, as a record array with
         the field names of `ArrayLoader` (prefix stripped)."""
-        import pyarrow.parquet as pq
-
         v = self.cfg_plot.version
         fname = f"{constants.CACHE_DIR}/{v}/{v}_{self.cfg_plot.sample}_{name}.parquet"
         if not os.path.exists(fname):
             raise FileNotFoundError(fname)
         loader = ArrayLoader(self, self.cfg_plot)
-        cols = [c for c in pq.read_schema(fname).names if loader._transform_key(c, name) in fields]
-        arr = ak.from_parquet(fname, columns=cols)
-        return ak.zip({loader._transform_key(k, name): arr[k] for k in arr.fields})
+        cols = [c for c in ak.metadata_from_parquet(fname)["form"].fields if loader._transform_key(c, name) in fields]
+        try:
+            arr = ak.from_parquet(fname, columns=cols)
+        except Exception:
+            # Caches written as one awkward record column cannot be pruned by pyarrow
+            # ("only part of an extension's storage type"): read everything, keep the fields.
+            arr = ak.from_parquet(fname)[cols]
+        return ak.zip({loader._transform_key(k, name): arr[k] for k in cols})
 
     def _load_arrays(self) -> None:
         for test_obj, _ in self.test_objects:
