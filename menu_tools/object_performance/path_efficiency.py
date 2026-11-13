@@ -96,6 +96,7 @@ from menu_tools.object_performance.turnon_collection import (
 from menu_tools.utils import constants
 from menu_tools.utils import utils
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.sample_labels import legend_title
 
 
 CURVES = ("L1", "HLT", "L1_and_HLT", "HLT_given_L1")
@@ -495,7 +496,10 @@ class PathEfficiencyPlotter(Plotter):
     def _draw(
         self, curves: list[dict[str, Any]], title: str, suffix: str, out: dict
     ) -> None:
-        """One plot of the curve data `curves`, saved as <plot><suffix>_<version>."""
+        """One plot of the curve data `curves`, saved as <plot><suffix>_<version>;
+        legend title: the sample label and `title`."""
+        # the legend spans the top of the plot: wider title lines than the default
+        title = legend_title(self.cfg.sample_label, title, width=50) or ""
         fig, ax = self._create_new_plot()
         for data in curves:
             ax.errorbar(

@@ -23,6 +23,7 @@ from menu_tools.object_performance.purity_collection import PurityCollection
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object, trigger_level
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.sample_labels import wrap_title
 
 
 def _clean(values):
@@ -134,12 +135,13 @@ class PurityPlotter(Plotter):
         return f"All {lvl} objects after ID / $\\eta$ cuts (no gen matching)"
 
     def _context(self, plot: dict) -> str:
-        parts = [self.cfg.sample]
+        sample = self.cfg.sample_label
+        parts = [sample] if sample else []
         if plot["threshold"] is not None:
             parts.append(rf"$p_T \geq$ {plot['threshold']:g} GeV")
         if self.pur_cfg.leading_only:
             parts.append("leading object only")
-        return ", ".join(parts)
+        return wrap_title(", ".join(parts), 40)
 
     def _fname(self, plot: dict) -> str:
         thr = (

@@ -39,6 +39,7 @@ from menu_tools.object_performance.split import OTHER, category_counts, safe_nam
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object, trigger_level
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.sample_labels import legend_title
 
 
 # Event-level sums (MET, HT): the pT response is the ratio of the sums.
@@ -189,12 +190,12 @@ class ResolutionPlotter(Plotter):
         var: str,
         vs: str,
         curves: list[tuple[str, str, dict, dict]],
-        legend_title: str,
+        title: str,
         fname: str,
         tag: str,
     ) -> None:
         """Median (top) and resolution (bottom) vs `vs` of `curves` (JSON key,
-        label, binned result, style)."""
+        label, binned result, style); legend title: the sample label and `title`."""
         fig, (ax_med, ax_res) = plt.subplots(
             2,
             1,
@@ -239,7 +240,7 @@ class ResolutionPlotter(Plotter):
             loc="best",
             frameon=False,
             fontsize=18,
-            title=legend_title,
+            title=legend_title(self.cfg.sample_label, title),
             title_fontsize=18,
         )
         for ax in (ax_med, ax_res):
@@ -334,7 +335,9 @@ class ResolutionPlotter(Plotter):
                 loc="upper right",
                 frameon=False,
                 fontsize=14,
-                title=self._label(obj_key),
+                title=legend_title(
+                    self.cfg.sample_label, self._label(obj_key), width=44
+                ),
                 title_fontsize=14,
             )
         for i in range(len(keys), nrows * ncols):
@@ -450,9 +453,11 @@ class ResolutionPlotter(Plotter):
                 ax.set_xlabel(self._response_labels(var)[0])
                 ax.set_ylabel("Fraction")
                 ax.legend(loc="upper right", frameon=False, fontsize=7)
+            sample = self.cfg.sample_label
             fig.suptitle(
-                f"CMS Phase-2 Simulation  -  {self.plot_name}, {self.version}  "
-                f"({self.pu_value} PU)",
+                "CMS Phase-2 Simulation  -  "
+                + (f"{sample}, " if sample else "")
+                + f"{self.plot_name}, {self.version}  ({self.pu_value} PU)",
                 fontsize=13,
                 y=1.0,
             )

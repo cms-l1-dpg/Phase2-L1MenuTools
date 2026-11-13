@@ -20,6 +20,7 @@
 * [Caching the NTuple trees](#caching-the-ntuple-trees)
 * [Efficiency and Scalings](#efficiency-and-scalings)
   * [Reference config files](#reference-config-files)
+  * [Sample label (`sample_label`)](#sample-label-sample_label)
   * [Matching + threshold (trigger) efficiencies](#matching--threshold-trigger-efficiencies)
   * [Combined L1 x HLT object efficiency (`l1_seed`)](#combined-l1-x-hlt-object-efficiency-l1_seed)
   * [Split by reference categories (`split_by`)](#split-by-reference-categories-split_by)
@@ -79,6 +80,31 @@
   * `turnons`: plots of the matching efficiencies and L1 turn-on efficiency curves.
 
   * `scalings`: plots of the scalings, i.e. position of the turnon point (often 95% location) as a function of different threshold cuts on L1 objects.
+
+### Sample label (`sample_label`)
+
+  Every performance plot (turn-ons and matching efficiencies, including the `l1_seed` curves
+  and the `split_by` plots, scalings, response / resolution, path efficiencies, purity /
+  multiplicity / rate vs threshold, b-tagging) names the sample it was made on in the legend
+  title, e.g. "HH→bbττ" (`HH$\rightarrow$bb$\tau\tau$`). If the plot already has a legend title (the
+  reference label of the resolution and path-efficiency plots, the object or category of the
+  `split_by` plots, the selection of the purity and b-tag plots), the sample comes first:
+  "HH→bbττ — Gen Taus" when that fits on one line, else the sample on the first line and the
+  (wrapped) title below it.
+
+  The labels are mapped from the `sample:` keys in
+  [`menu_tools/utils/sample_labels.yaml`](../menu_tools/utils/sample_labels.yaml) (mathtext);
+  a sample without an entry is shown with its raw key, so add new samples there. Per plot
+  entry:
+
+  ```yaml
+  HLTTausMatchingBarrel_DY:
+    sample: DYLL_M50
+    sample_label: "DY$\\rightarrow\\tau\\tau$"   # override the label of `sample`
+    # sample_label: false                    # no sample label on this plot
+  ```
+
+  Only the figures change: the JSON outputs are the same with and without the label.
 
 ### Matching + threshold (trigger) efficiencies
 

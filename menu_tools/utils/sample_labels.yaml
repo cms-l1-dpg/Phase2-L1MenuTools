@@ -1,0 +1,28 @@
+# Pretty labels of the sample keys (`sample:` of the plot configs, the sample names of the
+# cache configs), shown as the legend title (or its first line) of the performance plots
+# (menu_tools/utils/sample_labels.py). Matplotlib mathtext; keep them short.
+# A sample missing here is shown with its raw key. Per plot: `sample_label: "..."` overrides
+# the label, `sample_label: false` drops it.
+DYLL_M50: 'DY$\rightarrow\ell\ell$'
+TT: '$t\bar{t}$'
+TT_Taus: '$t\bar{t}$'
+MinBias: 'Minimum bias'
+MinBiasF1000: 'Minimum bias'
+MinBiasL1Pass: 'Minimum bias (L1 accepted)'
+HHTo2B2Tau: 'HH$\rightarrow$bb$\tau\tau$'
+HHTo4B: 'HH$\rightarrow$bbbb'
+HHbbWW: 'HH$\rightarrow$bbWW'
+HHToTauTau: 'HH$\rightarrow\tau\tau$'
+VBFHToTauTau: 'VBF H$\rightarrow\tau\tau$'
+QQHToTauTau: 'qqH$\rightarrow\tau\tau$'
+VBFHToBB: 'VBF H$\rightarrow$bb'
+VBFHToInv: 'VBF H$\rightarrow$invisible'
+VBFHinv: 'VBF H$\rightarrow$invisible'
+Hgg: 'H$\rightarrow\gamma\gamma$'
+Hgg_Ele: 'H$\rightarrow\gamma\gamma$'
+ZEE: 'Z$\rightarrow$ee'
+ZMM: 'Z$\rightarrow\mu\mu$'
+ZTT: 'Z$\rightarrow\tau\tau$'
+WTo3Pi: 'W$\rightarrow3\pi$'
+HtoLLPto4b_M125_Phi60_ctau100: 'H$\rightarrow$LLP$\rightarrow$4b ($m$ = 60 GeV, $c\tau$ = 100 mm)'
+HtoLLPto4B_M125_Phi60_ctau100: 'H$\rightarrow$LLP$\rightarrow$4b ($m$ = 60 GeV, $c\tau$ = 100 mm)'
