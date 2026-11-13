@@ -1,0 +1,73 @@
+# Decay-mode split of hlt_tau_trigger_wMatching.yaml (`split_by`, see docs/object-performance.md).
+# Same plots as hlt_tau_trigger_wMatching.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
+# curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
+# GenVisTau_status (CMSSW GenVisTauProducer, JetMCTagUtils::genTauDecayMode): 0 = 1-prong,
+# 1 = 1-prong + 1 pi0, 2 = 1-prong + 2 pi0, 10 = 3-prong, 11 = 3-prong + 1 pi0, 15 = other
+# (other: neutral hadrons, >= 3 pi0, 3-prong + >= 2 pi0, 5-prong, ...; ~6% of the taus).
+# Generated from hlt_tau_trigger_wMatching.yaml; keep in sync.
+
+HLTTauTriggerBarrel_wMatching_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event:
+      - abs({eta}) < 1.5
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:barrel: pt
+    hltHpsPFTau:LooseDeepTau:barrel: pt
+    L1nnPuppiTau:default:barrel: pt
+  thresholds:
+  - 27
+  - 35
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Matching + Trigger Efficiency (barrel, $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 150
+    step: 6
+  split_by: &split_dm
+    field: status            # GenVisTau_status: generator decay mode
+    name: ""                 # files: <plot>_<test object>_<thr>_<version>, <plot>_fractions_...
+    categories:              # status 15 (other) is only in the inclusive curve
+      "1-prong": [0]
+      "1-prong + $\\pi^0$s": [1, 2]
+      "3-prong": [10]
+      "3-prong + $\\pi^0$": [11]
+    summary_range: [70, 150]   # integrated eff. in fractions JSON
+
+HLTTauTriggerEndcap_wMatching_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event:
+      - abs({eta}) > 1.5
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:endcap: pt
+    hltHpsPFTau:LooseDeepTau:endcap: pt
+    L1nnPuppiTau:default:endcap: pt
+  thresholds:
+  - 27
+  - 35
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Matching + Trigger Efficiency (endcap, $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 150
+    step: 6
+  split_by: *split_dm

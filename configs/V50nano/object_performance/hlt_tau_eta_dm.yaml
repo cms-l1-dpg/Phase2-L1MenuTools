@@ -1,0 +1,69 @@
+# Decay-mode split of hlt_tau_eta.yaml (`split_by`, see docs/object-performance.md).
+# Same plots as hlt_tau_eta.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
+# curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
+# GenVisTau_status (CMSSW GenVisTauProducer, JetMCTagUtils::genTauDecayMode): 0 = 1-prong,
+# 1 = 1-prong + 1 pi0, 2 = 1-prong + 2 pi0, 10 = 3-prong, 11 = 3-prong + 1 pi0, 15 = other
+# (other: neutral hadrons, >= 3 pi0, 3-prong + >= 2 pi0, 5-prong, ...; ~6% of the taus).
+# Generated from hlt_tau_eta.yaml; keep in sync.
+
+HLTTauMatching_Eta_Pt40ToInf_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: eta
+    label: Gen Taus
+    cuts:
+      event:
+      - '{pt} > 40'
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:default: eta
+    hltHpsPFTau:MediumDeepTau: eta
+    hltHpsPFTau:LooseDeepTau: eta
+    L1nnPuppiTau:default: eta
+  xlabel: Gen. $\eta$
+  ylabel: Matching Efficiency (gen vis. $p_T$ > 40 GeV)
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2
+  split_by: &split_dm
+    field: status            # GenVisTau_status: generator decay mode
+    name: ""                 # files: <plot>_<test object>_<thr>_<version>, <plot>_fractions_...
+    categories:              # status 15 (other) is only in the inclusive curve
+      "1-prong": [0]
+      "1-prong + $\\pi^0$s": [1, 2]
+      "3-prong": [10]
+      "3-prong + $\\pi^0$": [11]
+
+HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM:
+  sample: HHTo2B2Tau
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  threshold_field: pt
+  reference_object:
+    object: GenVisTau
+    x_arg: eta
+    label: Gen Taus
+    cuts:
+      event:
+      - '{pt} > 50'
+      object:
+      - abs({eta}) < 2.1
+  test_objects:
+    hltHpsPFTau:MediumDeepTau: eta
+    hltHpsPFTau:LooseDeepTau: eta
+    L1nnPuppiTau:default: eta
+  thresholds:
+  - 35
+  xlabel: Gen. $\eta$
+  ylabel: Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen vis. $p_T$ > 50 GeV)
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2
+  split_by: *split_dm

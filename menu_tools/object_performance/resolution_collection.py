@@ -25,6 +25,7 @@ from menu_tools.object_performance.turnon_collection import (
     ArrayLoader,
     TurnOnCollection,
 )
+from menu_tools.object_performance.split import SplitConfig
 from menu_tools.utils import constants
 
 
@@ -209,6 +210,8 @@ class ResolutionCollection(TurnOnCollection):
       pairs[obj_key]: dict of flat numpy arrays ref_pt, ref_eta, ref_phi, test_pt,
                       test_eta, test_phi (missing ones absent) and pu (if requested)
       results[variable][vs][obj_key]: output of `binned_response`
+      split_results[category][variable][vs][obj_key]: the same per category of
+                      `split_by` (pairs carry the reference field as `split`)
     """
 
     def __init__(
@@ -235,7 +238,13 @@ class ResolutionCollection(TurnOnCollection):
         self.matched_records: dict[str, dict] = {}
         self.pairs: dict[str, dict[str, np.ndarray]] = {}
         self.results: dict[str, dict[str, dict[str, dict]]] = {}
+        self.split_results: dict[str, dict[str, dict[str, dict[str, dict]]]] = {}
         self.pileup: Optional[np.ndarray] = None
+        self.split = self.cfg_plot.split_by
+        if self.split is not None and self.event_level:
+            raise ValueError("split_by needs match_test_to_ref: True")
+        if self.split is not None and self.split.objects is not None:
+            raise ValueError("split_by `objects` is only for path_efficiency")
 
     # ---- loading -------------------------------------------------------------------
 
@@ -289,6 +298,12 @@ class ResolutionCollection(TurnOnCollection):
             if self.pileup is not None:
                 pu = ak.broadcast_arrays(ak.Array(self.pileup), ok)[0]
                 pairs["pu"] = self._flat(pu[ok])
+            if self.split is not None:
+                if self.split.field not in ref.fields:
+                    raise KeyError(
+                        f"split_by: reference has no field `{self.split.field}`"
+                    )
+                pairs["split"] = self._flat(ref[self.split.field][ok])
             self.pairs[str(test_obj)] = pairs
 
     @staticmethod
@@ -361,25 +376,51 @@ class ResolutionCollection(TurnOnCollection):
             return np.abs(p["ref_eta"]) if "ref_eta" in p else None
         return p.get(f"ref_{vs}")
 
-    def _compute_results(self) -> None:
+    @property
+    def split_cfg(self) -> SplitConfig:
+        """The `split_by` config (error if not set)."""
+        if self.split is None:
+            raise ValueError("no split_by configured")
+        return self.split
+
+    def split_mask(self, obj_key: str, category: str) -> np.ndarray:
+        """Pairs of `obj_key` whose reference is in `category` of `split_by`."""
+        return np.isin(
+            self.pairs[obj_key]["split"], self.split_cfg.categories[category]
+        )
+
+    def _binned_results(self, category: Optional[str] = None) -> dict:
+        """results[variable][vs][obj_key], for the pairs of `category` (default
+        all)."""
+        results: dict[str, dict[str, dict[str, dict]]] = {}
         for var in self.res_cfg.variables:
             kind = "ratio" if var in RATIO_VARIABLES else "diff"
-            self.results[var] = {}
+            results[var] = {}
             for vs in self.res_cfg.vs:
-                self.results[var][vs] = {}
+                results[var][vs] = {}
                 for obj_key in self.pairs:
                     values = self.response(obj_key, var)
                     x = self.vs_values(obj_key, vs)
                     if values is None or x is None:
                         continue
                     ok = np.isfinite(values) & np.isfinite(x)
-                    self.results[var][vs][obj_key] = binned_response(
+                    if category is not None:
+                        ok &= self.split_mask(obj_key, category)
+                    results[var][vs][obj_key] = binned_response(
                         x[ok],
                         values[ok],
                         self.res_cfg.vs_edges(vs),
                         kind,
                         self.res_cfg.min_entries,
                     )
+        return results
+
+    def _compute_results(self) -> None:
+        self.results = self._binned_results()
+        if self.split is not None:
+            self.split_results = {
+                cat: self._binned_results(cat) for cat in self.split_cfg.categories
+            }
 
     def create(self) -> None:
         self._load_arrays()

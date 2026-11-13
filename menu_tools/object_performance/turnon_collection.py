@@ -130,6 +130,11 @@ class TurnOnCollection:
         # passing the L1 threshold / matched to an L1 seed object at all
         self.l1_seed_pass = None
         self.l1_seed_matched = None
+        # `split_by`: per category, histograms with the structure of `hists`
+        # (reference objects of that category only), and the category value of each
+        # reference object ([event][ref], flat after `_skim`)
+        self.split_hists: dict[str, dict[str, Any]] = {}
+        self.split_ref_values: Optional[np.ndarray] = None
 
     @property
     def test_objects(self) -> list[tuple[Object, str]]:
@@ -369,11 +374,24 @@ class TurnOnCollection:
         sel = sel_arr_not_none & sel_arr_not_zero
         return arr[sel]
 
-    def _skim_to_hists_dR_matched(self):
+    @staticmethod
+    def _masked(arr, ref_mask):
+        """`arr` ([event][ref]) restricted to the reference objects in `ref_mask`."""
+        return arr if ref_mask is None else arr[ref_mask]
+
+    def _skim_to_hists_dR_matched(self, ref_mask=None, hists=None):
+        """Matched (turn-on) histograms into `hists` (default `self.hists`).
+
+        `ref_mask` ([event][ref], `split_by`): only these reference objects count, in
+        the numerators and the denominators.
+        """
+        hists = self.hists if hists is None else hists
         ref_field = self.cfg_plot.reference_field
 
         # All reference objects (matching efficiency denominator)
-        ref_all = self._remove_inner_nones_zeros(self.ak_arrays["ref"][ref_field])
+        ref_all = self._remove_inner_nones_zeros(
+            self._masked(self.ak_arrays["ref"][ref_field], ref_mask)
+        )
 
         for test_obj, x_arg in self.test_objects:
             if self.cfg_plot.matching_and_threshold and x_arg.lower() != ref_field:
@@ -384,28 +402,29 @@ class TurnOnCollection:
                     f"matching_and_threshold: test object {test_obj} x_arg "
                     f"'{x_arg}' differs from the reference x_arg '{ref_field}'"
                 )
-            sel_threshold = self.numerators["test"][str(test_obj)] >= self.threshold
-            numerator = self.numerators["ref"][str(test_obj)][sel_threshold]
+            num_ref = self._masked(self.numerators["ref"][str(test_obj)], ref_mask)
+            num_test = self._masked(self.numerators["test"][str(test_obj)], ref_mask)
+            sel_threshold = num_test >= self.threshold
+            numerator = num_ref[sel_threshold]
             numerator = self._remove_inner_nones_zeros(numerator)
             numerator = self._flatten_array(numerator, ak_to_np=True)
 
             # Create Test Object(s) Numpy Histogram
-            self.hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
+            hists[str(test_obj)] = np.histogram(numerator, bins=self.bins)
 
             # Create Reference Numpy Histogram
             if self.threshold >= 0 and not self.cfg_plot.matching_and_threshold:
                 # Pure threshold efficiency: only matched reference objects
-                ref_obj = self.numerators["ref"][str(test_obj)]
-                ref_obj = self._remove_inner_nones_zeros(ref_obj)
+                ref_obj = self._remove_inner_nones_zeros(num_ref)
             else:
                 # Matching efficiency (no threshold) or combined matching +
                 # threshold efficiency: all reference objects
                 ref_obj = ref_all
             ref_flat_np = self._flatten_array(ref_obj, ak_to_np=True)
-            self.hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
+            hists["ref"][str(test_obj)] = np.histogram(ref_flat_np, bins=self.bins)
 
         if self.cfg_plot.l1_seed is not None:
-            self._skim_l1_seed_hists(ref_all)
+            self._skim_l1_seed_hists(ref_all, ref_mask, hists)
 
     def _skim_to_hists_dR_matched_Iso(self):
         for test_obj, _ in self.test_objects:
@@ -540,24 +559,31 @@ class TurnOnCollection:
             parts.append(f"{obj.plot_label} > {thr_str} GeV")
         return " OR ".join(parts)
 
-    def _skim_l1_seed_hists(self, ref_all) -> None:
+    def _skim_l1_seed_hists(self, ref_all, ref_mask=None, hists=None) -> None:
         """Histograms of the `l1_seed` curves (see docs/object-performance.md):
         `L1seed`: reference objects matched to an L1 seed object passing the L1
         threshold (independent of the HLT threshold); `<hlt test object>+L1seed`:
         reference objects passing the HLT test object's numerator AND the L1 seed
-        requirement, with the HLT test object's denominator."""
+        requirement, with the HLT test object's denominator. `ref_mask` and `hists`
+        as in `_skim_to_hists_dR_matched`."""
+        hists = self.hists if hists is None else hists
         seed_label = self._l1_seed_label()
-        ref_vals = self.ak_arrays["ref"][self.cfg_plot.reference_field]
+        ref_vals = self._masked(
+            self.ak_arrays["ref"][self.cfg_plot.reference_field], ref_mask
+        )
+        seed_pass = self._masked(self.l1_seed_pass, ref_mask)
 
         def _hist(arr):
             arr = self._remove_inner_nones_zeros(arr)
             return np.histogram(self._flatten_array(arr, ak_to_np=True), bins=self.bins)
 
-        self.hists[L1SEED_KEY] = _hist(ref_vals[self.l1_seed_pass])
+        hists[L1SEED_KEY] = _hist(ref_vals[seed_pass])
         if self.threshold >= 0 and not self.cfg_plot.matching_and_threshold:
-            self.hists["ref"][L1SEED_KEY] = _hist(ref_vals[self.l1_seed_matched])
+            hists["ref"][L1SEED_KEY] = _hist(
+                ref_vals[self._masked(self.l1_seed_matched, ref_mask)]
+            )
         else:
-            self.hists["ref"][L1SEED_KEY] = np.histogram(
+            hists["ref"][L1SEED_KEY] = np.histogram(
                 self._flatten_array(ref_all, ak_to_np=True), bins=self.bins
             )
         self.extra_curves[L1SEED_KEY] = {
@@ -568,11 +594,14 @@ class TurnOnCollection:
         labels = {str(obj): obj.plot_label for obj, _ in self.test_objects}
         for key in self.l1_seeded_test_objects:
             sel_hlt = ak.fill_none(
-                self.numerators["test"][key] >= self.threshold, False
+                self._masked(self.numerators["test"][key], ref_mask) >= self.threshold,
+                False,
             )
-            numerator = self.numerators["ref"][key][sel_hlt & self.l1_seed_pass]
-            self.hists[key + L1SEED_SUFFIX] = _hist(numerator)
-            self.hists["ref"][key + L1SEED_SUFFIX] = self.hists["ref"][key]
+            numerator = self._masked(self.numerators["ref"][key], ref_mask)[
+                sel_hlt & seed_pass
+            ]
+            hists[key + L1SEED_SUFFIX] = _hist(numerator)
+            hists["ref"][key + L1SEED_SUFFIX] = hists["ref"][key]
             self.extra_curves[key + L1SEED_SUFFIX] = {
                 "label": f"{labels[key]} $\\wedge$ L1 seed",
                 "style": {"marker": "^", "markerfacecolor": "none", "markersize": 10},
@@ -593,9 +622,12 @@ class TurnOnCollection:
         return np.ones_like(ref_vals) * bin_width / 2
 
     @utils.ignore_warnings
-    def get_efficiency(self, obj: Object):
-        ref_vals = self.hists["ref"][str(obj)][0]
-        test_vals = self.hists[str(obj)][0]
+    def get_efficiency(self, obj: Object, hists: Optional[dict[str, Any]] = None):
+        """Efficiency and Clopper-Pearson errors of the curve `obj` in `hists`
+        (default `self.hists`; e.g. a category of `split_hists`)."""
+        hists = self.hists if hists is None else hists
+        ref_vals = hists["ref"][str(obj)][0]
+        test_vals = hists[str(obj)][0]
 
         eff = test_vals / ref_vals
         assert all(0 <= i <= 1 or str(i) == "nan" for i in eff)
@@ -620,6 +652,47 @@ class TurnOnCollection:
                 self._skim_to_hists_dR_matched_Iso()
             else:
                 self._skim_to_hists_dR_matched()
+                if self.cfg_plot.split_by is not None:
+                    self._skim_split()
+
+    # ------------------------------------------------------------------------------------------
+    # `split_by`: curves per category of a reference field (split.py)
+    # ------------------------------------------------------------------------------------------
+    def _check_split(self) -> None:
+        split = self.cfg_plot.split_by
+        if split is None:
+            return
+        if split.objects is not None:
+            raise ValueError("split_by `objects` is only for path_efficiency")
+        if (
+            not self.cfg_plot.matching
+            or self.cfg_plot.iso_vs_eff_plot
+            or self.cfg_plot.reference_trafo
+        ):
+            raise ValueError(
+                "split_by needs match_test_to_ref: True (no iso_vs_efficiency, "
+                "no trafo)"
+            )
+        if split.field not in self.ak_arrays["ref"].fields:
+            raise KeyError(
+                f"split_by: reference {self.cfg_plot.reference_object} has no field "
+                f"`{split.field}` (fields: {self.ak_arrays['ref'].fields})"
+            )
+
+    def _skim_split(self) -> None:
+        """Histograms of every curve (test objects and `l1_seed` curves) per category:
+        `split_hists[category]`, same structure as `hists`."""
+        split = self.cfg_plot.split_by
+        assert split is not None
+        values = self.ak_arrays["ref"][split.field]
+        self.split_ref_values = self._flatten_array(
+            self._remove_inner_nones_zeros(values), ak_to_np=True
+        )
+        self.split_hists = {}
+        for cat, mask in split.masks(values).items():
+            hists: dict[str, Any] = {"ref": {}}
+            self._skim_to_hists_dR_matched(ref_mask=mask, hists=hists)
+            self.split_hists[cat] = hists
 
     def set_threshold(self, threshold):
         """Re-histograms at a new threshold.
@@ -632,6 +705,7 @@ class TurnOnCollection:
     def create_hists(self):
         self._load_arrays()
         self._apply_cuts()
+        self._check_split()
         if self.cfg_plot.l1_seed is not None:
             if not self.cfg_plot.matching or self.cfg_plot.iso_vs_eff_plot:
                 raise ValueError(

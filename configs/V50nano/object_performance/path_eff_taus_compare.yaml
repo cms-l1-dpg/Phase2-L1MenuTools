@@ -1,0 +1,183 @@
+# Di-tau HLT paths compared at the path (bit) level (path_efficiency.py, `paths:` map): the L1 seed
+# L1_pDoublePuppiTau52_52 and the two HLT paths it seeds, HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1
+# (HPS taus + DeepTau) and HLT_DoubleMediumPFPuppiParTTauh30_eta2p1 (ParT tau tag on AK4 PUPPI
+# jets), each as L1 and HLT. The ParT scores and HLT trigger objects are not in the nano: per-event
+# bit efficiencies only. Run with --version V50nano_170pre6HLT.
+# Reference: GenVisTau with |eta| < 2.1 (the paths are eta2p1); every plot is also split by the
+# decay-mode pair of the two leading such taus (split_by objects: 2; 1-prong = status 0, 1, 2,
+# 3-prong = 10, 11, as in the *_dm configs; "other": status 15 or fewer than 2 taus).
+# Legend rates: the bits on the 2M Spring24 minimum-bias events (V50nano_170pre6HLT_MinBias,
+# 31,038 kHz / 1,999,040 events; L1 1306, DeepTau 66, ParT 11 events; DeepTau and ParT both: 3).
+# DY (DYLL_M50) is not used: its GenVisTau is not cached, and of its 200k events only ~200 have a
+# subleading visible tau with pT > 40 GeV in |eta| < 2.1 (5 of 200 files).
+DoubleTauPathsVsSubleadPt:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen visible taus, $|\\eta| < 2.1$"
+    rank: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+    plateau_min: 80
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      "1-prong": [0, 1, 2]
+      "3-prong": [10, 11]
+    name: DMpair
+    layout: per_category
+    summary_range: [80, 200]
+  xlabel: "Subleading gen visible tau $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]
+
+# Leading tau pT of the events with two visible taus in |eta| < 2.1 (min_objects: 2). Plateau
+# entry: all such events (plateau_min 0).
+DoubleTauPathsVsLeadPt:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen visible taus, $|\\eta| < 2.1$"
+    rank: 1
+    min_objects: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      "1-prong": [0, 1, 2]
+      "3-prong": [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: "Leading gen visible tau $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 20, 40, 60, 80, 100, 120, 150, 200, 300]
+
+# |eta| of the subleading tau (x_arg abs(eta)), subleading tau pT > 60 GeV (L1 plateau region).
+DoubleTauPathsVsSubleadEta:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "abs(eta)"
+    label: "Gen visible taus, $|\\eta| < 2.1$, subl. $p_T > 60$ GeV"
+    rank: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+      event:
+        - "{pt} > 60"
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      "1-prong": [0, 1, 2]
+      "3-prong": [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: "Subleading gen visible tau $|\\eta|$"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1]
+
+# Pileup: x = Pileup_nPU (in-time interactions; Pileup_nTrueInt is 200 in every event of this
+# sample), events with a subleading tau pT > 60 GeV.
+DoubleTauPathsVsNPU:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen visible taus, $|\\eta| < 2.1$, subl. $p_T > 60$ GeV"
+    rank: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+      event:
+        - "{pt} > 60"
+  path_efficiency:
+    event_x: Pileup_nPU
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      "1-prong": [0, 1, 2]
+      "3-prong": [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: "Number of pileup interactions (nPU)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [150, 180, 190, 200, 210, 220, 250]
