@@ -23,6 +23,7 @@ from menu_tools.object_performance.btag_collection import BTagCollection
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object, trigger_level
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.sample_labels import wrap_title
 
 FLAVOUR_LABEL = {
     "b": "b jets",
@@ -100,7 +101,9 @@ class BTagPlotter:
         )
 
     def _context(self, min_pt: Optional[float], pt_bin=None) -> str:
-        parts = [self.cfg.sample, rf"$|\eta|$ < {self.btag_cfg.max_abs_eta:g}"]
+        sample = self.cfg.sample_label
+        parts = [sample] if sample else []
+        parts.append(rf"$|\eta|$ < {self.btag_cfg.max_abs_eta:g}")
         if pt_bin is not None:
             lo, hi = pt_bin
             parts.append(
@@ -110,7 +113,7 @@ class BTagPlotter:
             )
         elif min_pt is not None:
             parts.append(rf"$p_T \geq$ {min_pt:g} GeV")
-        return ", ".join(parts)
+        return wrap_title(", ".join(parts), 40)
 
     def _axes(self):
         fig, ax = plt.subplots(figsize=(10, 10))

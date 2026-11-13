@@ -128,7 +128,7 @@ def test_path_groups(cache):
     }
 
 
-def test_split_by_decay_mode_pair(cache, tmp_path, monkeypatch):
+def test_split_by_decay_mode_pair(cache, tmp_path, monkeypatch, legend_titles):
     split = {
         "field": "status",
         "objects": 2,
@@ -169,6 +169,17 @@ def test_split_by_decay_mode_pair(cache, tmp_path, monkeypatch):
     assert (entry[OTHER]["n_num"], entry[OTHER]["n_den"]) == (1, 1)  # ev3
     assert entry[P11]["fraction"] == pytest.approx(0.25)
     assert entry[P33]["plateau"]["n_total"] == 1
+    # legend title: the sample (raw key: no label) above the reference label, and the
+    # category; the JSON does not change
+    assert legend_titles[f"ditau_{VERSION}"] == [f"{SAMPLE} — Gen taus"]
+    assert legend_titles[f"ditau_DMpair_1-prong_3-prong_{VERSION}"] == [
+        f"{SAMPLE}\nGen taus\n{P13}"
+    ]
+    before = (outdir / f"ditau_{VERSION}.json").read_text()
+    coll.cfg_plot.config_dict["sample_label"] = False
+    PathEfficiencyPlotter("ditau", coll).plot()
+    assert legend_titles[f"ditau_{VERSION}"] == ["Gen taus"]
+    assert (outdir / f"ditau_{VERSION}.json").read_text() == before
 
 
 def test_split_by_rank_object_per_object_layout(cache, tmp_path, monkeypatch):

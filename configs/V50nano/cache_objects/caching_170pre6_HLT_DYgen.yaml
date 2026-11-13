@@ -1,0 +1,11 @@
+# Addition to caching_170pre6_HLT.yaml (same version, same sorted DY file list and row order):
+# gen visible taus and gen jets of DYLL_M50, needed by the DY tau configs (*_DY.yaml).
+# Only new files:
+#   cache_objects configs/V50nano/cache_objects/caching_170pre6_HLT_DYgen.yaml
+V50nano_170pre6HLT:
+  DYLL_M50:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/DYToLL_M-50_TuneCP5_14TeV-pythia8/P2Nano_L1HLT_noSel_v1/*/0000/p2nano_*.root
+    trees_branches:
+      Events:
+        GenVisTau: "all"
+        GenJet: "all"

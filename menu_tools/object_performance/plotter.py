@@ -1,7 +1,6 @@
 import argparse
 import sys
 import json
-import textwrap
 import os
 from typing import Any, Optional
 import warnings
@@ -26,6 +25,7 @@ from menu_tools.object_performance.scaling_collection import ScalingCollection
 from menu_tools.utils import utils
 from menu_tools.utils.objects import Object, is_hlt_object, trigger_level
 from menu_tools.utils.plotting import add_watermark
+from menu_tools.utils.sample_labels import legend_title
 from menu_tools.utils.versions import (
     add_version_argument,
     get_versions,
@@ -96,7 +96,12 @@ class EfficiencyPlotter(Plotter):
     def _style_plot(self, fig, ax, legend_loc="lower right"):
         ax.axvline(self.threshold, ls=":", c="k")
         ax.axhline(1, ls=":", c="k")
-        ax.legend(loc=legend_loc, frameon=False)
+        ax.legend(
+            loc=legend_loc,
+            frameon=False,
+            title=legend_title(self.cfg.sample_label),
+            title_fontsize=18,
+        )
         ax.set_xlabel(rf"{self.cfg.xlabel}")
         ylabel = self.cfg.ylabel.replace("<threshold>", str(self.threshold))
         ax.set_ylabel(rf"{ylabel}")
@@ -429,10 +434,14 @@ class EfficiencyPlotter(Plotter):
                     label, efficiency, yerr, coll.xerr(key), style
                 )
             self._style_plot(fig, ax)
-            # Long titles (e.g. the l1_seed label) are wrapped, mathtext kept intact
-            if len(title) > 36 and "$" not in title:
-                title = textwrap.fill(title, 36)
-            ax.legend(loc="best", frameon=False, title=title, title_fontsize=18)
+            # Sample label first; long titles (e.g. the l1_seed label) are wrapped,
+            # mathtext kept intact
+            ax.legend(
+                loc="best",
+                frameon=False,
+                title=legend_title(self.cfg.sample_label, title),
+                title_fontsize=18,
+            )
             ax.set_ylim(0, 1.1)
             fname = os.path.join(
                 self._outdir_turnons,
@@ -606,7 +615,11 @@ class ScalingPlotter(Plotter):
             _xlim_upper = max(_xlim_upper, np.max(x_points) * 1.1)
             _ylim_upper = max(_ylim_upper, np.max(y_points) * 1.1)
 
-        ax.legend(loc="lower right")
+        ax.legend(
+            loc="lower right",
+            title=legend_title(self.plot_config.sample_label),
+            title_fontsize=18,
+        )
         ax.set_xlabel(f"{trigger_level(self.scalings.keys())} threshold [GeV]")
         ax.set_ylabel(f"{int(self.scaling_pct * 100)}% Location (gen, GeV)")
         watermark = f"{self.version}_{self.plot_name}"

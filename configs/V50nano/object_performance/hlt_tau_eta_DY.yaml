@@ -1,0 +1,65 @@
+# DY copy of hlt_tau_eta.yaml (DYLL_M50, run with --version V50nano_170pre6HLT): the same plots,
+# objects and gen selection as hlt_tau_eta.yaml (HHTo2B2Tau), plot names + "_DY", no scalings (the
+# scalings stay from HHTo2B2Tau).
+# Finer low-pT binning (0-100 GeV in 4 GeV; resolution vs pT 20-100 GeV): DY visible taus
+# are soft (200k events, |eta| < 2.1: 27k visible taus with pT > 20 GeV, 4.9k with pT > 40
+# GeV, 0.76k above 60 GeV), so the plateau above ~60 GeV is statistics-limited. The
+# single-tau efficiencies (matching, turn-ons, resolution) are the main DY result.
+# The decay-mode summary_range (fractions JSON, _dm files) is the HHTo2B2Tau one cut at 100 GeV.
+# hltHpsPFTau is stored only in events in which an L1 tau seed fired: in DY (soft taus,
+# rarely two above the L1 double-tau thresholds) far fewer events have HLT taus than in HH,
+# so the HLT matching and matching + trigger efficiencies are much lower than in HH. The
+# trigger efficiency given the match (hlt_tau_trigger) is the object-level comparison.
+# Generated from hlt_tau_eta.yaml (scripts/make_dy_tau_configs.py); keep in sync.
+#
+# Header of hlt_tau_eta.yaml:
+#   HLT HPS taus vs L1 NN PUPPI tau: efficiency vs gen visible-tau eta (HH -> bbtautau).
+#   hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
+
+HLTTauMatching_Eta_Pt40ToInf_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: eta
+    label: Gen Taus
+    cuts:
+      event: ['{pt} > 40']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:default: eta
+    hltHpsPFTau:MediumDeepTau: eta
+    hltHpsPFTau:LooseDeepTau: eta
+    L1nnPuppiTau:default: eta
+  xlabel: Gen. $\eta$
+  ylabel: Matching Efficiency (gen vis. $p_T$ > 40 GeV)
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2
+
+HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  threshold_field: pt
+  reference_object:
+    object: GenVisTau
+    x_arg: eta
+    label: Gen Taus
+    cuts:
+      event: ['{pt} > 50']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:MediumDeepTau: eta
+    hltHpsPFTau:LooseDeepTau: eta
+    L1nnPuppiTau:default: eta
+  thresholds: [35]
+  xlabel: Gen. $\eta$
+  ylabel: Matching + Trigger Eff. ($p_T > <threshold>$ GeV, gen vis. $p_T$ > 50 GeV)
+  binning:
+    min: -2.2
+    max: 2.2
+    step: 0.2

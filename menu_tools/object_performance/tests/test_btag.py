@@ -277,7 +277,7 @@ def test_roc(cache):
     assert t["misid"] == pytest.approx(0.1) and t["eff_b"] == pytest.approx(0.7)
 
 
-def test_plotter_outputs(cache, tmp_path, monkeypatch):
+def test_plotter_outputs(cache, tmp_path, monkeypatch, legend_titles):
     from menu_tools.object_performance.btag_plotter import BTagPlotter
 
     configs = os.path.join(os.path.dirname(__file__), "..", "..", "..", "configs")
@@ -301,3 +301,10 @@ def test_plotter_outputs(cache, tmp_path, monkeypatch):
         js = json.load(f)
     assert js["working_points"][f"{KEY}|{WP_LOOSE}"]["misid"] == pytest.approx(0.1)
     assert js["target_misid"][0]["threshold"] == 0.0
+    # legend title: the sample label (raw key, no label for it) and the selection
+    title = legend_titles[f"synthetic_plot_roc_light_pt30toInf_{VERSION}"]
+    assert title[0].startswith(f"{SAMPLE}, ")
+    coll.cfg_plot.config_dict["sample_label"] = False
+    BTagPlotter("synthetic_plot", coll).plot()
+    title = legend_titles[f"synthetic_plot_roc_light_pt30toInf_{VERSION}"]
+    assert title[0].startswith("$|\\eta|$")

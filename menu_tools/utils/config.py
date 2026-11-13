@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from menu_tools.utils.sample_labels import resolve_sample_label
+
 
 class BasePlotConfig:
     """Base class for yaml/dict style plot config
@@ -25,6 +27,13 @@ class BasePlotConfig:
             return self._cfg["sample"]
         except KeyError:
             raise KeyError(f"No sample configured for {self.plot_name}!")
+
+    @property
+    def sample_label(self) -> Optional[str]:
+        """Pretty sample label for the legend title (`sample_label:` override or
+        the label of `sample` in menu_tools/utils/sample_labels.yaml); None if
+        `sample_label: false` or no sample is set."""
+        return resolve_sample_label(self._cfg)
 
     @property
     def version(self) -> str:
