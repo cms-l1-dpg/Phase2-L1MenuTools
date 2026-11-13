@@ -256,6 +256,9 @@
   numerator and the denominator (for `matching_and_threshold` all reference objects of the category,
   for pure threshold efficiencies the matched ones). Reference objects in no category ("other") are
   only in the inclusive curve. The usual (inclusive) plot, JSON and distributions are unchanged.
+  For [path efficiencies](#l1-seed-and-hlt-path-efficiencies) the categories are per event
+  (`objects: n`: the combination of the categories of the n leading reference objects, e.g. the
+  decay-mode pair of the two leading taus).
   In addition, in `outputs/<version>/object_performance/turnons/` (`<tag>` = `_<name>`):
 
   * `<plot><tag>_<curve>_<threshold>_<version>.{png,pdf,json}` (`layout: per_object`): one plot per
@@ -404,6 +407,76 @@
   Outputs, in `outputs/<version>/object_performance/path_efficiency/`: `<plot>_<version>.{png,pdf,json}`
   (json per curve: `label`, `xbins`, `efficiency`, `efficiency_err`, `n_pass`, `n_total`, `plateau`)
   and `<plot>_<version>.yaml` (the plot config).
+
+  **Several paths in one plot (`paths:`).** Instead of `L1` / `HLT` / `labels`, a `paths:` map of
+  group name → `{L1, HLT, curves, labels}` overlays several groups of bits, e.g. two HLT paths with
+  the same L1 seed. A group without `curves` takes the top-level `curves` (default: `L1` and/or `HLT`).
+  The curves are keyed `<group>:<curve>` in the JSON (`bits` is then per group); default legend labels
+  are prefixed by the group name. The single-group syntax is unchanged.
+
+  ```yaml
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels: {L1: "L1 DoublePuppiTau52_52 (20.3 kHz)", L1_and_HLT: "DeepTau HPS35 (1.02 kHz)"}
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels: {L1_and_HLT: "ParT Tauh30 (0.17 kHz)"}
+    plateau_min: 80
+  ```
+
+  **Other x variables and selections.**
+
+  * `reference_object.min_objects: n`: only events with at least n reference objects after the object
+    cuts (e.g. `rank: 1, min_objects: 2`: the leading-tau pT of the events with two taus).
+  * `reference_object.x_arg: "abs(eta)"`: the absolute value of a reference field.
+  * `path_efficiency.event_x: Pileup_nPU`: x is a per-event branch `<object>_<field>` of the cache
+    (`<version>_<sample>_<object>.parquet`), for the events that pass the reference selection
+    (efficiency vs pileup). Note: in the Spring24 samples `Pileup_nTrueInt` is 200 in every event;
+    `Pileup_nPU` (in-time interactions, ~200 ± 14) varies.
+  * `reference_object.cuts.event` acts on the object at `rank` (e.g. `"{pt} > 60"` on the subleading
+    tau for the |η| and pileup dependence in the plateau).
+
+  **Per-event categories (`split_by`).** The [`split_by`](#split-by-reference-categories-split_by)
+  block also works for path efficiencies, with event categories: by default the category of the
+  reference object at `rank` (the x object); with `objects: n` the unordered combination of the
+  categories of the n leading reference objects (after the object cuts), named `"<cat> + <cat>"`
+  in declaration order. Events with fewer than n reference objects, or with one of them in no
+  category, are "other" (only in the inclusive curve). Decay-mode pair of the two leading taus:
+
+  ```yaml
+  split_by:
+    field: status
+    objects: 2                     # path efficiency only
+    categories: {"1-prong": [0, 1, 2], "3-prong": [10, 11]}
+    # -> "1-prong + 1-prong", "1-prong + 3-prong", "3-prong + 3-prong" (status 15: other)
+    name: DMpair
+    layout: per_category           # one plot per category with all curves; per_object: one per curve
+    summary_range: [80, 200]       # x range of the integrated efficiency in the fractions JSON
+  ```
+
+  Outputs in addition to the inclusive ones: `<plot><tag>_<category>_<version>.{png,pdf,json}`
+  (`per_category`; JSON as the inclusive one, with `category` and per-category `plateau`) or
+  `<plot><tag>_<curve key>_<version>.*` (`per_object`: inclusive "All" and one curve per category),
+  and `<plot><tag>_fractions_<version>.json`: the composition of the events with a reference x, and
+  per curve and category (`inclusive`, the categories, `other`) `n_den`, `n_num`, `fraction` of the
+  denominator, the `efficiency` with Clopper-Pearson `err` integrated over `summary_range`, and the
+  `plateau` (`plateau_min`). Tests: `menu_tools/object_performance/tests/test_path_efficiency_groups.py`.
+
+  **Di-tau path comparison** (`configs/V50nano/object_performance/path_eff_taus_compare.yaml`,
+  `--version V50nano_170pre6HLT`, HH → bbττ): the seed `L1_pDoublePuppiTau52_52` and the two HLT
+  paths it seeds, `HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1` (HPS + DeepTau) and
+  `HLT_DoubleMediumPFPuppiParTTauh30_eta2p1` (ParT on AK4 PUPPI jets), each as L1 and HLT, vs the
+  subleading / leading visible gen-tau pT, the subleading |η| and nPU, inclusive and per decay-mode
+  pair. Only bits are possible (the ParT scores and the HLT trigger objects are not in the nano). The
+  legend gives the rates on the 2M minimum-bias events (L1 1306 events = 20.3 kHz, DeepTau 66 =
+  1.02 kHz, ParT 11 = 0.17 kHz; `rate_table` HLT bits). DY is not used: its `GenVisTau` is not cached
+  and it has only ~200 events with a subleading visible tau above 40 GeV in |η| < 2.1.
 
 ## Purity, fake rate and multiplicity
 

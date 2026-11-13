@@ -18,8 +18,16 @@ gives, in addition to the usual (inclusive) outputs, one plot per test object wi
 inclusive curve and one curve per category (`per_object`), or one plot per category
 with all test objects (`per_category`), and a JSON table of the category fractions. A
 reference object in none of the categories ("other") is only in the inclusive curve.
+
+Path efficiencies (path_efficiency.py) are per event: the category is that of the
+reference object at `rank`, or, with `objects: n`, the combination of the categories of
+the n leading reference objects, e.g. with the categories "1-prong" and "3-prong" and
+`objects: 2` the event categories "1-prong + 1-prong", "1-prong + 3-prong" and
+"3-prong + 3-prong" (`event_categories`, `assign_events`); events with fewer than n
+reference objects, or with one of them in no category, are "other".
 See docs/object-performance.md#split-by-reference-categories-split_by.
 """
+import itertools
 import re
 from typing import Any, Optional
 
@@ -59,6 +67,13 @@ class SplitConfig:
         self.layout: str = str(cfg.get("layout", "per_object"))
         if self.layout not in LAYOUTS:
             raise ValueError(f"{where}: layout must be one of {LAYOUTS}")
+        objects = cfg.get("objects")
+        if objects is not None and (
+            isinstance(objects, bool) or not isinstance(objects, int) or objects < 1
+        ):
+            raise ValueError(f"{where}: `objects` must be an integer >= 1")
+        # path efficiency only: event category from the n leading reference objects
+        self.objects: Optional[int] = objects
         rng = cfg.get("summary_range")
         self.summary_range: Optional[tuple[float, float]] = (
             (float(rng[0]), float(rng[1])) if rng is not None else None
@@ -86,6 +101,41 @@ class SplitConfig:
         for name, cat_values in self.categories.items():
             out[np.isin(values, cat_values)] = name
         return out
+
+
+def event_categories(split: SplitConfig) -> list[str]:
+    """Names of the event categories: the categories (`objects` unset or 1), or the
+    unordered combinations of `objects` categories in declaration order, joined by
+    " + "."""
+    n = split.objects or 1
+    if n == 1:
+        return list(split.categories)
+    return [
+        " + ".join(c)
+        for c in itertools.combinations_with_replacement(split.categories, n)
+    ]
+
+
+def assign_events(split: SplitConfig, values, n: int = 1) -> np.ndarray:
+    """Event category per event from `values`, the split field of the reference objects
+    per event (jagged, leading first): the combination of the categories of the first
+    `n` objects (`event_categories`). `OTHER` for events with fewer than `n` objects or
+    with one of them in no category."""
+    names = list(split.categories)
+    counts = ak.to_numpy(ak.num(values, axis=1))
+    padded = ak.to_numpy(ak.fill_none(ak.pad_none(values, n, clip=True), np.nan))
+    padded = np.asarray(padded, dtype=float).reshape(len(counts), n)
+    # category index per object, len(names) for "other" / missing
+    idx = np.full(padded.shape, len(names), dtype=int)
+    for i, cat_values in enumerate(split.categories.values()):
+        idx[np.isin(padded, np.asarray(cat_values, dtype=float))] = i
+    idx.sort(axis=1)
+    out = np.full(len(counts), OTHER, dtype=object)
+    ok = (counts >= n) & (idx[:, -1] < len(names))
+    for row in np.unique(idx[ok], axis=0):
+        sel = ok & np.all(idx == row, axis=1)
+        out[sel] = " + ".join(names[i] for i in row)
+    return out
 
 
 def safe_name(key: str) -> str:

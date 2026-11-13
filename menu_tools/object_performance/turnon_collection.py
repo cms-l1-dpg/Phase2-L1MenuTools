@@ -662,6 +662,8 @@ class TurnOnCollection:
         split = self.cfg_plot.split_by
         if split is None:
             return
+        if split.objects is not None:
+            raise ValueError("split_by `objects` is only for path_efficiency")
         if (
             not self.cfg_plot.matching
             or self.cfg_plot.iso_vs_eff_plot

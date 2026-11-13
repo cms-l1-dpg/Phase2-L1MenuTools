@@ -243,6 +243,8 @@ class ResolutionCollection(TurnOnCollection):
         self.split = self.cfg_plot.split_by
         if self.split is not None and self.event_level:
             raise ValueError("split_by needs match_test_to_ref: True")
+        if self.split is not None and self.split.objects is not None:
+            raise ValueError("split_by `objects` is only for path_efficiency")
 
     # ---- loading -------------------------------------------------------------------
 
