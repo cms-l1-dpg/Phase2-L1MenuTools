@@ -1,0 +1,91 @@
+# DY copy of hlt_tau_l1seed.yaml (DYLL_M50, run with --version V50nano_170pre6HLT): the same plots,
+# objects and gen selection as hlt_tau_l1seed.yaml (HHTo2B2Tau), plot names + "_DY", no scalings (the
+# scalings stay from HHTo2B2Tau).
+# Finer low-pT binning (0-100 GeV in 4 GeV; resolution vs pT 20-100 GeV): DY visible taus
+# are soft (200k events, |eta| < 2.1: 27k visible taus with pT > 20 GeV, 4.9k with pT > 40
+# GeV, 0.76k above 60 GeV), so the plateau above ~60 GeV is statistics-limited. The
+# single-tau efficiencies (matching, turn-ons, resolution) are the main DY result.
+# The decay-mode summary_range (fractions JSON, _dm files) is the HHTo2B2Tau one cut at 100 GeV.
+# hltHpsPFTau is stored only in events in which an L1 tau seed fired: in DY (soft taus,
+# rarely two above the L1 double-tau thresholds) far fewer events have HLT taus than in HH,
+# so the HLT matching and matching + trigger efficiencies are much lower than in HH. The
+# trigger efficiency given the match (hlt_tau_trigger) is the object-level comparison.
+# Generated from hlt_tau_l1seed.yaml (scripts/make_dy_tau_configs.py); keep in sync.
+#
+# Header of hlt_tau_l1seed.yaml:
+#   Combined L1 x HLT object efficiency of the tau leg of HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1,
+#   HH -> bbtautau: hltHpsPFTau:MediumDeepTau pT > 35 AND the gen visible tau matched to an L1 NN
+#   PUPPI tau passing ONE leg of L1_pDoublePuppiTau52_52. `l1_seed`: docs/object-performance.md.
+#   Per-leg only: the seed's second leg (and its dR > 0.5) is not required, so the L1 x HLT curve
+#   is the per-tau efficiency, not the path efficiency (see path_eff_taus.yaml for the latter).
+#   hltHpsPFTau is stored only in events in which an L1 tau seed fired: the HLT-only curve is
+#   already biased towards L1-triggered events.
+#   #   L1 seed L1_pDoublePuppiTau52_52 (configs/V50nano/rate_table/hlt_paths.yml), P2GT menu step1_2024
+#   (CMSSW_17_0_0_pre6): two CL2Taus with minQualityScore 225 (= L1nnPuppiTau:default,
+#   chargedIso > 0.22), |eta| < 2.172, offline pT 52, dR > 0.5. Online threshold =
+#   (52 - offset) / slope with the GT scalings (l1tGTObject_scalings.py, CL2Taus):
+#   barrel (|eta| < 1.5)  (52 + 0.29) / 1.38 = 37.9 GeV
+#   endcap                (52 + 4.96) / 1.89 = 30.1 GeV
+#   (menu-tools v0p0 scalings, outputs/V50nano_regscal: 38.3 / 33.3 GeV; the GT values are used.)
+#   Check against the GT emulator bit (>= 2 L1nnPuppiTau:default passing, dR > 0.5), per event,
+#   49k HH -> bbtautau events: identical decision.
+#   match_dR: 0.3 for the L1 tau, as the HLT tau (the L1nnPuppiTau default 0.1 gives the same
+#   result within 0.2%: L1 seed plateau 0.957 instead of 0.958 in the barrel, gen pT 80-150 GeV).
+
+HLTTauL1Seed_DoubleTau35_Barrel_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) < 1.5']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:barrel: pt
+  l1_seed:
+    object: L1nnPuppiTau:default
+    threshold:
+      barrel: 37.9
+      endcap: 30.1
+    match_dR: 0.3
+    label: NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52
+  thresholds: [35]
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Efficiency, barrel (HLT $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 100
+    step: 4
+
+HLTTauL1Seed_DoubleTau35_Endcap_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  matching_and_threshold: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) > 1.5']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:MediumDeepTau:endcap: pt
+  l1_seed:
+    object: L1nnPuppiTau:default
+    threshold:
+      barrel: 37.9
+      endcap: 30.1
+    match_dR: 0.3
+    label: NN PUPPI Tau, 1 leg of pDoublePuppiTau52_52
+  thresholds: [35]
+  xlabel: Gen. $p_T$ (GeV)
+  ylabel: Efficiency, endcap (HLT $p_T > <threshold>$ GeV)
+  binning:
+    min: 0
+    max: 100
+    step: 4

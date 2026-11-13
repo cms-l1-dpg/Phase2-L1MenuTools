@@ -1,0 +1,92 @@
+# DY copy of hlt_tau_resolution_dm.yaml (DYLL_M50, run with --version V50nano_170pre6HLT): the same plots,
+# objects and gen selection as hlt_tau_resolution_dm.yaml (HHTo2B2Tau), plot names + "_DY", no scalings (the
+# scalings stay from HHTo2B2Tau).
+# Finer low-pT binning (0-100 GeV in 4 GeV; resolution vs pT 20-100 GeV): DY visible taus
+# are soft (200k events, |eta| < 2.1: 27k visible taus with pT > 20 GeV, 4.9k with pT > 40
+# GeV, 0.76k above 60 GeV), so the plateau above ~60 GeV is statistics-limited. The
+# single-tau efficiencies (matching, turn-ons, resolution) are the main DY result.
+# The decay-mode summary_range (fractions JSON, _dm files) is the HHTo2B2Tau one cut at 100 GeV.
+# hltHpsPFTau is stored only in events in which an L1 tau seed fired: in DY (soft taus,
+# rarely two above the L1 double-tau thresholds) far fewer events have HLT taus than in HH,
+# so the HLT matching and matching + trigger efficiencies are much lower than in HH. The
+# trigger efficiency given the match (hlt_tau_trigger) is the object-level comparison.
+# Generated from hlt_tau_resolution_dm.yaml (scripts/make_dy_tau_configs.py); keep in sync.
+#
+# Header of hlt_tau_resolution_dm.yaml:
+#   Decay-mode split of hlt_tau_resolution.yaml (`split_by`, see docs/object-performance.md).
+#   Same plots as hlt_tau_resolution.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
+#   curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
+#   GenVisTau_status (CMSSW GenVisTauProducer, JetMCTagUtils::genTauDecayMode): 0 = 1-prong,
+#   1 = 1-prong + 1 pi0, 2 = 1-prong + 2 pi0, 10 = 3-prong, 11 = 3-prong + 1 pi0, 15 = other
+#   (other: neutral hadrons, >= 3 pi0, 3-prong + >= 2 pi0, 5-prong, ...; ~6% of the taus).
+#   Generated from hlt_tau_resolution.yaml; keep in sync.
+
+HLTTauResolutionBarrel_DY_DM:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) < 1.5']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:default: pt
+    L1nnPuppiTau:default: pt
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt:
+        edges: [20, 25, 30, 35, 40, 50, 60, 80, 100]
+      pu:
+        edges: [150, 180, 190, 200, 210, 220, 260]
+    response_binning:
+      pt:
+        min: 0
+        max: 3
+        step: 0.04
+  split_by:
+    field: status
+    name: ''
+    categories:
+      1-prong: [0]
+      1-prong + $\pi^0$s: [1, 2]
+      3-prong: [10]
+      3-prong + $\pi^0$: [11]
+
+HLTTauResolutionEndcap_DY_DM:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) > 1.5']
+      object: ['abs({eta}) < 2.1']
+  test_objects:
+    hltHpsPFTau:default: pt
+    L1nnPuppiTau:default: pt
+  resolution:
+    variables: [pt, eta, phi]
+    vs:
+      pt:
+        edges: [20, 25, 30, 35, 40, 50, 60, 80, 100]
+      pu:
+        edges: [150, 180, 190, 200, 210, 220, 260]
+    response_binning:
+      pt:
+        min: 0
+        max: 3
+        step: 0.04
+  split_by:
+    field: status
+    name: ''
+    categories:
+      1-prong: [0]
+      1-prong + $\pi^0$s: [1, 2]
+      3-prong: [10]
+      3-prong + $\pi^0$: [11]

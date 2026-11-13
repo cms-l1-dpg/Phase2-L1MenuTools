@@ -1,0 +1,58 @@
+# DY copy of tau_trigger.yaml (DYLL_M50, run with --version V50nano_170pre6HLT): the same plots,
+# objects and gen selection as tau_trigger.yaml (VBFHToTauTau), plot names + "_DY", no scalings (the
+# scalings stay from VBFHToTauTau).
+# Finer low-pT binning (0-100 GeV in 4 GeV; resolution vs pT 20-100 GeV): DY visible taus
+# are soft (200k events, |eta| < 2.1: 27k visible taus with pT > 20 GeV, 4.9k with pT > 40
+# GeV, 0.76k above 60 GeV), so the plateau above ~60 GeV is statistics-limited. The
+# single-tau efficiencies (matching, turn-ons, resolution) are the main DY result.
+# The decay-mode summary_range (fractions JSON, _dm files) is the VBFHToTauTau one cut at 100 GeV.
+# L1 taus only: L1hpsTau is dropped (not in the V50nano_170pre6HLT caches).
+# Generated from tau_trigger.yaml (scripts/make_dy_tau_configs.py); keep in sync.
+#
+# Header of tau_trigger.yaml:
+
+TauTriggerBarrel_90perc_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) < 1.5']
+      object: ['abs({eta}) < 2.4']
+  test_objects:
+    L1nnPuppiTau:default:barrel: pt
+    L1caloTau:default:barrel: pt
+    L1nnCaloTau:default:barrel: pt
+  xlabel: Gen. pT (GeV)
+  ylabel: Trigger Efficiency (barrel, L1 $p_T > <threshold>$ GeV)
+  thresholds: [20, 30]
+  binning:
+    min: 0
+    max: 100
+    step: 4
+
+TauTriggerEndcap_90perc_DY:
+  sample: DYLL_M50
+  version: V50nano
+  match_test_to_ref: true
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen Taus
+    cuts:
+      event: ['abs({eta}) > 1.5']
+      object: ['abs({eta}) < 2.4']
+  test_objects:
+    L1nnPuppiTau:default:endcap: pt
+    L1caloTau:default:endcap: pt
+    L1nnCaloTau:default:endcap: pt
+  xlabel: Gen. pT (GeV)
+  ylabel: Trigger Efficiency (endcap, L1 $p_T > <threshold>$ GeV)
+  thresholds: [20, 30]
+  binning:
+    min: 0
+    max: 100
+    step: 4

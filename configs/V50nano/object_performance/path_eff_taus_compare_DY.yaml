@@ -1,0 +1,187 @@
+# DY copy of path_eff_taus_compare.yaml (DYLL_M50, run with --version V50nano_170pre6HLT): the same
+# di-tau path comparison (L1 seed L1_pDoublePuppiTau52_52, DeepTau HPS35, ParT Tauh30), the same gen
+# selection and decay-mode pairs, plot names + "_DY". The legend rates are the minimum-bias rates of
+# the bits (as in the HH config).
+# STATISTICS-LIMITED: DY visible taus are soft. Of the 200k DY events, 11.1k have two visible taus
+# in |eta| < 2.1, but only 1.4k have a subleading tau with pT > 30 GeV, 79 with pT > 45 GeV, 27 with
+# pT > 60 GeV and 7 with pT > 80 GeV (HH: 4.2k / 2.1k / 0.9k of 17.7k). The L1 seed (52 GeV
+# offline, ~38 / 30 GeV online per leg) is on its plateau only above ~60-80 GeV, so the DY path
+# efficiencies are turn-on dominated: finer low-pT binning (subleading pT 0-100 GeV), plateau entry
+# for subleading pT > 45 GeV (~80 events; HH: > 80 GeV); the |eta| and pileup plots keep the HH
+# selection (subleading pT > 60 GeV) and have only ~27 events.
+# Generated from path_eff_taus_compare.yaml (scripts/make_dy_tau_configs.py); keep in sync.
+#
+# Header of path_eff_taus_compare.yaml:
+#   Di-tau HLT paths compared at the path (bit) level (path_efficiency.py, `paths:` map): the L1 seed
+#   L1_pDoublePuppiTau52_52 and the two HLT paths it seeds, HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1
+#   (HPS taus + DeepTau) and HLT_DoubleMediumPFPuppiParTTauh30_eta2p1 (ParT tau tag on AK4 PUPPI
+#   jets), each as L1 and HLT. The ParT scores and HLT trigger objects are not in the nano: per-event
+#   bit efficiencies only. Run with --version V50nano_170pre6HLT.
+#   Reference: GenVisTau with |eta| < 2.1 (the paths are eta2p1); every plot is also split by the
+#   decay-mode pair of the two leading such taus (split_by objects: 2; 1-prong = status 0, 1, 2,
+#   3-prong = 10, 11, as in the *_dm configs; "other": status 15 or fewer than 2 taus).
+#   Legend rates: the bits on the 2M Spring24 minimum-bias events (V50nano_170pre6HLT_MinBias,
+#   31,038 kHz / 1,999,040 events; L1 1306, DeepTau 66, ParT 11 events; DeepTau and ParT both: 3).
+#   DY (DYLL_M50) version: path_eff_taus_compare_DY.yaml (statistics-limited: of its 200k events only
+#   79 have a subleading visible tau with pT > 45 GeV in |eta| < 2.1).
+
+DoubleTauPathsVsSubleadPt_DY:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen visible taus, $|\eta| < 2.1$
+    rank: 2
+    cuts:
+      object: ['abs({eta}) < 2.1']
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)
+          L1_and_HLT: DeepTau HPS35 (1.02 kHz, 66 ev.)
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: ParT Tauh30 (0.17 kHz, 11 ev.)
+    plateau_min: 45
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      1-prong: [0, 1, 2]
+      3-prong: [10, 11]
+    name: DMpair
+    layout: per_category
+    summary_range: [45, 100]
+  xlabel: Subleading gen visible tau $p_T$ (GeV)
+  ylabel: Efficiency
+  binning:
+    edges: [0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 80, 100]
+
+DoubleTauPathsVsLeadPt_DY:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen visible taus, $|\eta| < 2.1$
+    rank: 1
+    min_objects: 2
+    cuts:
+      object: ['abs({eta}) < 2.1']
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)
+          L1_and_HLT: DeepTau HPS35 (1.02 kHz, 66 ev.)
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: ParT Tauh30 (0.17 kHz, 11 ev.)
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      1-prong: [0, 1, 2]
+      3-prong: [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: Leading gen visible tau $p_T$ (GeV)
+  ylabel: Efficiency
+  binning:
+    edges: [0, 20, 25, 30, 35, 40, 45, 50, 60, 80, 100, 150]
+
+DoubleTauPathsVsSubleadEta_DY:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: GenVisTau
+    x_arg: abs(eta)
+    label: Gen visible taus, $|\eta| < 2.1$, subl. $p_T > 60$ GeV
+    rank: 2
+    cuts:
+      object: ['abs({eta}) < 2.1']
+      event: ['{pt} > 60']
+  path_efficiency:
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)
+          L1_and_HLT: DeepTau HPS35 (1.02 kHz, 66 ev.)
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: ParT Tauh30 (0.17 kHz, 11 ev.)
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      1-prong: [0, 1, 2]
+      3-prong: [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: Subleading gen visible tau $|\eta|$
+  ylabel: Efficiency
+  binning:
+    edges: [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1]
+
+DoubleTauPathsVsNPU_DY:
+  sample: DYLL_M50
+  version: V50nano
+  reference_object:
+    object: GenVisTau
+    x_arg: pt
+    label: Gen visible taus, $|\eta| < 2.1$, subl. $p_T > 60$ GeV
+    rank: 2
+    cuts:
+      object: ['abs({eta}) < 2.1']
+      event: ['{pt} > 60']
+  path_efficiency:
+    event_x: Pileup_nPU
+    paths:
+      DeepTau:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
+        curves: [L1, L1_and_HLT]
+        labels:
+          L1: L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)
+          L1_and_HLT: DeepTau HPS35 (1.02 kHz, 66 ev.)
+      ParT:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: ParT Tauh30 (0.17 kHz, 11 ev.)
+    plateau_min: 0
+  split_by:
+    field: status
+    objects: 2
+    categories:
+      1-prong: [0, 1, 2]
+      3-prong: [10, 11]
+    name: DMpair
+    layout: per_category
+  xlabel: Number of pileup interactions (nPU)
+  ylabel: Efficiency
+  binning:
+    edges: [150, 180, 190, 200, 210, 220, 250]

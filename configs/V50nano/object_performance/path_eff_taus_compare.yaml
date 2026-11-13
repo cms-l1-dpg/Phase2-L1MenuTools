@@ -8,8 +8,8 @@
 # 3-prong = 10, 11, as in the *_dm configs; "other": status 15 or fewer than 2 taus).
 # Legend rates: the bits on the 2M Spring24 minimum-bias events (V50nano_170pre6HLT_MinBias,
 # 31,038 kHz / 1,999,040 events; L1 1306, DeepTau 66, ParT 11 events; DeepTau and ParT both: 3).
-# DY (DYLL_M50) is not used: its GenVisTau is not cached, and of its 200k events only ~200 have a
-# subleading visible tau with pT > 40 GeV in |eta| < 2.1 (5 of 200 files).
+# DY (DYLL_M50) version: path_eff_taus_compare_DY.yaml (statistics-limited: of its 200k events only
+# 79 have a subleading visible tau with pT > 45 GeV in |eta| < 2.1).
 DoubleTauPathsVsSubleadPt:
   sample: HHTo2B2Tau
   version: V50nano
