@@ -20,3 +20,26 @@ DoubleDeepTau35PathEff:
   ylabel: "Efficiency"
   binning:
     edges: [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]
+
+# Phase-2 HLT ParticleTransformer tau tag on AK4 PUPPI jets (same L1 seed): the ParT scores are
+# not stored in the nano, so this path is compared at the path (bit) level only.
+DoubleParTTau30PathEff:
+  sample: HHTo2B2Tau
+  version: V50nano
+  reference_object:
+    object: "GenVisTau"
+    x_arg: "pt"
+    label: "Gen visible taus, $|\\eta| < 2.1$"
+    rank: 2
+    cuts:
+      object:
+        - "abs({eta}) < 2.1"
+  path_efficiency:
+    L1: [L1_pDoublePuppiTau52_52_final]
+    HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
+    curves: [L1, HLT, L1_and_HLT, HLT_given_L1]
+    plateau_min: 80
+  xlabel: "Subleading gen visible tau $p_T$ (GeV)"
+  ylabel: "Efficiency"
+  binning:
+    edges: [0, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]
