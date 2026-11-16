@@ -1,3 +1,4 @@
+# ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 # Decay-mode split of hlt_tau_trigger.yaml (`split_by`, see docs/object-performance.md).
 # Same plots as hlt_tau_trigger.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
 # curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
@@ -22,6 +23,8 @@ HLTTauTriggerBarrel_DM:
   test_objects:
     hltHpsPFTau:MediumDeepTau:barrel: pt
     hltHpsPFTau:LooseDeepTau:barrel: pt
+    hltAK4PuppiJetParT:MediumParT:barrel: pt
+    hltAK4PuppiJetParT:ParT1kHz:barrel: pt
     L1nnPuppiTau:default:barrel: pt
   thresholds:
   - 27
@@ -58,6 +61,8 @@ HLTTauTriggerEndcap_DM:
   test_objects:
     hltHpsPFTau:MediumDeepTau:endcap: pt
     hltHpsPFTau:LooseDeepTau:endcap: pt
+    hltAK4PuppiJetParT:MediumParT:endcap: pt
+    hltAK4PuppiJetParT:ParT1kHz:endcap: pt
     L1nnPuppiTau:default:endcap: pt
   thresholds:
   - 27

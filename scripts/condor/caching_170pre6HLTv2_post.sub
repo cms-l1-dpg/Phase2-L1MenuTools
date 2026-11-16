@@ -1,0 +1,22 @@
+# Post-processing of the chunked V50nano_170pre6HLTv2 caching, one job per sample (merge_chunks,
+# make_hlt_sums, merge_arrays: scripts/condor/caching_170pre6HLTv2_post.sh). Submit after all
+# chunk jobs succeeded; fpj must match the caching .sub files.
+#   condor_submit scripts/condor/caching_170pre6HLTv2_post.sub                          # all samples
+#   condor_submit scripts/condor/caching_170pre6HLTv2_post.sub postlist=<file>   # subset, e.g. "MinBias 15"
+# Each step skips outputs that exist already.
+checkout       = $ENV(PWD)
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+executable     = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/scripts/condor/job.sh
+arguments      = /bin/bash $(checkout)/scripts/condor/menu_job.sh $(checkout) /bin/bash scripts/condor/caching_170pre6HLTv2_post.sh $(sample) $(fpj)
+output         = $(logdir)/cache170pre6HLTv2_post_$(sample).out
+error          = $(logdir)/cache170pre6HLTv2_post_$(sample).err
+log            = $(logdir)/cache170pre6HLTv2.log
+request_cpus   = 1
+request_memory = 8000
++JobFlavour    = "longlunch"
+# one line "<sample> <files per job>" per job; override for a subset, e.g.
+# postlist=<file with "MinBias 15">
+if ! defined postlist
+  postlist = scripts/condor/caching_170pre6HLTv2_post_samples.txt
+endif
+queue sample, fpj from $(postlist)

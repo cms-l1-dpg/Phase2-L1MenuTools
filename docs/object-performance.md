@@ -426,7 +426,9 @@
   `HLT`, `L1_and_HLT` (both fired), `HLT_given_L1` (denominator: events where the L1 OR fired).
   Clopper-Pearson 68% errors. The bits are read directly from the cached per-event records
   `<version>_<sample>_L1.parquet` (`L1_*` fields) and `<version>_<sample>_HLT.parquet` (`HLT_*`),
-  row-aligned with the gen parquets. In the Spring24 L1+HLT nanos the HLT bit of an L1-seeded path
+  row-aligned with the gen parquets. `HLT_EMU_*` bits, emulated variants of menu paths built from
+  cached HLT objects (e.g. the ParT di-τ path at another score cut, `scripts/part/part_wps.py`), are
+  read from `<version>_<sample>_HLTEMU.parquet`. In the Spring24 L1+HLT nanos the HLT bit of an L1-seeded path
   already includes its L1 seed (HLT fired ⇒ seed fired, checked for all reference configs), so `HLT`
   and `L1_and_HLT` coincide; `HLT_given_L1` gives the HLT efficiency relative to L1.
 

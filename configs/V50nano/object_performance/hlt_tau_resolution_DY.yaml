@@ -13,6 +13,7 @@
 # Generated from hlt_tau_resolution.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_resolution.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   HLT HPS taus (hltHpsPFTau, no ID / Medium / Loose DeepTau) vs the L1 NN PUPPI tau, HH -> bbtautau.
 #   hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
 #   Reference: visible gen taus with |eta| < 2.1 (the HLT tau paths cut |eta| < 2.1).
@@ -31,6 +32,7 @@ HLTTauResolutionBarrel_DY:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:default: pt
+    hltAK4PuppiJetParT:default: pt
     L1nnPuppiTau:default: pt
   resolution:
     variables: [pt, eta, phi]
@@ -58,6 +60,7 @@ HLTTauResolutionEndcap_DY:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:default: pt
+    hltAK4PuppiJetParT:default: pt
     L1nnPuppiTau:default: pt
   resolution:
     variables: [pt, eta, phi]

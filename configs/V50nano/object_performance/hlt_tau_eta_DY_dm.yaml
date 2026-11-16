@@ -13,6 +13,7 @@
 # Generated from hlt_tau_eta_dm.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_eta_dm.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   Decay-mode split of hlt_tau_eta.yaml (`split_by`, see docs/object-performance.md).
 #   Same plots as hlt_tau_eta.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
 #   curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
@@ -36,6 +37,8 @@ HLTTauMatching_Eta_Pt40ToInf_DY_DM:
     hltHpsPFTau:default: eta
     hltHpsPFTau:MediumDeepTau: eta
     hltHpsPFTau:LooseDeepTau: eta
+    hltAK4PuppiJetParT:MediumParT: eta
+    hltAK4PuppiJetParT:ParT1kHz: eta
     L1nnPuppiTau:default: eta
   xlabel: Gen. $\eta$
   ylabel: Matching Efficiency (gen vis. $p_T$ > 40 GeV)
@@ -68,6 +71,8 @@ HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM:
   test_objects:
     hltHpsPFTau:MediumDeepTau: eta
     hltHpsPFTau:LooseDeepTau: eta
+    hltAK4PuppiJetParT:MediumParT: eta
+    hltAK4PuppiJetParT:ParT1kHz: eta
     L1nnPuppiTau:default: eta
   thresholds: [35]
   xlabel: Gen. $\eta$

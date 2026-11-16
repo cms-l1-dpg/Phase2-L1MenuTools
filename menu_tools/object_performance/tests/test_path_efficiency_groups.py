@@ -255,3 +255,20 @@ def test_bad_configs(cache):
         PathEfficiencyCollection(cfg, "bad")
     with pytest.raises(ValueError):
         SplitConfig({"field": "s", "categories": DM_CATS, "objects": 0})
+
+
+def test_hlt_emu_bits(cache):
+    """HLT_EMU_* bits (emulated variants of menu paths) are read from the HLTEMU record."""
+    emul = [False, True, True, True, False, False]
+    ak.to_parquet(
+        ak.Array({"HLT_EMU_Emul": emul}),
+        cache / VERSION / f"{VERSION}_{SAMPLE}_HLTEMU.parquet",
+    )
+    cfg = _cfg()
+    cfg["path_efficiency"]["paths"]["E"] = {
+        "L1": ["L1_pSeed_final"],
+        "HLT": ["HLT_EMU_Emul"],
+    }
+    coll = PathEfficiencyCollection(cfg, "emu_bits")
+    coll.create_hists()
+    assert _counts(coll.hists, "E:L1_and_HLT") == (2, 4)

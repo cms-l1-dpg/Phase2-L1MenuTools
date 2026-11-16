@@ -13,6 +13,7 @@
 # Generated from hlt_tau_matching_dm.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_matching_dm.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   Decay-mode split of hlt_tau_matching.yaml (`split_by`, see docs/object-performance.md).
 #   Same plots as hlt_tau_matching.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
 #   curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
@@ -36,6 +37,8 @@ HLTTausMatchingBarrel_DY_DM:
     hltHpsPFTau:default: pt
     hltHpsPFTau:MediumDeepTau: pt
     hltHpsPFTau:LooseDeepTau: pt
+    hltAK4PuppiJetParT:MediumParT: pt
+    hltAK4PuppiJetParT:ParT1kHz: pt
     L1nnPuppiTau:default: pt
   xlabel: Gen. $p_T$ (GeV)
   ylabel: Matching Efficiency (barrel)
@@ -68,6 +71,8 @@ HLTTausMatchingEndcap_DY_DM:
     hltHpsPFTau:default: pt
     hltHpsPFTau:MediumDeepTau: pt
     hltHpsPFTau:LooseDeepTau: pt
+    hltAK4PuppiJetParT:MediumParT: pt
+    hltAK4PuppiJetParT:ParT1kHz: pt
     L1nnPuppiTau:default: pt
   xlabel: Gen. $p_T$ (GeV)
   ylabel: Matching Efficiency (endcap)

@@ -1,3 +1,4 @@
+# ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 # Purity and fake rates of HLT HPS taus vs the L1 NN PUPPI tau (`purity:` block, see
 # docs/object-performance.md#purity-fake-rate-and-multiplicity). Run on an L1+HLT cache.
 # hltHpsPFTau is stored only if an L1 tau seed fired. Leptonic tau decays and jets count as fakes.
@@ -8,6 +9,8 @@ HLTTausPurity:
   test_objects:
     hltHpsPFTau:default: "pt"
     hltHpsPFTau:MediumDeepTau: "pt"
+    hltAK4PuppiJetParT:MediumParT: "pt"
+    hltAK4PuppiJetParT:ParT1kHz: "pt"
     L1nnPuppiTau:default: "pt"
   purity:
     mode: purity
@@ -26,6 +29,8 @@ HLTTausFakeRate:
   test_objects:
     hltHpsPFTau:default: "pt"
     hltHpsPFTau:MediumDeepTau: "pt"
+    hltAK4PuppiJetParT:MediumParT: "pt"
+    hltAK4PuppiJetParT:ParT1kHz: "pt"
     L1nnPuppiTau:default: "pt"
   purity:
     mode: fake_rate
@@ -41,6 +46,8 @@ HLTTausMultiplicityMinBias:
   test_objects:
     hltHpsPFTau:default: "pt"
     hltHpsPFTau:MediumDeepTau: "pt"
+    hltAK4PuppiJetParT:MediumParT: "pt"
+    hltAK4PuppiJetParT:ParT1kHz: "pt"
     L1nnPuppiTau:default: "pt"
   purity:
     mode: multiplicity
