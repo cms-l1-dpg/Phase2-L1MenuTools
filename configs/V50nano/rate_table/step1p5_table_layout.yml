@@ -51,6 +51,8 @@ sections:
         label: 'Double TkElectron'
       L1_DoubleTkEle_er1p5_dEta_Max1p5:
         label: 'Double TkElectron'
+      L1_DoubleTkEleIso_er1p5:
+        label: 'Double TkIsoElectron'
       L1_SingleEGEle:
         label: 'Single StaEG'
       L1_DoubleEGEle:
@@ -58,6 +60,8 @@ sections:
       L1_SingleTkIsoPhoton:
         label: 'Single TkIsoPhoton'
       L1_DoubleTkPhoIso:
+        label: 'Double TkIsoPhoton'
+      L1_DoubleTkPhoIso_er1p5:
         label: 'Double TkIsoPhoton'
   - name: 'Tau seeds'
     seeds:

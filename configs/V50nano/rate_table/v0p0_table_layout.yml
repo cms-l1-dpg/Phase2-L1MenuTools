@@ -4,7 +4,7 @@
 # overridden here (the derived values are shown in the comments).
 title: 'V0.0 Menu for AR26: CMSSW\_17\_0\_X, V50nano'
 pu_columns:
-  - {pu: 140, version_suffix: '_140PU'}  # from outputs/<version>_140PU/rate_tables
+  - {pu: 140, version_suffix: '_140PU'}
   - {pu: 200, version_suffix: ''}
 total_rate_margin: null  # e.g. 0.3 adds a "Total (+30%)" line
 rate_decimals: 0
@@ -97,9 +97,19 @@ sections:
         label: 'Double TkElectron'
       L1_DoubleTkPhoIso:
         # objects: L1tkPhoton:Iso:inclusive, L1tkPhoton:Iso:inclusive
+        # derived thresholds: 30,15
+        # derived requirements: $|\eta|<2.4$
+        label: 'Double TkIsoPhoton'
+      L1_DoubleTkPhoIso_er1p5:
+        # objects: L1tkPhoton:Iso:inclusive, L1tkPhoton:Iso:inclusive
         # derived thresholds: 24,15
         # derived requirements: $|\eta|<1.5$
         label: 'Double TkIsoPhoton'
+      L1_DoubleTkEleIso_er1p5:
+        # objects: L1tkElectron:Iso:inclusive, L1tkElectron:Iso:inclusive
+        # derived thresholds: 24,15
+        # derived requirements: $|\eta|<1.5$, ${\Delta}z<1$
+        label: 'Double TkIsoElectron'
       L1_SingleEGEle:
         # objects: L1EG:default:inclusive
         # derived thresholds: 51
@@ -313,14 +323,19 @@ sections:
       L1_PFHTT_QuadJet_BTagNNScore:
         # objects: L1puppiJetSC4sums:HT, L1puppiJetSC4NG:default, L1puppiJetSC4NG:default, L1puppiJetSC4NG:default, L1puppiJetSC4NG:default
         # derived thresholds: 299,25$^{\dagger}$,25$^{\dagger}$,25$^{\dagger}$,25$^{\dagger}$
-        # derived requirements: Tot. b-tag score $>0.2$
+        # derived requirements: Tot. b-tag score $>0.9$
         label: 'QuadPuppiJets-Puppi\HT'
       L1_W3pi_GTT:
         # objects: L1TrackTripletWord:default
-        # derived thresholds: -99$^{\dagger}$
+        # derived thresholds: --
         # derived requirements: (none)
+        # NOT auto-translated: leg1: leg1.trk1Pt >= 24
+        # NOT auto-translated: ((leg1.mass >= 60) & (leg1.mass <= 100))
+        # NOT auto-translated: (leg1.trk2Pt >= 20)
+        # NOT auto-translated: (leg1.trk3Pt >= 5)
         label: 'Track Triplet for W3Pi'
-        thresholds: '--'
+        thresholds: '24$^{\dagger}$,20$^{\dagger}$,5$^{\dagger}$'
+        requirements: '$60<m_{3\pi}<100$'
       L1_SingleTau_Ext:
         # objects: L1caloTau:extended
         # derived thresholds: 153

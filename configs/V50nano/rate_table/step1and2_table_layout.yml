@@ -145,7 +145,8 @@ sections:
         label: 'Double Displaced Muon'
       L1_W3pi_GTT:
         label: 'Track Triplet for W3Pi'
-        thresholds: '--'
+        thresholds: '24$^{\dagger}$,20$^{\dagger}$,5$^{\dagger}$'  # track pTs (trk1Pt, trk2Pt, trk3Pt)
+        requirements: '$60<m_{3\pi}<100$'
       L1_SinglePfJet8_Mass:
         label: 'Single Ak8 PuppiJet (mass)'
         extra_requirements: '$m_{J}>20$'
