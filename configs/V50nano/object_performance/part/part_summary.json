@@ -1,0 +1,66 @@
+{
+ "n_minbias": 1998400,
+ "khz_per_event": 0.015531905524419536,
+ "n_1khz": 64,
+ "wps": {
+  "MediumParT": {
+   "cut": 0.11645,
+   "thr": 30,
+   "def": "HLT Medium WP"
+  },
+  "ParT1kHz": {
+   "cut": 0.018341064453125,
+   "thr": 30,
+   "def": "<= 64 MB events (seed AND >= 2 jets pT > 30, |eta| < 2.1)"
+  },
+  "ParT1kHz35": {
+   "cut": 0.011016845703125,
+   "thr": 35,
+   "def": "<= 64 MB events (seed AND >= 2 jets pT > 35, |eta| < 2.1)"
+  },
+  "ParTEff90": {
+   "cut": 0.41943359374999956,
+   "thr": 30,
+   "def": "90% per-jet eff. on HH tau_h"
+  },
+  "ParTEff80": {
+   "cut": 0.76513671875,
+   "thr": 30,
+   "def": "80% per-jet eff. on HH tau_h"
+  }
+ },
+ "validation": {
+  "MinBias": {
+   "n_hlt": 11,
+   "n_emu": 11,
+   "both": 11,
+   "hlt_only": 0,
+   "emu_only": 0
+  },
+  "HHTo2B2Tau": {
+   "n_hlt": 8433,
+   "n_emu": 8433,
+   "both": 8433,
+   "hlt_only": 0,
+   "emu_only": 0
+  },
+  "DYLL_M50": {
+   "n_hlt": 52500,
+   "n_emu": 52497,
+   "both": 52495,
+   "hlt_only": 5,
+   "emu_only": 2
+  },
+  "TT": {
+   "n_hlt": 7852,
+   "n_emu": 7852,
+   "both": 7852,
+   "hlt_only": 0,
+   "emu_only": 0
+  }
+ },
+ "mb_1khz_distinct_leading_jets": {
+  "events": 64,
+  "distinct": 64
+ }
+}

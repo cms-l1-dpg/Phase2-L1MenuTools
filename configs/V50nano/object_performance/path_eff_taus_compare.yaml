@@ -1,3 +1,9 @@
+# p2nano v2 (run with --version V50nano_170pre6HLTv2): + the ParT path emulated at the 1 kHz
+# working point, HLT_EMU_DoubleParTTauh30_1kHz = L1 seed AND >= 2 uncorrected hltAK4PuppiJet with
+# pT > 30, |eta| < 2.1, ParT TauvsAll > 0.0183411 (the ParT path with only the score cut changed;
+# the emulation at the HLT cut 0.11645 reproduces the ParT bit in 8433 / 8433 HH and 11 / 11
+# minimum-bias events), from the HLTEMU record (scripts/part/part_wps.py). Legend rates: v2
+# minimum bias, 31,038 kHz / 1,998,400 events (L1 1305, DeepTau 66, ParT 11, ParT 1 kHz 64).
 # Di-tau HLT paths compared at the path (bit) level (path_efficiency.py, `paths:` map): the L1 seed
 # L1_pDoublePuppiTau52_52 and the two HLT paths it seeds, HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1
 # (HPS taus + DeepTau) and HLT_DoubleMediumPFPuppiParTTauh30_eta2p1 (ParT tau tag on AK4 PUPPI
@@ -28,14 +34,20 @@ DoubleTauPathsVsSubleadPt:
         HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
         curves: [L1, L1_and_HLT]
         labels:
-          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
-          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1305 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.03 kHz, 66 ev.)"
       ParT:
         L1: [L1_pDoublePuppiTau52_52_final]
         HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
         curves: [L1_and_HLT]
         labels:
           L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+      ParT_1kHz:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_EMU_DoubleParTTauh30_1kHz]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT > 0.0183 (1 kHz WP), jet $p_T$ > 30 (0.99 kHz, 64 ev.)"
     plateau_min: 80
   split_by:
     field: status
@@ -72,14 +84,20 @@ DoubleTauPathsVsLeadPt:
         HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
         curves: [L1, L1_and_HLT]
         labels:
-          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
-          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1305 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.03 kHz, 66 ev.)"
       ParT:
         L1: [L1_pDoublePuppiTau52_52_final]
         HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
         curves: [L1_and_HLT]
         labels:
           L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+      ParT_1kHz:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_EMU_DoubleParTTauh30_1kHz]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT > 0.0183 (1 kHz WP), jet $p_T$ > 30 (0.99 kHz, 64 ev.)"
     plateau_min: 0
   split_by:
     field: status
@@ -115,14 +133,20 @@ DoubleTauPathsVsSubleadEta:
         HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
         curves: [L1, L1_and_HLT]
         labels:
-          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
-          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1305 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.03 kHz, 66 ev.)"
       ParT:
         L1: [L1_pDoublePuppiTau52_52_final]
         HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
         curves: [L1_and_HLT]
         labels:
           L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+      ParT_1kHz:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_EMU_DoubleParTTauh30_1kHz]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT > 0.0183 (1 kHz WP), jet $p_T$ > 30 (0.99 kHz, 64 ev.)"
     plateau_min: 0
   split_by:
     field: status
@@ -160,14 +184,20 @@ DoubleTauPathsVsNPU:
         HLT: [HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1]
         curves: [L1, L1_and_HLT]
         labels:
-          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1306 ev.)"
-          L1_and_HLT: "DeepTau HPS35 (1.02 kHz, 66 ev.)"
+          L1: "L1 DoublePuppiTau52_52 (20.3 kHz, 1305 ev.)"
+          L1_and_HLT: "DeepTau HPS35 (1.03 kHz, 66 ev.)"
       ParT:
         L1: [L1_pDoublePuppiTau52_52_final]
         HLT: [HLT_DoubleMediumPFPuppiParTTauh30_eta2p1]
         curves: [L1_and_HLT]
         labels:
           L1_and_HLT: "ParT Tauh30 (0.17 kHz, 11 ev.)"
+      ParT_1kHz:
+        L1: [L1_pDoublePuppiTau52_52_final]
+        HLT: [HLT_EMU_DoubleParTTauh30_1kHz]
+        curves: [L1_and_HLT]
+        labels:
+          L1_and_HLT: "ParT > 0.0183 (1 kHz WP), jet $p_T$ > 30 (0.99 kHz, 64 ev.)"
     plateau_min: 0
   split_by:
     field: status

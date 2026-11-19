@@ -1,3 +1,4 @@
+# ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 # Decay-mode split of hlt_tau_resolution.yaml (`split_by`, see docs/object-performance.md).
 # Same plots as hlt_tau_resolution.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
 # curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
@@ -21,6 +22,7 @@ HLTTauResolutionBarrel_DM:
       - abs({eta}) < 2.1
   test_objects:
     hltHpsPFTau:default: pt
+    hltAK4PuppiJetParT:default: pt
     L1nnPuppiTau:default: pt
   resolution:
     variables:
@@ -76,6 +78,7 @@ HLTTauResolutionEndcap_DM:
       - abs({eta}) < 2.1
   test_objects:
     hltHpsPFTau:default: pt
+    hltAK4PuppiJetParT:default: pt
     L1nnPuppiTau:default: pt
   resolution:
     variables:

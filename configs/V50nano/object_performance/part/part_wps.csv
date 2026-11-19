@@ -1,0 +1,6 @@
+wp,cut,definition,hh_tau_jet_eff,mb_jet_fake
+MediumParT,0.11645,HLT Medium WP,0.95201,0.0634237
+ParT1kHz,0.0183411,"<= 64 MB events (seed AND >= 2 jets pT > 30, |eta| < 2.1)",0.976346,0.189756
+ParT1kHz35,0.0110168,"<= 64 MB events (seed AND >= 2 jets pT > 35, |eta| < 2.1)",0.980564,0.248178
+ParTEff90,0.419434,90% per-jet eff. on HH tau_h,0.899991,0.0215357
+ParTEff80,0.765137,80% per-jet eff. on HH tau_h,0.799981,0.00745535

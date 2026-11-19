@@ -1,3 +1,4 @@
+# ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 # HLT HPS taus (hltHpsPFTau, no ID / Medium / Loose DeepTau) vs the L1 NN PUPPI tau, HH -> bbtautau.
 # hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
 # Reference: visible gen taus with |eta| < 2.1 (the HLT tau paths cut |eta| < 2.1).
@@ -20,6 +21,8 @@ HLTTausMatchingBarrel:
     hltHpsPFTau:default: "pt"
     hltHpsPFTau:MediumDeepTau: "pt"
     hltHpsPFTau:LooseDeepTau: "pt"
+    hltAK4PuppiJetParT:MediumParT: "pt"
+    hltAK4PuppiJetParT:ParT1kHz: "pt"
     L1nnPuppiTau:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (barrel)"
@@ -45,6 +48,8 @@ HLTTausMatchingEndcap:
     hltHpsPFTau:default: "pt"
     hltHpsPFTau:MediumDeepTau: "pt"
     hltHpsPFTau:LooseDeepTau: "pt"
+    hltAK4PuppiJetParT:MediumParT: "pt"
+    hltAK4PuppiJetParT:ParT1kHz: "pt"
     L1nnPuppiTau:default: "pt"
   xlabel: "Gen. $p_T$ (GeV)"
   ylabel: "Matching Efficiency (endcap)"

@@ -285,6 +285,41 @@ hltAK4PuppiJetCorr:
         inclusive:
           - "abs({eta}) < 2.4"
           - "{DeepFlavour_prob_b} > 0.636"
+    # HLT ParT (p2nano v2 caches only): b / (b + c + uds + g) at 10% / 1% light-jet mis-id on
+    # the v2 inclusive tt (corrected pT > 30 GeV, |eta| < 2.4, from btag_tt.yaml target_misid);
+    # only jets inside the ParT acceptance (raw pT > 5, |eta| < 2.1) can pass.
+    # V50nano_170pre6HLTv2 TT (inclusive tt), corrected pT > 30 GeV, |eta| < 2.4:
+    #   b/(b+c+uds+g) > 0.019832: light mis-id 10.0%, b eff. 88.5%; > 0.237211: 1.0%, 75.1%;
+    #   prob(b) alone (bTagParTbLight10 / 1): > 0.0122: 10.0%, 89.3%; > 0.11878: 1.0%, 79.0%
+    #   (DeepFlavour prob(b) on the same jets: 10% at > 0.1707 with 89.2%, 1% at > 0.5957 with 70.7%).
+    bTagParTLight10:
+      label: "HLT ParT b/(b+c+uds+g) > 0.0198 (10% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{ParT_inputFilled} == 1"
+          - "{ParT_prob_b} / ({ParT_prob_b} + {ParT_prob_c} + {ParT_prob_uds} + {ParT_prob_g} + 1e-6) > 0.019832"
+    bTagParTLight1:
+      label: "HLT ParT b/(b+c+uds+g) > 0.237 (1% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{ParT_inputFilled} == 1"
+          - "{ParT_prob_b} / ({ParT_prob_b} + {ParT_prob_c} + {ParT_prob_uds} + {ParT_prob_g} + 1e-6) > 0.237211"
+    bTagParTbLight10:
+      label: "HLT ParT prob(b) > 0.0122 (10% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{ParT_inputFilled} == 1"
+          - "{ParT_prob_b} > 0.0122"
+    bTagParTbLight1:
+      label: "HLT ParT prob(b) > 0.1188 (1% light mis-id)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.4"
+          - "{ParT_inputFilled} == 1"
+          - "{ParT_prob_b} > 0.11878"
 
 hltHpsPFTau:
   label: "HLT HPS PF Tau"
@@ -326,6 +361,65 @@ hltHpsPFTau:
           - "({pt} < 100) | ({pt} >= 300) | ({deepTauVSjet} > 0.4837 + (0.05 - 0.4837) / 200 * ({pt} - 100))"
           - "({pt} < 300) | ({deepTauVSjet} > 0.05)"
 
+
+# HLT ParT tau candidates (p2nano v2 caches only, e.g. V50nano_170pre6HLTv2): the hltAK4PuppiJet
+# inside the ParT acceptance (ParT_inputFilled: raw pT > 5, |eta| < 2.1) with raw pT > 10 GeV,
+# built by menu_tools/caching/make_hlt_jets_part.py. pt is the UNcorrected jet pT, as in
+# HLT_DoubleMediumPFPuppiParTTauh30_eta2p1 (TauTagFilter hltDoublePFJets30ParTTauhTagMediumWPL2DoubleTau
+# on hltAK4PFPuppiJets: >= 2 jets pT > 30, |eta| < 2.1, TauvsAll > 0.11645, no pT correction,
+# no matching to the L1 taus); ptCorr = pt x jecFactor. In v2 ParT runs on every jet in every
+# event (in v1 only where its path ran: v1 has no usable ParT). Stored scores: 10-bit mantissa.
+# Working points (scripts/part/part_wps.py -> configs/V50nano/object_performance/part/part_wps.csv):
+#   MediumParT: the HLT path WP;
+#   ParT1kHz:   the di-tau emulation (seed AND >= 2 jets pT > 30, |eta| < 2.1) at 1 kHz of the
+#               v2 minimum bias (64 of 1,998,400 events, 0.99 kHz; cut 0.0183411 just above the 65th
+#               event's stored score); ParT1kHz35: the same with jet pT > 35 (cut 0.0110169);
+#   ParTEff90 / ParTEff80: 90% / 80% per-jet efficiency for genuine HH tau_h (jet pT > 20, matched
+#               within dR < 0.3 to a GenVisTau pT > 20, |eta| < 2.1); MB jet fake rate 2.2% / 0.75%
+#               (MediumParT: 95% / 6.3%, ParT1kHz: 97.6% / 19%).
+hltAK4PuppiJetParT:
+  label: "HLT ParT AK4 PUPPI jet"
+  match_dR: 0.3
+  eta_ranges:
+    inclusive: [0, 7]
+    barrel: [0, 1.5]
+    endcap: [1.5, 2.4]
+  ids:
+    default:
+      label: "HLT AK4 jet in ParT acc., no tag"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+    MediumParT:
+      label: "HLT ParT TauvsAll > 0.116 (Medium, HLT)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+          - "{TauvsAll} > 0.11645"
+    ParT1kHz:
+      label: "HLT ParT TauvsAll > 0.0183 (1 kHz di-tau, 30 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+          - "{TauvsAll} > 0.0183411"
+    ParT1kHz35:
+      label: "HLT ParT TauvsAll > 0.0110 (1 kHz di-tau, 35 GeV)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+          - "{TauvsAll} > 0.0110169"
+    ParTEff90:
+      label: "HLT ParT TauvsAll > 0.419 (90% $\\tau_h$ eff.)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+          - "{TauvsAll} > 0.4194"
+    ParTEff80:
+      label: "HLT ParT TauvsAll > 0.765 (80% $\\tau_h$ eff.)"
+      cuts:
+        inclusive:
+          - "abs({eta}) < 2.1"
+          - "{TauvsAll} > 0.7651"
 
 # HLT PUPPI HT: the nano's hltPFPuppiHT_pt, one value per event (used like L1puppiMET:default).
 # It is the sumEt of hltPFPuppiMHT (HLTHtMhtProducer, HLTrigger/NGTScouting hltSums_cfi):

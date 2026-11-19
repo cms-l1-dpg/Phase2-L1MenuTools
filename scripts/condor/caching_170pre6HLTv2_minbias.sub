@@ -1,0 +1,33 @@
+# Chunked caching of the V50nano_170pre6HLTv2 MinBias sample (p2nano v2, 2,094 files of
+# MinBias_TuneCP5_14TeV-pythia8/P2Nano_L1HLT_noSel_v2): 140 jobs of 15 files (sorted file order).
+# Output: $MENU_TOOLS_CACHE/V50nano_170pre6HLTv2/chunks/. Executable: the hackathon-repo wrapper
+# scripts/condor/job.sh, which runs scripts/condor/menu_job.sh of this checkout (environment).
+# Submit from the checkout, with the EOS submit pool:
+#   export _myschedd_POOL=eossubmit _condor_CONDOR_HOST="tweetybird04.cern.ch, tweetybird03.cern.ch"
+#   condor_submit scripts/condor/caching_170pre6HLTv2_minbias.sub first=0 last=0   # one test chunk
+#   condor_submit scripts/condor/caching_170pre6HLTv2_minbias.sub first=1          # the rest
+# Then: scripts/condor/caching_170pre6HLTv2_post.sub (merge, hltPuppiJetSums, JEC, L1EG).
+checkout       = $ENV(PWD)
+if ! defined extra
+  extra =
+endif
+if ! defined logtag
+  logtag =
+endif
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+fpj            = 15
+executable     = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/scripts/condor/job.sh
+arguments      = /bin/bash $(checkout)/scripts/condor/menu_job.sh $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLTv2.yaml --samples MinBias --files-per-job $(fpj) --job $(job) $(extra)
+output         = $(logdir)/cache170pre6HLTv2_MinBias$(logtag).$(job).out
+error          = $(logdir)/cache170pre6HLTv2_MinBias$(logtag).$(job).err
+log            = $(logdir)/cache170pre6HLTv2.log
+request_cpus   = 1
+request_memory = 2500
++JobFlavour    = "longlunch"
+if ! defined first
+  first = 0
+endif
+if ! defined last
+  last = 139
+endif
+queue job from seq $(first) $(last) |

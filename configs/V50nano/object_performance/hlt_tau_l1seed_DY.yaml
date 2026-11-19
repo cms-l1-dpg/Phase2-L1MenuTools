@@ -13,6 +13,7 @@
 # Generated from hlt_tau_l1seed.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_l1seed.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   Combined L1 x HLT object efficiency of the tau leg of HLT_DoubleMediumDeepTauPFTauHPS35_eta2p1,
 #   HH -> bbtautau: hltHpsPFTau:MediumDeepTau pT > 35 AND the gen visible tau matched to an L1 NN
 #   PUPPI tau passing ONE leg of L1_pDoublePuppiTau52_52. `l1_seed`: docs/object-performance.md.
@@ -46,6 +47,8 @@ HLTTauL1Seed_DoubleTau35_Barrel_DY:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:MediumDeepTau:barrel: pt
+    hltAK4PuppiJetParT:MediumParT:barrel: pt
+    hltAK4PuppiJetParT:ParT1kHz:barrel: pt
   l1_seed:
     object: L1nnPuppiTau:default
     threshold:
@@ -75,6 +78,8 @@ HLTTauL1Seed_DoubleTau35_Endcap_DY:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:MediumDeepTau:endcap: pt
+    hltAK4PuppiJetParT:MediumParT:endcap: pt
+    hltAK4PuppiJetParT:ParT1kHz:endcap: pt
   l1_seed:
     object: L1nnPuppiTau:default
     threshold:

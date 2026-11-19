@@ -1,0 +1,27 @@
+# Chunked caching of the V50nano_170pre6HLTv2 signal samples (p2nano v2), 25 files (25k events)
+# per job: DYLL_M50 985 files -> 40 jobs, TT (inclusive) 300 -> 12, HHTo2B2Tau 57 -> 3 (55 jobs).
+# Submit from the checkout, with the EOS submit pool (see caching_170pre6HLTv2_minbias.sub):
+#   condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub
+#   condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub joblist=mylist.txt   # subset
+# Then: scripts/condor/caching_170pre6HLTv2_post.sub.
+checkout       = $ENV(PWD)
+if ! defined extra
+  extra =
+endif
+if ! defined logtag
+  logtag =
+endif
+logdir         = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/projects/hlt-extension/condor_logs
+fpj            = 25
+executable     = /eos/home-a/alobanov/SWAN_projects/L1TML/topo-hackathon-2026/scripts/condor/job.sh
+arguments      = /bin/bash $(checkout)/scripts/condor/menu_job.sh $(checkout) cache_objects configs/V50nano/cache_objects/caching_170pre6_HLTv2.yaml --samples $(sample) --files-per-job $(fpj) --job $(job) $(extra)
+output         = $(logdir)/cache170pre6HLTv2_$(sample)$(logtag).$(job).out
+error          = $(logdir)/cache170pre6HLTv2_$(sample)$(logtag).$(job).err
+log            = $(logdir)/cache170pre6HLTv2.log
+request_cpus   = 1
+request_memory = 3000
++JobFlavour    = "longlunch"
+if ! defined joblist
+  joblist = scripts/condor/caching_170pre6HLTv2_signal_jobs.txt
+endif
+queue sample, job from $(joblist)

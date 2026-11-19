@@ -1,0 +1,592 @@
+subdir,plot,curve,bins,max_abs_diff,max_abs_pull,chi2_ndf
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_35,L1seed,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_35,hltHpsPFTau:MediumDeepTau:barrel+L1seed,25,0.0006035,0.03907,6.106e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_35,L1seed,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_35,hltHpsPFTau:MediumDeepTau:barrel+L1seed,25,0.0006035,0.03907,6.106e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_L1seed_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_L1seed_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_L1seed_35,3-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_L1seed_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_L1seed_35,inclusive,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.001056,0.05029,0.0001012
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,1-prong + $\pi^0$s,25,0.001056,0.05189,0.0001077
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,3-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,inclusive,25,0.0006035,0.03907,6.106e-05
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_35,L1seed,25,0.07602,1.583,0.4819
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.538,0.584
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_35,hltHpsPFTau:MediumDeepTau:barrel+L1seed,25,0.1766,1.449,0.5969
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_35,L1seed,25,0.07602,1.583,0.4819
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.538,0.584
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_35,hltHpsPFTau:MediumDeepTau:barrel+L1seed,25,0.1766,1.449,0.5969
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_L1seed_35,1-prong,25,0.2076,1.523,0.3157
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_L1seed_35,1-prong + $\pi^0$s,25,0.0719,1.416,0.5304
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_L1seed_35,3-prong + $\pi^0$,25,0.1429,1.577,0.3923
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_L1seed_35,inclusive,25,0.07602,1.583,0.4819
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong,25,0.3889,2.227,0.4139
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.2619,1.686,0.4305
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong + $\pi^0$,25,0.6,1.3,0.3735
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.1766,1.538,0.584
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,1-prong,25,0.3889,1.837,0.3709
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,1-prong + $\pi^0$s,25,0.2619,1.686,0.4333
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,3-prong + $\pi^0$,25,0.6,1.337,0.3858
+turnons,HLTTauL1Seed_DoubleTau35_Barrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_L1seed_35,inclusive,25,0.1766,1.449,0.5969
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_35,L1seed,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_35,hltHpsPFTau:MediumDeepTau:endcap+L1seed,25,0.0137,0.1696,0.001151
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_35,L1seed,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_35,hltHpsPFTau:MediumDeepTau:endcap+L1seed,25,0.0137,0.1696,0.001151
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_L1seed_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_L1seed_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_L1seed_35,3-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_L1seed_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_L1seed_35,inclusive,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong,25,0.03704,0.2662,0.002834
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,inclusive,25,0.0137,0.1649,0.001087
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,1-prong,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,3-prong,25,0.03704,0.2791,0.003115
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,inclusive,25,0.0137,0.1696,0.001151
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_35,L1seed,25,0.1667,1.791,0.685
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.6124
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_35,hltHpsPFTau:MediumDeepTau:endcap+L1seed,25,0.4318,2.52,0.6199
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_35,L1seed,25,0.1667,1.791,0.685
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.6124
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_35,hltHpsPFTau:MediumDeepTau:endcap+L1seed,25,0.4318,2.52,0.6199
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_L1seed_35,1-prong + $\pi^0$s,25,0.1852,2.079,0.5762
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_L1seed_35,inclusive,25,0.1667,1.791,0.685
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong + $\pi^0$s,25,0.7273,1.696,0.3909
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_35,inclusive,25,0.4318,2.52,0.6124
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,1-prong + $\pi^0$s,25,0.7273,1.696,0.398
+turnons,HLTTauL1Seed_DoubleTau35_Endcap_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_L1seed_35,inclusive,25,0.4318,2.52,0.6199
+turnons,HLTTauMatching_Eta_Pt40ToInf_-999,L1nnPuppiTau:default:inclusive,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_-999,hltHpsPFTau:LooseDeepTau:inclusive,22,0.001323,0.05329,0.0001719
+turnons,HLTTauMatching_Eta_Pt40ToInf_-999,hltHpsPFTau:MediumDeepTau:inclusive,22,0.001323,0.05425,0.0001766
+turnons,HLTTauMatching_Eta_Pt40ToInf_-999,hltHpsPFTau:default:inclusive,22,0.001323,0.05022,0.0001574
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_-999,L1nnPuppiTau:default:inclusive,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,22,0.001323,0.05329,0.0001719
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,22,0.001323,0.05425,0.0001766
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_-999,hltHpsPFTau:default:inclusive,22,0.001323,0.05022,0.0001574
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_L1nnPuppiTau-default-inclusive_-999,1-prong,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_L1nnPuppiTau-default-inclusive_-999,3-prong,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_L1nnPuppiTau-default-inclusive_-999,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,22,0.000885,0.04111,7.681e-05
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong,22,0.008333,0.1264,0.0007259
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,22,0.001323,0.05329,0.0001719
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,22,0.000885,0.04113,7.688e-05
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong,22,0.008333,0.1298,0.0007652
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,22,0.001323,0.05425,0.0001766
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-default-inclusive_-999,1-prong,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,22,0.000885,0.0411,7.677e-05
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-default-inclusive_-999,3-prong,22,0.008333,0.1195,0.0006489
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-default-inclusive_-999,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauMatching_Eta_Pt40ToInf_DM_hltHpsPFTau-default-inclusive_-999,inclusive,22,0.001323,0.05022,0.0001574
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_-999,L1nnPuppiTau:default:inclusive,22,0.0457,1.228,0.5389
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_-999,hltHpsPFTau:LooseDeepTau:inclusive,22,0.05314,1.703,0.6357
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_-999,hltHpsPFTau:MediumDeepTau:inclusive,22,0.05483,1.638,0.6351
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_-999,hltHpsPFTau:default:inclusive,22,0.06205,1.816,0.7514
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_-999,L1nnPuppiTau:default:inclusive,22,0.0457,1.228,0.5389
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,22,0.05314,1.703,0.6357
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,22,0.05483,1.638,0.6351
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_-999,hltHpsPFTau:default:inclusive,22,0.06205,1.816,0.7514
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_L1nnPuppiTau-default-inclusive_-999,1-prong,22,0.1823,2.239,0.6059
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,22,0.07539,1.459,0.4734
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_L1nnPuppiTau-default-inclusive_-999,3-prong,22,0.1451,1.824,0.6945
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_L1nnPuppiTau-default-inclusive_-999,3-prong + $\pi^0$,22,0.3182,1.529,0.3769
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,22,0.0457,1.228,0.5389
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong,22,0.2407,2.35,0.8198
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,22,0.0505,1.25,0.4488
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong,22,0.1524,1.712,0.5172
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong + $\pi^0$,22,0.1846,1.57,0.2969
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,22,0.05314,1.703,0.6357
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong,22,0.2407,2.221,0.8434
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,22,0.05228,1.209,0.4095
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong,22,0.1524,1.712,0.4901
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong + $\pi^0$,22,0.1363,1.254,0.2971
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,22,0.05483,1.638,0.6351
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-default-inclusive_-999,1-prong,22,0.2325,2.35,0.8148
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,22,0.05814,1.453,0.4346
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-default-inclusive_-999,3-prong,22,0.1726,2.125,0.7193
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-default-inclusive_-999,3-prong + $\pi^0$,22,0.2088,1.751,0.3818
+turnons,HLTTauMatching_Eta_Pt40ToInf_DY_DM_hltHpsPFTau-default-inclusive_-999,inclusive,22,0.06205,1.816,0.7514
+turnons,HLTTauTriggerBarrel_27,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_27,hltHpsPFTau:LooseDeepTau:barrel,25,6.813e-05,0.005414,1.172e-06
+turnons,HLTTauTriggerBarrel_27,hltHpsPFTau:MediumDeepTau:barrel,25,6.341e-05,0.005177,1.072e-06
+turnons,HLTTauTriggerBarrel_35,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.0003293,0.01368,7.488e-06
+turnons,HLTTauTriggerBarrel_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0003321,0.01369,7.493e-06
+turnons,HLTTauTriggerBarrel_DM_27,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_27,hltHpsPFTau:LooseDeepTau:barrel,25,6.813e-05,0.005414,1.172e-06
+turnons,HLTTauTriggerBarrel_DM_27,hltHpsPFTau:MediumDeepTau:barrel,25,6.341e-05,0.005177,1.072e-06
+turnons,HLTTauTriggerBarrel_DM_35,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.0003293,0.01368,7.488e-06
+turnons,HLTTauTriggerBarrel_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0003321,0.01369,7.493e-06
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_27,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_27,3-prong,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_27,3-prong + $\pi^0$,23,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_27,inclusive,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_35,3-prong,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_35,3-prong + $\pi^0$,23,0,0,0
+turnons,HLTTauTriggerBarrel_DM_L1nnPuppiTau-default-barrel_35,inclusive,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.0001257,0.007176,2.06e-06
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_27,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_27,3-prong + $\pi^0$,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_27,inclusive,25,6.813e-05,0.005414,1.172e-06
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.0007288,0.02092,1.75e-05
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_35,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_35,3-prong + $\pi^0$,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-LooseDeepTau-barrel_35,inclusive,25,0.0003293,0.01368,7.488e-06
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.0001135,0.006741,1.817e-06
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_27,3-prong,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_27,3-prong + $\pi^0$,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_27,inclusive,25,6.341e-05,0.005177,1.072e-06
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.0007331,0.02091,1.749e-05
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong + $\pi^0$,24,0,0,0
+turnons,HLTTauTriggerBarrel_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.0003321,0.01369,7.493e-06
+turnons,HLTTauTriggerBarrel_DY_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.08028,0.9279,0.1352
+turnons,HLTTauTriggerBarrel_DY_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.07369,0.8328,0.09984
+turnons,HLTTauTriggerBarrel_DY_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.05882,1.243,0.1892
+turnons,HLTTauTriggerBarrel_DY_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.06061,0.9352,0.1472
+turnons,HLTTauTriggerBarrel_DY_DM_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.08028,0.9279,0.1352
+turnons,HLTTauTriggerBarrel_DY_DM_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.07369,0.8328,0.09984
+turnons,HLTTauTriggerBarrel_DY_DM_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.05882,1.243,0.1892
+turnons,HLTTauTriggerBarrel_DY_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.06061,0.9352,0.1472
+turnons,HLTTauTriggerBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_27,inclusive,25,0.08028,0.9279,0.1352
+turnons,HLTTauTriggerBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_35,inclusive,25,0.05882,1.243,0.1892
+turnons,HLTTauTriggerBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_27,inclusive,25,0.07369,0.8328,0.09984
+turnons,HLTTauTriggerBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.06061,0.9352,0.1472
+turnons,HLTTauTriggerBarrel_wMatching_27,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.0006035,0.03586,5.143e-05
+turnons,HLTTauTriggerBarrel_wMatching_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03608,5.208e-05
+turnons,HLTTauTriggerBarrel_wMatching_35,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.0006035,0.03755,5.641e-05
+turnons,HLTTauTriggerBarrel_wMatching_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_27,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.0006035,0.03586,5.143e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03608,5.208e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_35,L1nnPuppiTau:default:barrel,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.0006035,0.03755,5.641e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_27,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_27,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_27,inclusive,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_35,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_L1nnPuppiTau-default-barrel_35,inclusive,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.001056,0.04689,8.796e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_27,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_27,inclusive,25,0.0006035,0.03586,5.143e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.001056,0.05005,0.0001002
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_35,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-LooseDeepTau-barrel_35,inclusive,25,0.0006035,0.03755,5.641e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.001056,0.04706,8.857e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_27,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_27,inclusive,25,0.0006035,0.03608,5.208e-05
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.001056,0.05029,0.0001012
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerBarrel_wMatching_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.0006035,0.03783,5.726e-05
+turnons,HLTTauTriggerBarrel_wMatching_DY_27,L1nnPuppiTau:default:barrel,25,0.05195,3.234,0.972
+turnons,HLTTauTriggerBarrel_wMatching_DY_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.1895,1.533,0.7202
+turnons,HLTTauTriggerBarrel_wMatching_DY_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.479,0.6164
+turnons,HLTTauTriggerBarrel_wMatching_DY_35,L1nnPuppiTau:default:barrel,25,0.07097,1.661,0.5164
+turnons,HLTTauTriggerBarrel_wMatching_DY_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.183,1.481,0.66
+turnons,HLTTauTriggerBarrel_wMatching_DY_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.538,0.584
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_27,L1nnPuppiTau:default:barrel,25,0.05195,3.234,0.972
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_27,hltHpsPFTau:LooseDeepTau:barrel,25,0.1895,1.533,0.7202
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_27,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.479,0.6164
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_35,L1nnPuppiTau:default:barrel,25,0.07097,1.661,0.5164
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_35,hltHpsPFTau:LooseDeepTau:barrel,25,0.183,1.481,0.66
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_35,hltHpsPFTau:MediumDeepTau:barrel,25,0.1766,1.538,0.584
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_27,1-prong,25,0.1712,1.697,0.3573
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_27,1-prong + $\pi^0$s,25,0.05496,3.803,1.12
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_27,3-prong + $\pi^0$,25,0.1039,1.87,0.4352
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_27,inclusive,25,0.05195,3.234,0.972
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_35,1-prong,25,0.1894,1.395,0.3481
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_35,1-prong + $\pi^0$s,25,0.06305,1.85,0.4138
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_35,3-prong + $\pi^0$,25,0.1364,1.582,0.4152
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_L1nnPuppiTau-default-barrel_35,inclusive,25,0.07097,1.661,0.5164
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong,25,0.3889,2.227,0.4176
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.2619,1.686,0.4885
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_27,3-prong + $\pi^0$,25,0.6,1.715,0.4569
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_27,inclusive,25,0.1895,1.533,0.7202
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong,25,0.3889,2.227,0.4109
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.2619,1.686,0.4497
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_35,3-prong + $\pi^0$,25,0.6,1.427,0.3896
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-barrel_35,inclusive,25,0.183,1.481,0.66
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong,25,0.3889,2.227,0.4156
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_27,1-prong + $\pi^0$s,25,0.2619,1.686,0.4716
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_27,3-prong + $\pi^0$,25,0.6,1.629,0.4431
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_27,inclusive,25,0.1766,1.479,0.6164
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong,25,0.3889,2.227,0.4139
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,1-prong + $\pi^0$s,25,0.2619,1.686,0.4305
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,3-prong + $\pi^0$,25,0.6,1.3,0.3735
+turnons,HLTTauTriggerBarrel_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-barrel_35,inclusive,25,0.1766,1.538,0.584
+turnons,HLTTauTriggerEndcap_27,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_27,hltHpsPFTau:LooseDeepTau:endcap,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_27,hltHpsPFTau:MediumDeepTau:endcap,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_35,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_35,hltHpsPFTau:LooseDeepTau:endcap,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_35,hltHpsPFTau:MediumDeepTau:endcap,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_DM_27,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_27,hltHpsPFTau:LooseDeepTau:endcap,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_DM_27,hltHpsPFTau:MediumDeepTau:endcap,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_DM_35,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_35,hltHpsPFTau:LooseDeepTau:endcap,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_DM_35,hltHpsPFTau:MediumDeepTau:endcap,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_27,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_27,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_27,3-prong + $\pi^0$,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_27,inclusive,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_35,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_35,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_35,3-prong + $\pi^0$,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_L1nnPuppiTau-default-endcap_35,inclusive,25,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_27,1-prong,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_27,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_27,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_27,3-prong + $\pi^0$,20,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_27,inclusive,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_35,1-prong,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_35,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_35,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_35,3-prong + $\pi^0$,20,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-LooseDeepTau-endcap_35,inclusive,24,0.003623,0.03292,4.516e-05
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_27,1-prong,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_27,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_27,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_27,3-prong + $\pi^0$,19,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_27,inclusive,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong + $\pi^0$s,24,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong,23,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong + $\pi^0$,19,0,0,0
+turnons,HLTTauTriggerEndcap_DM_hltHpsPFTau-MediumDeepTau-endcap_35,inclusive,24,0.003953,0.03449,4.957e-05
+turnons,HLTTauTriggerEndcap_DY_27,L1nnPuppiTau:default:endcap,25,0.04255,0.9896,0.1722
+turnons,HLTTauTriggerEndcap_DY_35,L1nnPuppiTau:default:endcap,25,0.1106,1.255,0.2895
+turnons,HLTTauTriggerEndcap_DY_DM_27,L1nnPuppiTau:default:endcap,25,0.04255,0.9896,0.1722
+turnons,HLTTauTriggerEndcap_DY_DM_35,L1nnPuppiTau:default:endcap,25,0.1106,1.255,0.2895
+turnons,HLTTauTriggerEndcap_DY_DM_L1nnPuppiTau-default-endcap_27,inclusive,25,0.04255,0.9896,0.1722
+turnons,HLTTauTriggerEndcap_DY_DM_L1nnPuppiTau-default-endcap_35,inclusive,25,0.1106,1.255,0.2895
+turnons,HLTTauTriggerEndcap_wMatching_27,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_27,hltHpsPFTau:LooseDeepTau:endcap,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_27,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_35,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_35,hltHpsPFTau:LooseDeepTau:endcap,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_DM_27,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_27,hltHpsPFTau:LooseDeepTau:endcap,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_DM_27,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_DM_35,L1nnPuppiTau:default:endcap,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_35,hltHpsPFTau:LooseDeepTau:endcap,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_DM_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_27,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_27,3-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_27,inclusive,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_35,3-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_L1nnPuppiTau-default-endcap_35,inclusive,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_27,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_27,3-prong,25,0.03704,0.2565,0.002631
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_27,inclusive,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_35,3-prong,25,0.03704,0.2565,0.002631
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-LooseDeepTau-endcap_35,inclusive,25,0.0137,0.1628,0.001061
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_27,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_27,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_27,3-prong,25,0.03704,0.2662,0.002834
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_27,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_27,inclusive,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong,25,0.03704,0.2662,0.002834
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_35,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTauTriggerEndcap_wMatching_DM_hltHpsPFTau-MediumDeepTau-endcap_35,inclusive,25,0.0137,0.1649,0.001087
+turnons,HLTTauTriggerEndcap_wMatching_DY_27,L1nnPuppiTau:default:endcap,25,0.1667,2.211,0.7841
+turnons,HLTTauTriggerEndcap_wMatching_DY_27,hltHpsPFTau:LooseDeepTau:endcap,25,0.4318,2.52,0.695
+turnons,HLTTauTriggerEndcap_wMatching_DY_27,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.7159
+turnons,HLTTauTriggerEndcap_wMatching_DY_35,L1nnPuppiTau:default:endcap,25,0.2113,1.828,0.5885
+turnons,HLTTauTriggerEndcap_wMatching_DY_35,hltHpsPFTau:LooseDeepTau:endcap,25,0.4318,2.52,0.662
+turnons,HLTTauTriggerEndcap_wMatching_DY_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.6124
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_27,L1nnPuppiTau:default:endcap,25,0.1667,2.211,0.7841
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_27,hltHpsPFTau:LooseDeepTau:endcap,25,0.4318,2.52,0.695
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_27,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.7159
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_35,L1nnPuppiTau:default:endcap,25,0.2113,1.828,0.5885
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_35,hltHpsPFTau:LooseDeepTau:endcap,25,0.4318,2.52,0.662
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_35,hltHpsPFTau:MediumDeepTau:endcap,25,0.4318,2.52,0.6124
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_L1nnPuppiTau-default-endcap_27,1-prong + $\pi^0$s,25,0.1852,2.079,0.6821
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_L1nnPuppiTau-default-endcap_27,inclusive,25,0.1667,2.211,0.7841
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_L1nnPuppiTau-default-endcap_35,1-prong + $\pi^0$s,25,0.1852,1.143,0.352
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_L1nnPuppiTau-default-endcap_35,inclusive,25,0.2113,1.828,0.5885
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-endcap_27,1-prong + $\pi^0$s,25,0.7273,1.981,0.5304
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-endcap_27,inclusive,25,0.4318,2.52,0.695
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-endcap_35,1-prong + $\pi^0$s,25,0.7273,1.72,0.4607
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-endcap_35,inclusive,25,0.4318,2.52,0.662
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_27,1-prong + $\pi^0$s,25,0.7273,1.696,0.4278
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_27,inclusive,25,0.4318,2.52,0.7159
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_35,1-prong + $\pi^0$s,25,0.7273,1.696,0.3909
+turnons,HLTTauTriggerEndcap_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-endcap_35,inclusive,25,0.4318,2.52,0.6124
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_35,L1nnPuppiTau:default:inclusive,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_35,hltHpsPFTau:LooseDeepTau:inclusive,22,0.001534,0.05927,0.0001597
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_35,hltHpsPFTau:MediumDeepTau:inclusive,22,0.001534,0.06005,0.0001639
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_35,L1nnPuppiTau:default:inclusive,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_35,hltHpsPFTau:LooseDeepTau:inclusive,22,0.001534,0.05927,0.0001597
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_35,hltHpsPFTau:MediumDeepTau:inclusive,22,0.001534,0.06005,0.0001639
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_L1nnPuppiTau-default-inclusive_35,1-prong,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_L1nnPuppiTau-default-inclusive_35,1-prong + $\pi^0$s,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_L1nnPuppiTau-default-inclusive_35,3-prong,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_L1nnPuppiTau-default-inclusive_35,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_L1nnPuppiTau-default-inclusive_35,inclusive,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,1-prong,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,1-prong + $\pi^0$s,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,3-prong,22,0.00885,0.1333,0.0008077
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,inclusive,22,0.001534,0.05927,0.0001597
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,1-prong,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,1-prong + $\pi^0$s,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,3-prong,22,0.00885,0.1355,0.0008348
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,3-prong + $\pi^0$,22,0,0,0
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,inclusive,22,0.001534,0.06005,0.0001639
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_35,L1nnPuppiTau:default:inclusive,22,0.1135,2.198,0.6507
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_35,hltHpsPFTau:LooseDeepTau:inclusive,22,0.1032,1.431,0.4916
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_35,hltHpsPFTau:MediumDeepTau:inclusive,22,0.1059,1.47,0.4898
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_35,L1nnPuppiTau:default:inclusive,22,0.1135,2.198,0.6507
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_35,hltHpsPFTau:LooseDeepTau:inclusive,22,0.1032,1.431,0.4916
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_35,hltHpsPFTau:MediumDeepTau:inclusive,22,0.1059,1.47,0.4898
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_L1nnPuppiTau-default-inclusive_35,1-prong,22,0.2368,1.817,0.4322
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_L1nnPuppiTau-default-inclusive_35,1-prong + $\pi^0$s,22,0.1712,1.733,0.4512
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_L1nnPuppiTau-default-inclusive_35,3-prong,22,0.1204,1.322,0.3582
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_L1nnPuppiTau-default-inclusive_35,3-prong + $\pi^0$,22,0.2222,1.452,0.5564
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_L1nnPuppiTau-default-inclusive_35,inclusive,22,0.1135,2.198,0.6507
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,1-prong,22,0.3047,1.574,0.5831
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,1-prong + $\pi^0$s,22,0.08754,1.45,0.3477
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,3-prong,22,0.1917,1.298,0.4772
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,3-prong + $\pi^0$,22,0.3158,0.935,0.1822
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_35,inclusive,22,0.1032,1.431,0.4916
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,1-prong,22,0.3047,1.574,0.5995
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,1-prong + $\pi^0$s,22,0.08227,1.45,0.3469
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,3-prong,22,0.1917,1.274,0.4697
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,3-prong + $\pi^0$,22,0.3421,0.8096,0.1553
+turnons,HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_35,inclusive,22,0.1059,1.47,0.4898
+turnons,HLTTausMatchingBarrel_-999,L1nnPuppiTau:default:inclusive,25,0,0,0
+turnons,HLTTausMatchingBarrel_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.0006035,0.03553,5.049e-05
+turnons,HLTTausMatchingBarrel_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.0006035,0.03577,5.118e-05
+turnons,HLTTausMatchingBarrel_-999,hltHpsPFTau:default:inclusive,25,0.0006035,0.03498,4.896e-05
+turnons,HLTTausMatchingBarrel_DM_-999,L1nnPuppiTau:default:inclusive,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.0006035,0.03553,5.049e-05
+turnons,HLTTausMatchingBarrel_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.0006035,0.03577,5.118e-05
+turnons,HLTTausMatchingBarrel_DM_-999,hltHpsPFTau:default:inclusive,25,0.0006035,0.03498,4.896e-05
+turnons,HLTTausMatchingBarrel_DM_L1nnPuppiTau-default-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_L1nnPuppiTau-default-inclusive_-999,3-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_L1nnPuppiTau-default-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.001056,0.04645,8.629e-05
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,25,0.0006035,0.03553,5.049e-05
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.001056,0.04665,8.704e-05
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,25,0.0006035,0.03577,5.118e-05
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-default-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0.001056,0.0459,8.428e-05
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-default-inclusive_-999,3-prong,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-default-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingBarrel_DM_hltHpsPFTau-default-inclusive_-999,inclusive,25,0.0006035,0.03498,4.896e-05
+turnons,HLTTausMatchingBarrel_DY_-999,L1nnPuppiTau:default:inclusive,25,0.05195,1.899,0.6073
+turnons,HLTTausMatchingBarrel_DY_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.1895,1.533,0.8708
+turnons,HLTTausMatchingBarrel_DY_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.1766,1.43,0.6781
+turnons,HLTTausMatchingBarrel_DY_-999,hltHpsPFTau:default:inclusive,25,0.1895,1.847,0.9532
+turnons,HLTTausMatchingBarrel_DY_DM_-999,L1nnPuppiTau:default:inclusive,25,0.05195,1.899,0.6073
+turnons,HLTTausMatchingBarrel_DY_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.1895,1.533,0.8708
+turnons,HLTTausMatchingBarrel_DY_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.1766,1.43,0.6781
+turnons,HLTTausMatchingBarrel_DY_DM_-999,hltHpsPFTau:default:inclusive,25,0.1895,1.847,0.9532
+turnons,HLTTausMatchingBarrel_DY_DM_L1nnPuppiTau-default-inclusive_-999,1-prong,25,0.1712,1.591,0.3906
+turnons,HLTTausMatchingBarrel_DY_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0.05298,1.661,0.5904
+turnons,HLTTausMatchingBarrel_DY_DM_L1nnPuppiTau-default-inclusive_-999,3-prong + $\pi^0$,25,0.07778,1.481,0.3518
+turnons,HLTTausMatchingBarrel_DY_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,25,0.05195,1.899,0.6073
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong,25,0.3889,2.227,0.6053
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.2619,1.686,0.5955
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0.6,1.909,0.6
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,25,0.1895,1.533,0.8708
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong,25,0.3889,2.227,0.5214
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.2619,1.686,0.5565
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0.6,1.825,0.5748
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,25,0.1766,1.43,0.6781
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-default-inclusive_-999,1-prong,25,0.3889,2.227,0.5762
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0.2619,1.686,0.6261
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-default-inclusive_-999,3-prong + $\pi^0$,25,0.5,1.803,0.557
+turnons,HLTTausMatchingBarrel_DY_DM_hltHpsPFTau-default-inclusive_-999,inclusive,25,0.1895,1.847,0.9532
+turnons,HLTTausMatchingEndcap_-999,L1nnPuppiTau:default:inclusive,25,0,0,0
+turnons,HLTTausMatchingEndcap_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.0137,0.1593,0.001016
+turnons,HLTTausMatchingEndcap_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.0137,0.161,0.001037
+turnons,HLTTausMatchingEndcap_-999,hltHpsPFTau:default:inclusive,25,0.0137,0.1501,0.0009014
+turnons,HLTTausMatchingEndcap_DM_-999,L1nnPuppiTau:default:inclusive,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.0137,0.1593,0.001016
+turnons,HLTTausMatchingEndcap_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.0137,0.161,0.001037
+turnons,HLTTausMatchingEndcap_DM_-999,hltHpsPFTau:default:inclusive,25,0.0137,0.1501,0.0009014
+turnons,HLTTausMatchingEndcap_DM_L1nnPuppiTau-default-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_L1nnPuppiTau-default-inclusive_-999,3-prong,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_L1nnPuppiTau-default-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong,25,0.03704,0.2565,0.002631
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,25,0.0137,0.1593,0.001016
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong,25,0.03704,0.2662,0.002834
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,25,0.0137,0.161,0.001037
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-default-inclusive_-999,1-prong,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-default-inclusive_-999,3-prong,25,0.03704,0.235,0.002209
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-default-inclusive_-999,3-prong + $\pi^0$,25,0,0,0
+turnons,HLTTausMatchingEndcap_DM_hltHpsPFTau-default-inclusive_-999,inclusive,25,0.0137,0.1501,0.0009014
+turnons,HLTTausMatchingEndcap_DY_-999,L1nnPuppiTau:default:inclusive,25,0.1868,1.942,0.6972
+turnons,HLTTausMatchingEndcap_DY_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.4318,2.083,0.6558
+turnons,HLTTausMatchingEndcap_DY_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.4318,1.956,0.5588
+turnons,HLTTausMatchingEndcap_DY_-999,hltHpsPFTau:default:inclusive,25,0.3864,1.696,0.519
+turnons,HLTTausMatchingEndcap_DY_DM_-999,L1nnPuppiTau:default:inclusive,25,0.1868,1.942,0.6972
+turnons,HLTTausMatchingEndcap_DY_DM_-999,hltHpsPFTau:LooseDeepTau:inclusive,25,0.4318,2.083,0.6558
+turnons,HLTTausMatchingEndcap_DY_DM_-999,hltHpsPFTau:MediumDeepTau:inclusive,25,0.4318,1.956,0.5588
+turnons,HLTTausMatchingEndcap_DY_DM_-999,hltHpsPFTau:default:inclusive,25,0.3864,1.696,0.519
+turnons,HLTTausMatchingEndcap_DY_DM_L1nnPuppiTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0.1852,1.676,0.5159
+turnons,HLTTausMatchingEndcap_DY_DM_L1nnPuppiTau-default-inclusive_-999,inclusive,25,0.1868,1.942,0.6972
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.7273,1.828,0.5979
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-LooseDeepTau-inclusive_-999,inclusive,25,0.4318,2.083,0.6558
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,1-prong + $\pi^0$s,25,0.7273,1.696,0.4983
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-MediumDeepTau-inclusive_-999,inclusive,25,0.4318,1.956,0.5588
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-default-inclusive_-999,1-prong + $\pi^0$s,25,0.7273,2.091,0.7551
+turnons,HLTTausMatchingEndcap_DY_DM_hltHpsPFTau-default-inclusive_-999,inclusive,25,0.3864,1.696,0.519
+path_efficiency,DoubleDeepTau35PathEff,HLT,10,0,0,0
+path_efficiency,DoubleDeepTau35PathEff,L1,10,0.0002568,0.02523,6.363e-05
+path_efficiency,DoubleDeepTau35PathEff,L1_and_HLT,10,0,0,0
+path_efficiency,DoubleParTTau30PathEff,HLT,10,0,0,0
+path_efficiency,DoubleParTTau30PathEff,HLT_given_L1,10,0.0001725,0.009923,9.846e-06
+path_efficiency,DoubleParTTau30PathEff,L1,10,0.0002568,0.02523,6.363e-05
+path_efficiency,DoubleParTTau30PathEff,L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_1-prong,DeepTau:L1,9,0.0006223,0.03481,0.0001347
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_1-prong,ParT:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_3-prong,DeepTau:L1,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_1-prong_3-prong,ParT:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_3-prong_3-prong,DeepTau:L1,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_3-prong_3-prong,DeepTau:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DMpair_3-prong_3-prong,ParT:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_1-prong,DeepTau:L1,11,0.06314,1.271,0.27
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,11,0.07603,1.427,0.4805
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_1-prong,ParT:L1_and_HLT,11,0.1581,1.695,0.7992
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_3-prong,DeepTau:L1,11,0.146,1.241,0.7045
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,11,0.1889,1.405,0.4256
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_1-prong_3-prong,ParT:L1_and_HLT,11,0.1102,0.8833,0.3319
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_3-prong_3-prong,DeepTau:L1,11,0.1786,1.127,0.3336
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_3-prong_3-prong,DeepTau:L1_and_HLT,11,0.2857,0.9296,0.229
+path_efficiency,DoubleTauPathsVsLeadPt_DY_DMpair_3-prong_3-prong,ParT:L1_and_HLT,11,0.1429,0.921,0.176
+path_efficiency,DoubleTauPathsVsLeadPt_DY,DeepTau:L1,11,0.02338,1.832,0.7743
+path_efficiency,DoubleTauPathsVsLeadPt_DY,DeepTau:L1_and_HLT,11,0.05237,0.8663,0.3445
+path_efficiency,DoubleTauPathsVsLeadPt_DY,ParT:L1_and_HLT,11,0.1379,2.155,1.272
+path_efficiency,DoubleTauPathsVsLeadPt,DeepTau:L1,9,0.0003393,0.02598,7.498e-05
+path_efficiency,DoubleTauPathsVsLeadPt,DeepTau:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsLeadPt,ParT:L1_and_HLT,9,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_1-prong,DeepTau:L1,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_1-prong,ParT:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_3-prong,DeepTau:L1,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_1-prong_3-prong,ParT:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_3-prong_3-prong,DeepTau:L1,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_3-prong_3-prong,DeepTau:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU_DMpair_3-prong_3-prong,ParT:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU,DeepTau:L1,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU,DeepTau:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsNPU,ParT:L1_and_HLT,6,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_1-prong,DeepTau:L1,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_1-prong,ParT:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_3-prong,DeepTau:L1,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_1-prong_3-prong,ParT:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_3-prong_3-prong,DeepTau:L1,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_3-prong_3-prong,DeepTau:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DMpair_3-prong_3-prong,ParT:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta_DY,DeepTau:L1,7,0.2667,0.804,0.2303
+path_efficiency,DoubleTauPathsVsSubleadEta_DY,DeepTau:L1_and_HLT,7,0.6667,1.382,0.7462
+path_efficiency,DoubleTauPathsVsSubleadEta_DY,ParT:L1_and_HLT,7,0.4444,1.215,0.286
+path_efficiency,DoubleTauPathsVsSubleadEta,DeepTau:L1,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta,DeepTau:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadEta,ParT:L1_and_HLT,7,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_1-prong,DeepTau:L1,10,0.0004669,0.03389,0.0001149
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_1-prong,ParT:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_3-prong,DeepTau:L1,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_1-prong_3-prong,ParT:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_3-prong_3-prong,DeepTau:L1,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_3-prong_3-prong,DeepTau:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DMpair_3-prong_3-prong,ParT:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_1-prong,DeepTau:L1,12,0.1324,0.7675,0.2139
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_1-prong,DeepTau:L1_and_HLT,12,0.4,1.528,0.4788
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_1-prong,ParT:L1_and_HLT,12,0.2353,0.9935,0.325
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_3-prong,DeepTau:L1,12,0.15,1.037,0.3982
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_3-prong,DeepTau:L1_and_HLT,12,0.1429,0.8991,0.1734
+path_efficiency,DoubleTauPathsVsSubleadPt_DY_DMpair_1-prong_3-prong,ParT:L1_and_HLT,12,0.2857,1.613,0.5667
+path_efficiency,DoubleTauPathsVsSubleadPt_DY,DeepTau:L1,12,0.07407,0.9022,0.1935
+path_efficiency,DoubleTauPathsVsSubleadPt_DY,DeepTau:L1_and_HLT,12,0.2593,1.039,0.2541
+path_efficiency,DoubleTauPathsVsSubleadPt_DY,ParT:L1_and_HLT,12,0.1852,1.263,0.4174
+path_efficiency,DoubleTauPathsVsSubleadPt,DeepTau:L1,10,0.0002568,0.02523,6.363e-05
+path_efficiency,DoubleTauPathsVsSubleadPt,DeepTau:L1_and_HLT,10,0,0,0
+path_efficiency,DoubleTauPathsVsSubleadPt,ParT:L1_and_HLT,10,0,0,0

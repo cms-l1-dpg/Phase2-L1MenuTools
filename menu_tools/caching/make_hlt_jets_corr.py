@@ -90,6 +90,8 @@ def correct_jets(jets: ak.Array, table: np.ndarray) -> ak.Array:
     fields[f"{TARGET}_mass"] = (ak.to_numpy(flat[f"{SRC}_mass"]) * fac).astype(
         np.float32
     )
+    if f"{TARGET}_jecFactor" in fields:  # p2nano v2: the HLT's own factor, kept
+        fields[f"{TARGET}_nanoJecFactor"] = fields.pop(f"{TARGET}_jecFactor")
     fields[f"{TARGET}_rawPt"] = raw_pt.astype(np.float32)
     fields[f"{TARGET}_jecFactor"] = fac.astype(np.float32)
     out = ak.unflatten(ak.zip(fields), counts)
@@ -150,9 +152,42 @@ def main():
     if os.path.exists(t_jets) and os.path.exists(t_sums) and not args.overwrite:
         print(f"{t_jets} and {t_sums} exist, skipping")
         return
-    cjets = correct_jets(ak.from_parquet(pattern % SRC), load_jec_table(args.jec))
-    _write(cjets, t_jets)
-    _write(make_sums(cjets), t_sums)
+    table = load_jec_table(args.jec)
+    # One parquet row group at a time (the merged chunked caches have one row group per
+    # chunk), so that memory stays at about one chunk for the large samples.
+    n_rg = ak.metadata_from_parquet(pattern % SRC)["num_row_groups"]
+    sums, n_ev, max_dev = [], 0, 0.0
+
+    def _iter():
+        nonlocal n_ev, max_dev
+        for rg in range(n_rg):
+            jets = ak.from_parquet(pattern % SRC, row_groups=[rg])
+            nano_fac = (
+                ak.to_numpy(ak.flatten(jets[f"{SRC}_jecFactor"]))
+                if f"{SRC}_jecFactor" in jets.fields
+                else None
+            )
+            cjets = correct_jets(jets, table)
+            if nano_fac is not None:
+                # p2nano v2 stores the HLT jecFactor: compare with the tables here
+                # (same jets, before the re-sorting by corrected pT)
+                fac = l2relative(
+                    ak.to_numpy(ak.flatten(jets[f"{SRC}_pt"])),
+                    ak.to_numpy(ak.flatten(jets[f"{SRC}_eta"])),
+                    table,
+                )
+                if len(fac):
+                    max_dev = max(max_dev, float(np.max(np.abs(fac / nano_fac - 1))))
+            n_ev += len(cjets)
+            sums.append(make_sums(cjets))
+            yield cjets
+
+    ak.to_parquet_row_groups(_iter(), t_jets + ".tmp")
+    os.replace(t_jets + ".tmp", t_jets)
+    print(f"Wrote {t_jets}: {n_ev} events")
+    if max_dev:
+        print(f"max |JEC factor (tables) / nano jecFactor - 1| = {max_dev:.2e}")
+    _write(ak.concatenate(sums), t_sums)
 
 
 if __name__ == "__main__":

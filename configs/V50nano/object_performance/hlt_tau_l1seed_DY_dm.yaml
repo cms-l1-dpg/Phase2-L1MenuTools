@@ -13,6 +13,7 @@
 # Generated from hlt_tau_l1seed_dm.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_l1seed_dm.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   Decay-mode split of hlt_tau_l1seed.yaml (`split_by`, see docs/object-performance.md).
 #   Same plots as hlt_tau_l1seed.yaml (plot names + "_DM", no scalings), plus, per test object, the inclusive
 #   curve and one curve per generator decay mode of the visible gen tau, and a fractions JSON.
@@ -35,6 +36,8 @@ HLTTauL1Seed_DoubleTau35_Barrel_DY_DM:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:MediumDeepTau:barrel: pt
+    hltAK4PuppiJetParT:MediumParT:barrel: pt
+    hltAK4PuppiJetParT:ParT1kHz:barrel: pt
   l1_seed:
     object: L1nnPuppiTau:default
     threshold:
@@ -73,6 +76,8 @@ HLTTauL1Seed_DoubleTau35_Endcap_DY_DM:
       object: ['abs({eta}) < 2.1']
   test_objects:
     hltHpsPFTau:MediumDeepTau:endcap: pt
+    hltAK4PuppiJetParT:MediumParT:endcap: pt
+    hltAK4PuppiJetParT:ParT1kHz:endcap: pt
   l1_seed:
     object: L1nnPuppiTau:default
     threshold:

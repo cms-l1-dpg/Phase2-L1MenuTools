@@ -8,6 +8,13 @@
 #   second ROC curve); the WPs and their sources are documented in configs/V50nano/objects/
 #   {jets,hlt}.yaml (L1: fixed 10% / 1% light mis-id on this sample; HLT: the DeepFlavour
 #   filters of the Phase-2 HLT menu b-tag paths, plus prob(b) at 10% / 1% light mis-id).
+# ParT (p2nano v2 caches only, e.g. V50nano_170pre6HLTv2): the HLT ParT AK4 tagger
+#   (hltParticleTransformerDiscriminatorsJetTags) stored for every jet in its acceptance
+#   (raw pT > 5 GeV, |eta| < 2.1; -10 outside, mapped to -1 here). Discriminants
+#   b / (b + c + uds + g) (the tau probabilities removed, as a b-vs-jets tagger) and prob(b);
+#   WPs bTagParTLight10 / bTagParTLight1 (configs/V50nano/objects/hlt.yaml). For |eta| 2.1-2.4
+#   the ParT jets are untagged: BTagTT_eta2p1 compares all taggers inside |eta| < 2.1.
+#   On V50nano_170pre6HLTv2 the TT sample is INCLUSIVE tt (v1: tt -> 2l2nu).
 # Truth: closest GenJet within dR < 0.2 -> hadronFlavour b (5) / c (4) / light (0);
 #   no GenJet (pT > 10 GeV, hard scatter) within dR < 0.4 -> pileup jet.
 
@@ -23,10 +30,13 @@ BTagTT:
       hltAK4PuppiJetCorr:default:
         "prob(b)": "{DeepFlavour_prob_b}"
         "b+bb+lepb": "{DeepFlavour_prob_b} + {DeepFlavour_prob_bb} + {DeepFlavour_prob_lepb}"
+        "ParT b/(b+c+uds+g)": "ak.where({ParT_inputFilled} == 1, {ParT_prob_b} / ({ParT_prob_b} + {ParT_prob_c} + {ParT_prob_uds} + {ParT_prob_g} + 1e-6), -1)"
+        "ParT prob(b)": "ak.where({ParT_inputFilled} == 1, {ParT_prob_b}, -1)"
     working_points:
       L1puppiJetSC4NG:default: [bTagLight10, bTagLight1, bjetnn]
       hltAK4PuppiJetCorr:default:
-        [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagDeepFlavour0p935, bTagLight10, bTagLight1]
+        [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagDeepFlavour0p935, bTagLight10, bTagLight1,
+         bTagParTLight10, bTagParTLight1, bTagParTbLight1]
     reference_gen:
       object: GenJet
       label: "GenJet"
@@ -45,7 +55,50 @@ BTagTT:
     roc:
       pt_bins: [[30, 100], [100, null], [30, null]]
       against: [light, c, pu]
-      target_misid: {light: [0.1, 0.01], c: [0.1]}
+      target_misid: {light: [0.1, 0.05, 0.01], c: [0.1]}
     summary:
       pt_bins: [[30, 100], [100, null], [30, null]]
       eta_regions: {inclusive: [0, 2.4], barrel: [0, 1.5]}
+
+# All taggers inside the ParT acceptance |eta| < 2.1 (v2 caches only).
+BTagTT_eta2p1:
+  sample: TT
+  version: V50nano
+  test_objects:
+    L1puppiJetSC4NG:default: "pt"
+    hltAK4PuppiJetCorr:default: "pt"
+  btag:
+    discriminants:
+      L1puppiJetSC4NG:default: "{bTagScore}"
+      hltAK4PuppiJetCorr:default:
+        "prob(b)": "{DeepFlavour_prob_b}"
+        "b+bb+lepb": "{DeepFlavour_prob_b} + {DeepFlavour_prob_bb} + {DeepFlavour_prob_lepb}"
+        "ParT b/(b+c+uds+g)": "ak.where({ParT_inputFilled} == 1, {ParT_prob_b} / ({ParT_prob_b} + {ParT_prob_c} + {ParT_prob_uds} + {ParT_prob_g} + 1e-6), -1)"
+        "ParT prob(b)": "ak.where({ParT_inputFilled} == 1, {ParT_prob_b}, -1)"
+    working_points:
+      L1puppiJetSC4NG:default: [bTagLight10, bTagLight1, bjetnn]
+      hltAK4PuppiJetCorr:default:
+        [bTagDeepFlavour0p275, bTagDeepFlavour0p375, bTagDeepFlavour0p935, bTagLight10, bTagLight1,
+         bTagParTLight10, bTagParTLight1, bTagParTbLight1]
+    reference_gen:
+      object: GenJet
+      label: "GenJet"
+      cuts: ["{pt} > 10"]
+    flavour_field: hadronFlavour
+    match_dR: 0.2
+    pu_dR: 0.4
+    max_abs_eta: 2.1
+    min_pt: 30
+    vs:
+      pt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      genpt: {edges: [20, 30, 40, 50, 60, 80, 100, 125, 150, 200, 300, 500]}
+      eta: {min: -2.1, max: 2.1, step: 0.3}
+      abseta: {min: 0, max: 2.1, step: 0.3}
+      pu: {edges: [140, 170, 185, 195, 205, 215, 230, 260]}
+    roc:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      against: [light, c, pu]
+      target_misid: {light: [0.1, 0.05, 0.01], c: [0.1]}
+    summary:
+      pt_bins: [[30, 100], [100, null], [30, null]]
+      eta_regions: {inclusive: [0, 2.1], barrel: [0, 1.5]}

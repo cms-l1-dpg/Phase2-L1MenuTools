@@ -13,6 +13,7 @@
 # Generated from hlt_tau_eta.yaml (scripts/make_dy_tau_configs.py); keep in sync.
 #
 # Header of hlt_tau_eta.yaml:
+#   ParT (hltAK4PuppiJetParT) needs a p2nano v2 cache (V50nano_170pre6HLTv2).
 #   HLT HPS taus vs L1 NN PUPPI tau: efficiency vs gen visible-tau eta (HH -> bbtautau).
 #   hltHpsPFTau stored only if an L1 tau seed fired: HLT efficiency is L1 x HLT-like.
 
@@ -31,6 +32,8 @@ HLTTauMatching_Eta_Pt40ToInf_DY:
     hltHpsPFTau:default: eta
     hltHpsPFTau:MediumDeepTau: eta
     hltHpsPFTau:LooseDeepTau: eta
+    hltAK4PuppiJetParT:MediumParT: eta
+    hltAK4PuppiJetParT:ParT1kHz: eta
     L1nnPuppiTau:default: eta
   xlabel: Gen. $\eta$
   ylabel: Matching Efficiency (gen vis. $p_T$ > 40 GeV)
@@ -55,6 +58,8 @@ HLTTauTrigger_Eta_Pt50ToInf_wMatching_DY:
   test_objects:
     hltHpsPFTau:MediumDeepTau: eta
     hltHpsPFTau:LooseDeepTau: eta
+    hltAK4PuppiJetParT:MediumParT: eta
+    hltAK4PuppiJetParT:ParT1kHz: eta
     L1nnPuppiTau:default: eta
   thresholds: [35]
   xlabel: Gen. $\eta$
