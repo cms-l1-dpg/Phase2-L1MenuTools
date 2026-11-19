@@ -17,13 +17,15 @@ The cache version is `V50nano_170pre6HLTv2` (`configs/V50nano/cache_objects/cach
 | DYLL_M50 | 985,000 | 5× v1 (v1 had 200k) |
 | TT | 300,000 | **inclusive tt̄**; v1 was tt̄ → 2ℓ2ν, so these are different events |
 | HHTo2B2Tau | 49,103 | the same events as v1 |
-| HHTo4B | — | v2 was still running (3 files on 2026-11-16); not included |
+| HHTo4B | 50,000 (50 files) | the same 50,000 events as v1 (task `261116_104350`) |
 
 Post-processing steps:
 - `make_hlt_jets_corr`, now streamed by row group, writes `hltAK4PuppiJetCorr`. It checks the JEC factor against the nano `jecFactor`: they agree to < 1.4e-4, except 74 of 227k jets at |η| bin edges.
 - `make_hlt_jets_part` (new) writes `hltAK4PuppiJetParT`. It keeps jets with `ParT_inputFilled` and raw pT > 10. Its pT is the **raw** pT, as in the HLT path; `ptCorr` holds the corrected pT.
 - `scripts/part/event_ids.py` writes `<version>_<sample>_EventID.parquet` with (run, luminosityBlock, event).
 - `scripts/part/part_wps.py` sets the ParT working points (WPs) and writes the `HLTEMU` record of emulated ParT paths (bits `HLT_EMU_*`). `path_efficiency.py` reads `HLT_EMU_*` bits from this record.
+- HHTo4B was added later (2026-11-19) with the same objects and steps. Its `HLTEMU` record (`scripts/part/hltemu_sample.py`) uses the WPs of `part_wps.csv` unchanged (the emulated Medium path reproduces the HLT ParT bit in 172 / 172 events). All 52 records have 50,000 rows. The JEC check flags 202 of 540k jets (HHTo2B2Tau: 209 of 520k), the same |η|-edge jets as in the other samples.
+- Independent check against the HH→4b skim of `results/hlt_hh/skim_v2/` (topo-hackathon repo, same sorted file list): the 31 HLT bits agree in all events, the jet count (raw pT > 10, |η| < 2.5) agrees in all 50,000 events, and pT, η, DeepFlavour, ParT and hadronFlavour agree exactly in the 300 events compared.
 
 ## ParT τ ID
 
@@ -92,6 +94,32 @@ b-jet efficiency at fixed light mis-id, jet pT > 30:
 
 ParT gains most at high pT: at 1% light mis-id with pT > 100 and |η| < 2.1, ParT reaches 0.864 against 0.722 for DeepFlavour.
 
+## ParT b tag (HH → 4b, v2)
+
+`btag_tt.yaml` has two more blocks on the HHTo4B sample, with the same taggers, WPs and truth definition as `BTagTT`:
+- `BTagHH4b` (|η| < 2.4);
+- `BTagHH4b_eta2p1` (|η| < 2.1, the ParT acceptance).
+
+`btag_hh4b.yaml` (`BTagHHTo4B`, DeepFlavour and L1 only) is the v1 plot, also run on v2 for the v1/v2 comparison.
+
+b-jet efficiency at fixed light mis-id, jet pT > 30 (`BTagHH4b*_roc_light_pt30toInf`, `target_misid`). HH→4b has 139k b jets but only 43k light jets (|η| < 2.4), so 1% light mis-id rests on about 430 jets.
+
+| region | light mis-id | DeepFlavour prob(b) | ParT b/(b+c+uds+g) | ParT prob(b) | L1 |
+|---|---|---|---|---|---|
+| \|η\| < 2.4 | 1% | 0.667 | 0.799 | 0.790 | 0.088 (0.3%) |
+| \|η\| < 2.4 | 5% | 0.824 | 0.890 | 0.883 | 0.276 (4.6%) |
+| \|η\| < 2.4 | 10% | 0.875 | 0.913 | 0.908 | 0.338 (7.5%) |
+| \|η\| < 2.1 | 1% | 0.692 | 0.825 | 0.818 | 0.091 (0.3%) |
+| \|η\| < 2.1 | 5% | 0.850 | 0.927 | 0.920 | 0.284 (5.0%) |
+| \|η\| < 2.1 | 10% | 0.903 | 0.952 | 0.947 | 0.348 (7.9%) |
+
+The L1 score is discrete: its numbers are at the largest mis-id below the target (in brackets).
+- The ParT gain over DeepFlavour is larger in HH→4b than in tt̄: at 1% light mis-id and |η| < 2.1, +0.13 (0.825 vs 0.692) against +0.05–0.09 in tt̄.
+- In HH→4b, b/(b+c+uds+g) is slightly ahead of prob(b) (0.799 vs 0.790); in tt̄ prob(b) is ahead.
+- With pT > 100 and |η| < 2.1, at 1%: ParT 0.839 / 0.831, DeepFlavour 0.636.
+
+Outputs: https://alobanov.web.cern.ch/L1T/Phase2/menu/Validation/MenuTools_AR26/V50nano_170pre6HLTv2/object_performance/btag/ (`BTagHH4b*`, `BTagHHTo4B*`), and the path table `rate_tables/hlt_paths_V50nano_170pre6HLTv2_HHTo4B.csv`.
+
 ## Cross-checks v1 vs v2
 
 - Events are matched by (run, luminosityBlock, event) with `scripts/part/compare_v1_v2.py`:
@@ -106,6 +134,11 @@ ParT gains most at high pT: at 1% light mis-id with pT > 100 and |η| < 2.1, Par
   | DY (of 200k) | 2 | 3 | 24 | 141 | |
   | MB | 0 | 1 | 2 | | 776 |
 
+- HH→4b (50,000 events, the same in v1 and v2, matched by event ID):
+  - identical in every event: hltAK4PuppiJet (pT, η, φ, DeepFlavour b / c), hltAK4PuppiJetCorr, hltPFPuppiHT, GenJet, GenPart, all 31 HLT bits except `HLT_IsoMu24_FromL1TkMuon` (1 event);
+  - L1 differs in a few events: L1puppiJetSC4 200, L1puppiJetSC4NG 99, L1 seeds 1–3 events per bit.
+  - `BTagHHTo4B` outputs (152 curves): the HLT curves are identical; L1 curves differ by at most 5e-4 (max |pull| 0.09).
+  - `hlt_paths` HHTo4B table: the HLT counts are equal except IsoMu24 (306 vs 307); L1 seed counts differ by at most 3 events.
 - Outputs are compared with `scripts/part/compare_outputs.py` → `compare_v1_v2_outputs.csv`, curve by curve against the published v1 JSON outputs:
   - HH, 370 curves: max |pull| 0.28.
   - DY, 221 curves: v2 has 5× the events; max |pull| 3.8 (L1 barrel turn-on), mean χ²/ndf 0.53.
@@ -121,10 +154,17 @@ export _myschedd_POOL=eossubmit _condor_CONDOR_HOST="tweetybird04.cern.ch, tweet
 condor_submit scripts/condor/caching_170pre6HLTv2_minbias.sub     # MB chunks, 140 jobs
 condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub      # DY / TT / HH chunks
 condor_submit scripts/condor/caching_170pre6HLTv2_post.sub        # merge, sums, jets Corr, ParT
-for s in HHTo2B2Tau DYLL_M50 MinBias; do                             # EventID records
+condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub \
+    joblist=scripts/condor/caching_170pre6HLTv2_hh4b_jobs.txt logtag=_hh4b   # HHTo4B only, 2 jobs
+condor_submit scripts/condor/caching_170pre6HLTv2_post.sub postlist=scripts/condor/caching_170pre6HLTv2_hh4b_post.txt
+for s in HHTo2B2Tau HHTo4B DYLL_M50 MinBias; do                      # EventID records
   python3 scripts/part/event_ids.py configs/V50nano/cache_objects/caching_170pre6_HLTv2.yaml --sample $s; done
 python3 scripts/part/part_wps.py                                 # WPs, HLTEMU, part_*.csv
+python3 scripts/part/hltemu_sample.py --sample HHTo4B            # HLTEMU of HHTo4B with the same WPs
 condor_submit scripts/condor/menu_runs_jobsh.sub joblist=scripts/condor/part_170pre6HLTv2.txt
+condor_submit scripts/condor/menu_runs_jobsh.sub joblist=scripts/condor/hh4b_170pre6HLTv2.txt   # HH->4b b tag, paths
+python3 scripts/part/compare_outputs.py <v1 outputs>/V50nano_170pre6HLT/object_performance \
+    outputs/V50nano_170pre6HLTv2/object_performance --subdirs btag --match BTagHHTo4B
 python3 scripts/part/compare_outputs.py <v1 outputs>/V50nano_170pre6HLT/object_performance \
     outputs/V50nano_170pre6HLTv2/object_performance --subdirs turnons path_efficiency resolution \
     --csv configs/V50nano/object_performance/part/compare_v1_v2_outputs.csv

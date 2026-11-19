@@ -1,6 +1,7 @@
 # b-tagging efficiency and mis-identification rates of L1 and HLT jets in HH -> 4b, with the
 # settings and working points of btag_tt.yaml (see the comments there).
 # Run on an L1+HLT cache: object_performance <this file> --version V50nano_170pre6HLT
+# (also run on V50nano_170pre6HLTv2 for the v1/v2 comparison; the v2 plot with ParT is BTagHH4b in btag_tt.yaml)
 
 BTagHHTo4B:
   sample: HHTo4B
