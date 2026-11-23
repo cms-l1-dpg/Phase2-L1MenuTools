@@ -1,5 +1,6 @@
 # Chunked caching of the V50nano_170pre6HLTv2 signal samples (p2nano v2), 25 files (25k events)
-# per job: DYLL_M50 985 files -> 40 jobs, TT (inclusive) 300 -> 12, HHTo2B2Tau 57 -> 3 (55 jobs).
+# per job: DYLL_M50 985 files -> 40 jobs, TT (inclusive) 300 -> 12, HHTo2B2Tau 57 -> 3, HHTo4B 50 -> 2
+# (57 jobs; HHTo4B alone: joblist=scripts/condor/caching_170pre6HLTv2_hh4b_jobs.txt).
 # Submit from the checkout, with the EOS submit pool (see caching_170pre6HLTv2_minbias.sub):
 #   condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub
 #   condor_submit scripts/condor/caching_170pre6HLTv2_signal.sub joblist=mylist.txt   # subset

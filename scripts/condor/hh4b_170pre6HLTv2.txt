@@ -1,0 +1,3 @@
+v2_btag_tt_hh4b object_performance configs/V50nano/object_performance/btag_tt.yaml --version V50nano_170pre6HLTv2
+v2_btag_hh4b object_performance configs/V50nano/object_performance/btag_hh4b.yaml --version V50nano_170pre6HLTv2
+v2_hltpaths_hh4b python3 -m menu_tools.rate_table.hlt_paths configs/V50nano/rate_table/hlt_paths.yml --version V50nano_170pre6HLTv2 --sample HHTo4B

@@ -10,7 +10,8 @@
 #   DYLL_M50     985 files x 1000 (a superset of the 200k v1 events)
 #   TT           300 files x 1000: INCLUSIVE tt (TT_TuneCP5_14TeV-powheg), NOT the v1 tt -> 2l2nu
 #   HHTo2B2Tau    57 files, the same 49,103 events as v1
-#   (no HH -> 4b in v2; QCD_Pt-30To50_MuEnriched not cached: not used by these configs)
+#   HHTo4B        50 files x 1000 (task 261116_104350)
+#   (QCD_Pt-30To50_MuEnriched not cached: not used by these configs)
 # Chunked caching on HTCondor: scripts/condor/caching_170pre6HLTv2_*.sub; post-processing
 # scripts/condor/caching_170pre6HLTv2_post.sh (merge, hltPuppiJetSums, hltAK4PuppiJetCorr, L1EG).
 V50nano_170pre6HLTv2:
@@ -159,6 +160,78 @@ V50nano_170pre6HLTv2:
         L1: "all"
   HHTo2B2Tau:
     ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/GluGluToHHTo2B2Tau_node_SM_TuneCP5_14TeV-madgraph-pythia8/P2Nano_L1HLT_noSel_v2/*/*/p2nano_*.root
+    trees_branches:
+      Events:
+        # gen
+        GenPart: "all"
+        GenJet: "all"
+        GenJetAK8: "all"
+        GenMET: "all"
+        GenVisTau: "all"
+        # PV
+        L1PV: [z0]
+        ## EG
+        L1tkPhoton: "all"
+        L1tkElectron: "all"
+        L1EGbarrel: "all"
+        L1EGendcap: "all"
+        ## MUONS
+        L1gmtTkMuon: "all"
+        L1gmtMuon: "all"  # aka gmtMuon
+        L1gmtDispMuon: "all"
+        ## TAUS (L1hpsTau is not in these nanos)
+        L1nnPuppiTau: "all"
+        L1caloTau: "all"
+        L1nnCaloTau: "all"
+        ## MET/Sums
+        L1puppiMET: [pt, phi]
+        L1puppiMLMET: [pt]
+        L1puppiJetSC4sums: [pt, phi]
+        L1puppiHistoJetSums: [pt, phi]
+        ## jets
+        L1puppiJetSC4: [pt, eta, phi]
+        L1puppiJetSC8: [pt, eta, phi, mass]
+        L1puppiExtJetSC4: [pt, eta, phi, btagScore]
+        L1puppiJetSC4NG: [pt, eta, phi, udsTagScore, bTagScore, cTagScore, gTagScore, tau_nTagScore, tau_pTagScore]
+        L1puppiJetHisto: [pt, eta, phi]
+        L1caloJet: [pt, eta, phi]
+        ## track-only
+        L1TrackMET: [pt]
+        L1TrackHT: [ht, mht]
+        L1TrackJet: [pt, eta, phi]
+        L1TrackTripletWord: "all"
+        L1ExtTrackHT: [ht]
+        ## TF Muons
+        L1MuonKMTF: "all"
+        L1MuonOMTF: "all"
+        L1MuonEMTF: "all"
+        L1DispMuonKMTF: "all"
+        L1DispMuonOMTF: "all"
+        L1DispMuonEMTF: "all"
+        ## HLT objects. hltPFPuppiHT: HLT PUPPI HT, one value per event = sumEt of hltPFPuppiMHT
+        ## (HLTHtMhtProducer, NGTScouting hltSums_cfi): JEC-corrected jets pT > 30, |eta| < 5,
+        ## summing ET; NOT the |eta| < 2.4 pT-sum HT that HLT_PFPuppiHT1070 cuts on, but the
+        ## only corrected HLT HT in the nano. hltPFPuppiMET is not cached (it is the type-1
+        ## PUPPI sumEt, ~450 GeV in minimum bias). MHT (and an HT from the uncorrected nano jets,
+        ## for comparison) are built from hltAK4PuppiJet by make_hlt_sums.py -> hltPuppiJetSums.
+        hltMuon: "all"
+        hltElectron: "all"
+        hltPhoton: "all"
+        hltAK4PuppiJet: "all"
+        hltHpsPFTau: "all"
+        hltPFPuppiHT: [pt]
+        ## Pileup
+        Pileup: [nTrueInt, nPU]
+        ## Per-event bits (one flat record per event).
+        # HLT_* paths of the HLTX process. Excluded: the `_pHLT` copies of the old process, and two
+        # DeepCSV PFHT paths that exist only in the old process (nano names them without a suffix);
+        # HLTriggerFinalPath is not matched by the `HLT_` prefix anyway.
+        HLT:
+          exclude: ["_pHLT$", "^PFHT(330|200)PT30_QuadPFPuppiJet_.*_TriplePFPuppiBTagDeepCSV_2p4$"]
+        # L1_p*_final: GT-emulator seed decisions (L1T_* and L1simulation_step are not matched by `L1_`)
+        L1: "all"
+  HHTo4B:
+    ntuple_path: /eos/cms/store/group/dpg_trigger/comm_trigger/L1Trigger/alobanov/phase2/menu/ntuples/Spring24/170pre6/GluGluToHHTo4B_node_SM_TuneCP5_14TeV-amcatnlo-pythia8/P2Nano_L1HLT_noSel_v2/*/*/p2nano_*.root
     trees_branches:
       Events:
         # gen
