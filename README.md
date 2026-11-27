@@ -73,4 +73,6 @@ The GitLab workflow caches selected objects from configurable menu Nanos and
 produces V50 jet, event-sum, tau, electron, muon, and photon performance
 plots. See
 [`docs/gitlab-ci.md`](docs/gitlab-ci.md) for inputs, artifacts, publication, and
-equivalent local commands.
+equivalent local commands. The shorter
+[`docs/run-handoff.md`](docs/run-handoff.md) is the operator handoff for running
+with EOS inputs in CI or directly on `hm01`.
